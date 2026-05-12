@@ -287,6 +287,11 @@ export const translations = {
     galleryTitle: '📸 나의 셀카 기록',
     galleryEmpty: '아직 셀카가 없어요. 오늘의 3분을 시작해보세요.',
     galleryLoginPrompt: '로그인하면 그동안 찍은 셀카가 여기에 모입니다.',
+    loadingFeed: '불러오는 중...',
+    wallCircleEmptyTitle: '아직 게시물이 없어요',
+    wallCircleEmptySub: '오늘의 3분을 시작하면 내 게시물과 친구들 글이 여기에 표시돼요.',
+    wallPublicEmptyTitle: '아직 글로벌 게시물이 없어요',
+    wallPublicEmptySub: '전 세계 사용자가 나눈 글이 곧 여기에 보일 거예요.',
   },
   en: {
     heroQuote: '<span class="one">One minute</span> to move,<br>two minutes to breathe,<br>shared energy.',
@@ -573,5 +578,10 @@ export const translations = {
     galleryTitle: '📸 My Selfie Records',
     galleryEmpty: 'No selfies yet. Start your 3 minutes today.',
     galleryLoginPrompt: 'Sign in to see all the selfies you have taken.',
+    loadingFeed: 'Loading...',
+    wallCircleEmptyTitle: 'No posts yet',
+    wallCircleEmptySub: 'Start your 3 minutes — your post and your friends\' posts will appear here.',
+    wallPublicEmptyTitle: 'No global posts yet',
+    wallPublicEmptySub: 'Posts shared by users around the world will appear here soon.',
   },
 };

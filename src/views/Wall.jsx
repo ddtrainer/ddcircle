@@ -26,25 +26,33 @@ export default function Wall() {
   const [remoteFriends, setRemoteFriends] = useState([]);
   const [empathies, setEmpathies] = useState({}); // { postId: { counts, byUser:Set } }
   const [remoteEncMap, setRemoteEncMap] = useState({}); // { toUserId: {encId, ts} }
+  const [loading, setLoading] = useState(false);
+  const [hasLoaded, setHasLoaded] = useState(false);
 
   // 피드 + 친구 + 공감 + 응원 일괄 로드
-  const refresh = useCallback(async () => {
+  const refresh = useCallback(async (showLoading = false) => {
     if (!user) return;
-    const [circle, pub, friendsList, encMap] = await Promise.all([
-      fetchCircleFeed(50),
-      fetchPublicFeed(50),
-      fetchFriends(user.id),
-      fetchSentToday(user.id),
-    ]);
-    const normCircle = circle.map(normalizePost);
-    const normPublic = pub.map(normalizePost);
-    setRemoteCircle(normCircle);
-    setRemotePublic(normPublic);
-    setRemoteFriends(friendsList);
-    setRemoteEncMap(encMap);
-    const allIds = [...new Set([...normCircle, ...normPublic].map((p) => p.id))];
-    const emp = await fetchEmpathiesForPosts(allIds, user.id);
-    setEmpathies(emp);
+    if (showLoading) setLoading(true);
+    try {
+      const [circle, pub, friendsList, encMap] = await Promise.all([
+        fetchCircleFeed(50),
+        fetchPublicFeed(50),
+        fetchFriends(user.id),
+        fetchSentToday(user.id),
+      ]);
+      const normCircle = circle.map(normalizePost);
+      const normPublic = pub.map(normalizePost);
+      setRemoteCircle(normCircle);
+      setRemotePublic(normPublic);
+      setRemoteFriends(friendsList);
+      setRemoteEncMap(encMap);
+      const allIds = [...new Set([...normCircle, ...normPublic].map((p) => p.id))];
+      const emp = await fetchEmpathiesForPosts(allIds, user.id);
+      setEmpathies(emp);
+    } finally {
+      if (showLoading) setLoading(false);
+      setHasLoaded(true);
+    }
   }, [user]);
 
   useEffect(() => {
@@ -54,9 +62,10 @@ export default function Wall() {
       setRemoteFriends([]);
       setEmpathies({});
       setRemoteEncMap({});
+      setHasLoaded(false);
       return;
     }
-    refresh();
+    refresh(true); // 초기 로드에만 loading UI
   }, [user, refresh]);
 
   // 최신 게시물 ID를 ref로 추적 (realtime 콜백 closure 문제 해결)
@@ -274,8 +283,16 @@ export default function Wall() {
         </button>
       </div>
 
+      {/* 로딩 인디케이터 */}
+      {loading && !hasLoaded && (
+        <div className={styles.loading}>
+          <div className={styles.spinner}>🌿</div>
+          <div className={styles.loadingText}>{t('loadingFeed')}</div>
+        </div>
+      )}
+
       {/* 내 서클 탭 */}
-      {tab === 'circle' && (
+      {tab === 'circle' && (!loading || hasLoaded) && (
         <div>
           <div className={styles.friendsStatus}>
             <div className={styles.summary}>
@@ -325,6 +342,13 @@ export default function Wall() {
           </div>
 
           {/* 내 게시물 (최신 위) */}
+          {user && hasLoaded && myCirclePosts.length === 0 && (
+            <div className={styles.emptyCard}>
+              <div className={styles.emptyEmoji}>💙</div>
+              <div className={styles.emptyTitle}>{t('wallCircleEmptyTitle')}</div>
+              <div className={styles.emptySub}>{t('wallCircleEmptySub')}</div>
+            </div>
+          )}
           {myCirclePosts.map(renderMyPost)}
 
           {/* 친구 피드 (완료한 친구들) — 데모 FRIENDS만 (비인증 시) */}
@@ -392,8 +416,15 @@ export default function Wall() {
       )}
 
       {/* 글로벌 서클 탭 */}
-      {tab === 'public' && (
+      {tab === 'public' && (!loading || hasLoaded) && (
         <div>
+          {user && hasLoaded && remotePublic.length === 0 && (
+            <div className={styles.emptyCard}>
+              <div className={styles.emptyEmoji}>🌍</div>
+              <div className={styles.emptyTitle}>{t('wallPublicEmptyTitle')}</div>
+              <div className={styles.emptySub}>{t('wallPublicEmptySub')}</div>
+            </div>
+          )}
           {(user ? remotePublic : userPosts.filter((p) => p.target === 'public')).map(renderMyPost)}
           {!user && (<>
           <FeedCard
