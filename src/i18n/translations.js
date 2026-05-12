@@ -297,6 +297,10 @@ export const translations = {
     inviteCtaTitle: '아직 함께할 친구가 없어요',
     inviteCtaSub: '친구나 가족을 초대해 함께 호흡해보세요. 매일의 작은 응원이 큰 힘이 됩니다.',
     inviteCtaBtn: '💙 친구·가족 초대하기',
+    pwaInstallTitle: '앱처럼 빠르게 시작해요',
+    pwaInstallSub: '홈 화면에 추가하면 한 번에 열려요',
+    pwaInstallBtn: '설치',
+    pwaInstallIosGuide: 'Safari 공유 → "홈 화면에 추가" 선택',
   },
   en: {
     heroQuote: '<span class="one">One minute</span> to move,<br>two minutes to breathe,<br>shared energy.',
@@ -593,5 +597,9 @@ export const translations = {
     inviteCtaTitle: 'No one in your circle yet',
     inviteCtaSub: 'Invite a friend or family member to breathe together. Daily small encouragements go a long way.',
     inviteCtaBtn: '💙 Invite friends & family',
+    pwaInstallTitle: 'Open it like an app',
+    pwaInstallSub: 'Add to home screen for one-tap launch',
+    pwaInstallBtn: 'Install',
+    pwaInstallIosGuide: 'Tap Share in Safari → "Add to Home Screen"',
   },
 };

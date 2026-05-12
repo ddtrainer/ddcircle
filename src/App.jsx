@@ -9,6 +9,7 @@ import Header from './components/layout/Header';
 import BottomNav from './components/layout/BottomNav';
 import IncomingInviteModal from './components/modals/IncomingInviteModal';
 import Onboarding from './components/Onboarding';
+import PWAInstallPrompt from './components/PWAInstallPrompt';
 import SetAlertController from './components/SetAlertController';
 import { initAnalytics } from './utils/analytics';
 import { initKakao } from './utils/kakao';
@@ -117,6 +118,7 @@ export default function App() {
               <ConditionalBottomNav />
               <InviteUrlHandler />
               <Onboarding />
+              <PWAInstallPrompt />
               <SetAlertController />
               <Analytics />
             </BrowserRouter>
