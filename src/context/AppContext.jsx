@@ -1,6 +1,7 @@
 import { createContext, useContext, useState, useCallback, useEffect, useRef } from 'react';
 import { useLocalStorage } from '../hooks/useLocalStorage';
 import { useAuth } from './AuthContext';
+import { recordSession } from '../lib/stats';
 import { calculateEarnedEp } from '../utils/ep';
 import { DEFAULT_CUSTOM_BREATH } from '../data/breathPatterns';
 import { evaluateChallenges } from '../data/challenges';
@@ -29,7 +30,7 @@ function generateInviteCode() {
 }
 
 export function AppProvider({ children }) {
-  const { profile } = useAuth();
+  const { profile, user } = useAuth();
   const [userEp, setUserEp] = useLocalStorage('ddcircle.userEp', DEFAULT_USER_EP);
   const [setTiming, setSetTiming] = useLocalStorage('ddcircle.setTiming', DEFAULT_SET_TIMING);
   const [todayCount, setTodayCount] = useLocalStorage('ddcircle.todayCount', 247);
@@ -133,8 +134,20 @@ export function AppProvider({ children }) {
     }));
     setTodayDone(true);
     setTodayCount((c) => c + 1);
+
+    // 인증된 유저는 Supabase에 기록 (fire-and-forget)
+    if (user) {
+      recordSession(user.id, {
+        earnedEp: total,
+        hasProof,
+        shared,
+        exerciseId: null, // selectedExercise를 여기서 못 받아서 일단 null
+        breathId: null,
+        newStreak,
+      }).catch((e) => console.error('[stats] recordSession failed:', e));
+    }
     return total;
-  }, [userEp.streak, challengeClaims, challengeJoins, setUserEp, setTodayDone, setTodayCount, setChallengeClaims, setChallengeJoins]);
+  }, [userEp.streak, challengeClaims, challengeJoins, setUserEp, setTodayDone, setTodayCount, setChallengeClaims, setChallengeJoins, user]);
 
   // 챌린지 보너스 알림을 소비(읽음 처리)
   const consumeLastChallengeBonus = useCallback(() => setLastChallengeBonus(null), []);

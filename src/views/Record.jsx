@@ -5,6 +5,7 @@ import { useAuth } from '../context/AuthContext';
 import { TREE_LEVELS, getCurrentLevel, getNextLevel, LAST_14_DAYS } from '../data/treeLevels';
 import { getMultiplier } from '../utils/ep';
 import { fetchMyPosts } from '../lib/posts';
+import { fetchUserStats, fetchLastNDaysEp } from '../lib/stats';
 import TreeSVG from '../components/TreeSVG';
 import EPModal from '../components/modals/EPModal';
 import styles from './Record.module.css';
@@ -38,45 +39,72 @@ export default function Record() {
   const [epModalOpen, setEpModalOpen] = useState(false);
   const [proofPosts, setProofPosts] = useState([]);
   const [lightbox, setLightbox] = useState(null);
+  const [remoteStats, setRemoteStats] = useState(null);   // user_stats row
+  const [remoteChart, setRemoteChart] = useState(null);   // [{date, earnedEp}, ...]
 
   useEffect(() => {
     if (!user) {
       setProofPosts([]);
+      setRemoteStats(null);
+      setRemoteChart(null);
       return;
     }
     let cancelled = false;
     (async () => {
-      const posts = await fetchMyPosts(user.id, 100);
+      const [posts, stats, chart] = await Promise.all([
+        fetchMyPosts(user.id, 100),
+        fetchUserStats(user.id),
+        fetchLastNDaysEp(user.id, 14),
+      ]);
       if (cancelled) return;
       setProofPosts(posts.filter((p) => p.has_proof && p.proof_url));
+      setRemoteStats(stats);
+      setRemoteChart(chart);
     })();
     return () => { cancelled = true; };
   }, [user]);
 
-  const ep = userEp.total;
+  // 인증 시 user_stats 우선, 아니면 localStorage userEp
+  const useRemote = !!(user && remoteStats);
+  const displayStats = useRemote
+    ? {
+        total: remoteStats.total_ep,
+        today: remoteStats.today_ep,
+        thisMonth: remoteStats.month_ep,
+        streak: remoteStats.streak,
+        empathySent: remoteStats.empathy_sent,
+        empathyReceived: remoteStats.empathy_received,
+      }
+    : userEp;
+
+  const ep = displayStats.total;
   const cur = getCurrentLevel(ep);
   const next = getNextLevel(ep);
   const epToNext = Math.max(0, next.min - ep);
   const progressPct = Math.min(((ep - cur.min) / (cur.max - cur.min)) * 100, 100);
 
-  const multiplier = getMultiplier(userEp.streak);
+  const multiplier = getMultiplier(displayStats.streak);
   const multiplierText =
     multiplier > 1 ? t('multiplierActive', { x: multiplier }) : t('noMultiplier');
 
   const today = new Date();
   const dayOfMonth = today.getDate();
-  const monthlyAvg = Math.round(userEp.thisMonth / Math.max(dayOfMonth, 1));
+  const monthlyAvg = Math.round(displayStats.thisMonth / Math.max(dayOfMonth, 1));
 
   const tb = TODAY_EP_BREAKDOWN;
   const baseTotal = tb.dash + tb.deep + tb.fullSet + tb.proof + tb.share + tb.empathySent + tb.empathyReceived;
   const finalEp = Math.round(baseTotal * multiplier);
 
-  const maxChart = Math.max(...LAST_14_DAYS, 1);
-  const chartLabels = LAST_14_DAYS.map((_, i) => {
-    const off = LAST_14_DAYS.length - 1 - i;
+  // 인증 시 실데이터 차트, 아니면 데모
+  const chartData = useRemote && remoteChart
+    ? remoteChart.map((r) => r.earnedEp)
+    : LAST_14_DAYS;
+  const maxChart = Math.max(...chartData, 1);
+  const chartLabels = chartData.map((_, i) => {
+    const off = chartData.length - 1 - i;
     const d = new Date(today);
     d.setDate(today.getDate() - off);
-    return { day: d.getDate(), isToday: i === LAST_14_DAYS.length - 1 };
+    return { day: d.getDate(), isToday: i === chartData.length - 1 };
   });
 
   return (
@@ -118,27 +146,27 @@ export default function Record() {
       <div className={styles.statsGrid}>
         <Stat
           label={t('streakLabel')}
-          value={`🔥 ${userEp.streak}${t('daysShort')}`}
+          value={`🔥 ${displayStats.streak}${t('daysShort')}`}
           color="warm"
           sub={multiplierText}
         />
         <Stat
           label={t('todayEp')}
-          value={`+${userEp.today}`}
+          value={`+${displayStats.today}`}
           color="gold"
           sub={t('dashDeepFull')}
         />
         <Stat
           label={t('thisMonth')}
-          value={`${userEp.thisMonth} EP`}
+          value={`${displayStats.thisMonth} EP`}
           color="cool"
           sub={t('monthlyAvgTpl', { avg: monthlyAvg })}
         />
         <Stat
           label={t('empathyShared')}
-          value={`💌 ${userEp.empathySent}`}
+          value={`💌 ${displayStats.empathySent}`}
           color="calm"
-          sub={t('empathyReceivedTpl', { n: userEp.empathyReceived })}
+          sub={t('empathyReceivedTpl', { n: displayStats.empathyReceived })}
         />
       </div>
 
@@ -183,8 +211,8 @@ export default function Record() {
       <div className={styles.chartCard}>
         <div className={styles.chartTitle}>{t('weeklyChart')}</div>
         <div className={styles.chartBars}>
-          {LAST_14_DAYS.map((dayEp, i) => {
-            const isToday = i === LAST_14_DAYS.length - 1;
+          {chartData.map((dayEp, i) => {
+            const isToday = i === chartData.length - 1;
             const height = dayEp === 0 ? 4 : (dayEp / maxChart) * 100;
             return (
               <div key={i} className={styles.chartCol} title={`${dayEp} EP`}>
