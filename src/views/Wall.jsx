@@ -75,9 +75,10 @@ export default function Wall() {
       };
     });
     try {
-      await toggleEmpathy(user.id, postId, type);
+      const result = await toggleEmpathy(user.id, postId, type);
+      console.log('[empathy] toggle ok:', { postId, type, result });
     } catch (e) {
-      console.error('[empathy] toggle failed, reverting:', e);
+      console.error('[empathy] toggle failed, reverting:', e?.message || e);
       // 롤백
       setEmpathies((prev) => {
         const cur = prev[postId];

@@ -30,23 +30,44 @@ export async function toggleEmpathy(userId, postId, type) {
   if (!userId || !postId || !type) throw new Error('invalid args');
 
   // 기존 행 확인
-  const { data: existing } = await supabase
+  const { data: existing, error: selErr } = await supabase
     .from('empathies')
     .select('id')
     .eq('user_id', userId)
     .eq('post_id', postId)
     .eq('type', type)
     .maybeSingle();
+  if (selErr) {
+    console.error('[empathy] select error:', selErr);
+    throw selErr;
+  }
 
   if (existing) {
-    const { error } = await supabase.from('empathies').delete().eq('id', existing.id);
-    if (error) throw error;
+    // .select()로 삭제된 행을 받아 실제 삭제 여부 확인 (RLS 거부 시 0행)
+    const { data: deleted, error } = await supabase
+      .from('empathies')
+      .delete()
+      .eq('id', existing.id)
+      .select();
+    if (error) {
+      console.error('[empathy] delete error:', error);
+      throw error;
+    }
+    if (!deleted || deleted.length === 0) {
+      console.warn('[empathy] delete returned 0 rows — RLS may have rejected');
+      throw new Error('delete rejected');
+    }
     return { added: false };
   } else {
     const { error } = await supabase
       .from('empathies')
       .insert({ user_id: userId, post_id: postId, type });
-    if (error) throw error;
+    if (error) {
+      // 23505 = unique violation (이미 존재) — 토글 실패가 아닌 race condition
+      if (error.code === '23505') return { added: true };
+      console.error('[empathy] insert error:', error);
+      throw error;
+    }
     return { added: true };
   }
 }
