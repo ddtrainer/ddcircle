@@ -284,6 +284,8 @@ export const translations = {
     profileSaveBtn: '시작하기',
     profileNicknameError: '닉네임은 1~20자 사이여야 해요',
     profileSaving: '저장 중...',
+    galleryTitle: '📸 나의 셀카 기록',
+    galleryEmpty: '아직 셀카가 없어요. 오늘의 3분을 시작해보세요.',
   },
   en: {
     heroQuote: '<span class="one">One minute</span> to move,<br>two minutes to breathe,<br>shared energy.',
@@ -567,5 +569,7 @@ export const translations = {
     profileSaveBtn: 'Get started',
     profileNicknameError: 'Nickname must be between 1 and 20 characters',
     profileSaving: 'Saving...',
+    galleryTitle: '📸 My Selfie Records',
+    galleryEmpty: 'No selfies yet. Start your 3 minutes today.',
   },
 };

@@ -1,8 +1,10 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useLang } from '../i18n/LangContext';
 import { useApp } from '../context/AppContext';
+import { useAuth } from '../context/AuthContext';
 import { TREE_LEVELS, getCurrentLevel, getNextLevel, LAST_14_DAYS } from '../data/treeLevels';
 import { getMultiplier } from '../utils/ep';
+import { fetchMyPosts } from '../lib/posts';
 import TreeSVG from '../components/TreeSVG';
 import EPModal from '../components/modals/EPModal';
 import styles from './Record.module.css';
@@ -32,7 +34,24 @@ const ACTIVITY = [
 export default function Record() {
   const { t } = useLang();
   const { userEp } = useApp();
+  const { user } = useAuth();
   const [epModalOpen, setEpModalOpen] = useState(false);
+  const [proofPosts, setProofPosts] = useState([]);
+  const [lightbox, setLightbox] = useState(null);
+
+  useEffect(() => {
+    if (!user) {
+      setProofPosts([]);
+      return;
+    }
+    let cancelled = false;
+    (async () => {
+      const posts = await fetchMyPosts(user.id, 100);
+      if (cancelled) return;
+      setProofPosts(posts.filter((p) => p.has_proof && p.proof_url));
+    })();
+    return () => { cancelled = true; };
+  }, [user]);
 
   const ep = userEp.total;
   const cur = getCurrentLevel(ep);
@@ -230,6 +249,52 @@ export default function Record() {
           </div>
         </div>
       </div>
+
+      {/* 셀카 갤러리 (인증 시) */}
+      {user && (
+        <div className={styles.galleryCard}>
+          <div className={styles.chartTitle}>{t('galleryTitle')}</div>
+          {proofPosts.length === 0 ? (
+            <div className={styles.galleryEmpty}>{t('galleryEmpty')}</div>
+          ) : (
+            <div className={styles.galleryGrid}>
+              {proofPosts.map((p) => {
+                const d = new Date(p.created_at);
+                const dateLabel = `${d.getMonth() + 1}/${d.getDate()}`;
+                return (
+                  <button
+                    key={p.id}
+                    type="button"
+                    className={styles.galleryCell}
+                    onClick={() => setLightbox(p)}
+                  >
+                    <img src={p.proof_url} alt={dateLabel} loading="lazy" />
+                    <span className={styles.galleryDate}>{dateLabel}</span>
+                  </button>
+                );
+              })}
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* 라이트박스 */}
+      {lightbox && (
+        <div className={styles.lightboxOverlay} onClick={() => setLightbox(null)}>
+          <div className={styles.lightboxInner} onClick={(e) => e.stopPropagation()}>
+            <button
+              className={styles.lightboxClose}
+              onClick={() => setLightbox(null)}
+              aria-label="Close"
+            >×</button>
+            <img src={lightbox.proof_url} alt="" />
+            <div className={styles.lightboxMeta}>
+              {new Date(lightbox.created_at).toLocaleString(undefined, { dateStyle: 'long', timeStyle: 'short' })}
+              {lightbox.message ? ` · ${lightbox.message}` : ''}
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* EP 시스템 안내 모달 */}
       <EPModal open={epModalOpen} onClose={() => setEpModalOpen(false)} />
