@@ -1,0 +1,109 @@
+.title {
+  font-family: 'Noto Serif KR', 'Playfair Display', serif;
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.sub {
+  font-size: 15px;
+  color: var(--text-soft);
+  margin-bottom: 18px;
+  line-height: 1.6;
+}
+
+.timeSlot {
+  background: var(--bg-soft);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 14px;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.slotInfo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.slotIcon {
+  font-size: 22px;
+}
+
+.slotLabel {
+  font-size: 14px;
+  color: var(--text-soft);
+}
+
+.timeInput {
+  background: none;
+  border: none;
+  color: var(--text);
+  font-family: 'Noto Serif KR', 'Playfair Display', serif;
+  font-size: 16px;
+  font-weight: 700;
+  text-align: right;
+}
+
+.toggleRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 0;
+  margin-top: 12px;
+}
+
+.toggleLabel {
+  font-size: 15px;
+}
+
+.toggle {
+  width: 40px;
+  height: 22px;
+  background: var(--bg-soft);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  position: relative;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.toggle::after {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 16px;
+  height: 16px;
+  background: var(--text-muted);
+  border-radius: 50%;
+  transition: all 0.2s;
+}
+
+.toggle.on {
+  background: var(--warm);
+  border-color: var(--warm);
+}
+
+.toggle.on::after {
+  left: 20px;
+  background: white;
+}
+
+.saveBtn {
+  width: 100%;
+  background: linear-gradient(135deg, var(--warm), var(--cool));
+  border: none;
+  border-radius: 12px;
+  padding: 12px;
+  color: white;
+  font-family: inherit;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  margin-top: 16px;
+  box-shadow: 0 6px 16px rgba(244, 119, 48, 0.25);
+}

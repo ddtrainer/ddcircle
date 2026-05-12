@@ -1,0 +1,71 @@
+/* Jumping Jack */
+.jj .body { animation: jjBody 0.5s ease-in-out infinite alternate; transform-origin: center; }
+.jj .armL { animation: jjArmL 0.5s ease-in-out infinite alternate; transform-origin: 50px 35px; }
+.jj .armR { animation: jjArmR 0.5s ease-in-out infinite alternate; transform-origin: 50px 35px; }
+.jj .legL { animation: jjLegL 0.5s ease-in-out infinite alternate; transform-origin: 50px 60px; }
+.jj .legR { animation: jjLegR 0.5s ease-in-out infinite alternate; transform-origin: 50px 60px; }
+@keyframes jjBody { from { transform: translateY(0); } to { transform: translateY(-3px); } }
+@keyframes jjArmL { from { transform: rotate(0deg); } to { transform: rotate(-130deg); } }
+@keyframes jjArmR { from { transform: rotate(0deg); } to { transform: rotate(130deg); } }
+@keyframes jjLegL { from { transform: rotate(0deg); } to { transform: rotate(-25deg); } }
+@keyframes jjLegR { from { transform: rotate(0deg); } to { transform: rotate(25deg); } }
+
+/* CSS Modules은 자식 셀렉터에서 클래스 매칭이 어려우니 직접 클래스 적용 */
+.body { animation: jjBody 0.5s ease-in-out infinite alternate; transform-origin: center; }
+.armL { animation: jjArmL 0.5s ease-in-out infinite alternate; transform-origin: 50px 35px; }
+.armR { animation: jjArmR 0.5s ease-in-out infinite alternate; transform-origin: 50px 35px; }
+.legL { animation: jjLegL 0.5s ease-in-out infinite alternate; transform-origin: 50px 60px; }
+.legR { animation: jjLegR 0.5s ease-in-out infinite alternate; transform-origin: 50px 60px; }
+.head {}
+
+/* Jog */
+.jogArmL { animation: jogArmL 0.3s ease-in-out infinite alternate; transform-origin: 50px 38px; }
+.jogArmR { animation: jogArmR 0.3s ease-in-out infinite alternate; transform-origin: 50px 38px; }
+.jogLegL { animation: jogLegL 0.3s ease-in-out infinite alternate; transform-origin: 50px 60px; }
+.jogLegR { animation: jogLegR 0.3s ease-in-out infinite alternate; transform-origin: 50px 60px; }
+.jog .body { animation: jogBody 0.3s ease-in-out infinite alternate; }
+@keyframes jogBody { from { transform: translateY(-2px); } to { transform: translateY(2px); } }
+@keyframes jogArmL { from { transform: rotate(-30deg); } to { transform: rotate(30deg); } }
+@keyframes jogArmR { from { transform: rotate(30deg); } to { transform: rotate(-30deg); } }
+@keyframes jogLegL { from { transform: rotate(20deg); } to { transform: rotate(-25deg); } }
+@keyframes jogLegR { from { transform: rotate(-25deg); } to { transform: rotate(20deg); } }
+
+/* Squat */
+.sqBody { animation: sqBody 1s ease-in-out infinite alternate; transform-origin: center; }
+.sqHead { animation: sqHead 1s ease-in-out infinite alternate; }
+.sqArm { animation: sqArm 1s ease-in-out infinite alternate; transform-origin: 50px 38px; }
+.sqLeg { animation: sqLeg 1s ease-in-out infinite alternate; transform-origin: 50px 60px; }
+@keyframes sqBody { from { transform: scaleY(1) translateY(0); } to { transform: scaleY(0.85) translateY(8px); } }
+@keyframes sqHead { from { transform: translateY(0); } to { transform: translateY(8px); } }
+@keyframes sqArm { from { transform: rotate(0deg); } to { transform: rotate(-80deg); } }
+@keyframes sqLeg { from { transform: scaleY(1); } to { transform: scaleY(0.7); } }
+
+/* Running (앞으로 달리기 — 더 다이내믹) */
+.runFigure { animation: runBob 0.35s ease-in-out infinite alternate; transform-origin: center; }
+.runArmL { animation: runArmL 0.35s ease-in-out infinite alternate; transform-origin: 50px 38px; }
+.runArmR { animation: runArmR 0.35s ease-in-out infinite alternate; transform-origin: 50px 38px; }
+.runLegL { animation: runLegL 0.35s ease-in-out infinite alternate; transform-origin: 50px 60px; }
+.runLegR { animation: runLegR 0.35s ease-in-out infinite alternate; transform-origin: 50px 60px; }
+@keyframes runBob { from { transform: translateY(-3px); } to { transform: translateY(3px); } }
+@keyframes runArmL { from { transform: rotate(-50deg); } to { transform: rotate(40deg); } }
+@keyframes runArmR { from { transform: rotate(50deg); } to { transform: rotate(-40deg); } }
+@keyframes runLegL { from { transform: rotate(35deg); } to { transform: rotate(-35deg); } }
+@keyframes runLegR { from { transform: rotate(-35deg); } to { transform: rotate(35deg); } }
+
+/* Free (자유 — 부드러운 양팔 흔들기) */
+.freeHead { animation: freeBob 1.4s ease-in-out infinite alternate; }
+.freeArmL { animation: freeArmL 1.4s ease-in-out infinite alternate; transform-origin: 50px 35px; }
+.freeArmR { animation: freeArmR 1.4s ease-in-out infinite alternate; transform-origin: 50px 35px; }
+@keyframes freeBob { from { transform: translateY(0); } to { transform: translateY(-4px); } }
+@keyframes freeArmL { from { transform: rotate(-15deg); } to { transform: rotate(15deg); } }
+@keyframes freeArmR { from { transform: rotate(15deg); } to { transform: rotate(-15deg); } }
+
+/* Burpee */
+.brFigure { animation: brBody 1.5s ease-in-out infinite; transform-origin: center; }
+@keyframes brBody {
+  0% { transform: translateY(0) scaleY(1); }
+  25% { transform: translateY(8px) scaleY(0.7); }
+  50% { transform: translateY(15px) scaleY(0.4) translateX(4px); }
+  75% { transform: translateY(8px) scaleY(0.7); }
+  100% { transform: translateY(-5px) scaleY(1); }
+}

@@ -1,0 +1,424 @@
+.record {
+  max-width: 460px;
+  margin: 0 auto;
+  padding: 8px 20px 90px;
+}
+
+/* 생명나무 카드 */
+.treeCard {
+  background: linear-gradient(160deg, rgba(244,119,48,0.08), rgba(30,155,216,0.08), rgba(43,164,143,0.06));
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 24px 20px;
+  margin-bottom: 14px;
+  text-align: center;
+  box-shadow: var(--shadow-md);
+  position: relative;
+  overflow: hidden;
+}
+
+.treeCard::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at center top, rgba(255,255,255,0.5), transparent 60%);
+  pointer-events: none;
+}
+
+.treeBadge {
+  display: inline-block;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 4px 12px;
+  font-size: 13px;
+  color: var(--text-soft);
+  letter-spacing: 1px;
+  margin-bottom: 12px;
+  font-family: 'Inter', sans-serif;
+  font-weight: 600;
+  position: relative;
+  z-index: 1;
+}
+
+.treeVisual {
+  width: 180px;
+  height: 180px;
+  margin: 0 auto 14px;
+  position: relative;
+  z-index: 1;
+}
+
+.treeName {
+  font-family: 'Noto Serif KR', 'Playfair Display', serif;
+  font-size: 22px;
+  font-weight: 700;
+  margin-bottom: 4px;
+  position: relative;
+  z-index: 1;
+}
+
+.treeEp {
+  font-size: 15px;
+  color: var(--text-soft);
+  margin-bottom: 16px;
+  position: relative;
+  z-index: 1;
+}
+
+.epNum {
+  font-family: 'Noto Serif KR', 'Playfair Display', serif;
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--text);
+  margin-right: 4px;
+}
+
+.progressWrap {
+  background: var(--surface);
+  border-radius: 999px;
+  height: 10px;
+  overflow: hidden;
+  box-shadow: inset 0 1px 3px rgba(0,0,0,0.06);
+  position: relative;
+  z-index: 1;
+  margin-bottom: 8px;
+}
+
+.progressBar {
+  height: 100%;
+  background: linear-gradient(90deg, var(--warm), var(--gold), var(--calm), var(--cool));
+  border-radius: 999px;
+  transition: width 1s ease;
+}
+
+.progressLabel {
+  font-size: 13px;
+  color: var(--text-soft);
+  position: relative;
+  z-index: 1;
+}
+
+.nextLevel {
+  color: var(--text);
+  font-weight: 600;
+}
+
+/* DDT 안내 */
+.ddtNotice {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 12px 14px;
+  margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  box-shadow: var(--shadow-sm);
+}
+
+.ddtIcon {
+  font-size: 22px;
+  flex-shrink: 0;
+}
+
+.ddtText {
+  flex: 1;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--text-soft);
+}
+
+.ddtText strong {
+  color: var(--text);
+  font-weight: 600;
+}
+
+.ddtLink {
+  font-size: 13px;
+  color: var(--warm);
+  cursor: pointer;
+  font-weight: 600;
+  flex-shrink: 0;
+}
+
+/* 통계 카드 */
+.statsGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.statCard {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 14px;
+  box-shadow: var(--shadow-sm);
+}
+
+.statLabel {
+  font-size: 13px;
+  color: var(--text-soft);
+  margin-bottom: 6px;
+  letter-spacing: 1px;
+  font-family: 'Inter', sans-serif;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.statValue {
+  font-family: 'Noto Serif KR', 'Playfair Display', serif;
+  font-size: 24px;
+  font-weight: 700;
+}
+
+.statValue.warm { color: var(--warm); }
+.statValue.cool { color: var(--cool); }
+.statValue.calm { color: var(--calm); }
+.statValue.gold { color: var(--gold); }
+
+.statSub {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+/* 오늘의 EP 카드 */
+.todayEpCard {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 18px;
+  margin-bottom: 14px;
+  box-shadow: var(--shadow-sm);
+}
+
+.todayEpHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+
+.todayEpTitle {
+  font-family: 'Noto Serif KR', 'Playfair Display', serif;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.todayEpTotal {
+  font-family: 'Noto Serif KR', 'Playfair Display', serif;
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--warm);
+}
+
+.unit {
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  color: var(--text-soft);
+  margin-left: 3px;
+  font-weight: 500;
+}
+
+.epLine {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 15px;
+}
+
+.epLine:last-of-type {
+  border-bottom: none;
+}
+
+.epLineLeft {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+}
+
+.epLineIcon {
+  font-size: 16px;
+}
+
+.epLineName {
+  color: var(--text);
+}
+
+.subText {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-left: 4px;
+}
+
+.epLineValue {
+  font-family: 'Noto Serif KR', 'Playfair Display', serif;
+  font-weight: 700;
+  color: var(--calm);
+}
+
+.epLine.bonus {
+  background: var(--warm-soft);
+  margin: 8px -10px 0;
+  padding: 10px;
+  border-radius: 10px;
+  border: none;
+}
+
+.epLine.bonus .epLineName {
+  color: var(--warm);
+  font-weight: 600;
+}
+
+.epLine.bonus .epLineValue {
+  color: var(--warm);
+}
+
+.multiplierRow {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px dashed var(--border-strong);
+  font-size: 14px;
+  color: var(--text-soft);
+  text-align: right;
+}
+
+.mult {
+  color: var(--gold);
+  font-weight: 600;
+}
+
+/* 차트 */
+.chartCard {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 18px;
+  margin-bottom: 14px;
+  box-shadow: var(--shadow-sm);
+}
+
+.chartTitle {
+  font-family: 'Noto Serif KR', 'Playfair Display', serif;
+  font-size: 15px;
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+
+.chartBars {
+  display: flex;
+  align-items: flex-end;
+  gap: 3px;
+  height: 80px;
+  margin-bottom: 6px;
+}
+
+.chartCol {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100%;
+  justify-content: flex-end;
+  cursor: pointer;
+  position: relative;
+}
+
+.chartBar {
+  width: 100%;
+  background: linear-gradient(180deg, var(--warm), var(--cool));
+  border-radius: 3px 3px 0 0;
+  min-height: 2px;
+  transition: opacity 0.2s;
+}
+
+.chartBar.zero {
+  background: var(--bg-soft);
+}
+
+.chartBar.today {
+  background: linear-gradient(180deg, var(--gold), var(--warm));
+  box-shadow: 0 0 8px rgba(232,158,43,0.4);
+}
+
+.chartCol:hover .chartBar {
+  opacity: 0.8;
+}
+
+.chartLabels {
+  display: flex;
+  gap: 3px;
+  font-size: 12px;
+  color: var(--text-muted);
+  text-align: center;
+}
+
+.chartLabel {
+  flex: 1;
+}
+
+.chartLabel.todayLabel {
+  color: var(--warm);
+  font-weight: 700;
+}
+
+/* 활동 분석 */
+.breakdownCard {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 18px;
+  margin-bottom: 14px;
+  box-shadow: var(--shadow-sm);
+}
+
+.breakdownRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.breakdownRow:last-child {
+  border-bottom: none;
+}
+
+.breakdownLabel {
+  font-size: 15px;
+  color: var(--text);
+}
+
+.breakdownBarWrap {
+  flex: 1;
+  margin: 0 14px;
+  height: 6px;
+  background: var(--bg-soft);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.breakdownBar {
+  height: 100%;
+  border-radius: 999px;
+}
+
+.breakdownBar.dash { background: var(--warm); }
+.breakdownBar.deep { background: var(--cool); }
+.breakdownBar.share { background: var(--pink); }
+.breakdownBar.empathy { background: var(--gold); }
+.breakdownBar.friend { background: var(--calm); }
+
+.breakdownValue {
+  font-family: 'Noto Serif KR', 'Playfair Display', serif;
+  font-weight: 700;
+  font-size: 16px;
+  min-width: 60px;
+  text-align: right;
+}

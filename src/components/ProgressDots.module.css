@@ -1,0 +1,23 @@
+.dots {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 16px;
+  justify-content: center;
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--bg-soft);
+  transition: all 0.3s;
+}
+
+.dot.active {
+  background: var(--text);
+  transform: scale(1.2);
+}
+
+.dot.done {
+  background: var(--calm);
+}

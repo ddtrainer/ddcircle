@@ -1,0 +1,439 @@
+.home {
+  max-width: 460px;
+  margin: 0 auto;
+  padding: 16px 20px 90px;
+}
+
+/* 셋 타이밍 카드 */
+.setTimingCard {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 14px 18px;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  box-shadow: var(--shadow-sm);
+  transition: all 0.2s;
+}
+
+.setTimingCard:hover {
+  border-color: var(--border-strong);
+  box-shadow: var(--shadow-md);
+}
+
+.setTimingCard.active {
+  background: linear-gradient(135deg, rgba(244,119,48,0.08), rgba(30,155,216,0.08));
+  border-color: var(--warm);
+  animation: glow 2s ease-in-out infinite;
+}
+
+@keyframes glow {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(244,119,48,0); }
+  50% { box-shadow: 0 0 16px 4px rgba(244,119,48,0.15); }
+}
+
+.setInfo { flex: 1; }
+
+.setLabel {
+  font-size: 13px;
+  letter-spacing: 1.5px;
+  color: var(--text-soft);
+  text-transform: uppercase;
+  margin-bottom: 4px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-weight: 600;
+}
+
+.liveDot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--calm);
+  animation: pulse 1.2s infinite;
+}
+
+.setTime {
+  font-family: 'Noto Serif KR', 'Playfair Display', serif;
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.accent { color: var(--warm); }
+
+.setCta {
+  background: var(--warm);
+  color: white;
+  border: none;
+  border-radius: 999px;
+  padding: 8px 16px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: inherit;
+  box-shadow: 0 4px 12px rgba(244, 119, 48, 0.3);
+}
+
+.setCta.dim {
+  background: var(--bg-soft);
+  color: var(--text-soft);
+  box-shadow: none;
+}
+
+/* 히어로 */
+.hero {
+  text-align: center;
+  padding: 24px 0 16px;
+}
+
+.heroQuote {
+  font-family: 'Noto Serif KR', 'Playfair Display', serif;
+  font-size: 17px;
+  line-height: 2;
+  color: var(--text);
+  margin-bottom: 8px;
+  word-break: keep-all;
+  font-weight: 400;
+}
+
+:global(body[data-lang="en"]) .heroQuote {
+  font-style: italic;
+  font-size: 18px;
+  line-height: 1.7;
+}
+
+.heroQuote :global(.one) {
+  background: linear-gradient(135deg, #ed3a4a, #f47730, #fbb040, #7ed957, #3bbfb0, #1e9bd8);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-weight: 700;
+}
+
+.heroSub {
+  font-size: 13px;
+  color: var(--text-muted);
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  font-family: 'Inter', sans-serif;
+  font-weight: 500;
+}
+
+/* 호흡 원 */
+.breathZone {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 20px 0 28px;
+  height: 280px;
+}
+
+.breathCircle {
+  position: relative;
+  width: 240px;
+  height: 240px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.3s ease;
+}
+
+.breathCircle:active { transform: scale(0.97); }
+
+.breathRing {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #ed3a4a, #f47730 25%, #fbb040 50%, #3bbfb0 75%, #1e9bd8);
+  opacity: 0.28;
+  animation: breath 6s ease-in-out infinite;
+}
+
+.breathRing.r2 { animation-delay: -2s; opacity: 0.18; }
+.breathRing.r3 { animation-delay: -4s; opacity: 0.12; }
+
+@keyframes breath {
+  0%, 100% { transform: scale(0.8); }
+  50% { transform: scale(1.25); }
+}
+
+.breathInner {
+  position: relative;
+  z-index: 2;
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--shadow-lg);
+}
+
+.label {
+  font-size: 12px;
+  color: var(--text-muted);
+  letter-spacing: 1.5px;
+  margin-bottom: 2px;
+  font-family: 'Inter', sans-serif;
+  font-weight: 600;
+}
+
+.time {
+  font-family: 'Noto Serif KR', 'Playfair Display', serif;
+  font-size: 26px;
+  font-weight: 700;
+  line-height: 1.1;
+}
+
+.cta {
+  font-size: 13px;
+  color: var(--text);
+  margin-top: 3px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+}
+
+/* 함께 호흡한 사람들 */
+.together {
+  text-align: center;
+  margin-bottom: 16px;
+  padding: 16px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  box-shadow: var(--shadow-sm);
+}
+
+.togetherNum {
+  font-family: 'Noto Serif KR', 'Playfair Display', serif;
+  font-size: 22px;
+  font-weight: 700;
+}
+
+.togetherLabel {
+  font-size: 13px;
+  color: var(--text-soft);
+  margin-top: 2px;
+}
+
+.pulseDot {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  background: var(--calm);
+  border-radius: 50%;
+  margin-right: 6px;
+  animation: pulse 2s infinite;
+  vertical-align: middle;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.4; transform: scale(0.7); }
+}
+
+/* 도전 이벤트 섹션 */
+.challengeSection {
+  margin: 16px 0 18px;
+}
+
+.challengeHeader {
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+.challengeTitle {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 2px;
+}
+
+.challengeSub {
+  font-size: 13px;
+  color: var(--text-soft);
+}
+
+.challengeRow {
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+  padding: 4px 4px 12px;
+  margin: 0 -4px;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+.challengeRow::-webkit-scrollbar { display: none; }
+
+.challengeCard {
+  flex: 0 0 138px;
+  scroll-snap-align: start;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 12px 10px;
+  text-align: center;
+  box-shadow: var(--shadow-sm);
+  transition: all 0.2s;
+}
+
+.challengeCard.claimed {
+  background: var(--warm-soft);
+  border-color: var(--warm);
+}
+
+.challengeEmoji {
+  font-size: 26px;
+  margin-bottom: 4px;
+}
+
+.challengeName {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 1px;
+}
+
+.challengeDesc {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-bottom: 8px;
+}
+
+.challengeBar {
+  height: 5px;
+  background: var(--bg-soft);
+  border-radius: 3px;
+  overflow: hidden;
+  margin-bottom: 6px;
+}
+
+.challengeBarFill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--warm), var(--cool));
+  transition: width 0.4s ease;
+}
+
+.claimed .challengeBarFill {
+  background: var(--warm);
+}
+
+.challengeMeta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 13px;
+  color: var(--text-soft);
+  font-weight: 600;
+}
+
+.challengeReward {
+  color: var(--warm);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.challengeDoneTxt {
+  flex: 1;
+  text-align: center;
+  color: var(--warm);
+  font-weight: 700;
+  font-size: 13px;
+}
+
+.challengeJoinBtn {
+  width: 100%;
+  margin-top: 8px;
+  background: linear-gradient(135deg, var(--warm), var(--cool));
+  border: none;
+  border-radius: 999px;
+  padding: 7px 10px;
+  color: white;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 3px 10px rgba(244,119,48,0.18);
+}
+
+.challengeJoinBtn:active { transform: scale(0.97); }
+
+.challengeLeaveBtn {
+  width: 100%;
+  margin-top: 6px;
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 5px 10px;
+  color: var(--text-muted);
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.challengeCard.joined {
+  border-color: var(--cool);
+  background: var(--cool-soft);
+}
+
+/* 시작 버튼 + 링크 */
+.startBtn {
+  width: 100%;
+  background: linear-gradient(135deg, var(--warm), var(--cool));
+  border: none;
+  border-radius: 16px;
+  padding: 16px;
+  color: white;
+  font-family: inherit;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 8px 24px rgba(244,119,48,0.25);
+  transition: transform 0.15s ease;
+  margin-bottom: 10px;
+}
+
+.startBtn:active { transform: scale(0.98); }
+
+.secondaryLink {
+  display: block;
+  text-align: center;
+  background: none;
+  border: none;
+  color: var(--text-soft);
+  font-family: inherit;
+  font-size: 15px;
+  padding: 8px;
+  cursor: pointer;
+  width: 100%;
+  margin-bottom: 16px;
+}
+
+.secondaryLink:hover { color: var(--text); }
+
+/* 철학 인용 */
+.philosophy {
+  text-align: center;
+  padding: 24px 16px 8px;
+  border-top: 1px solid var(--border);
+}
+
+.philosophy p {
+  font-family: 'Noto Serif KR', 'Playfair Display', serif;
+  font-size: 15px;
+  color: var(--text-soft);
+  line-height: 1.8;
+  font-style: italic;
+  word-break: keep-all;
+}

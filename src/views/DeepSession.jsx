@@ -1,0 +1,161 @@
+import { useEffect, useMemo, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useLang } from '../i18n/LangContext';
+import { useApp } from '../context/AppContext';
+import { useBreathCycle } from '../hooks/useBreathCycle';
+import { useBreathSound } from '../hooks/useBreathSound';
+import { BREATH_PRESETS, resolveBreathPattern } from '../data/breathPatterns';
+import ProgressDots from '../components/ProgressDots';
+import BreathSettingsModal from '../components/modals/BreathSettingsModal';
+import styles from './DeepSession.module.css';
+
+export default function DeepSession() {
+  const { t } = useLang();
+  const navigate = useNavigate();
+  const { breathPatternId, setBreathPatternId, customBreath } = useApp();
+  const [soundOn, setSoundOn] = useState(true);
+  const [animationReady, setAnimationReady] = useState(false);
+  const [settingsOpen, setSettingsOpen] = useState(false);
+
+  // 현재 적용된 호흡 설정
+  const pattern = useMemo(
+    () => resolveBreathPattern(breathPatternId, customBreath),
+    [breathPatternId, customBreath]
+  );
+
+  const { phase, displaySecond, cycle, totalLeft, paused, togglePause, skip } = useBreathCycle({
+    durations: pattern.durations,
+    totalCycles: pattern.cycles,
+    onComplete: () => {
+      setTimeout(() => navigate('/complete', { replace: true }), 600);
+    },
+  });
+
+  // 마운트 후 애니메이션 활성화
+  useEffect(() => {
+    const id = requestAnimationFrame(() => {
+      requestAnimationFrame(() => setAnimationReady(true));
+    });
+    return () => cancelAnimationFrame(id);
+  }, []);
+
+  // phase 전환 시 효과음 (durations 동적)
+  useBreathSound({ phase, enabled: soundOn && !paused, durations: pattern.durations });
+
+  const minutes = Math.floor(totalLeft / 60);
+  const seconds = totalLeft % 60;
+  const totalText = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+
+  const guideKey =
+    phase === 'inhale' ? 'breathInhale' :
+    phase === 'hold' ? 'breathHold' :
+    'breathExhale';
+
+  const displayNum = displaySecond > 0 ? displaySecond : '';
+
+  // 패턴 선택 핸들러
+  const selectPattern = (id) => {
+    if (id === 'custom') {
+      setSettingsOpen(true);
+    } else {
+      setBreathPatternId(id);
+    }
+  };
+
+  // hold가 0이면 멈춤 칩 숨김
+  const showHold = pattern.durations.hold > 0;
+
+  return (
+    <div className={styles.session}>
+      <ProgressDots step={3} total={4} />
+      <div className={styles.stage}>STEP 3 OF 4</div>
+      <div className={`${styles.title} ${styles.deepColor}`}>🧘 Deep</div>
+      <div
+        className={styles.desc}
+        dangerouslySetInnerHTML={{ __html: t('deepDesc') }}
+      />
+
+      {/* 호흡 패턴 선택 */}
+      <div className={styles.patternPicker}>
+        {BREATH_PRESETS.map((p) => (
+          <button
+            key={p.id}
+            className={`${styles.patternBtn} ${breathPatternId === p.id ? styles.patternActive : ''}`}
+            onClick={() => selectPattern(p.id)}
+          >
+            {t('breath' + p.id)}
+          </button>
+        ))}
+        <button
+          className={`${styles.patternBtn} ${breathPatternId === 'custom' ? styles.patternActive : ''}`}
+          onClick={() => selectPattern('custom')}
+        >
+          ⚙ {t('breathCustom')}
+          {breathPatternId === 'custom' && (
+            <span className={styles.patternMeta}>
+              {' '}{customBreath.inhale}-{customBreath.hold}-{customBreath.exhale}
+            </span>
+          )}
+        </button>
+      </div>
+
+      {/* 단계 인디케이터 (숫자 표시) */}
+      <div className={styles.pattern}>
+        <div className={`${styles.patternStep} ${styles.inhale} ${phase === 'inhale' ? styles.active : ''}`}>
+          {t('patternInhale').replace(/\d+/, pattern.durations.inhale)}
+        </div>
+        {showHold && (
+          <div className={`${styles.patternStep} ${styles.hold} ${phase === 'hold' ? styles.active : ''}`}>
+            {t('patternHold').replace(/\d+/, pattern.durations.hold)}
+          </div>
+        )}
+        <div className={`${styles.patternStep} ${styles.exhale} ${phase === 'exhale' ? styles.active : ''}`}>
+          {t('patternExhale').replace(/\d+/, pattern.durations.exhale)}
+        </div>
+      </div>
+
+      {/* 호흡 orb */}
+      <div className={styles.breathZone}>
+        <div
+          className={`${styles.orbOuter} ${animationReady ? styles[phase] : ''}`}
+        >
+          <div className={styles.orbInner}>{displayNum}</div>
+        </div>
+      </div>
+
+      {/* 가이드 메시지 */}
+      <div className={`${styles.guide} ${styles[`guide_${phase}`]}`}>
+        {t(guideKey)}
+      </div>
+
+      {/* 사이클 카운터 + 남은 시간 */}
+      <div className={styles.counterRow}>
+        <div className={styles.cycleLabel}>
+          <span className={styles.cycleNum}>{cycle}</span>
+          <span>{t('cycleOf').replace(/\d+/, pattern.cycles)}</span>
+        </div>
+        <div className={styles.totalTime}>
+          <span>{t('timeLeftLabel')}</span> <span>{totalText}</span>
+        </div>
+      </div>
+
+      <div className={styles.controls}>
+        <button className={styles.ctrlBtn} onClick={togglePause}>
+          {paused ? t('resume') : t('pause')}
+        </button>
+        <button
+          className={`${styles.ctrlBtn} ${styles.soundBtn}`}
+          onClick={() => setSoundOn((v) => !v)}
+          aria-label="Sound toggle"
+        >
+          {soundOn ? '🔊' : '🔇'}
+        </button>
+        <button className={`${styles.ctrlBtn} ${styles.skipBtn}`} onClick={skip}>
+          {t('skip')}
+        </button>
+      </div>
+
+      <BreathSettingsModal open={settingsOpen} onClose={() => setSettingsOpen(false)} />
+    </div>
+  );
+}

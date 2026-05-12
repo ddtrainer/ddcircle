@@ -1,0 +1,96 @@
+.avatar {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  margin: 0 auto 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 36px;
+  box-shadow: var(--shadow-md);
+  border: 3px solid var(--surface);
+}
+
+.name {
+  font-family: 'Noto Serif KR', 'Playfair Display', serif;
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 4px;
+  text-align: center;
+}
+
+.msg {
+  font-size: 15px;
+  color: var(--text-soft);
+  margin-bottom: 16px;
+  font-style: italic;
+  text-align: center;
+}
+
+.stats {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  padding: 12px;
+  background: var(--bg-soft);
+  border-radius: 12px;
+  margin-bottom: 18px;
+}
+
+.stat {
+  text-align: center;
+  font-size: 13px;
+  color: var(--text-soft);
+}
+
+.num {
+  display: block;
+  font-family: 'Noto Serif KR', 'Playfair Display', serif;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 2px;
+}
+
+.actions {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.actionBtn {
+  flex: 1;
+  border: none;
+  border-radius: 12px;
+  padding: 12px;
+  font-family: inherit;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 0.15s ease;
+}
+
+.actionBtn:active {
+  transform: scale(0.98);
+}
+
+.accept {
+  background: linear-gradient(135deg, var(--warm), var(--cool));
+  color: white;
+  box-shadow: 0 6px 16px rgba(244, 119, 48, 0.25);
+}
+
+.decline {
+  background: var(--bg-soft);
+  color: var(--text-soft);
+  border: 1px solid var(--border);
+}
+
+.block {
+  width: 100%;
+  background: none;
+  color: var(--text-muted);
+  font-size: 14px;
+  padding: 12px;
+  font-weight: 400;
+}

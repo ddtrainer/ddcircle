@@ -1,0 +1,42 @@
+.bottomNav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(250, 246, 238, 0.92);
+  backdrop-filter: blur(20px);
+  border-top: 1px solid var(--border);
+  /* iOS 홈바 영역 침범 방지 (safe-area-inset-bottom) */
+  padding: 8px 0 calc(20px + env(safe-area-inset-bottom));
+  z-index: 40;
+}
+
+.inner {
+  max-width: 460px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-around;
+}
+
+.navBtn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 6px 16px;
+  color: var(--text-muted);
+  background: none;
+  border: none;
+  font-family: inherit;
+  font-size: 13px;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.navBtn.active {
+  color: var(--warm);
+}
+
+.icon {
+  font-size: 18px;
+}

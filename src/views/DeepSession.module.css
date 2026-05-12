@@ -1,0 +1,236 @@
+.session {
+  min-height: calc(100vh - 60px);
+  max-width: 460px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 24px 20px;
+  text-align: center;
+}
+
+.stage {
+  font-size: 13px;
+  letter-spacing: 4px;
+  color: var(--text-muted);
+  margin-bottom: 8px;
+  font-family: 'Inter', sans-serif;
+  font-weight: 600;
+}
+
+.title {
+  font-family: 'Noto Serif KR', 'Playfair Display', serif;
+  font-size: 26px;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.deepColor { color: var(--cool); }
+
+.desc {
+  font-size: 15px;
+  color: var(--text-soft);
+  margin-bottom: 14px;
+  line-height: 1.6;
+}
+
+/* 호흡 패턴 선택 (4-7-8 / 3-6 / 내 호흡) */
+.patternPicker {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-bottom: 14px;
+}
+
+.patternBtn {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 7px 14px;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-soft);
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: var(--shadow-sm);
+}
+
+.patternBtn.patternActive {
+  background: var(--cool-soft);
+  border-color: var(--cool);
+  color: var(--cool);
+}
+
+.patternMeta {
+  font-size: 12px;
+  font-weight: 500;
+  opacity: 0.85;
+}
+
+/* 4-7-8 패턴 인디케이터 */
+.pattern {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 10px;
+  font-size: 13px;
+  color: var(--text-muted);
+  letter-spacing: 1px;
+  font-family: 'Inter', sans-serif;
+  font-weight: 600;
+}
+
+.patternStep {
+  padding: 4px 10px;
+  border-radius: 6px;
+  background: var(--bg-soft);
+  transition: all 0.3s;
+}
+
+.patternStep.active.inhale { color: var(--cool); background: var(--cool-soft); }
+.patternStep.active.hold { color: var(--gold); background: var(--gold-soft); }
+.patternStep.active.exhale { color: var(--calm); background: var(--calm-soft); }
+
+/* 호흡 orb */
+.breathZone {
+  width: 280px;
+  height: 280px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 12px;
+}
+
+.orbOuter {
+  width: 180px;
+  height: 180px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(30,155,216,0.4), rgba(43,164,143,0.1));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform: scale(0.4);
+  /* 자연스러운 호흡 곡선 — 시작과 끝이 천천히 */
+  transition: transform 4s cubic-bezier(0.45, 0.05, 0.55, 0.95), background 1.2s ease;
+  filter: blur(0.5px);
+  box-shadow: 0 0 40px rgba(30,155,216,0.2);
+}
+
+.orbOuter.inhale {
+  transform: scale(1.5);
+  transition: transform 4s cubic-bezier(0.45, 0.05, 0.55, 0.95), background 1.2s ease;
+  background: radial-gradient(circle, rgba(30,155,216,0.6), rgba(30,155,216,0.1));
+  box-shadow: 0 0 60px rgba(30,155,216,0.35);
+}
+
+.orbOuter.hold {
+  transform: scale(1.5);
+  transition: transform 0.4s ease, background 1.2s ease;
+  background: radial-gradient(circle, rgba(232,158,43,0.55), rgba(232,158,43,0.1));
+  box-shadow: 0 0 70px rgba(232,158,43,0.4);
+}
+
+.orbOuter.exhale {
+  transform: scale(0.4);
+  transition: transform 8s cubic-bezier(0.45, 0.05, 0.55, 0.95), background 1.2s ease;
+  background: radial-gradient(circle, rgba(43,164,143,0.55), rgba(43,164,143,0.1));
+  box-shadow: 0 0 30px rgba(43,164,143,0.2);
+}
+
+.orbInner {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Noto Serif KR', 'Playfair Display', serif;
+  font-size: 32px;
+  font-weight: 700;
+  box-shadow: var(--shadow-md);
+}
+
+/* 가이드 메시지 */
+.guide {
+  font-family: 'Noto Serif KR', 'Playfair Display', serif;
+  font-size: 17px;
+  font-weight: 700;
+  margin-bottom: 20px;
+  min-height: 26px;
+  transition: color 0.4s ease;
+}
+
+.guide_inhale { color: var(--cool); }
+.guide_hold { color: var(--gold); }
+.guide_exhale { color: var(--calm); }
+
+/* 카운터 */
+.counterRow {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 8px;
+}
+
+.cycleLabel {
+  font-size: 14px;
+  color: var(--text-soft);
+}
+
+.cycleNum {
+  color: var(--text);
+  font-weight: 700;
+  margin-right: 2px;
+}
+
+.totalTime {
+  font-size: 14px;
+  color: var(--text-muted);
+  padding-left: 14px;
+  border-left: 1px solid var(--border-strong);
+}
+
+/* 컨트롤 */
+.controls {
+  display: flex;
+  gap: 10px;
+  width: 100%;
+  max-width: 280px;
+  margin-top: 12px;
+}
+
+.ctrlBtn {
+  flex: 1;
+  background: var(--surface);
+  border: 1px solid var(--border-strong);
+  border-radius: 12px;
+  padding: 11px;
+  color: var(--text-soft);
+  font-family: inherit;
+  font-size: 15px;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: var(--shadow-sm);
+}
+
+.ctrlBtn:hover {
+  border-color: var(--text-soft);
+  color: var(--text);
+}
+
+.skipBtn {
+  color: var(--text-muted);
+}
+
+.soundBtn {
+  flex: 0 0 48px;
+  font-size: 16px;
+  padding: 11px 0;
+}

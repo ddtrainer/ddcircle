@@ -1,0 +1,314 @@
+.wall {
+  max-width: 460px;
+  margin: 0 auto;
+  padding: 0 20px 90px;
+}
+
+/* 헤더 */
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 16px 0 12px;
+}
+
+.title {
+  font-family: 'Noto Serif KR', 'Playfair Display', serif;
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.headerRight {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.count {
+  font-size: 14px;
+  color: var(--text-soft);
+}
+
+.inviteBtn {
+  background: linear-gradient(135deg, var(--warm), var(--cool));
+  color: white;
+  border: none;
+  border-radius: 999px;
+  padding: 7px 14px;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  box-shadow: 0 4px 12px rgba(244, 119, 48, 0.25);
+  transition: transform 0.15s ease;
+}
+
+.inviteBtn:active {
+  transform: scale(0.96);
+}
+
+.inviteBtn:hover {
+  transform: translateY(-1px);
+}
+
+.inviteIcon {
+  font-size: 13px;
+}
+
+/* 탭 */
+.tabs {
+  display: flex;
+  gap: 6px;
+  background: var(--surface);
+  padding: 4px;
+  border-radius: 12px;
+  margin-bottom: 14px;
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-sm);
+}
+
+.tab {
+  flex: 1;
+  background: none;
+  border: none;
+  color: var(--text-soft);
+  font-family: inherit;
+  font-size: 15px;
+  padding: 9px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+}
+
+.tab.active {
+  background: var(--text);
+  color: var(--bg);
+  font-weight: 600;
+}
+
+.badge {
+  background: var(--warm);
+  color: white;
+  border-radius: 999px;
+  padding: 1px 6px;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.tab.active .badge {
+  background: var(--bg);
+  color: var(--warm);
+}
+
+/* 친구 상태 카드 */
+.friendsStatus {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 16px;
+  margin-bottom: 14px;
+  box-shadow: var(--shadow-sm);
+}
+
+.summary {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 14px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--border);
+}
+
+.summaryItem {
+  text-align: center;
+  flex: 1;
+}
+
+.summaryNum {
+  font-family: 'Noto Serif KR', 'Playfair Display', serif;
+  font-size: 22px;
+  font-weight: 700;
+}
+
+.summaryNum.done { color: var(--calm); }
+.summaryNum.pending { color: var(--gold); }
+
+.summaryLabel {
+  font-size: 13px;
+  color: var(--text-soft);
+  margin-top: 2px;
+}
+
+/* 친구 그리드 */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(64px, 1fr));
+  gap: 10px;
+}
+
+.cell {
+  text-align: center;
+  cursor: pointer;
+  padding: 6px 4px;
+  border-radius: 10px;
+  transition: background 0.2s;
+}
+
+.cell:hover {
+  background: var(--bg-soft);
+}
+
+.avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  margin: 0 auto 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  position: relative;
+  border: 2px solid transparent;
+  box-shadow: var(--shadow-sm);
+}
+
+.avatar.done {
+  border-color: var(--calm);
+  box-shadow: 0 0 0 2px rgba(43,164,143,0.2), var(--shadow-sm);
+}
+
+.avatar.pending {
+  opacity: 0.55;
+  filter: grayscale(0.4);
+}
+
+.avatar.add {
+  background: var(--bg-soft);
+  border: 2px dashed var(--border-strong);
+  color: var(--text-muted);
+  box-shadow: none;
+}
+
+.checkIcon {
+  position: absolute;
+  bottom: -2px;
+  right: -2px;
+  background: var(--calm);
+  color: white;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid var(--bg);
+}
+
+.fName {
+  font-size: 13px;
+  color: var(--text-soft);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.streak {
+  font-size: 13px;
+  color: var(--gold);
+  margin-top: 1px;
+  font-weight: 600;
+}
+
+/* Nudge 카드 */
+.nudgeCard {
+  background: var(--bg-soft);
+  border: 1px dashed var(--border);
+  border-radius: 16px;
+  padding: 16px;
+  margin-bottom: 10px;
+  animation: fadeIn 0.4s ease;
+  box-shadow: var(--shadow-sm);
+  transition: box-shadow 0.5s;
+}
+
+.nudgeCard.highlighted {
+  box-shadow: 0 0 0 2px var(--warm);
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.nudgeTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.user {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.avatarSmall {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+}
+
+.nameSoft {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-soft);
+}
+
+.meta {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-top: 1px;
+}
+
+.tagGold {
+  font-size: 13px;
+  color: var(--gold);
+  background: var(--bg-soft);
+  padding: 3px 8px;
+  border-radius: 999px;
+}
+
+.nudgeBtn {
+  width: 100%;
+  background: var(--gold-soft);
+  border: 1px solid rgba(232,158,43,0.3);
+  border-radius: 10px;
+  padding: 10px;
+  color: var(--gold);
+  font-family: inherit;
+  font-size: 14px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.nudgeBtn.sent {
+  background: var(--calm-soft);
+  border-color: rgba(43,164,143,0.3);
+  color: var(--calm);
+}
+
+.nudgeBtn:disabled {
+  cursor: not-allowed;
+}

@@ -1,0 +1,72 @@
+.screen {
+  min-height: 70vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 24px;
+  text-align: center;
+}
+
+.hero {
+  margin-bottom: 40px;
+}
+
+.logo {
+  margin-bottom: 16px;
+}
+
+.title {
+  font-family: 'Noto Serif KR', 'Playfair Display', serif;
+  font-size: 26px;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 8px;
+}
+
+.sub {
+  font-size: 15px;
+  color: var(--text-muted);
+  line-height: 1.6;
+}
+
+.kakaoBtn {
+  width: 100%;
+  max-width: 320px;
+  background: #FEE500;
+  color: #181600;
+  border: none;
+  border-radius: 12px;
+  padding: 14px 20px;
+  font-size: 16px;
+  font-weight: 700;
+  font-family: inherit;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  box-shadow: var(--shadow-sm);
+  transition: transform 0.1s, box-shadow 0.2s;
+}
+
+.kakaoBtn:active {
+  transform: scale(0.98);
+}
+
+.kakaoBtn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.kakaoIcon {
+  font-size: 18px;
+}
+
+.notice {
+  margin-top: 24px;
+  font-size: 13px;
+  color: var(--text-muted);
+  max-width: 320px;
+  line-height: 1.5;
+}

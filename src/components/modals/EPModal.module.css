@@ -1,0 +1,105 @@
+.epCard {
+  max-width: 380px;
+}
+
+.title {
+  font-family: 'Noto Serif KR', 'Playfair Display', serif;
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.sub {
+  font-size: 15px;
+  color: var(--text-soft);
+  margin-bottom: 18px;
+  line-height: 1.6;
+}
+
+.sectionTitle {
+  font-size: 14px;
+  color: var(--text-soft);
+  font-weight: 600;
+  margin: 14px 0 8px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  font-family: 'Inter', sans-serif;
+}
+
+.scoringTable {
+  background: var(--bg-soft);
+  border-radius: 12px;
+  padding: 12px;
+  margin-bottom: 12px;
+}
+
+.scoringRow {
+  display: flex;
+  justify-content: space-between;
+  padding: 6px 0;
+  font-size: 14px;
+  border-bottom: 1px solid var(--border);
+}
+
+.scoringRow:last-child {
+  border-bottom: none;
+}
+
+.pts {
+  font-family: 'Noto Serif KR', 'Playfair Display', serif;
+  font-weight: 700;
+  color: var(--warm);
+}
+
+.levelList {
+  margin: 14px 0;
+}
+
+.levelItem {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  margin-bottom: 6px;
+  background: var(--bg-soft);
+  transition: all 0.2s;
+}
+
+.levelItem.current {
+  background: var(--warm-soft);
+  border: 1px solid var(--warm);
+}
+
+.levelEmoji {
+  font-size: 22px;
+}
+
+.levelInfo {
+  flex: 1;
+}
+
+.levelName {
+  font-weight: 600;
+  font-size: 15px;
+}
+
+.levelItem.current .levelName {
+  color: var(--warm);
+}
+
+.levelRange {
+  font-size: 13px;
+  color: var(--text-soft);
+  margin-top: 1px;
+  font-family: 'Inter', sans-serif;
+}
+
+.ddtBox {
+  font-size: 14px;
+  color: var(--text-soft);
+  line-height: 1.7;
+  background: var(--bg-soft);
+  padding: 12px;
+  border-radius: 10px;
+}

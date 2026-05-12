@@ -1,0 +1,59 @@
+@import url('https://fonts.googleapis.com/css2?family=Gowun+Dodum&family=Noto+Serif+KR:wght@400;700&family=Inter:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,700;1,400&display=swap');
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html, body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Gowun Dodum', 'Inter', sans-serif;
+  min-height: 100vh;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+body[data-lang="en"] {
+  font-family: 'Inter', sans-serif;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(ellipse at 15% 5%, rgba(244,119,48,0.08) 0%, transparent 50%),
+    radial-gradient(ellipse at 85% 95%, rgba(30,155,216,0.08) 0%, transparent 50%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+#root {
+  position: relative;
+  z-index: 1;
+}
+
+button {
+  cursor: pointer;
+  font-family: inherit;
+  /* iOS 탭 시 회색 하이라이트 제거 */
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* iOS Safari 입력 폰트 16px 미만이면 자동 줌됨 — 전역 보호 */
+input[type="time"],
+input[type="text"],
+input[type="email"],
+textarea {
+  font-size: 16px;
+  -webkit-appearance: none;
+}
+
+/* 좌우 스와이프 시 가로 스크롤 방지 강화 */
+body, #root {
+  overscroll-behavior-x: none;
+}
+
+/* 클릭 이벤트 영역에서 텍스트 드래그 선택 방지 (UI 요소만) */
+button, .nav-btn, [role="button"] {
+  -webkit-user-select: none;
+  user-select: none;
+}
