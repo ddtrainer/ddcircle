@@ -76,7 +76,7 @@ export default function DashSession() {
         </div>
         <div className={styles.exerciseAnim}>
           <div className={styles.exerciseSvgContainer}>
-            <ExerciseSVG type={selectedExercise} size={130} />
+            <ExerciseSVG type={selectedExercise} size={130} paused={paused} />
           </div>
         </div>
       </div>
