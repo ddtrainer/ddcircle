@@ -78,8 +78,8 @@
 }
 
 .emojiBtn.selected {
-  border-color: var(--accent);
-  background: var(--accent-bg, #f0f0ff);
+  border-color: var(--warm);
+  background: var(--warm-soft);
 }
 
 .bgRow {
@@ -122,7 +122,7 @@
 
 .input:focus {
   outline: none;
-  border-color: var(--accent);
+  border-color: var(--warm);
 }
 
 .error {
@@ -136,7 +136,7 @@
   max-width: 320px;
   margin-top: 16px;
   padding: 15px 20px;
-  background: var(--accent);
+  background: linear-gradient(135deg, var(--warm), var(--cool));
   color: #fff;
   border: none;
   border-radius: 12px;
