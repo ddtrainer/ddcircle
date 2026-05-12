@@ -2,6 +2,8 @@ import { createContext, useContext, useState, useCallback, useEffect, useRef } f
 import { useLocalStorage } from '../hooks/useLocalStorage';
 import { useAuth } from './AuthContext';
 import { recordSession, migrateLocalStats } from '../lib/stats';
+import { recordStakeDeclared, resolveStakeWon, resolveStakeForfeited, cancelStake } from '../lib/challenges';
+import { findChallenge } from '../data/challenges';
 import { calculateEarnedEp } from '../utils/ep';
 import { DEFAULT_CUSTOM_BREATH } from '../data/breathPatterns';
 import { evaluateChallenges } from '../data/challenges';
@@ -84,22 +86,40 @@ export function AppProvider({ children }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
 
-  // 챌린지 참여 — 현재 streak를 기준점으로 기록
+  // 챌린지 약속 — 보증 EP 차감 + startStreak 기록
+  // 반환: { ok: true } 또는 { ok: false, reason: 'insufficient_ep' }
   const joinChallenge = useCallback((challengeId) => {
+    const ch = findChallenge(challengeId);
+    if (!ch) return { ok: false, reason: 'unknown_challenge' };
+    const stakeEp = ch.stakeEp || 0;
+    if (stakeEp > 0 && userEp.total < stakeEp) {
+      return { ok: false, reason: 'insufficient_ep', needed: stakeEp };
+    }
     setChallengeJoins((prev) => ({
       ...prev,
-      [challengeId]: { joinedAt: Date.now(), startStreak: userEp.streak },
+      [challengeId]: { joinedAt: Date.now(), startStreak: userEp.streak, stakedEp: stakeEp },
     }));
-  }, [userEp.streak, setChallengeJoins]);
+    if (stakeEp > 0) {
+      setUserEp((prev) => ({ ...prev, total: Math.max(0, prev.total - stakeEp) }));
+    }
+    if (user) {
+      recordStakeDeclared(user.id, challengeId, stakeEp, userEp.streak)
+        .catch((e) => console.error('[challenges] declare error:', e));
+    }
+    return { ok: true, stakeEp };
+  }, [userEp.streak, userEp.total, setChallengeJoins, setUserEp, user]);
 
-  // 챌린지 참여 취소
+  // 챌린지 자발적 포기 — 보증 EP는 회수됨 (반환 안 됨)
   const leaveChallenge = useCallback((challengeId) => {
     setChallengeJoins((prev) => {
       const next = { ...prev };
       delete next[challengeId];
       return next;
     });
-  }, [setChallengeJoins]);
+    if (user) {
+      cancelStake(user.id, challengeId).catch((e) => console.error('[challenges] cancel error:', e));
+    }
+  }, [setChallengeJoins, user]);
 
   // 받은 초대 (URL ?invite=xxx로 진입 시 설정됨)
   const [pendingInvite, setPendingInvite] = useState(null);
@@ -125,17 +145,23 @@ export function AppProvider({ children }) {
     const newStreak = userEp.streak + 1;
     const baseEarned = calculateEarnedEp({ hasProof, shared, streak: newStreak });
 
-    // 챌린지 평가 (참여 중인 것만) — 새로 달성한 챌린지의 보너스 EP 합산
-    const { newClaims, newJoins, bonusEp, completed } = evaluateChallenges(
+    // 챌린지 평가 — 달성 시 보증+보너스 환급, 실패 시 보증 소각
+    const { newClaims, newJoins, bonusEp, stakeRefund, stakeForfeited, completed, forfeited } = evaluateChallenges(
       newStreak, challengeClaims, challengeJoins
     );
     setChallengeClaims(newClaims);
     setChallengeJoins(newJoins);
     if (completed.length > 0) {
-      setLastChallengeBonus({ challenges: completed, bonusEp, ts: Date.now() });
+      setLastChallengeBonus({ challenges: completed, bonusEp, stakeRefund, ts: Date.now() });
+    }
+    // Supabase에 stake 상태 동기화
+    if (user) {
+      completed.forEach((ch) => resolveStakeWon(user.id, ch.id).catch(() => {}));
+      forfeited.forEach((ch) => resolveStakeForfeited(user.id, ch.id).catch(() => {}));
     }
 
-    const total = baseEarned + bonusEp;
+    // total: 기본 EP + 보너스 EP + 보증 환급분 (소각된 보증은 이미 차감 상태)
+    const total = baseEarned + bonusEp + stakeRefund;
 
     setUserEp((prev) => ({
       ...prev,

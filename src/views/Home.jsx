@@ -121,12 +121,32 @@ export default function Home() {
 
             const handleJoin = (e) => {
               e.stopPropagation();
-              joinChallenge(ch.id);
+              const stake = ch.stakeEp || 0;
+              // 보증 EP 확인 다이얼로그
+              if (stake > 0) {
+                const msg = t('challengePledgeConfirm')
+                  .replace('{title}', t(ch.titleKey))
+                  .replace('{stake}', stake)
+                  .replace('{bonus}', ch.bonusEp);
+                if (!window.confirm(msg)) return;
+              }
+              const result = joinChallenge(ch.id);
+              if (!result.ok) {
+                if (result.reason === 'insufficient_ep') {
+                  showToast('⚠️', t('challengeStakeShortage').replace('{n}', result.needed));
+                }
+                return;
+              }
               track(Events.CHALLENGE_JOINED, { challengeId: ch.id, target: ch.target });
               showToast(ch.emoji, `${t('challengeJoinToast')} ${t(ch.titleKey)}`);
             };
             const handleLeave = (e) => {
               e.stopPropagation();
+              const stake = join?.stakedEp || 0;
+              if (stake > 0) {
+                const msg = t('challengeLeaveConfirm').replace('{stake}', stake);
+                if (!window.confirm(msg)) return;
+              }
               leaveChallenge(ch.id);
               showToast('🏳️', t('challengeLeaveToast'));
             };
@@ -160,6 +180,11 @@ export default function Home() {
                       <span>{t('challengeProgress').replace('{cur}', cur).replace('{tar}', ch.target)}</span>
                       <span className={styles.challengeReward}>+{ch.bonusEp} EP</span>
                     </div>
+                    {join?.stakedEp > 0 && (
+                      <div className={styles.challengeStakeBadge}>
+                        🔒 {t('challengeStakeActive').replace('{n}', join.stakedEp)}
+                      </div>
+                    )}
                     <button className={styles.challengeLeaveBtn} onClick={handleLeave}>
                       {t('challengeLeave')}
                     </button>
@@ -169,8 +194,13 @@ export default function Home() {
                 {!joined && !claimed && (
                   <>
                     <div className={styles.challengeReward}>+{ch.bonusEp} EP</div>
+                    {ch.stakeEp > 0 && (
+                      <div className={styles.challengeStakeHint}>
+                        {t('challengeStakeHint').replace('{n}', ch.stakeEp)}
+                      </div>
+                    )}
                     <button className={styles.challengeJoinBtn} onClick={handleJoin}>
-                      {t('challengeJoin')}
+                      {ch.stakeEp > 0 ? t('challengePledge') : t('challengeJoin')}
                     </button>
                   </>
                 )}
