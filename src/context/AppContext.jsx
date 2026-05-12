@@ -163,6 +163,7 @@ export function AppProvider({ children }) {
         selectedExercise,
         setSelectedExercise,
         proofUrl,
+        getProofBlob: () => proofBlobRef.current,
         setProofBlob,
         completeSession,
         userPosts,

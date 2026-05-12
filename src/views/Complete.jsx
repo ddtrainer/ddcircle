@@ -2,19 +2,23 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useLang } from '../i18n/LangContext';
 import { useApp } from '../context/AppContext';
+import { useAuth } from '../context/AuthContext';
 import { useToast } from '../components/Toast';
 import ProgressDots from '../components/ProgressDots';
 import { EXERCISES } from '../data/exercises';
 import { MOODS, SHARE_TARGETS } from '../data/moods';
 import { track, Events } from '../utils/analytics';
 import { generateResultCard, shareOrDownload } from '../utils/generateResultCard';
+import { createPost } from '../lib/posts';
 import styles from './Complete.module.css';
 
 export default function Complete() {
   const { t, lang } = useLang();
-  const { proofUrl, completeSession, addUserPost, selectedExercise, lastChallengeBonus, consumeLastChallengeBonus, userEp } = useApp();
+  const { proofUrl, getProofBlob, completeSession, addUserPost, selectedExercise, lastChallengeBonus, consumeLastChallengeBonus, userEp } = useApp();
+  const { user } = useAuth();
   const { show: showToast } = useToast();
   const navigate = useNavigate();
+  const [sharing, setSharing] = useState(false);
 
   const [shareTarget, setShareTarget] = useState('circle');
   const [selectedMood, setSelectedMood] = useState(null);
@@ -41,14 +45,34 @@ export default function Complete() {
     navigate('/wall', { replace: true });
   };
 
-  const handleShare = () => {
-    addUserPost({
+  const handleShare = async () => {
+    if (sharing) return;
+    setSharing(true);
+    const payload = {
       mood: selectedMood,
       msg: empathyMsg.trim(),
       target: shareTarget,
       exerciseId: selectedExercise,
       proofUrl,
-    });
+    };
+    // 인증된 유저: Supabase에 저장 (사진은 Storage 업로드)
+    if (user) {
+      try {
+        await createPost(user.id, {
+          message: empathyMsg.trim(),
+          mood: selectedMood,
+          target: shareTarget,
+          exerciseId: selectedExercise,
+          proofBlob: getProofBlob(),
+        });
+      } catch (e) {
+        showToast('⚠️', '저장에 실패했어요. 로컬에만 저장됩니다.');
+        addUserPost(payload); // 폴백
+      }
+    } else {
+      // 비인증: 로컬에만
+      addUserPost(payload);
+    }
     finish(true);
   };
 
@@ -135,8 +159,8 @@ export default function Complete() {
         />
       </div>
 
-      <button className={styles.shareBtn} onClick={handleShare}>
-        {t('shareBtn')}
+      <button className={styles.shareBtn} onClick={handleShare} disabled={sharing}>
+        {sharing ? '...' : t('shareBtn')}
       </button>
       <button className={styles.storyShareBtn} onClick={handleStoryShare}>
         {t('storyShareBtn')}

@@ -1,11 +1,13 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useLang } from '../i18n/LangContext';
 import { useApp } from '../context/AppContext';
+import { useAuth } from '../context/AuthContext';
 import { useToast } from '../components/Toast';
 import { FRIENDS, formatTimeAgo } from '../data/friends';
 import { MOODS } from '../data/moods';
 import { EXERCISES } from '../data/exercises';
 import { findEncouragement } from '../data/encouragements';
+import { fetchCircleFeed, fetchPublicFeed, normalizePost } from '../lib/posts';
 import FeedCard from '../components/FeedCard';
 import EncourageSheet from '../components/EncourageSheet';
 import InviteModal from '../components/modals/InviteModal';
@@ -14,6 +16,26 @@ import styles from './Wall.module.css';
 export default function Wall() {
   const { t, lang } = useLang();
   const { userPosts, sentEncouragements, sendEncouragement } = useApp();
+  const { user } = useAuth();
+  const [remoteCircle, setRemoteCircle] = useState([]);
+  const [remotePublic, setRemotePublic] = useState([]);
+
+  // 로그인 상태면 Supabase에서 피드 가져오기
+  useEffect(() => {
+    if (!user) {
+      setRemoteCircle([]);
+      setRemotePublic([]);
+      return;
+    }
+    let cancelled = false;
+    (async () => {
+      const [circle, pub] = await Promise.all([fetchCircleFeed(50), fetchPublicFeed(50)]);
+      if (cancelled) return;
+      setRemoteCircle(circle.map(normalizePost));
+      setRemotePublic(pub.map(normalizePost));
+    })();
+    return () => { cancelled = true; };
+  }, [user]);
   const { show: showToast } = useToast();
   const [tab, setTab] = useState('circle');
   const [highlightId, setHighlightId] = useState(null);
@@ -55,21 +77,27 @@ export default function Wall() {
 
   const displayName = (f) => (lang === 'ko' ? f.name : f.enName);
 
-  // 내 게시물을 FeedCard용 데이터로 변환
-  const myCirclePosts = userPosts.filter((p) => p.target !== 'private');
+  // 인증 상태면 원격 피드 우선, 아니면 로컬
+  const myCirclePosts = user
+    ? remoteCircle
+    : userPosts.filter((p) => p.target !== 'private');
+
   const renderMyPost = (post) => {
     const mood = MOODS.find((m) => m.id === post.mood);
     const exercise = EXERCISES.find((e) => e.key === post.exerciseId);
     const minutesAgo = Math.max(0, Math.floor((Date.now() - post.ts) / 60000));
     const timeStr = minutesAgo < 1 ? t('justNow') : formatTimeAgo(minutesAgo, lang);
     const exerciseLabel = exercise ? t('ex' + exercise.i18n) : '';
+    // 본인 게시물 vs 친구 게시물 구분 (원격일 때만 의미)
+    const isMine = !post.userId || post.userId === user?.id;
+    const profile = post.profile;
     return (
       <FeedCard
         key={post.id}
-        variant="mine"
-        emoji="✨"
-        emojiBg="linear-gradient(135deg,#f47730,#1e9bd8)"
-        name={t('mineLabel')}
+        variant={isMine ? 'mine' : 'friend'}
+        emoji={profile?.emoji || (isMine ? '✨' : '🌸')}
+        emojiBg={profile?.emoji_bg || (isMine ? 'linear-gradient(135deg,#f47730,#1e9bd8)' : 'linear-gradient(135deg,#fbb040,#f97b9c)')}
+        name={isMine ? t('mineLabel') : (profile?.nickname || '')}
         meta={`${timeStr}${exerciseLabel ? ' · ' + exerciseLabel : ''}`}
         tag={mood ? t(mood.key) : null}
         message={post.msg || ''}
@@ -234,7 +262,7 @@ export default function Wall() {
       {/* 글로벌 서클 탭 */}
       {tab === 'public' && (
         <div>
-          {userPosts.filter((p) => p.target === 'public').map(renderMyPost)}
+          {(user ? remotePublic : userPosts.filter((p) => p.target === 'public')).map(renderMyPost)}
           <FeedCard
             variant="public"
             emoji="🌸"
