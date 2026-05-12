@@ -68,11 +68,16 @@ export default function Wall() {
     refresh(true); // 초기 로드에만 loading UI
   }, [user, refresh]);
 
-  // 최신 게시물 ID를 ref로 추적 (realtime 콜백 closure 문제 해결)
+  // 최신 게시물 ID + 친구 목록을 ref로 추적 (realtime 콜백 closure 문제 해결)
   const postIdsRef = useRef([]);
   useEffect(() => {
     postIdsRef.current = [...new Set([...remoteCircle, ...remotePublic].map((p) => p.id))];
   }, [remoteCircle, remotePublic]);
+
+  const friendsRef = useRef([]);
+  useEffect(() => {
+    friendsRef.current = remoteFriends;
+  }, [remoteFriends]);
 
   // Realtime 구독: 새 게시물 / 공감 변경 / 받은 응원
   useEffect(() => {
@@ -94,12 +99,15 @@ export default function Wall() {
         { event: 'INSERT', schema: 'public', table: 'encouragements', filter: `to_user=eq.${user.id}` },
         (payload) => {
           const encId = payload.new?.enc_id;
+          const fromId = payload.new?.from_user;
+          const sender = friendsRef.current.find((f) => f.id === fromId);
+          const name = sender?.nickname || t('friendFallback');
           if (encId === 'nudge') {
-            showToast('👋', t('nudgeReceivedToast'));
+            showToast('👋', t('nudgeReceivedToast', { name }));
             return;
           }
           const enc = findEncouragement(encId);
-          showToast(enc?.emoji || '💌', t(enc?.textKey) || t('encReceivedLabel'));
+          showToast(enc?.emoji || '💌', `${name} · ${t(enc?.textKey) || t('encReceivedLabel')}`);
         }
       )
       .subscribe();
