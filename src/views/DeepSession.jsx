@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useLang } from '../i18n/LangContext';
 import { useApp } from '../context/AppContext';
@@ -38,6 +38,21 @@ export default function DeepSession() {
     });
     return () => cancelAnimationFrame(id);
   }, []);
+
+  // 일시정지 시 진행 중인 transition을 현재 위치에서 고정
+  const orbRef = useRef(null);
+  useEffect(() => {
+    const el = orbRef.current;
+    if (!el) return;
+    if (paused) {
+      const t = getComputedStyle(el).transform;
+      el.style.transform = t === 'none' ? '' : t;
+      el.style.transition = 'none';
+    } else {
+      el.style.transform = '';
+      el.style.transition = '';
+    }
+  }, [paused]);
 
   // phase 전환 시 효과음 (durations 동적)
   useBreathSound({ phase, enabled: soundOn && !paused, durations: pattern.durations });
@@ -117,6 +132,7 @@ export default function DeepSession() {
       {/* 호흡 orb */}
       <div className={styles.breathZone}>
         <div
+          ref={orbRef}
           className={`${styles.orbOuter} ${animationReady ? styles[phase] : ''}`}
         >
           <div className={styles.orbInner}>{displayNum}</div>
