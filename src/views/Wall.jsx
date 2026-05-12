@@ -315,6 +315,20 @@ export default function Wall() {
       {/* 내 서클 탭 */}
       {tab === 'circle' && (!loading || hasLoaded) && (
         <div>
+          {/* 친구 0명일 때 초대 CTA */}
+          {user && hasLoaded && friendList.length === 0 ? (
+            <div className={styles.inviteCta}>
+              <div className={styles.inviteCtaIcon}>💙</div>
+              <div className={styles.inviteCtaTitle}>{t('inviteCtaTitle')}</div>
+              <div className={styles.inviteCtaSub}>{t('inviteCtaSub')}</div>
+              <button
+                className={styles.inviteCtaBtn}
+                onClick={() => setInviteOpen(true)}
+              >
+                {t('inviteCtaBtn')}
+              </button>
+            </div>
+          ) : (
           <div className={styles.friendsStatus}>
             <div className={styles.summary}>
               <div className={styles.summaryItem}>
@@ -361,6 +375,7 @@ export default function Wall() {
               </div>
             </div>
           </div>
+          )}
 
           {/* 내 게시물 (최신 위) */}
           {user && hasLoaded && myCirclePosts.length === 0 && (

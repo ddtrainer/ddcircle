@@ -8,6 +8,56 @@ function dateKey(d = new Date()) {
   return `${y}-${m}-${day}`;
 }
 
+// localStorage userEp → user_stats 1회 마이그레이션
+// remote에 의미 있는 데이터가 있으면 건너뜀
+export async function migrateLocalStats(userId, localStats) {
+  if (!userId) return { migrated: false, reason: 'no userId' };
+  const { data: cur, error } = await supabase
+    .from('user_stats')
+    .select('*')
+    .eq('user_id', userId)
+    .maybeSingle();
+  if (error) {
+    console.error('[stats] migrate read error:', error);
+    return { migrated: false, reason: 'read failed' };
+  }
+  // remote에 이미 데이터가 있으면 덮어쓰지 않음
+  if (cur && (cur.total_ep > 0 || cur.streak > 0)) {
+    return { migrated: false, reason: 'remote has data' };
+  }
+  // 로컬에도 의미 있는 값이 없으면 굳이 마이그레이션 안 함
+  if (!localStats || ((localStats.total || 0) === 0 && (localStats.streak || 0) === 0)) {
+    return { migrated: false, reason: 'local empty' };
+  }
+  const payload = {
+    total_ep: localStats.total || 0,
+    today_ep: localStats.today || 0,
+    month_ep: localStats.thisMonth || 0,
+    streak: localStats.streak || 0,
+    empathy_sent: localStats.empathySent || 0,
+    empathy_received: localStats.empathyReceived || 0,
+  };
+  if (cur) {
+    const { error: uErr } = await supabase
+      .from('user_stats')
+      .update(payload)
+      .eq('user_id', userId);
+    if (uErr) {
+      console.error('[stats] migrate update error:', uErr);
+      return { migrated: false, reason: 'update failed' };
+    }
+  } else {
+    const { error: iErr } = await supabase
+      .from('user_stats')
+      .insert({ user_id: userId, ...payload });
+    if (iErr) {
+      console.error('[stats] migrate insert error:', iErr);
+      return { migrated: false, reason: 'insert failed' };
+    }
+  }
+  return { migrated: true };
+}
+
 // 사용자 통계 조회
 export async function fetchUserStats(userId) {
   if (!userId) return null;

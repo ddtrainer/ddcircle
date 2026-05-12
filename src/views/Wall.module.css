@@ -368,3 +368,55 @@
   color: var(--text-muted);
   line-height: 1.6;
 }
+
+/* 친구 0명일 때 초대 CTA */
+.inviteCta {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 32px 24px;
+  margin: 12px 0 20px;
+  background: linear-gradient(160deg, rgba(244,119,48,0.08), rgba(30,155,216,0.08));
+  border: 1px solid var(--border);
+  border-radius: 18px;
+}
+
+.inviteCtaIcon {
+  font-size: 44px;
+  margin-bottom: 10px;
+}
+
+.inviteCtaTitle {
+  font-family: 'Noto Serif KR', serif;
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 6px;
+}
+
+.inviteCtaSub {
+  font-size: 13px;
+  color: var(--text-muted);
+  line-height: 1.6;
+  margin-bottom: 18px;
+  max-width: 280px;
+}
+
+.inviteCtaBtn {
+  background: linear-gradient(135deg, var(--warm), var(--cool));
+  color: #fff;
+  border: none;
+  border-radius: 12px;
+  padding: 12px 28px;
+  font-size: 15px;
+  font-weight: 700;
+  font-family: inherit;
+  cursor: pointer;
+  box-shadow: var(--shadow-sm);
+  transition: transform 0.1s;
+}
+
+.inviteCtaBtn:active {
+  transform: scale(0.97);
+}

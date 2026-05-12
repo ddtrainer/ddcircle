@@ -1,7 +1,7 @@
 import { createContext, useContext, useState, useCallback, useEffect, useRef } from 'react';
 import { useLocalStorage } from '../hooks/useLocalStorage';
 import { useAuth } from './AuthContext';
-import { recordSession } from '../lib/stats';
+import { recordSession, migrateLocalStats } from '../lib/stats';
 import { calculateEarnedEp } from '../utils/ep';
 import { DEFAULT_CUSTOM_BREATH } from '../data/breathPatterns';
 import { evaluateChallenges } from '../data/challenges';
@@ -71,6 +71,18 @@ export function AppProvider({ children }) {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  // 인증 직후 localStorage userEp → user_stats 1회 마이그레이션
+  useEffect(() => {
+    if (!user) return;
+    const flagKey = `ddcircle.statsMigrated.${user.id}`;
+    if (localStorage.getItem(flagKey)) return;
+    migrateLocalStats(user.id, userEp).then(() => {
+      localStorage.setItem(flagKey, '1');
+    }).catch((e) => console.error('[stats] migration error:', e));
+    // userEp 변경마다 다시 실행되지 않도록 user.id만 의존성
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user]);
 
   // 챌린지 참여 — 현재 streak를 기준점으로 기록
   const joinChallenge = useCallback((challengeId) => {

@@ -294,6 +294,9 @@ export const translations = {
     wallPublicEmptySub: '전 세계 사용자가 나눈 글이 곧 여기에 보일 거예요.',
     nudgeReceivedToast: '{name}님이 함께 호흡을 권유했어요',
     friendFallback: '친구',
+    inviteCtaTitle: '아직 함께할 친구가 없어요',
+    inviteCtaSub: '친구나 가족을 초대해 함께 호흡해보세요. 매일의 작은 응원이 큰 힘이 됩니다.',
+    inviteCtaBtn: '💙 친구·가족 초대하기',
   },
   en: {
     heroQuote: '<span class="one">One minute</span> to move,<br>two minutes to breathe,<br>shared energy.',
@@ -587,5 +590,8 @@ export const translations = {
     wallPublicEmptySub: 'Posts shared by users around the world will appear here soon.',
     nudgeReceivedToast: '{name} invited you to breathe together',
     friendFallback: 'A friend',
+    inviteCtaTitle: 'No one in your circle yet',
+    inviteCtaSub: 'Invite a friend or family member to breathe together. Daily small encouragements go a long way.',
+    inviteCtaBtn: '💙 Invite friends & family',
   },
 };
