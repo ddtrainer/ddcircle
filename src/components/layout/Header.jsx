@@ -1,8 +1,40 @@
+import { useEffect, useRef, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useLang } from '../../i18n/LangContext';
+import { useAuth } from '../../context/AuthContext';
 import styles from './Header.module.css';
 
 export default function Header() {
   const { lang, setLang } = useLang();
+  const { user, profile, signOut } = useAuth();
+  const navigate = useNavigate();
+  const [menuOpen, setMenuOpen] = useState(false);
+  const menuRef = useRef(null);
+
+  // 외부 클릭 시 메뉴 닫기
+  useEffect(() => {
+    if (!menuOpen) return;
+    const onDocClick = (e) => {
+      if (menuRef.current && !menuRef.current.contains(e.target)) {
+        setMenuOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', onDocClick);
+    return () => document.removeEventListener('mousedown', onDocClick);
+  }, [menuOpen]);
+
+  const handleEdit = () => {
+    setMenuOpen(false);
+    navigate('/profile-edit');
+  };
+
+  const handleLogout = async () => {
+    setMenuOpen(false);
+    const msg = lang === 'ko' ? '로그아웃할까요?' : 'Sign out of DDCircle?';
+    if (!window.confirm(msg)) return;
+    await signOut();
+    navigate('/login', { replace: true });
+  };
 
   return (
     <header className={styles.header}>
@@ -42,6 +74,37 @@ export default function Header() {
               EN
             </button>
           </div>
+
+          {user && (
+            <div className={styles.menuWrap} ref={menuRef}>
+              <button
+                className={styles.avatarBtn}
+                style={{ background: profile?.emoji_bg || 'linear-gradient(135deg,#fde2e4,#fad2e1)' }}
+                onClick={() => setMenuOpen((v) => !v)}
+                aria-label="user menu"
+                aria-expanded={menuOpen}
+              >
+                {profile?.emoji || '🌸'}
+              </button>
+              {menuOpen && (
+                <div className={styles.menu} role="menu">
+                  {profile?.nickname && (
+                    <div className={styles.menuHeader}>{profile.nickname}</div>
+                  )}
+                  <button className={styles.menuItem} onClick={handleEdit} role="menuitem">
+                    {lang === 'ko' ? '프로필 편집' : 'Edit profile'}
+                  </button>
+                  <button
+                    className={`${styles.menuItem} ${styles.menuItemDanger}`}
+                    onClick={handleLogout}
+                    role="menuitem"
+                  >
+                    {lang === 'ko' ? '로그아웃' : 'Sign out'}
+                  </button>
+                </div>
+              )}
+            </div>
+          )}
         </div>
       </div>
     </header>

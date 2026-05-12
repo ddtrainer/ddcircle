@@ -113,6 +113,7 @@ export default function App() {
                   <Route path="/login" element={<Login />} />
                   <Route path="/auth/callback" element={<AuthCallback />} />
                   <Route path="/profile-setup" element={<ProfileSetup />} />
+                  <Route path="/profile-edit" element={<ProfileSetup mode="edit" />} />
                 </Routes>
               </main>
               <ProfileGuard />

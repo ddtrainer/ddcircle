@@ -72,3 +72,75 @@
   background: var(--text);
   color: var(--bg);
 }
+
+.menuWrap {
+  position: relative;
+}
+
+.avatarBtn {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  font-size: 18px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--shadow-sm);
+  padding: 0;
+  transition: transform 0.1s;
+}
+
+.avatarBtn:active {
+  transform: scale(0.95);
+}
+
+.menu {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  min-width: 160px;
+  background: var(--surface, #fff);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  padding: 6px;
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+}
+
+.menuHeader {
+  padding: 8px 12px 6px;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text);
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 4px;
+}
+
+.menuItem {
+  background: none;
+  border: none;
+  padding: 10px 12px;
+  font-size: 14px;
+  font-family: inherit;
+  color: var(--text);
+  text-align: left;
+  cursor: pointer;
+  border-radius: 8px;
+  transition: background 0.12s;
+}
+
+.menuItem:hover {
+  background: var(--warm-soft, rgba(244, 119, 48, 0.08));
+}
+
+.menuItemDanger {
+  color: #d64545;
+}
+
+.menuItemDanger:hover {
+  background: rgba(214, 69, 69, 0.08);
+}

@@ -27,7 +27,8 @@ const GRADIENTS = [
   'linear-gradient(135deg,#e0c3fc,#8ec5fc)',
 ];
 
-export default function ProfileSetup() {
+export default function ProfileSetup({ mode = 'setup' }) {
+  const isEdit = mode === 'edit';
   const { user, profile, refreshProfile } = useAuth();
   const { setUserEp } = useApp();
   const { t } = useLang();
@@ -56,26 +57,31 @@ export default function ProfileSetup() {
 
       if (dbError) throw dbError;
 
-      localStorage.setItem(`ddcircle.setup.${user.id}`, '1');
+      if (!isEdit) {
+        localStorage.setItem(`ddcircle.setup.${user.id}`, '1');
 
-      // 환영 EP 1회 지급
-      const welcomeKey = `ddcircle.welcomeGiven.${user.id}`;
-      if (!localStorage.getItem(welcomeKey)) {
-        const ok = await applyWelcomeBonus(user.id, WELCOME_EP);
-        if (ok) {
-          localStorage.setItem(welcomeKey, '1');
-          setUserEp((prev) => ({
-            ...prev,
-            total: (prev.total || 0) + WELCOME_EP,
-            today: (prev.today || 0) + WELCOME_EP,
-            thisMonth: (prev.thisMonth || 0) + WELCOME_EP,
-          }));
-          setTimeout(() => showToast('🎁', t('welcomeBonusToast').replace('{n}', WELCOME_EP)), 600);
+        // 환영 EP 1회 지급
+        const welcomeKey = `ddcircle.welcomeGiven.${user.id}`;
+        if (!localStorage.getItem(welcomeKey)) {
+          const ok = await applyWelcomeBonus(user.id, WELCOME_EP);
+          if (ok) {
+            localStorage.setItem(welcomeKey, '1');
+            setUserEp((prev) => ({
+              ...prev,
+              total: (prev.total || 0) + WELCOME_EP,
+              today: (prev.today || 0) + WELCOME_EP,
+              thisMonth: (prev.thisMonth || 0) + WELCOME_EP,
+            }));
+            setTimeout(() => showToast('🎁', t('welcomeBonusToast').replace('{n}', WELCOME_EP)), 600);
+          }
         }
+      } else {
+        showToast('✨', t('profileEditSaved'));
       }
 
       await refreshProfile();
-      navigate('/', { replace: true });
+      if (isEdit) navigate(-1);
+      else navigate('/', { replace: true });
     } catch (e) {
       console.error('[profile-setup] save error:', e);
       showToast('⚠️', '저장에 실패했어요. 다시 시도해주세요.');
@@ -85,8 +91,18 @@ export default function ProfileSetup() {
 
   return (
     <div className={styles.screen}>
-      <h1 className={styles.title}>{t('profileSetupTitle')}</h1>
-      <p className={styles.sub}>{t('profileSetupSub')}</p>
+      {isEdit && (
+        <button
+          type="button"
+          className={styles.backBtn}
+          onClick={() => navigate(-1)}
+          aria-label="back"
+        >
+          ←
+        </button>
+      )}
+      <h1 className={styles.title}>{isEdit ? t('profileEditTitle') : t('profileSetupTitle')}</h1>
+      <p className={styles.sub}>{isEdit ? t('profileEditSub') : t('profileSetupSub')}</p>
 
       <div className={styles.avatar} style={{ background: emojiBg }}>
         {emoji}
@@ -143,7 +159,7 @@ export default function ProfileSetup() {
         onClick={handleSave}
         disabled={saving}
       >
-        {saving ? t('profileSaving') : t('profileSaveBtn')}
+        {saving ? t('profileSaving') : (isEdit ? t('profileEditSaveBtn') : t('profileSaveBtn'))}
       </button>
     </div>
   );
