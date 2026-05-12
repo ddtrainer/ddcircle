@@ -292,7 +292,7 @@ export const translations = {
     wallCircleEmptySub: '오늘의 3분을 시작하면 내 게시물과 친구들 글이 여기에 표시돼요.',
     wallPublicEmptyTitle: '아직 글로벌 게시물이 없어요',
     wallPublicEmptySub: '전 세계 사용자가 나눈 글이 곧 여기에 보일 거예요.',
-    nudgeReceivedToast: '{name}님이 오늘의 3분을 권유했어요',
+    nudgeReceivedToast: '{name}님이 함께 호흡을 권유했어요',
     friendFallback: '친구',
   },
   en: {
@@ -585,7 +585,7 @@ export const translations = {
     wallCircleEmptySub: 'Start your 3 minutes — your post and your friends\' posts will appear here.',
     wallPublicEmptyTitle: 'No global posts yet',
     wallPublicEmptySub: 'Posts shared by users around the world will appear here soon.',
-    nudgeReceivedToast: '{name} nudged you to start your 3 minutes',
+    nudgeReceivedToast: '{name} invited you to breathe together',
     friendFallback: 'A friend',
   },
 };
