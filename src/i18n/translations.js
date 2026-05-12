@@ -312,6 +312,7 @@ export const translations = {
     challengeStakeShortage: 'EP가 부족해요 ({n} EP 필요)',
     challengeStakeRefund: '약속을 지켰어요 +{n} EP',
     challengeStakeBurned: '도전 실패 · 보증 회수 -{n} EP',
+    welcomeBonusToast: '환영합니다 · 첫 발걸음 보너스 +{n} EP',
   },
   en: {
     heroQuote: '<span class="one">One minute</span> to move,<br>two minutes to breathe,<br>shared energy.',
@@ -623,5 +624,6 @@ export const translations = {
     challengeStakeShortage: 'Not enough EP ({n} EP needed)',
     challengeStakeRefund: 'Pledge fulfilled +{n} EP',
     challengeStakeBurned: 'Challenge failed · Stake forfeited -{n} EP',
+    welcomeBonusToast: 'Welcome · First-step bonus +{n} EP',
   },
 };

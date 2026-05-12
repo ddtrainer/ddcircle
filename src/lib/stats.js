@@ -8,6 +8,44 @@ function dateKey(d = new Date()) {
   return `${y}-${m}-${day}`;
 }
 
+// 환영 EP 보너스 — 신규 가입 시 1회 지급
+export async function applyWelcomeBonus(userId, amount = 20) {
+  if (!userId || amount <= 0) return false;
+  const { data: cur, error } = await supabase
+    .from('user_stats')
+    .select('total_ep, today_ep, month_ep')
+    .eq('user_id', userId)
+    .maybeSingle();
+  if (error) {
+    console.error('[stats] welcome read error:', error);
+    return false;
+  }
+  if (!cur) {
+    // user_stats가 없으면 신규 row 생성 (트리거가 보통 만들지만 fallback)
+    const { error: iErr } = await supabase
+      .from('user_stats')
+      .insert({ user_id: userId, total_ep: amount, today_ep: amount, month_ep: amount });
+    if (iErr) {
+      console.error('[stats] welcome insert error:', iErr);
+      return false;
+    }
+    return true;
+  }
+  const { error: uErr } = await supabase
+    .from('user_stats')
+    .update({
+      total_ep: (cur.total_ep || 0) + amount,
+      today_ep: (cur.today_ep || 0) + amount,
+      month_ep: (cur.month_ep || 0) + amount,
+    })
+    .eq('user_id', userId);
+  if (uErr) {
+    console.error('[stats] welcome update error:', uErr);
+    return false;
+  }
+  return true;
+}
+
 // localStorage userEp → user_stats 1회 마이그레이션
 // remote에 의미 있는 데이터가 있으면 건너뜀
 export async function migrateLocalStats(userId, localStats) {

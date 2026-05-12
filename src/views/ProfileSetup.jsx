@@ -1,10 +1,14 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { useApp } from '../context/AppContext';
 import { useLang } from '../i18n/LangContext';
 import { supabase } from '../lib/supabase';
+import { applyWelcomeBonus } from '../lib/stats';
 import { useToast } from '../components/Toast';
 import styles from './ProfileSetup.module.css';
+
+const WELCOME_EP = 20;
 
 const EMOJIS = [
   '🌸', '🌷', '🌹', '🌻', '🌼', '🪷',
@@ -25,6 +29,7 @@ const GRADIENTS = [
 
 export default function ProfileSetup() {
   const { user, profile, refreshProfile } = useAuth();
+  const { setUserEp } = useApp();
   const { t } = useLang();
   const { show: showToast } = useToast();
   const navigate = useNavigate();
@@ -52,6 +57,23 @@ export default function ProfileSetup() {
       if (dbError) throw dbError;
 
       localStorage.setItem(`ddcircle.setup.${user.id}`, '1');
+
+      // 환영 EP 1회 지급
+      const welcomeKey = `ddcircle.welcomeGiven.${user.id}`;
+      if (!localStorage.getItem(welcomeKey)) {
+        const ok = await applyWelcomeBonus(user.id, WELCOME_EP);
+        if (ok) {
+          localStorage.setItem(welcomeKey, '1');
+          setUserEp((prev) => ({
+            ...prev,
+            total: (prev.total || 0) + WELCOME_EP,
+            today: (prev.today || 0) + WELCOME_EP,
+            thisMonth: (prev.thisMonth || 0) + WELCOME_EP,
+          }));
+          setTimeout(() => showToast('🎁', t('welcomeBonusToast').replace('{n}', WELCOME_EP)), 600);
+        }
+      }
+
       await refreshProfile();
       navigate('/', { replace: true });
     } catch (e) {
