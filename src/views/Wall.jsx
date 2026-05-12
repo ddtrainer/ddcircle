@@ -9,6 +9,8 @@ import { EXERCISES } from '../data/exercises';
 import { findEncouragement } from '../data/encouragements';
 import { fetchCircleFeed, fetchPublicFeed, normalizePost } from '../lib/posts';
 import { fetchFriends } from '../lib/friends';
+import { fetchEmpathiesForPosts, toggleEmpathy } from '../lib/empathies';
+import { fetchSentToday, sendEncouragement as sendEncSupabase } from '../lib/encouragements';
 import FeedCard from '../components/FeedCard';
 import EncourageSheet from '../components/EncourageSheet';
 import InviteModal from '../components/modals/InviteModal';
@@ -21,6 +23,8 @@ export default function Wall() {
   const [remoteCircle, setRemoteCircle] = useState([]);
   const [remotePublic, setRemotePublic] = useState([]);
   const [remoteFriends, setRemoteFriends] = useState([]);
+  const [empathies, setEmpathies] = useState({}); // { postId: { counts, byUser:Set } }
+  const [remoteEncMap, setRemoteEncMap] = useState({}); // { toUserId: {encId, ts} }
 
   // 로그인 상태면 Supabase에서 피드 + 친구 목록 가져오기
   useEffect(() => {
@@ -32,18 +36,66 @@ export default function Wall() {
     }
     let cancelled = false;
     (async () => {
-      const [circle, pub, friendsList] = await Promise.all([
+      const [circle, pub, friendsList, encMap] = await Promise.all([
         fetchCircleFeed(50),
         fetchPublicFeed(50),
         fetchFriends(user.id),
+        fetchSentToday(user.id),
       ]);
       if (cancelled) return;
-      setRemoteCircle(circle.map(normalizePost));
-      setRemotePublic(pub.map(normalizePost));
+      const normCircle = circle.map(normalizePost);
+      const normPublic = pub.map(normalizePost);
+      setRemoteCircle(normCircle);
+      setRemotePublic(normPublic);
       setRemoteFriends(friendsList);
+      setRemoteEncMap(encMap);
+      // 공감 데이터 한 번에 조회
+      const allIds = [...new Set([...normCircle, ...normPublic].map((p) => p.id))];
+      const emp = await fetchEmpathiesForPosts(allIds, user.id);
+      if (!cancelled) setEmpathies(emp);
     })();
     return () => { cancelled = true; };
   }, [user]);
+
+  // 공감 토글: 낙관적 UI 업데이트 후 Supabase에 반영
+  const handleEmpathyToggle = async (postId, type) => {
+    if (!user) return;
+    setEmpathies((prev) => {
+      const cur = prev[postId] || { counts: { sent: 0, great: 0, me: 0 }, byUser: new Set() };
+      const has = cur.byUser.has(type);
+      const nextBy = new Set(cur.byUser);
+      if (has) nextBy.delete(type); else nextBy.add(type);
+      const delta = has ? -1 : 1;
+      return {
+        ...prev,
+        [postId]: {
+          counts: { ...cur.counts, [type]: Math.max(0, cur.counts[type] + delta) },
+          byUser: nextBy,
+        },
+      };
+    });
+    try {
+      await toggleEmpathy(user.id, postId, type);
+    } catch (e) {
+      console.error('[empathy] toggle failed, reverting:', e);
+      // 롤백
+      setEmpathies((prev) => {
+        const cur = prev[postId];
+        if (!cur) return prev;
+        const has = cur.byUser.has(type);
+        const nextBy = new Set(cur.byUser);
+        if (has) nextBy.delete(type); else nextBy.add(type);
+        const delta = has ? -1 : 1;
+        return {
+          ...prev,
+          [postId]: {
+            counts: { ...cur.counts, [type]: Math.max(0, cur.counts[type] + delta) },
+            byUser: nextBy,
+          },
+        };
+      });
+    }
+  };
   const { show: showToast } = useToast();
   const [tab, setTab] = useState('circle');
   const [highlightId, setHighlightId] = useState(null);
@@ -56,11 +108,21 @@ export default function Wall() {
     setEncFriend({ id: friend.id, name: lang === 'ko' ? friend.name : friend.enName });
   };
 
-  const handleEncSelect = (encId) => {
+  const handleEncSelect = async (encId) => {
     if (!encFriend) return;
+    // 로컬 응원 카운터 (legacy + 비인증 호환)
     sendEncouragement(encFriend.id, encId);
     const enc = findEncouragement(encId);
     showToast(enc?.emoji || '💌', `${t('encToastSent')} · ${t(enc?.textKey)}`);
+    // 인증된 유저 + 실제 친구(UUID)면 Supabase에도 저장
+    if (user && typeof encFriend.id === 'string' && encFriend.id.length > 20) {
+      try {
+        await sendEncSupabase(user.id, encFriend.id, encId);
+        setRemoteEncMap((m) => ({ ...m, [encFriend.id]: { encId, ts: Date.now() } }));
+      } catch (e) {
+        console.error('[encouragement] save failed:', e);
+      }
+    }
     setEncFriend(null);
   };
 
@@ -114,6 +176,11 @@ export default function Wall() {
     // 본인 게시물 vs 친구 게시물 구분 (원격일 때만 의미)
     const isMine = !post.userId || post.userId === user?.id;
     const profile = post.profile;
+    const emp = user ? empathies[post.id] : null;
+    const controlledCounts = emp?.counts;
+    const controlledActive = emp
+      ? { sent: emp.byUser.has('sent'), great: emp.byUser.has('great'), me: emp.byUser.has('me') }
+      : undefined;
     return (
       <FeedCard
         key={post.id}
@@ -126,6 +193,9 @@ export default function Wall() {
         message={post.msg || ''}
         proof={post.hasProof ? { url: post.proofUrl } : null}
         initialEmpathy={{ sent: 0, great: 0, me: 0 }}
+        controlledCounts={controlledCounts}
+        controlledActive={controlledActive}
+        onEmpathyToggle={user ? (key) => handleEmpathyToggle(post.id, key) : undefined}
       />
     );
   };
@@ -179,7 +249,7 @@ export default function Wall() {
                 <div className={styles.summaryLabel}>{t('notYetLabel')}</div>
               </div>
               <div className={styles.summaryItem}>
-                <div className={styles.summaryNum}>{FRIENDS.length}</div>
+                <div className={styles.summaryNum}>{friendList.length}</div>
                 <div className={styles.summaryLabel}>{t('totalFriendsLabel')}</div>
               </div>
             </div>

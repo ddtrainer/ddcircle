@@ -21,15 +21,27 @@ export default function FeedCard({
   onEncourage, // () => void — 부모가 바텀시트 열기
   encouraged,  // 이미 보낸 경우 true
   encouragedText, // 보낸 메시지 텍스트 (있으면 카드에 표시)
+  // controlled empathy (Supabase 연동 시 부모가 제공)
+  controlledCounts,   // { sent, great, me }
+  controlledActive,   // { sent, great, me } booleans
+  onEmpathyToggle,    // (key) => void
 }) {
   const { t } = useLang();
-  const [counts, setCounts] = useState(initialEmpathy);
-  const [active, setActive] = useState({ sent: false, great: false, me: false });
+  const [localCounts, setLocalCounts] = useState(initialEmpathy);
+  const [localActive, setLocalActive] = useState({ sent: false, great: false, me: false });
+
+  const isControlled = !!onEmpathyToggle;
+  const counts = isControlled ? (controlledCounts || { sent: 0, great: 0, me: 0 }) : localCounts;
+  const active = isControlled ? (controlledActive || { sent: false, great: false, me: false }) : localActive;
 
   const click = (key) => {
-    if (active[key]) return;
-    setActive((a) => ({ ...a, [key]: true }));
-    setCounts((c) => ({ ...c, [key]: c[key] + 1 }));
+    if (isControlled) {
+      onEmpathyToggle(key);
+      return;
+    }
+    if (localActive[key]) return;
+    setLocalActive((a) => ({ ...a, [key]: true }));
+    setLocalCounts((c) => ({ ...c, [key]: c[key] + 1 }));
   };
 
   return (
