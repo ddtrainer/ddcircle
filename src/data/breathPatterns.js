@@ -1,7 +1,7 @@
 // 호흡 프리셋 (들숨-멈춤-날숨, 사이클 수)
 export const BREATH_PRESETS = [
   { id: '478', label: '4-7-8', durations: { inhale: 4, hold: 7, exhale: 8 }, cycles: 6 },
-  { id: '36',  label: '3-6',   durations: { inhale: 3, hold: 0, exhale: 6 }, cycles: 8 },
+  { id: '36',  label: '3-6',   durations: { inhale: 3, hold: 0, exhale: 6 }, cycles: 6 },
 ];
 
 export const DEFAULT_CUSTOM_BREATH = {
