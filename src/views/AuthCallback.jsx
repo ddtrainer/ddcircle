@@ -14,12 +14,9 @@ export default function AuthCallback() {
       if (navigated) return;
       navigated = true;
       if (session) {
-        const key = `ddcircle.setup.${session.user.id}`;
-        const setupDone = localStorage.getItem(key);
-        console.log('[auth-callback] userId:', session.user.id, 'setupDone:', setupDone, 'key:', key);
+        const setupDone = localStorage.getItem(`ddcircle.setup.${session.user.id}`);
         navigate(setupDone ? '/' : '/profile-setup', { replace: true });
       } else {
-        console.log('[auth-callback] no session → login');
         navigate('/login', { replace: true });
       }
     };

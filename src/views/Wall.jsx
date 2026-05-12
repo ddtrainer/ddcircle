@@ -70,15 +70,12 @@ export default function Wall() {
     if (!user) return;
     // 채널 이름에 랜덤값 포함 (같은 계정 다중 탭에서도 각자 구독)
     const channelName = `wall-${user.id}-${Math.random().toString(36).slice(2, 8)}`;
-    console.log('[realtime] subscribing:', channelName);
     const channel = supabase
       .channel(channelName)
-      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'posts' }, (payload) => {
-        console.log('[realtime] post INSERT:', payload.new?.id);
+      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'posts' }, () => {
         refresh();
       })
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'empathies' }, async (payload) => {
-        console.log('[realtime] empathy event:', payload.eventType, payload);
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'empathies' }, async () => {
         const allIds = postIdsRef.current;
         if (allIds.length === 0) return;
         const emp = await fetchEmpathiesForPosts(allIds, user.id);
@@ -87,17 +84,13 @@ export default function Wall() {
       .on('postgres_changes',
         { event: 'INSERT', schema: 'public', table: 'encouragements', filter: `to_user=eq.${user.id}` },
         (payload) => {
-          console.log('[realtime] encouragement received:', payload.new);
           const enc = findEncouragement(payload.new?.enc_id);
           showToast(enc?.emoji || '💌', t(enc?.textKey) || t('encReceivedLabel'));
         }
       )
-      .subscribe((status) => {
-        console.log('[realtime] channel status:', status);
-      });
+      .subscribe();
 
     return () => {
-      console.log('[realtime] unsubscribing:', channelName);
       supabase.removeChannel(channel);
     };
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -121,8 +114,7 @@ export default function Wall() {
       };
     });
     try {
-      const result = await toggleEmpathy(user.id, postId, type);
-      console.log('[empathy] toggle ok:', { postId, type, result });
+      await toggleEmpathy(user.id, postId, type);
     } catch (e) {
       console.error('[empathy] toggle failed, reverting:', e?.message || e);
       // 롤백
