@@ -54,6 +54,104 @@ export async function fetchLastNDaysEp(userId, days = 14) {
   return result;
 }
 
+// 오늘의 활동 — Record의 "오늘의 EP 내역" 카드용
+// 반환: { hasProof, shared, sentCount, receivedCount, sessionDone }
+export async function fetchTodayBreakdown(userId) {
+  if (!userId) return null;
+  const today = dateKey();
+  const startOfDay = new Date();
+  startOfDay.setHours(0, 0, 0, 0);
+  const startIso = startOfDay.toISOString();
+
+  // 오늘 세션 조회
+  const { data: session } = await supabase
+    .from('daily_sessions')
+    .select('has_proof, shared')
+    .eq('user_id', userId)
+    .eq('session_date', today)
+    .maybeSingle();
+
+  // 오늘 보낸 공감 수
+  const { count: sentCount } = await supabase
+    .from('empathies')
+    .select('id', { count: 'exact', head: true })
+    .eq('user_id', userId)
+    .gte('created_at', startIso);
+
+  // 오늘 받은 공감 수 — 본인 게시물 ID 먼저 조회 후 in 절
+  const { data: myPosts } = await supabase
+    .from('posts')
+    .select('id')
+    .eq('user_id', userId);
+  const myPostIds = (myPosts || []).map((p) => p.id);
+  let receivedCount = 0;
+  if (myPostIds.length > 0) {
+    const { count } = await supabase
+      .from('empathies')
+      .select('id', { count: 'exact', head: true })
+      .in('post_id', myPostIds)
+      .neq('user_id', userId)
+      .gte('created_at', startIso);
+    receivedCount = count || 0;
+  }
+
+  return {
+    sessionDone: !!session,
+    hasProof: session?.has_proof || false,
+    shared: session?.shared || false,
+    sentCount: sentCount || 0,
+    receivedCount,
+  };
+}
+
+// 이번 달 활동 — Record의 "이번 달 활동 분석" 카드용
+// 반환: { dashCount, deepCount, proofCount, empathyCount, nudgeCount }
+export async function fetchMonthActivity(userId) {
+  if (!userId) return null;
+  const start = new Date();
+  start.setDate(1);
+  start.setHours(0, 0, 0, 0);
+  const startIso = start.toISOString();
+  const startDate = dateKey(start);
+
+  // 이번 달 세션 수 (Dash/Deep는 페어로 함께)
+  const { count: sessionCount } = await supabase
+    .from('daily_sessions')
+    .select('user_id', { count: 'exact', head: true })
+    .eq('user_id', userId)
+    .gte('session_date', startDate);
+
+  // 이번 달 셀카 + 공유 (posts.has_proof=true)
+  const { count: proofCount } = await supabase
+    .from('posts')
+    .select('id', { count: 'exact', head: true })
+    .eq('user_id', userId)
+    .eq('has_proof', true)
+    .gte('created_at', startIso);
+
+  // 이번 달 보낸 공감 수
+  const { count: empathySentCount } = await supabase
+    .from('empathies')
+    .select('id', { count: 'exact', head: true })
+    .eq('user_id', userId)
+    .gte('created_at', startIso);
+
+  // 이번 달 보낸 응원/nudge 수
+  const { count: nudgeCount } = await supabase
+    .from('encouragements')
+    .select('id', { count: 'exact', head: true })
+    .eq('from_user', userId)
+    .gte('created_at', startIso);
+
+  return {
+    dashCount: sessionCount || 0,
+    deepCount: sessionCount || 0,
+    proofCount: proofCount || 0,
+    empathyCount: empathySentCount || 0,
+    nudgeCount: nudgeCount || 0,
+  };
+}
+
 // 세션 완료 기록: daily_sessions upsert + user_stats 업데이트
 // data: { earnedEp, hasProof, shared, exerciseId, breathId, newStreak }
 export async function recordSession(userId, data) {

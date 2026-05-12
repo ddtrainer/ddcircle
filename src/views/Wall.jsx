@@ -93,7 +93,12 @@ export default function Wall() {
       .on('postgres_changes',
         { event: 'INSERT', schema: 'public', table: 'encouragements', filter: `to_user=eq.${user.id}` },
         (payload) => {
-          const enc = findEncouragement(payload.new?.enc_id);
+          const encId = payload.new?.enc_id;
+          if (encId === 'nudge') {
+            showToast('👋', t('nudgeReceivedToast'));
+            return;
+          }
+          const enc = findEncouragement(encId);
           showToast(enc?.emoji || '💌', t(enc?.textKey) || t('encReceivedLabel'));
         }
       )
@@ -201,11 +206,19 @@ export default function Wall() {
     setTimeout(() => setHighlightId(null), 1500);
   };
 
-  const sendNudge = (friend) => {
+  const sendNudge = async (friend) => {
     if (nudged[friend.id]) return;
     setNudged((prev) => ({ ...prev, [friend.id]: true }));
     const name = lang === 'ko' ? friend.name : friend.enName;
     showToast('💌', name + t('nudgeSent'));
+    // 실제 친구(UUID)면 Supabase encouragements에 nudge 저장
+    if (user && typeof friend.id === 'string' && friend.id.length > 20) {
+      try {
+        await sendEncSupabase(user.id, friend.id, 'nudge');
+      } catch (e) {
+        console.error('[nudge] save failed:', e);
+      }
+    }
   };
 
   const displayName = (f) => (lang === 'ko' ? f.name : f.enName);

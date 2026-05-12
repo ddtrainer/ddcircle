@@ -5,7 +5,7 @@ import { useAuth } from '../context/AuthContext';
 import { TREE_LEVELS, getCurrentLevel, getNextLevel, LAST_14_DAYS } from '../data/treeLevels';
 import { getMultiplier } from '../utils/ep';
 import { fetchMyPosts } from '../lib/posts';
-import { fetchUserStats, fetchLastNDaysEp } from '../lib/stats';
+import { fetchUserStats, fetchLastNDaysEp, fetchTodayBreakdown, fetchMonthActivity } from '../lib/stats';
 import TreeSVG from '../components/TreeSVG';
 import EPModal from '../components/modals/EPModal';
 import styles from './Record.module.css';
@@ -41,25 +41,33 @@ export default function Record() {
   const [lightbox, setLightbox] = useState(null);
   const [remoteStats, setRemoteStats] = useState(null);   // user_stats row
   const [remoteChart, setRemoteChart] = useState(null);   // [{date, earnedEp}, ...]
+  const [todayActivity, setTodayActivity] = useState(null); // 오늘 활동
+  const [monthActivity, setMonthActivity] = useState(null); // 이번 달 활동
 
   useEffect(() => {
     if (!user) {
       setProofPosts([]);
       setRemoteStats(null);
       setRemoteChart(null);
+      setTodayActivity(null);
+      setMonthActivity(null);
       return;
     }
     let cancelled = false;
     (async () => {
-      const [posts, stats, chart] = await Promise.all([
+      const [posts, stats, chart, today, month] = await Promise.all([
         fetchMyPosts(user.id, 100),
         fetchUserStats(user.id),
         fetchLastNDaysEp(user.id, 14),
+        fetchTodayBreakdown(user.id),
+        fetchMonthActivity(user.id),
       ]);
       if (cancelled) return;
       setProofPosts(posts.filter((p) => p.has_proof && p.proof_url));
       setRemoteStats(stats);
       setRemoteChart(chart);
+      setTodayActivity(today);
+      setMonthActivity(month);
     })();
     return () => { cancelled = true; };
   }, [user]);
@@ -91,7 +99,20 @@ export default function Record() {
   const dayOfMonth = today.getDate();
   const monthlyAvg = Math.round(displayStats.thisMonth / Math.max(dayOfMonth, 1));
 
-  const tb = TODAY_EP_BREAKDOWN;
+  // 오늘 활동 기반 EP 내역 (인증 시 실데이터, 아니면 데모)
+  const tb = useRemote && todayActivity
+    ? {
+        dash: todayActivity.sessionDone ? 10 : 0,
+        deep: todayActivity.sessionDone ? 15 : 0,
+        fullSet: todayActivity.sessionDone ? 5 : 0,
+        proof: todayActivity.hasProof ? 5 : 0,
+        share: todayActivity.shared ? 5 : 0,
+        empathySent: Math.min(todayActivity.sentCount, 10) * 0.4, // +0.4/회, 최대 10회 = 4 EP
+        empathyReceived: Math.min(todayActivity.receivedCount, 20) * 0.3, // +0.3/회, 최대 20회 = 6 EP
+      }
+    : TODAY_EP_BREAKDOWN;
+  const sentCount = useRemote && todayActivity ? todayActivity.sentCount : SENT_COUNT;
+  const recvCount = useRemote && todayActivity ? todayActivity.receivedCount : RECV_COUNT;
   const baseTotal = tb.dash + tb.deep + tb.fullSet + tb.proof + tb.share + tb.empathySent + tb.empathyReceived;
   const finalEp = Math.round(baseTotal * multiplier);
 
@@ -186,19 +207,19 @@ export default function Record() {
         <EpLine
           icon="🤝"
           name={t('empathyGivenRow')}
-          sub={`(${SENT_COUNT}${t('timesUnit')})`}
+          sub={`(${sentCount}${t('timesUnit')})`}
           value={tb.empathySent}
         />
         <EpLine
           icon="❤️"
           name={t('empathyGottenRow')}
-          sub={`(${RECV_COUNT}${t('timesUnit')})`}
+          sub={`(${recvCount}${t('timesUnit')})`}
           value={tb.empathyReceived}
         />
         <div className={styles.multiplierRow}>
           {t('baseScoreTpl', { base: baseTotal })} ×{' '}
           <span className={styles.mult}>
-            {multiplier} ({t('streakDaysTpl', { days: userEp.streak })})
+            {multiplier} ({t('streakDaysTpl', { days: displayStats.streak })})
           </span>{' '}
           ={' '}
           <strong style={{ color: 'var(--warm)', fontSize: 14 }}>
@@ -242,8 +263,17 @@ export default function Record() {
       {/* 이번 달 활동 분석 */}
       <div className={styles.breakdownCard}>
         <div className={styles.chartTitle}>{t('activityBreakdown')}</div>
-        {ACTIVITY.map((a) => {
-          const pct = (a.value / a.max) * 100;
+        {(useRemote && monthActivity
+          ? [
+              { icon: '🔥', labelKey: 'dashLabel', value: monthActivity.dashCount * 10, max: 140, color: 'dash', unit: '회', rawCount: monthActivity.dashCount },
+              { icon: '🧘', labelKey: 'deepLabel', value: monthActivity.deepCount * 15, max: 210, color: 'deep', unit: '회', rawCount: monthActivity.deepCount },
+              { icon: '📸', labelKey: 'proofShareLabel', value: monthActivity.proofCount * 10, max: 140, color: 'share', unit: '회', rawCount: monthActivity.proofCount },
+              { icon: '🤝', labelKey: 'empathyLabel', value: Math.round(monthActivity.empathyCount * 0.4), max: 200, color: 'empathy', unit: '회', rawCount: monthActivity.empathyCount },
+              { icon: '👋', labelKey: 'friendLabel', value: monthActivity.nudgeCount * 2, max: 120, color: 'friend', unit: '회', rawCount: monthActivity.nudgeCount },
+            ]
+          : ACTIVITY
+        ).map((a) => {
+          const pct = Math.min((a.value / a.max) * 100, 100);
           return (
             <div key={a.labelKey} className={styles.breakdownRow}>
               <div className={styles.breakdownLabel}>
