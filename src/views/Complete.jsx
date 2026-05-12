@@ -15,7 +15,7 @@ import styles from './Complete.module.css';
 export default function Complete() {
   const { t, lang } = useLang();
   const { proofUrl, getProofBlob, completeSession, addUserPost, selectedExercise, lastChallengeBonus, consumeLastChallengeBonus, userEp } = useApp();
-  const { user } = useAuth();
+  const { user, profile } = useAuth();
   const { show: showToast } = useToast();
   const navigate = useNavigate();
   const [sharing, setSharing] = useState(false);
@@ -83,13 +83,14 @@ export default function Complete() {
     try {
       const exercise = EXERCISES.find((e) => e.key === selectedExercise);
       const exerciseLabel = exercise ? t('ex' + exercise.i18n) : '';
-      const mood = MOODS.find((m) => m.id === selectedMood);
-      const moodLabel = mood ? t(mood.key) : '';
       const blob = await generateResultCard({
         ep: userEp.today,
         streak: userEp.streak,
-        mood: moodLabel,
+        mood: selectedMood, // mood id (hard/tired/anxious/didIt/proud)
         exerciseLabel,
+        nickname: profile?.nickname || (user ? 'DD' : '나'),
+        emoji: profile?.emoji || '🌸',
+        emojiBg: profile?.emoji_bg || 'linear-gradient(135deg,#fbb040,#f97b9c)',
         lang,
       });
       const result = await shareOrDownload(blob);
