@@ -1,4 +1,5 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useCallback } from 'react';
+import { supabase } from '../lib/supabase';
 import { useLang } from '../i18n/LangContext';
 import { useApp } from '../context/AppContext';
 import { useAuth } from '../context/AuthContext';
@@ -26,36 +27,71 @@ export default function Wall() {
   const [empathies, setEmpathies] = useState({}); // { postId: { counts, byUser:Set } }
   const [remoteEncMap, setRemoteEncMap] = useState({}); // { toUserId: {encId, ts} }
 
-  // 로그인 상태면 Supabase에서 피드 + 친구 목록 가져오기
+  // 피드 + 친구 + 공감 + 응원 일괄 로드
+  const refresh = useCallback(async () => {
+    if (!user) return;
+    const [circle, pub, friendsList, encMap] = await Promise.all([
+      fetchCircleFeed(50),
+      fetchPublicFeed(50),
+      fetchFriends(user.id),
+      fetchSentToday(user.id),
+    ]);
+    const normCircle = circle.map(normalizePost);
+    const normPublic = pub.map(normalizePost);
+    setRemoteCircle(normCircle);
+    setRemotePublic(normPublic);
+    setRemoteFriends(friendsList);
+    setRemoteEncMap(encMap);
+    const allIds = [...new Set([...normCircle, ...normPublic].map((p) => p.id))];
+    const emp = await fetchEmpathiesForPosts(allIds, user.id);
+    setEmpathies(emp);
+  }, [user]);
+
   useEffect(() => {
     if (!user) {
       setRemoteCircle([]);
       setRemotePublic([]);
       setRemoteFriends([]);
+      setEmpathies({});
+      setRemoteEncMap({});
       return;
     }
-    let cancelled = false;
-    (async () => {
-      const [circle, pub, friendsList, encMap] = await Promise.all([
-        fetchCircleFeed(50),
-        fetchPublicFeed(50),
-        fetchFriends(user.id),
-        fetchSentToday(user.id),
-      ]);
-      if (cancelled) return;
-      const normCircle = circle.map(normalizePost);
-      const normPublic = pub.map(normalizePost);
-      setRemoteCircle(normCircle);
-      setRemotePublic(normPublic);
-      setRemoteFriends(friendsList);
-      setRemoteEncMap(encMap);
-      // 공감 데이터 한 번에 조회
-      const allIds = [...new Set([...normCircle, ...normPublic].map((p) => p.id))];
-      const emp = await fetchEmpathiesForPosts(allIds, user.id);
-      if (!cancelled) setEmpathies(emp);
-    })();
-    return () => { cancelled = true; };
-  }, [user]);
+    refresh();
+  }, [user, refresh]);
+
+  // Realtime 구독: 새 게시물 / 공감 변경 / 받은 응원
+  useEffect(() => {
+    if (!user) return;
+    const channel = supabase
+      .channel(`wall-${user.id}`)
+      // 본인이 아닌 다른 유저의 새 게시물 → 피드 갱신 (RLS가 가시성 보장)
+      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'posts' }, (payload) => {
+        if (payload.new?.user_id === user.id) return; // 본인 게시물은 이미 로컬 처리
+        refresh();
+      })
+      // 공감 변경 (insert/delete) → 카운트 갱신
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'empathies' }, async () => {
+        // 현재 화면의 post id에 대한 empathy만 다시 fetch
+        const allIds = [...new Set([...remoteCircle, ...remotePublic].map((p) => p.id))];
+        if (allIds.length === 0) return;
+        const emp = await fetchEmpathiesForPosts(allIds, user.id);
+        setEmpathies(emp);
+      })
+      // 나에게 온 응원 → 토스트
+      .on('postgres_changes',
+        { event: 'INSERT', schema: 'public', table: 'encouragements', filter: `to_user=eq.${user.id}` },
+        (payload) => {
+          const enc = findEncouragement(payload.new?.enc_id);
+          showToast(enc?.emoji || '💌', t(enc?.textKey) || t('encReceivedLabel'));
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user, refresh]);
 
   // 공감 토글: 낙관적 UI 업데이트 후 Supabase에 반영
   const handleEmpathyToggle = async (postId, type) => {
