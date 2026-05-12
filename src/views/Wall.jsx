@@ -59,34 +59,45 @@ export default function Wall() {
     refresh();
   }, [user, refresh]);
 
+  // 최신 게시물 ID를 ref로 추적 (realtime 콜백 closure 문제 해결)
+  const postIdsRef = useRef([]);
+  useEffect(() => {
+    postIdsRef.current = [...new Set([...remoteCircle, ...remotePublic].map((p) => p.id))];
+  }, [remoteCircle, remotePublic]);
+
   // Realtime 구독: 새 게시물 / 공감 변경 / 받은 응원
   useEffect(() => {
     if (!user) return;
+    // 채널 이름에 랜덤값 포함 (같은 계정 다중 탭에서도 각자 구독)
+    const channelName = `wall-${user.id}-${Math.random().toString(36).slice(2, 8)}`;
+    console.log('[realtime] subscribing:', channelName);
     const channel = supabase
-      .channel(`wall-${user.id}`)
-      // 새 게시물 → 피드 갱신 (RLS가 가시성 보장)
-      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'posts' }, () => {
+      .channel(channelName)
+      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'posts' }, (payload) => {
+        console.log('[realtime] post INSERT:', payload.new?.id);
         refresh();
       })
-      // 공감 변경 (insert/delete) → 카운트 갱신
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'empathies' }, async () => {
-        // 현재 화면의 post id에 대한 empathy만 다시 fetch
-        const allIds = [...new Set([...remoteCircle, ...remotePublic].map((p) => p.id))];
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'empathies' }, async (payload) => {
+        console.log('[realtime] empathy event:', payload.eventType, payload);
+        const allIds = postIdsRef.current;
         if (allIds.length === 0) return;
         const emp = await fetchEmpathiesForPosts(allIds, user.id);
         setEmpathies(emp);
       })
-      // 나에게 온 응원 → 토스트
       .on('postgres_changes',
         { event: 'INSERT', schema: 'public', table: 'encouragements', filter: `to_user=eq.${user.id}` },
         (payload) => {
+          console.log('[realtime] encouragement received:', payload.new);
           const enc = findEncouragement(payload.new?.enc_id);
           showToast(enc?.emoji || '💌', t(enc?.textKey) || t('encReceivedLabel'));
         }
       )
-      .subscribe();
+      .subscribe((status) => {
+        console.log('[realtime] channel status:', status);
+      });
 
     return () => {
+      console.log('[realtime] unsubscribing:', channelName);
       supabase.removeChannel(channel);
     };
   // eslint-disable-next-line react-hooks/exhaustive-deps
