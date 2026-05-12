@@ -250,33 +250,33 @@ export default function Record() {
         </div>
       </div>
 
-      {/* 셀카 갤러리 (인증 시) */}
-      {user && (
-        <div className={styles.galleryCard}>
-          <div className={styles.chartTitle}>{t('galleryTitle')}</div>
-          {proofPosts.length === 0 ? (
-            <div className={styles.galleryEmpty}>{t('galleryEmpty')}</div>
-          ) : (
-            <div className={styles.galleryGrid}>
-              {proofPosts.map((p) => {
-                const d = new Date(p.created_at);
-                const dateLabel = `${d.getMonth() + 1}/${d.getDate()}`;
-                return (
-                  <button
-                    key={p.id}
-                    type="button"
-                    className={styles.galleryCell}
-                    onClick={() => setLightbox(p)}
-                  >
-                    <img src={p.proof_url} alt={dateLabel} loading="lazy" />
-                    <span className={styles.galleryDate}>{dateLabel}</span>
-                  </button>
-                );
-              })}
-            </div>
-          )}
-        </div>
-      )}
+      {/* 셀카 갤러리 */}
+      <div className={styles.galleryCard}>
+        <div className={styles.chartTitle}>{t('galleryTitle')}</div>
+        {proofPosts.length === 0 ? (
+          <div className={styles.galleryEmpty}>
+            {user ? t('galleryEmpty') : t('galleryLoginPrompt')}
+          </div>
+        ) : (
+          <div className={styles.galleryGrid}>
+            {proofPosts.map((p) => {
+              const d = new Date(p.created_at);
+              const dateLabel = `${d.getMonth() + 1}/${d.getDate()}`;
+              return (
+                <button
+                  key={p.id}
+                  type="button"
+                  className={styles.galleryCell}
+                  onClick={() => setLightbox(p)}
+                >
+                  <img src={p.proof_url} alt={dateLabel} loading="lazy" />
+                  <span className={styles.galleryDate}>{dateLabel}</span>
+                </button>
+              );
+            })}
+          </div>
+        )}
+      </div>
 
       {/* 라이트박스 */}
       {lightbox && (

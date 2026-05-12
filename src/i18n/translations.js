@@ -286,6 +286,7 @@ export const translations = {
     profileSaving: '저장 중...',
     galleryTitle: '📸 나의 셀카 기록',
     galleryEmpty: '아직 셀카가 없어요. 오늘의 3분을 시작해보세요.',
+    galleryLoginPrompt: '로그인하면 그동안 찍은 셀카가 여기에 모입니다.',
   },
   en: {
     heroQuote: '<span class="one">One minute</span> to move,<br>two minutes to breathe,<br>shared energy.',
@@ -571,5 +572,6 @@ export const translations = {
     profileSaving: 'Saving...',
     galleryTitle: '📸 My Selfie Records',
     galleryEmpty: 'No selfies yet. Start your 3 minutes today.',
+    galleryLoginPrompt: 'Sign in to see all the selfies you have taken.',
   },
 };
