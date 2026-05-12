@@ -64,9 +64,8 @@ export default function Wall() {
     if (!user) return;
     const channel = supabase
       .channel(`wall-${user.id}`)
-      // 본인이 아닌 다른 유저의 새 게시물 → 피드 갱신 (RLS가 가시성 보장)
-      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'posts' }, (payload) => {
-        if (payload.new?.user_id === user.id) return; // 본인 게시물은 이미 로컬 처리
+      // 새 게시물 → 피드 갱신 (RLS가 가시성 보장)
+      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'posts' }, () => {
         refresh();
       })
       // 공감 변경 (insert/delete) → 카운트 갱신
