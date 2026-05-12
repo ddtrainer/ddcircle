@@ -20,7 +20,7 @@ export default function SetAlertController() {
       // 인앱 모달 표시
       setActiveSlot(slot);
 
-      // 브라우저 알림 (권한 허용 + 페이지가 백그라운드일 때 가장 효과적)
+      // 브라우저 알림 — 서비스 워커 우선 (Android Chrome PWA에서 더 안정적), 폴백은 Notification API
       try {
         if (
           notificationsEnabled &&
@@ -30,17 +30,26 @@ export default function SetAlertController() {
           const slotName = t(slot.id === 'morning' ? 'morning' : 'evening');
           const title = `${slot.icon} ${t('setAlertTitle').replace('{slot}', slotName)}`;
           const body = t('setAlertSub');
-          const n = new Notification(title, {
+          const options = {
             body,
             icon: '/dd-logo.png',
             badge: '/dd-logo.png',
             tag: `ddcircle-set-${slot.id}`,
-          });
-          n.onclick = () => {
-            window.focus();
-            navigate('/picker');
-            n.close();
+            data: { url: '/picker' },
           };
+          if (navigator.serviceWorker?.getRegistration) {
+            navigator.serviceWorker.getRegistration().then((reg) => {
+              if (reg?.showNotification) {
+                reg.showNotification(title, options);
+              } else {
+                const n = new Notification(title, options);
+                n.onclick = () => { window.focus(); navigate('/picker'); n.close(); };
+              }
+            });
+          } else {
+            const n = new Notification(title, options);
+            n.onclick = () => { window.focus(); navigate('/picker'); n.close(); };
+          }
         }
       } catch {
         /* 일부 환경(특히 iOS Safari)은 Notification 미지원 — 무시 */

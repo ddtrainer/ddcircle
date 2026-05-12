@@ -301,6 +301,9 @@ export const translations = {
     pwaInstallSub: '홈 화면에 추가하면 한 번에 열려요',
     pwaInstallBtn: '설치',
     pwaInstallIosGuide: 'Safari 공유 → "홈 화면에 추가" 선택',
+    swUpdateTitle: '새 버전이 준비됐어요',
+    swUpdateSub: '더 빠르고 안정적인 새 버전으로 업데이트하세요',
+    swUpdateBtn: '새로고침',
   },
   en: {
     heroQuote: '<span class="one">One minute</span> to move,<br>two minutes to breathe,<br>shared energy.',
@@ -601,5 +604,8 @@ export const translations = {
     pwaInstallSub: 'Add to home screen for one-tap launch',
     pwaInstallBtn: 'Install',
     pwaInstallIosGuide: 'Tap Share in Safari → "Add to Home Screen"',
+    swUpdateTitle: 'A new version is ready',
+    swUpdateSub: 'Refresh to get the latest improvements',
+    swUpdateBtn: 'Refresh',
   },
 };
