@@ -8,6 +8,7 @@ import { MOODS } from '../data/moods';
 import { EXERCISES } from '../data/exercises';
 import { findEncouragement } from '../data/encouragements';
 import { fetchCircleFeed, fetchPublicFeed, normalizePost } from '../lib/posts';
+import { fetchFriends } from '../lib/friends';
 import FeedCard from '../components/FeedCard';
 import EncourageSheet from '../components/EncourageSheet';
 import InviteModal from '../components/modals/InviteModal';
@@ -19,20 +20,27 @@ export default function Wall() {
   const { user } = useAuth();
   const [remoteCircle, setRemoteCircle] = useState([]);
   const [remotePublic, setRemotePublic] = useState([]);
+  const [remoteFriends, setRemoteFriends] = useState([]);
 
-  // 로그인 상태면 Supabase에서 피드 가져오기
+  // 로그인 상태면 Supabase에서 피드 + 친구 목록 가져오기
   useEffect(() => {
     if (!user) {
       setRemoteCircle([]);
       setRemotePublic([]);
+      setRemoteFriends([]);
       return;
     }
     let cancelled = false;
     (async () => {
-      const [circle, pub] = await Promise.all([fetchCircleFeed(50), fetchPublicFeed(50)]);
+      const [circle, pub, friendsList] = await Promise.all([
+        fetchCircleFeed(50),
+        fetchPublicFeed(50),
+        fetchFriends(user.id),
+      ]);
       if (cancelled) return;
       setRemoteCircle(circle.map(normalizePost));
       setRemotePublic(pub.map(normalizePost));
+      setRemoteFriends(friendsList);
     })();
     return () => { cancelled = true; };
   }, [user]);
@@ -56,8 +64,23 @@ export default function Wall() {
     setEncFriend(null);
   };
 
-  const doneFriends = FRIENDS.filter((f) => f.done);
-  const pendingFriends = FRIENDS.filter((f) => !f.done);
+  // 인증 시: 실제 친구 데이터 (Supabase) / 비인증: 데모 FRIENDS
+  const friendList = user
+    ? remoteFriends.map((f) => ({
+        id: f.id,
+        name: f.nickname,
+        enName: f.nickname,
+        emoji: f.emoji || '🌸',
+        emoji_bg: f.emoji_bg || 'linear-gradient(135deg,#fbb040,#f97b9c)',
+        color: null,
+        streak: 0,
+        done: false,
+        isRemote: true,
+      }))
+    : FRIENDS;
+
+  const doneFriends = friendList.filter((f) => f.done);
+  const pendingFriends = friendList.filter((f) => !f.done);
   const todayCircleCount = doneFriends.length;
 
   const scrollToFriend = (id) => {
@@ -162,7 +185,7 @@ export default function Wall() {
             </div>
 
             <div className={styles.grid}>
-              {FRIENDS.map((f) => (
+              {friendList.map((f) => (
                 <div
                   key={f.id}
                   className={styles.cell}
@@ -170,13 +193,13 @@ export default function Wall() {
                 >
                   <div
                     className={`${styles.avatar} ${f.done ? styles.done : styles.pending}`}
-                    style={{ background: `linear-gradient(135deg,${f.color})` }}
+                    style={{ background: f.emoji_bg || `linear-gradient(135deg,${f.color})` }}
                   >
                     {f.emoji}
                     {f.done && <span className={styles.checkIcon}>✓</span>}
                   </div>
                   <div className={styles.fName}>{displayName(f)}</div>
-                  <div className={styles.streak}>🔥 {f.streak}</div>
+                  {f.streak > 0 && <div className={styles.streak}>🔥 {f.streak}</div>}
                 </div>
               ))}
               {/* 친구 초대 (+) 셀 */}
@@ -195,8 +218,8 @@ export default function Wall() {
           {/* 내 게시물 (최신 위) */}
           {myCirclePosts.map(renderMyPost)}
 
-          {/* 친구 피드 (완료한 친구들) */}
-          {doneFriends.map((f) => {
+          {/* 친구 피드 (완료한 친구들) — 데모 FRIENDS만 (비인증 시) */}
+          {!user && doneFriends.map((f) => {
             const sent = sentEncouragements[f.id];
             const sentEnc = sent ? findEncouragement(sent.encId) : null;
             return (
@@ -220,8 +243,8 @@ export default function Wall() {
             );
           })}
 
-          {/* 아직 안 한 친구들 - nudge 카드 */}
-          {pendingFriends.map((f) => {
+          {/* 아직 안 한 친구들 - nudge 카드 (비인증 시만 데모) */}
+          {!user && pendingFriends.map((f) => {
             const sent = !!nudged[f.id];
             return (
               <div
@@ -263,6 +286,7 @@ export default function Wall() {
       {tab === 'public' && (
         <div>
           {(user ? remotePublic : userPosts.filter((p) => p.target === 'public')).map(renderMyPost)}
+          {!user && (<>
           <FeedCard
             variant="public"
             emoji="🌸"
@@ -283,6 +307,7 @@ export default function Wall() {
             message={t('publicMsg2')}
             initialEmpathy={{ sent: 31, great: 24, me: 15 }}
           />
+          </>)}
         </div>
       )}
 

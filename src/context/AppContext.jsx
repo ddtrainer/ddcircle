@@ -1,5 +1,6 @@
 import { createContext, useContext, useState, useCallback, useEffect, useRef } from 'react';
 import { useLocalStorage } from '../hooks/useLocalStorage';
+import { useAuth } from './AuthContext';
 import { calculateEarnedEp } from '../utils/ep';
 import { DEFAULT_CUSTOM_BREATH } from '../data/breathPatterns';
 import { evaluateChallenges } from '../data/challenges';
@@ -28,11 +29,14 @@ function generateInviteCode() {
 }
 
 export function AppProvider({ children }) {
+  const { profile } = useAuth();
   const [userEp, setUserEp] = useLocalStorage('ddcircle.userEp', DEFAULT_USER_EP);
   const [setTiming, setSetTiming] = useLocalStorage('ddcircle.setTiming', DEFAULT_SET_TIMING);
   const [todayCount, setTodayCount] = useLocalStorage('ddcircle.todayCount', 247);
   const [todayDone, setTodayDone] = useLocalStorage('ddcircle.todayDone', false);
-  const [inviteCode] = useLocalStorage('ddcircle.inviteCode', generateInviteCode());
+  const [localInviteCode] = useLocalStorage('ddcircle.inviteCode', generateInviteCode());
+  // 인증된 유저는 프로필의 실제 invite_code 사용
+  const inviteCode = profile?.invite_code || localInviteCode;
   const [userPosts, setUserPosts] = useLocalStorage('ddcircle.userPosts', []);
   const [breathPatternId, setBreathPatternId] = useLocalStorage('ddcircle.breathPatternId', '478');
   const [customBreath, setCustomBreath] = useLocalStorage('ddcircle.customBreath', DEFAULT_CUSTOM_BREATH);
