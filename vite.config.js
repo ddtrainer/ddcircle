@@ -8,7 +8,7 @@ export default defineConfig({
     react(),
     VitePWA({
       registerType: 'autoUpdate',
-      includeAssets: ['dd-logo.png', 'dd-logo-128.png', 'favicon.svg', 'og-image.png'],
+      includeAssets: ['dd-logo-128.png', 'favicon.svg', 'og-image.png'],
       manifest: {
         name: 'DDCircle',
         short_name: 'DDCircle',
@@ -19,10 +19,10 @@ export default defineConfig({
         theme_color: '#faf6ee',
         orientation: 'portrait',
         lang: 'ko',
+        // 정사각형 PNG만 선언 (모바일 홈 화면 아이콘 요구사항)
         icons: [
           { src: '/dd-logo-128.png', sizes: '128x128', type: 'image/png', purpose: 'any' },
-          { src: '/dd-logo.png', sizes: '512x512', type: 'image/png', purpose: 'any' },
-          { src: '/dd-logo.png', sizes: '512x512', type: 'image/png', purpose: 'maskable' },
+          { src: '/dd-logo-128.png', sizes: '128x128', type: 'image/png', purpose: 'maskable' },
         ],
       },
       workbox: {

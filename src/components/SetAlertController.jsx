@@ -32,8 +32,8 @@ export default function SetAlertController() {
           const body = t('setAlertSub');
           const options = {
             body,
-            icon: '/dd-logo.png',
-            badge: '/dd-logo.png',
+            icon: '/dd-logo-128.png',
+            badge: '/dd-logo-128.png',
             tag: `ddcircle-set-${slot.id}`,
             data: { url: '/picker' },
           };

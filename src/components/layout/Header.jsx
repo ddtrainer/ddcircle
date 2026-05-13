@@ -75,6 +75,15 @@ export default function Header() {
             </button>
           </div>
 
+          {!user && (
+            <button
+              className={styles.loginBtn}
+              onClick={() => navigate('/login')}
+            >
+              {lang === 'ko' ? '로그인' : 'Sign in'}
+            </button>
+          )}
+
           {user && (
             <div className={styles.menuWrap} ref={menuRef}>
               <button
