@@ -93,9 +93,21 @@ export default function Complete() {
         emojiBg: profile?.emoji_bg || 'linear-gradient(135deg,#fbb040,#f97b9c)',
         lang,
       });
-      const result = await shareOrDownload(blob);
-      if (result === 'shared' || result === 'downloaded') {
+      const shareText = lang === 'en'
+        ? 'A three-minute daily breath together · DDCircle\nhttps://www.ddcircle.app'
+        : '매일 3분, 함께 호흡하는 작은 의식 · DDCircle\nhttps://www.ddcircle.app';
+      const result = await shareOrDownload(blob, 'ddcircle-today.png', {
+        url: 'https://www.ddcircle.app?ref=share-card',
+        title: 'DDCircle',
+        text: shareText,
+      });
+      if (result === 'shared') {
         showToast('📸', t('storyShareSuccess'));
+      } else if (result === 'downloaded') {
+        // Web Share 미지원 환경 — 이미지 다운로드 + 링크 클립보드 복사 알림
+        showToast('📋', lang === 'en'
+          ? 'Card saved · link copied to clipboard'
+          : '카드 저장됨 · 링크가 복사됐어요');
       }
     } catch (e) {
       showToast('⚠️', t('storyShareError'));

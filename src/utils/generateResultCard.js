@@ -182,31 +182,59 @@ export async function generateResultCard({
 }
 
 // 공유 (Web Share API) 또는 다운로드 fallback
-export async function shareOrDownload(blob, filename = 'ddcircle-today.png') {
+// URL을 함께 전달해서 받는 쪽에서 카드를 탭하면 DDCircle 웹앱으로 접속 가능하게 함
+// (카카오톡, iMessage, 디스코드, 슬랙 등 대부분의 메신저에서 작동)
+export async function shareOrDownload(blob, filename = 'ddcircle-today.png', opts = {}) {
+  const {
+    url = 'https://www.ddcircle.app?ref=share-card',
+    title = 'DDCircle',
+    text = '매일 3분, 함께 호흡하는 작은 의식\nhttps://www.ddcircle.app',
+  } = opts;
+
   const file = new File([blob], filename, { type: 'image/png' });
 
+  // 1차: files + url + text 모두 전달 (지원 플랫폼에서 카드+링크 함께 표시)
   if (navigator.canShare && navigator.canShare({ files: [file] })) {
+    // 일부 플랫폼은 files+url 조합을 거부 — 가능 여부 사전 체크
+    let payload = { files: [file], title, text };
     try {
-      await navigator.share({
-        files: [file],
-        title: 'DDCircle',
-        text: '매일 3분, 함께 호흡하는 작은 의식 · ddcircle.app',
-      });
+      if (navigator.canShare({ files: [file], url, title, text })) {
+        payload = { files: [file], title, text, url };
+      }
+    } catch { /* canShare가 throw하면 url 없이 진행 */ }
+
+    try {
+      await navigator.share(payload);
       return 'shared';
     } catch (e) {
       if (e.name === 'AbortError') return 'cancelled';
+      // DataError 등이면 url 빼고 한 번 더 시도
+      if (payload.url) {
+        try {
+          await navigator.share({ files: [file], title, text });
+          return 'shared';
+        } catch (e2) {
+          if (e2.name === 'AbortError') return 'cancelled';
+        }
+      }
       // fallthrough to download
     }
   }
 
-  // Fallback: 다운로드
-  const url = URL.createObjectURL(blob);
+  // 2차 fallback: 다운로드 + 클립보드에 링크 복사 (사용자가 직접 첨부+붙여넣기)
+  try {
+    if (navigator.clipboard?.writeText) {
+      await navigator.clipboard.writeText(url);
+    }
+  } catch { /* ignore */ }
+
+  const blobUrl = URL.createObjectURL(blob);
   const a = document.createElement('a');
-  a.href = url;
+  a.href = blobUrl;
   a.download = filename;
   document.body.appendChild(a);
   a.click();
   document.body.removeChild(a);
-  setTimeout(() => URL.revokeObjectURL(url), 1000);
+  setTimeout(() => URL.revokeObjectURL(blobUrl), 1000);
   return 'downloaded';
 }
