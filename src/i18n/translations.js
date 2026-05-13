@@ -369,7 +369,7 @@ export const translations = {
     profileEditSaved: 'Profile saved',
     startBtn: 'Start your 3 minutes →',
     browseLink: 'Peek at Cheerland first →',
-    philosophyText: '"For a million years, humanity has carried two things —<br>to move the body, and to breathe deeply.<br>These three minutes of tending to myself are what keep me, me."',
+    philosophyText: '"For a million years, humanity has carried two things —<br>to move the body, and to breathe deeply.<br>These three minutes of tending to myself are how I stay myself."',
     pickerTitle: '🔥 Pick your move',
     pickerSub: 'Choose your 1-minute move',
     pickerBack: '← Back',
