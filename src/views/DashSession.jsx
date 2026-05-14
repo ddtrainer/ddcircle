@@ -29,7 +29,7 @@ export default function DashSession() {
 
   // 마일스톤별 가이드 변경 (페이드 효과)
   const handleMilestone = (sec) => {
-    const keys = { 55: 'dashGuide55', 40: 'dashGuide40', 20: 'dashGuide20', 10: 'dashGuide10', 5: 'dashGuide5' };
+    const keys = { 40: 'dashGuide40', 20: 'dashGuide20', 10: 'dashGuide10', 5: 'dashGuide5' };
     const key = keys[sec];
     if (!key) return;
     setGuideVisible(false);
