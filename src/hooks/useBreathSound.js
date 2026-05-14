@@ -17,8 +17,10 @@ let bellOut = null;
 // 시간대 기반 배경음 선택
 function selectBackgroundSrc() {
   const hour = new Date().getHours();
-  // 새벽~정오: 새소리 (활력) / 정오~밤: 물소리 (차분)
-  return hour < 12 ? '/audio/bird.mp3' : '/audio/water.mp3';
+  // 05:00–11:59 새소리 (새벽~오전, 실제 새가 우는 시간)
+  // 12:00–04:59 물소리 (오후·저녁·밤·한밤중·새벽까지 차분한 흐름)
+  const isMorning = hour >= 5 && hour < 12;
+  return isMorning ? '/audio/bird.mp3' : '/audio/water.mp3';
 }
 
 function ensureBackground() {
