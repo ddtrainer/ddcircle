@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 // 6가지 운동 동작 영상 (MP4, 정사각형, 5~10초 루프)
 // type: 'jumping-jack' | 'jog' | 'squat' | 'burpee' | 'running' | 'free'
@@ -19,8 +19,10 @@ export default function ExerciseSVG({ type = 'jumping-jack', size = 130, paused 
 }
 
 // 영상 기반 운동 동작 (autoplay + loop + muted, paused prop과 동기화)
+// 첫 프레임 준비 전 검은 화면 방지: 투명 배경 + 페이드 인
 function ExerciseVideo({ src, size, paused }) {
   const ref = useRef(null);
+  const [ready, setReady] = useState(false);
 
   useEffect(() => {
     const el = ref.current;
@@ -46,12 +48,19 @@ function ExerciseVideo({ src, size, paused }) {
       playsInline
       preload="auto"
       aria-label="exercise demonstration"
+      onLoadedData={() => setReady(true)}
+      onCanPlay={() => setReady(true)}
       style={{
         width: size,
         height: size,
         objectFit: 'contain',
         display: 'block',
         borderRadius: '50%',
+        // 검은 배경 방지 — 부모의 베이지 원이 비치도록 투명 처리
+        backgroundColor: 'transparent',
+        // 첫 프레임 준비될 때까지 숨김 → 준비 시점에 0.25초 페이드 인
+        opacity: ready ? 1 : 0,
+        transition: 'opacity 0.25s ease-out',
       }}
     />
   );
