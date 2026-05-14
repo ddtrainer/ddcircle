@@ -81,6 +81,35 @@ export async function createPost(userId, data) {
   return post;
 }
 
+// 게시물 삭제 (본인 게시물만 — RLS가 강제)
+// proofUrl이 있으면 Storage의 셀카 파일도 함께 삭제
+export async function deletePost(postId, proofUrl = null) {
+  if (!postId) return { ok: false, reason: 'no postId' };
+
+  // 1) Storage의 셀카 사진 먼저 제거 (실패해도 DB 삭제는 진행)
+  if (proofUrl) {
+    try {
+      // publicUrl 형식: .../storage/v1/object/public/proofs/{userId}/{timestamp}.{ext}
+      const match = proofUrl.match(/\/proofs\/(.+)$/);
+      const path = match?.[1];
+      if (path) {
+        const { error: sErr } = await supabase.storage.from('proofs').remove([path]);
+        if (sErr) console.warn('[posts] storage delete failed (ignored):', sErr);
+      }
+    } catch (e) {
+      console.warn('[posts] proof path parse failed (ignored):', e);
+    }
+  }
+
+  // 2) DB row 삭제 (RLS: 본인 user_id와 일치하는 row만 가능)
+  const { error } = await supabase.from('posts').delete().eq('id', postId);
+  if (error) {
+    console.error('[posts] delete error:', error);
+    return { ok: false, reason: error.message };
+  }
+  return { ok: true };
+}
+
 // 본인 게시물 최근 N개
 export async function fetchMyPosts(userId, limit = 30) {
   if (!userId) return [];

@@ -21,6 +21,8 @@ export default function FeedCard({
   onEncourage, // () => void — 부모가 바텀시트 열기
   encouraged,  // 이미 보낸 경우 true
   encouragedText, // 보낸 메시지 텍스트 (있으면 카드에 표시)
+  // 본인 게시물 삭제 (variant === 'mine'일 때만 부모가 전달)
+  onDelete,    // () => void
   // controlled empathy (Supabase 연동 시 부모가 제공)
   controlledCounts,   // { sent, great, me }
   controlledActive,   // { sent, great, me } booleans
@@ -60,6 +62,16 @@ export default function FeedCard({
           </div>
         </div>
         {tag && <div className={styles.tag}>{tag}</div>}
+        {onDelete && (
+          <button
+            className={styles.deleteBtn}
+            onClick={onDelete}
+            aria-label={t('deletePost')}
+            title={t('deletePost')}
+          >
+            ✕
+          </button>
+        )}
       </div>
 
       {proof && (

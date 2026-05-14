@@ -67,6 +67,24 @@
   border-radius: 999px;
 }
 
+.deleteBtn {
+  background: none;
+  border: none;
+  color: var(--text-muted, #999);
+  font-size: 16px;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 999px;
+  line-height: 1;
+  transition: color 0.15s, background 0.15s;
+  margin-left: 4px;
+}
+
+.deleteBtn:hover {
+  color: #d64545;
+  background: rgba(214, 69, 69, 0.08);
+}
+
 .msg {
   font-family: 'Noto Serif KR', 'Playfair Display', serif;
   font-size: 16px;

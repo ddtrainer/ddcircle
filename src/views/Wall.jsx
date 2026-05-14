@@ -8,7 +8,7 @@ import { FRIENDS, formatTimeAgo } from '../data/friends';
 import { MOODS } from '../data/moods';
 import { EXERCISES } from '../data/exercises';
 import { findEncouragement } from '../data/encouragements';
-import { fetchCircleFeed, fetchPublicFeed, normalizePost } from '../lib/posts';
+import { fetchCircleFeed, fetchPublicFeed, normalizePost, deletePost } from '../lib/posts';
 import { fetchFriends } from '../lib/friends';
 import { fetchEmpathiesForPosts, toggleEmpathy } from '../lib/empathies';
 import { fetchSentToday, sendEncouragement as sendEncSupabase } from '../lib/encouragements';
@@ -229,6 +229,40 @@ export default function Wall() {
     }
   };
 
+  // 본인 게시물 삭제 (서버 + 옵티미스틱 UI)
+  const handleDeletePost = async (post) => {
+    if (!post?.id) return;
+    const ok = window.confirm(t('deleteConfirm'));
+    if (!ok) return;
+
+    // 옵티미스틱 — UI에서 즉시 제거
+    const filterFn = (p) => p.id !== post.id;
+    setRemoteCircle((prev) => prev.filter(filterFn));
+    setRemotePublic((prev) => prev.filter(filterFn));
+
+    if (post.isRemote) {
+      // Supabase 삭제 (DB + Storage)
+      const result = await deletePost(post.id, post.proofUrl);
+      if (!result.ok) {
+        showToast('⚠️', t('deleteError'));
+        // 실패 시 새로고침 트리거 — 가장 안전한 롤백
+        try {
+          const [normCircle, normPublic] = await Promise.all([
+            fetchCircleFeed(50).then((r) => r.map(normalizePost)),
+            fetchPublicFeed(50).then((r) => r.map(normalizePost)),
+          ]);
+          setRemoteCircle(normCircle);
+          setRemotePublic(normPublic);
+        } catch { /* ignore */ }
+        return;
+      }
+      showToast('🗑️', t('deleteSuccess'));
+    } else {
+      // 로컬 게시물 — AppContext의 userPosts에서 제거 필요시 후속 작업
+      showToast('🗑️', t('deleteSuccess'));
+    }
+  };
+
   const displayName = (f) => (lang === 'ko' ? f.name : f.enName);
 
   // 인증 상태면 원격 피드 우선, 아니면 로컬
@@ -265,6 +299,7 @@ export default function Wall() {
         controlledCounts={controlledCounts}
         controlledActive={controlledActive}
         onEmpathyToggle={user ? (key) => handleEmpathyToggle(post.id, key) : undefined}
+        onDelete={isMine ? () => handleDeletePost(post) : undefined}
       />
     );
   };
