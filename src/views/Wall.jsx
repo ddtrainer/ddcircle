@@ -7,7 +7,7 @@ import { useToast } from '../components/Toast';
 import { FRIENDS, formatTimeAgo } from '../data/friends';
 import { MOODS } from '../data/moods';
 import { EXERCISES } from '../data/exercises';
-import { findEncouragement } from '../data/encouragements';
+import { findEncouragement, getEncouragementText } from '../data/encouragements';
 import { fetchCircleFeed, fetchPublicFeed, normalizePost, deletePost } from '../lib/posts';
 import { fetchFriends } from '../lib/friends';
 import { fetchEmpathiesForPosts, toggleEmpathy } from '../lib/empathies';
@@ -176,8 +176,10 @@ export default function Wall() {
     if (!encFriend) return;
     // 로컬 응원 카운터 (legacy + 비인증 호환)
     sendEncouragement(encFriend.id, encId);
-    const enc = findEncouragement(encId);
-    showToast(enc?.emoji || '💌', `${t('encToastSent')} · ${t(enc?.textKey)}`);
+    const isCustom = typeof encId === 'string' && encId.startsWith('custom:');
+    const enc = isCustom ? null : findEncouragement(encId);
+    const displayText = isCustom ? encId.slice(7) : (enc ? t(enc.textKey) : '');
+    showToast(enc?.emoji || '💌', `${t('encToastSent')} · ${displayText}`);
     // 인증된 유저 + 실제 친구(UUID)면 Supabase에도 저장
     if (user && typeof encFriend.id === 'string' && encFriend.id.length > 20) {
       try {
@@ -298,7 +300,7 @@ export default function Wall() {
     // 응원은 게시물별로 추적 — 같은 친구의 다른 게시물에 별도로 응원 가능
     const friendUserId = !isMine ? post.userId : null;
     const sentEncRemote = friendUserId ? remoteEncMap.byPost?.[post.id] : null;
-    const sentEncObj = sentEncRemote ? findEncouragement(sentEncRemote.encId) : null;
+    const sentEncDisplay = sentEncRemote ? getEncouragementText(sentEncRemote.encId, t) : '';
     const handleEncourageFriend = friendUserId && user
       ? () => setEncFriend({ id: friendUserId, name: profile?.nickname || '', postId: post.id })
       : undefined;
@@ -321,7 +323,7 @@ export default function Wall() {
         onDelete={isMine ? () => handleDeletePost(post) : undefined}
         onEncourage={handleEncourageFriend}
         encouraged={!!sentEncRemote}
-        encouragedText={sentEncObj ? t(sentEncObj.textKey) : ''}
+        encouragedText={sentEncDisplay}
       />
     );
   };
