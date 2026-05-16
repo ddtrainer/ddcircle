@@ -172,6 +172,12 @@ export function AppProvider({ children }) {
     }));
     setTodayDone(true);
     setTodayCount((c) => c + 1);
+    // 세션 완료 날짜 저장 — 셋 타이밍 알림이 "오늘 이미 했는지" 정확히 판단하기 위함
+    try {
+      const today = new Date();
+      const dateStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+      localStorage.setItem('ddcircle.lastSessionDate', dateStr);
+    } catch { /* ignore */ }
 
     // 인증된 유저는 Supabase에 기록 (fire-and-forget)
     if (user) {
