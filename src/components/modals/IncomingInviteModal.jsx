@@ -36,6 +36,20 @@ export default function IncomingInviteModal({ open, onClose }) {
   const emoji = inviter?.emoji || DEMO_INVITER.emoji;
   const emojiBg = inviter?.emoji_bg || DEMO_INVITER.emoji_bg;
 
+  // 처리된 초대 코드를 localStorage에 기록 — 같은 URL 재방문 시 모달 안 뜸
+  const markHandled = (code) => {
+    if (!code) return;
+    try {
+      const handled = JSON.parse(localStorage.getItem('ddcircle.handledInvites') || '[]');
+      if (!handled.includes(code)) {
+        handled.push(code);
+        // 최근 50개만 유지 (무한 증가 방지)
+        const trimmed = handled.slice(-50);
+        localStorage.setItem('ddcircle.handledInvites', JSON.stringify(trimmed));
+      }
+    } catch { /* ignore */ }
+  };
+
   const accept = async () => {
     if (accepting) return;
     setAccepting(true);
@@ -45,6 +59,7 @@ export default function IncomingInviteModal({ open, onClose }) {
         await acceptInvite(user.id, pendingInvite.code);
       }
       setUserEp((prev) => ({ ...prev, total: prev.total + 20 }));
+      markHandled(pendingInvite?.code);
       setPendingInvite(null);
       onClose?.();
       showToast('🎉', t('inviteAccepted'));
@@ -58,12 +73,14 @@ export default function IncomingInviteModal({ open, onClose }) {
   };
 
   const decline = () => {
+    markHandled(pendingInvite?.code);
     setPendingInvite(null);
     onClose?.();
     showToast('💌', t('inviteDeclined'));
   };
 
   const block = () => {
+    markHandled(pendingInvite?.code);
     setPendingInvite(null);
     onClose?.();
     showToast('🚫', t('inviteBlocked'));

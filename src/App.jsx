@@ -60,8 +60,12 @@ function ProfileGuard() {
 }
 
 // URL ?invite=xxx 진입 시 자동으로 받은 초대 모달 열기
+// 가드:
+//   1) 본인이 본인을 초대한 경우 — 무시 (자기 자신과 친구 불가)
+//   2) 이미 처리(수락/거절/차단)한 코드 — 무시 (localStorage에 기록)
 function InviteUrlHandler() {
-  const { pendingInvite, setPendingInvite } = useApp();
+  const { pendingInvite, setPendingInvite, inviteCode: myInviteCode } = useApp();
+  const { profile } = useAuth();
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
@@ -69,14 +73,31 @@ function InviteUrlHandler() {
     const code = params.get('invite');
     if (!code) return;
 
-    setPendingInvite({ code });
-    // URL 정리 (히스토리에 코드 노출 방지)
+    // URL 정리 — 가드에서 걸러져도 항상 URL은 청소 (북마크/공유 시 노출 방지)
     const cleanUrl = window.location.pathname + window.location.hash;
     window.history.replaceState({}, document.title, cleanUrl);
+
+    // 가드 1: 본인 코드면 무시 (자기 초대 차단)
+    const ownCode = profile?.invite_code || myInviteCode;
+    if (ownCode && code === ownCode) {
+      console.log('[invite] self-invite ignored');
+      return;
+    }
+
+    // 가드 2: 이미 처리한 코드면 무시
+    try {
+      const handled = JSON.parse(localStorage.getItem('ddcircle.handledInvites') || '[]');
+      if (handled.includes(code)) {
+        console.log('[invite] already handled, ignoring:', code);
+        return;
+      }
+    } catch { /* ignore parse errors */ }
+
+    setPendingInvite({ code });
     // 0.4초 후 모달 오픈 (페이드 안정화)
     setTimeout(() => setOpen(true), 400);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [profile?.invite_code]);
 
   // pendingInvite가 외부에서 사라지면 모달도 닫음
   useEffect(() => {
