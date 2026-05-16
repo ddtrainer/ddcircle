@@ -284,6 +284,15 @@ export default function Wall() {
     const controlledActive = emp
       ? { sent: emp.byUser.has('sent'), great: emp.byUser.has('great'), me: emp.byUser.has('me') }
       : undefined;
+
+    // 친구 게시물에만 응원 보내기 활성화 (본인 게시물에는 응원 못 보냄)
+    const friendUserId = !isMine ? post.userId : null;
+    const sentEncRemote = friendUserId ? remoteEncMap[friendUserId] : null;
+    const sentEncObj = sentEncRemote ? findEncouragement(sentEncRemote.encId) : null;
+    const handleEncourageFriend = friendUserId && user
+      ? () => setEncFriend({ id: friendUserId, name: profile?.nickname || '' })
+      : undefined;
+
     return (
       <FeedCard
         key={post.id}
@@ -300,6 +309,9 @@ export default function Wall() {
         controlledActive={controlledActive}
         onEmpathyToggle={user ? (key) => handleEmpathyToggle(post.id, key) : undefined}
         onDelete={isMine ? () => handleDeletePost(post) : undefined}
+        onEncourage={handleEncourageFriend}
+        encouraged={!!sentEncRemote}
+        encouragedText={sentEncObj ? t(sentEncObj.textKey) : ''}
       />
     );
   };
