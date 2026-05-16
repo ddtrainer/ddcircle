@@ -111,6 +111,25 @@ export async function fetchUserStats(userId) {
   return data;
 }
 
+// 여러 사용자의 통계 일괄 조회 → { [userId]: { streak, last_session_date, today_ep, ... } }
+// 친구 그리드에서 오늘 완료 여부 + 스트릭 표시용
+export async function fetchUserStatsBulk(userIds) {
+  if (!userIds || userIds.length === 0) return {};
+  const { data, error } = await supabase
+    .from('user_stats')
+    .select('user_id, streak, last_session_date, today_ep')
+    .in('user_id', userIds);
+  if (error) {
+    console.error('[stats] fetchUserStatsBulk error:', error);
+    return {};
+  }
+  const map = {};
+  for (const row of data || []) {
+    map[row.user_id] = row;
+  }
+  return map;
+}
+
 // 최근 N일 daily_sessions 조회
 // 반환: [{ date: 'YYYY-MM-DD', earnedEp }] — 오래된 → 최신 순
 export async function fetchLastNDaysEp(userId, days = 14) {

@@ -12,6 +12,7 @@ import { fetchCircleFeed, fetchPublicFeed, normalizePost, deletePost } from '../
 import { fetchFriends } from '../lib/friends';
 import { fetchEmpathiesForPosts, toggleEmpathy } from '../lib/empathies';
 import { fetchSentToday, sendEncouragement as sendEncSupabase } from '../lib/encouragements';
+import { fetchUserStatsBulk } from '../lib/stats';
 import FeedCard from '../components/FeedCard';
 import EncourageSheet from '../components/EncourageSheet';
 import InviteModal from '../components/modals/InviteModal';
@@ -28,6 +29,8 @@ export default function Wall() {
   // 오늘 보낸 응원: { byUser: {...}, byPost: {...} }
   // byUser → 친구 그리드(친구 1명별 오늘 응원), byPost → 게시물별 응원
   const [remoteEncMap, setRemoteEncMap] = useState({ byUser: {}, byPost: {} });
+  // 친구별 통계: { [userId]: { streak, last_session_date, today_ep } }
+  const [friendStats, setFriendStats] = useState({});
   const [loading, setLoading] = useState(false);
   const [hasLoaded, setHasLoaded] = useState(false);
 
@@ -49,8 +52,14 @@ export default function Wall() {
       setRemoteFriends(friendsList);
       setRemoteEncMap(encMap);
       const allIds = [...new Set([...normCircle, ...normPublic].map((p) => p.id))];
-      const emp = await fetchEmpathiesForPosts(allIds, user.id);
+      // 친구 통계 + 게시물 공감 병렬 로드
+      const friendIds = (friendsList || []).map((f) => f.id);
+      const [emp, stats] = await Promise.all([
+        fetchEmpathiesForPosts(allIds, user.id),
+        fetchUserStatsBulk(friendIds),
+      ]);
       setEmpathies(emp);
+      setFriendStats(stats);
     } finally {
       if (showLoading) setLoading(false);
       setHasLoaded(true);
@@ -62,6 +71,7 @@ export default function Wall() {
       setRemoteCircle([]);
       setRemotePublic([]);
       setRemoteFriends([]);
+      setFriendStats({});
       setEmpathies({});
       setRemoteEncMap({ byUser: {}, byPost: {} });
       setHasLoaded(false);
@@ -198,19 +208,28 @@ export default function Wall() {
     setEncFriend(null);
   };
 
-  // 인증 시: 실제 친구 데이터 (Supabase) / 비인증: 데모 FRIENDS
+  // 인증 시: 실제 친구 데이터 (Supabase) + 친구별 user_stats 결합
+  // 비인증: 데모 FRIENDS
+  const todayDateStr = (() => {
+    const d = new Date();
+    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+  })();
   const friendList = user
-    ? remoteFriends.map((f) => ({
-        id: f.id,
-        name: f.nickname,
-        enName: f.nickname,
-        emoji: f.emoji || '🌸',
-        emoji_bg: f.emoji_bg || 'linear-gradient(135deg,#fbb040,#f97b9c)',
-        color: null,
-        streak: 0,
-        done: false,
-        isRemote: true,
-      }))
+    ? remoteFriends.map((f) => {
+        const s = friendStats[f.id];
+        return {
+          id: f.id,
+          name: f.nickname,
+          enName: f.nickname,
+          emoji: f.emoji || '🌸',
+          emoji_bg: f.emoji_bg || 'linear-gradient(135deg,#fbb040,#f97b9c)',
+          color: null,
+          streak: s?.streak || 0,
+          // 오늘 세션 완료 여부: user_stats.last_session_date 와 오늘 날짜 비교
+          done: s?.last_session_date === todayDateStr,
+          isRemote: true,
+        };
+      })
     : FRIENDS;
 
   const doneFriends = friendList.filter((f) => f.done);
