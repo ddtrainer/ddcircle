@@ -6,7 +6,7 @@ export const ENCOURAGEMENTS = [
   { id: 'together',    emoji: '🤝', textKey: 'enc_together'    },
   { id: 'remember',    emoji: '💭', textKey: 'enc_remember'    },
   { id: 'tomorrow',    emoji: '🌅', textKey: 'enc_tomorrow'    },
-  { id: 'breath_big',  emoji: '🌬️', textKey: 'enc_breath_big'  },
+  // 'breath_big' 제거 — 표현이 어색
   { id: 'gentle_hug',  emoji: '🫂', textKey: 'enc_gentle_hug'  },
   // 'proud' 제거 — 'today_great' 와 의미 중복
   { id: 'thanks',      emoji: '🙏', textKey: 'enc_thanks'      },
