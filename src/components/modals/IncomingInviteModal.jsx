@@ -43,30 +43,45 @@ export default function IncomingInviteModal({ open, onClose }) {
       const handled = JSON.parse(localStorage.getItem('ddcircle.handledInvites') || '[]');
       if (!handled.includes(code)) {
         handled.push(code);
-        // 최근 50개만 유지 (무한 증가 방지)
         const trimmed = handled.slice(-50);
         localStorage.setItem('ddcircle.handledInvites', JSON.stringify(trimmed));
       }
+      // 보류 코드도 정리
+      localStorage.removeItem('ddcircle.pendingInviteCode');
     } catch { /* ignore */ }
   };
 
   const accept = async () => {
     if (accepting) return;
+
+    // 비로그인 상태에선 친구 관계 생성 불가 — 로그인 안내만
+    if (!user) {
+      showToast('🔑', '로그인하면 친구로 등록할 수 있어요');
+      onClose?.();
+      return;
+    }
+    // 실제 초대자 프로필 로딩 실패 (DB에 없는 코드)
+    if (!inviter?.id || !pendingInvite?.code) {
+      showToast('⚠️', '초대 정보를 찾을 수 없어요');
+      markHandled(pendingInvite?.code);
+      setPendingInvite(null);
+      onClose?.();
+      return;
+    }
+
     setAccepting(true);
     try {
-      // 인증 + 실제 초대자 프로필이 있으면 친구 관계 생성
-      if (user && inviter?.id && pendingInvite?.code) {
-        await acceptInvite(user.id, pendingInvite.code);
-      }
+      // 실제 친구 관계 DB에 생성 (RLS에 따라 INSERT, 중복이면 alreadyFriends)
+      await acceptInvite(user.id, pendingInvite.code);
       setUserEp((prev) => ({ ...prev, total: prev.total + 20 }));
-      markHandled(pendingInvite?.code);
+      markHandled(pendingInvite.code);
       setPendingInvite(null);
       onClose?.();
       showToast('🎉', t('inviteAccepted'));
       setTimeout(() => showToast('✦', '+20 EP'), 1500);
     } catch (e) {
       console.error('[invite] accept error:', e);
-      showToast('⚠️', '초대 수락에 실패했어요');
+      showToast('⚠️', `초대 수락 실패: ${e?.message || '잠시 후 다시 시도해주세요'}`);
     } finally {
       setAccepting(false);
     }

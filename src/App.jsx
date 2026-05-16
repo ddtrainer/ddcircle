@@ -59,45 +59,62 @@ function ProfileGuard() {
   return null;
 }
 
-// URL ?invite=xxx 진입 시 자동으로 받은 초대 모달 열기
-// 가드:
-//   1) 본인이 본인을 초대한 경우 — 무시 (자기 자신과 친구 불가)
-//   2) 이미 처리(수락/거절/차단)한 코드 — 무시 (localStorage에 기록)
+// URL ?invite=xxx 진입 + 로그인 후 보류 코드 처리
+// 흐름:
+//   1) URL에 ?invite=xxx 있으면 localStorage에 저장 (OAuth 리다이렉트 거쳐도 보존)
+//   2) 본인 코드 / 이미 처리한 코드는 무시
+//   3) 로그인 상태가 되면 (즉시 또는 OAuth 콜백 후) 보류 코드로 모달 표시
 function InviteUrlHandler() {
   const { pendingInvite, setPendingInvite, inviteCode: myInviteCode } = useApp();
-  const { profile } = useAuth();
+  const { user, profile } = useAuth();
   const [open, setOpen] = useState(false);
 
+  // 1) URL의 ?invite= 를 localStorage에 보관 (로그인 흐름을 거쳐도 살아남도록)
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const code = params.get('invite');
     if (!code) return;
 
-    // URL 정리 — 가드에서 걸러져도 항상 URL은 청소 (북마크/공유 시 노출 방지)
+    // URL 정리 — 가드에서 걸러져도 항상 청소
     const cleanUrl = window.location.pathname + window.location.hash;
     window.history.replaceState({}, document.title, cleanUrl);
 
-    // 가드 1: 본인 코드면 무시 (자기 초대 차단)
+    try {
+      localStorage.setItem('ddcircle.pendingInviteCode', code);
+    } catch { /* ignore */ }
+  }, []);
+
+  // 2) 로그인 상태 + 본인 invite_code 로딩 완료 후 보류 코드 처리
+  // user나 profile.invite_code가 바뀔 때마다 재평가
+  useEffect(() => {
+    if (!user) return; // 비로그인이면 모달 안 띄움 (수락이 의미 없으므로)
+
+    const code = (() => {
+      try { return localStorage.getItem('ddcircle.pendingInviteCode'); }
+      catch { return null; }
+    })();
+    if (!code) return;
+
+    // 가드 1: 본인 코드 (자기 초대 차단)
     const ownCode = profile?.invite_code || myInviteCode;
     if (ownCode && code === ownCode) {
       console.log('[invite] self-invite ignored');
+      try { localStorage.removeItem('ddcircle.pendingInviteCode'); } catch {}
       return;
     }
 
-    // 가드 2: 이미 처리한 코드면 무시
+    // 가드 2: 이미 처리한 코드
     try {
       const handled = JSON.parse(localStorage.getItem('ddcircle.handledInvites') || '[]');
       if (handled.includes(code)) {
-        console.log('[invite] already handled, ignoring:', code);
+        localStorage.removeItem('ddcircle.pendingInviteCode');
         return;
       }
-    } catch { /* ignore parse errors */ }
+    } catch { /* ignore */ }
 
     setPendingInvite({ code });
-    // 0.4초 후 모달 오픈 (페이드 안정화)
     setTimeout(() => setOpen(true), 400);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [profile?.invite_code]);
+  }, [user, profile?.invite_code, myInviteCode, setPendingInvite]);
 
   // pendingInvite가 외부에서 사라지면 모달도 닫음
   useEffect(() => {
