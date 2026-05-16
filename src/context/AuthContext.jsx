@@ -62,6 +62,9 @@ export function AuthProvider({ children }) {
       provider: 'kakao',
       options: {
         redirectTo: `${window.location.origin}/auth/callback`,
+        // 카카오 동의 항목 명시 — Supabase 기본값에 포함된 profile_image 제외
+        // (DDCircle은 이모지 아바타 사용, 카카오 프로필 사진 불필요)
+        scopes: 'profile_nickname account_email',
       },
     });
     if (error) {
