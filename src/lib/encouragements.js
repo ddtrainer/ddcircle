@@ -1,24 +1,31 @@
 import { supabase } from './supabase';
 
-// 본인이 오늘 보낸 응원 모두 조회 → { [toUserId]: { encId, ts } }
+// 본인이 오늘 보낸 응원 모두 조회
+// 반환: { byUser: { [toUserId]: { encId, ts } },  byPost: { [postId]: { encId, ts } } }
+// byUser  = 친구 그리드(친구 1명에 대한 오늘 응원 여부) 용도
+// byPost  = 응원나라 피드 카드(게시물별 응원 여부) 용도
 export async function fetchSentToday(userId) {
-  if (!userId) return {};
+  if (!userId) return { byUser: {}, byPost: {} };
   const start = new Date();
   start.setHours(0, 0, 0, 0);
   const { data, error } = await supabase
     .from('encouragements')
-    .select('to_user, enc_id, created_at')
+    .select('to_user, post_id, enc_id, created_at')
     .eq('from_user', userId)
     .gte('created_at', start.toISOString());
   if (error) {
     console.error('[encouragements] fetch error:', error);
-    return {};
+    return { byUser: {}, byPost: {} };
   }
-  const map = {};
+  const byUser = {};
+  const byPost = {};
   for (const row of data || []) {
-    map[row.to_user] = { encId: row.enc_id, ts: new Date(row.created_at).getTime() };
+    const entry = { encId: row.enc_id, ts: new Date(row.created_at).getTime() };
+    // byUser는 가장 최근 응원으로 덮어쓰기
+    byUser[row.to_user] = entry;
+    if (row.post_id) byPost[row.post_id] = entry;
   }
-  return map;
+  return { byUser, byPost };
 }
 
 // 응원 보내기

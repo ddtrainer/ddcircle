@@ -25,7 +25,9 @@ export default function Wall() {
   const [remotePublic, setRemotePublic] = useState([]);
   const [remoteFriends, setRemoteFriends] = useState([]);
   const [empathies, setEmpathies] = useState({}); // { postId: { counts, byUser:Set } }
-  const [remoteEncMap, setRemoteEncMap] = useState({}); // { toUserId: {encId, ts} }
+  // 오늘 보낸 응원: { byUser: {...}, byPost: {...} }
+  // byUser → 친구 그리드(친구 1명별 오늘 응원), byPost → 게시물별 응원
+  const [remoteEncMap, setRemoteEncMap] = useState({ byUser: {}, byPost: {} });
   const [loading, setLoading] = useState(false);
   const [hasLoaded, setHasLoaded] = useState(false);
 
@@ -61,7 +63,7 @@ export default function Wall() {
       setRemotePublic([]);
       setRemoteFriends([]);
       setEmpathies({});
-      setRemoteEncMap({});
+      setRemoteEncMap({ byUser: {}, byPost: {} });
       setHasLoaded(false);
       return;
     }
@@ -162,7 +164,8 @@ export default function Wall() {
   const [highlightId, setHighlightId] = useState(null);
   const [nudged, setNudged] = useState({}); // { friendId: true }
   const [inviteOpen, setInviteOpen] = useState(false);
-  const [encFriend, setEncFriend] = useState(null); // { id, name } 현재 응원 시트의 대상
+  // { id, name, postId? } — postId가 있으면 게시물별 응원, 없으면 친구별(데모/그리드용)
+  const [encFriend, setEncFriend] = useState(null);
   const cardRefs = useRef({});
 
   const openEncourageFor = (friend) => {
@@ -178,8 +181,14 @@ export default function Wall() {
     // 인증된 유저 + 실제 친구(UUID)면 Supabase에도 저장
     if (user && typeof encFriend.id === 'string' && encFriend.id.length > 20) {
       try {
-        await sendEncSupabase(user.id, encFriend.id, encId);
-        setRemoteEncMap((m) => ({ ...m, [encFriend.id]: { encId, ts: Date.now() } }));
+        await sendEncSupabase(user.id, encFriend.id, encId, encFriend.postId || null);
+        const entry = { encId, ts: Date.now() };
+        setRemoteEncMap((m) => ({
+          byUser: { ...m.byUser, [encFriend.id]: entry },
+          byPost: encFriend.postId
+            ? { ...m.byPost, [encFriend.postId]: entry }
+            : m.byPost,
+        }));
       } catch (e) {
         console.error('[encouragement] save failed:', e);
       }
@@ -286,11 +295,12 @@ export default function Wall() {
       : undefined;
 
     // 친구 게시물에만 응원 보내기 활성화 (본인 게시물에는 응원 못 보냄)
+    // 응원은 게시물별로 추적 — 같은 친구의 다른 게시물에 별도로 응원 가능
     const friendUserId = !isMine ? post.userId : null;
-    const sentEncRemote = friendUserId ? remoteEncMap[friendUserId] : null;
+    const sentEncRemote = friendUserId ? remoteEncMap.byPost?.[post.id] : null;
     const sentEncObj = sentEncRemote ? findEncouragement(sentEncRemote.encId) : null;
     const handleEncourageFriend = friendUserId && user
-      ? () => setEncFriend({ id: friendUserId, name: profile?.nickname || '' })
+      ? () => setEncFriend({ id: friendUserId, name: profile?.nickname || '', postId: post.id })
       : undefined;
 
     return (
