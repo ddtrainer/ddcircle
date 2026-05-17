@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, useCallback, useEffect, useRef } from 'react';
-import { useLocalStorage } from '../hooks/useLocalStorage';
+import { useLocalStorage, useSessionStorage } from '../hooks/useLocalStorage';
 import { useAuth } from './AuthContext';
 import { recordSession, migrateLocalStats } from '../lib/stats';
 import { recordStakeDeclared, resolveStakeWon, resolveStakeForfeited, cancelStake } from '../lib/challenges';
@@ -10,13 +10,16 @@ import { evaluateChallenges } from '../data/challenges';
 
 const AppContext = createContext(null);
 
+// 신규 사용자의 첫인상 — 모두 0에서 시작 (실제 활동으로 채워짐)
+// 데모 값을 두면 로그인 직후 "12일 연속 1247 EP" 가짜 카드가 보이다가
+// 0으로 바뀌어 신뢰가 깨짐.
 const DEFAULT_USER_EP = {
-  total: 1247,
-  today: 54,
-  thisMonth: 632,
-  streak: 12,
-  empathySent: 87,
-  empathyReceived: 14,
+  total: 0,
+  today: 0,
+  thisMonth: 0,
+  streak: 0,
+  empathySent: 0,
+  empathyReceived: 0,
 };
 
 const DEFAULT_SET_TIMING = {
@@ -35,7 +38,8 @@ export function AppProvider({ children }) {
   const { profile, user } = useAuth();
   const [userEp, setUserEp] = useLocalStorage('ddcircle.userEp', DEFAULT_USER_EP);
   const [setTiming, setSetTiming] = useLocalStorage('ddcircle.setTiming', DEFAULT_SET_TIMING);
-  const [todayCount, setTodayCount] = useLocalStorage('ddcircle.todayCount', 247);
+  // 실제 오늘 활동 인원 수 — 서버에서 fetch될 때까지 0 (가짜 247 노출 방지)
+  const [todayCount, setTodayCount] = useLocalStorage('ddcircle.todayCount', 0);
   const [todayDone, setTodayDone] = useLocalStorage('ddcircle.todayDone', false);
   const [localInviteCode] = useLocalStorage('ddcircle.inviteCode', generateInviteCode());
   // 인증된 유저는 프로필의 실제 invite_code 사용
@@ -124,8 +128,12 @@ export function AppProvider({ children }) {
   // 받은 초대 (URL ?invite=xxx로 진입 시 설정됨)
   const [pendingInvite, setPendingInvite] = useState(null);
 
-  // 세션 휘발성 상태 (현재 진행 중인 3분 플로우 — localStorage X)
-  const [selectedExercise, setSelectedExercise] = useState('jumping-jack');
+  // 세션 진행 중 상태 — sessionStorage에 보존 (새로고침/백그라운드 복귀에도 살아남음)
+  // selectedExercise가 휘발되면 completeSession이 exercise_id를 null로 저장해
+  // Record의 활동 기록이 비어 보이는 문제 발생.
+  const [selectedExercise, setSelectedExercise] = useSessionStorage(
+    'ddcircle.session.exercise', 'jumping-jack'
+  );
   const proofBlobRef = useRef(null);
   const [proofUrl, setProofUrl] = useState(null);
 
@@ -185,13 +193,13 @@ export function AppProvider({ children }) {
         earnedEp: total,
         hasProof,
         shared,
-        exerciseId: null, // selectedExercise를 여기서 못 받아서 일단 null
-        breathId: null,
+        exerciseId: selectedExercise,
+        breathId: breathPatternId,
         newStreak,
       }).catch((e) => console.error('[stats] recordSession failed:', e));
     }
     return total;
-  }, [userEp.streak, challengeClaims, challengeJoins, setUserEp, setTodayDone, setTodayCount, setChallengeClaims, setChallengeJoins, user]);
+  }, [userEp.streak, challengeClaims, challengeJoins, setUserEp, setTodayDone, setTodayCount, setChallengeClaims, setChallengeJoins, user, selectedExercise, breathPatternId]);
 
   // 챌린지 보너스 알림을 소비(읽음 처리)
   const consumeLastChallengeBonus = useCallback(() => setLastChallengeBonus(null), []);

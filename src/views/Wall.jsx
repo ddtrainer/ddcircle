@@ -20,7 +20,7 @@ import styles from './Wall.module.css';
 
 export default function Wall() {
   const { t, lang } = useLang();
-  const { userPosts, sentEncouragements, sendEncouragement } = useApp();
+  const { userPosts, sentEncouragements, sendEncouragement, todayDone } = useApp();
   const { user } = useAuth();
   const [remoteCircle, setRemoteCircle] = useState([]);
   const [remotePublic, setRemotePublic] = useState([]);
@@ -267,7 +267,8 @@ export default function Wall() {
 
   const doneFriends = friendList.filter((f) => f.done);
   const pendingFriends = friendList.filter((f) => !f.done);
-  const todayCircleCount = doneFriends.length;
+  // 오늘 내 서클에서 완료한 사람 수 — 친구들 + 본인(오늘 완료했으면)
+  const todayCircleCount = doneFriends.length + (todayDone ? 1 : 0);
 
   const scrollToFriend = (id) => {
     const el = cardRefs.current[id];
@@ -401,7 +402,7 @@ export default function Wall() {
         <div className={styles.title}>{t('wallTitle')}</div>
         <div className={styles.headerRight}>
           <span className={styles.count}>
-            {t('todayPrefix')} 23{t('peopleSuffix')}
+            {t('todayPrefix')} {todayCircleCount}{t('peopleSuffix')}
           </span>
           <button
             className={styles.inviteBtn}

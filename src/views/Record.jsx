@@ -10,26 +10,20 @@ import TreeSVG from '../components/TreeSVG';
 import EPModal from '../components/modals/EPModal';
 import styles from './Record.module.css';
 
-// EP 라인 (오늘의 EP 내역)
-const TODAY_EP_BREAKDOWN = {
-  dash: 10,
-  deep: 15,
-  fullSet: 5,
-  proof: 5,
-  share: 5,
-  empathySent: 4,
-  empathyReceived: 6,
+// 데이터가 아직 로드되지 않았거나 비인증 사용자의 빈 상태 — 모두 0
+// 데모 값을 두면 신규 사용자가 첫 진입 시 "+50 EP / 130 회" 가짜 카드를 보고
+// 활동 후 0으로 바뀌어 신뢰가 무너짐.
+const EMPTY_EP_BREAKDOWN = {
+  dash: 0, deep: 0, fullSet: 0, proof: 0, share: 0,
+  empathySent: 0, empathyReceived: 0,
 };
-const SENT_COUNT = 4;
-const RECV_COUNT = 12;
 
-// 활동 분석 (이번 달)
-const ACTIVITY = [
-  { icon: '🔥', labelKey: 'dashLabel', value: 130, max: 140, color: 'dash' },
-  { icon: '🧘', labelKey: 'deepLabel', value: 195, max: 210, color: 'deep' },
-  { icon: '📸', labelKey: 'proofShareLabel', value: 110, max: 140, color: 'share' },
-  { icon: '🤝', labelKey: 'empathyLabel', value: 128, max: 200, color: 'empathy' },
-  { icon: '👋', labelKey: 'friendLabel', value: 42, max: 120, color: 'friend' },
+const EMPTY_ACTIVITY = [
+  { icon: '🔥', labelKey: 'dashLabel', value: 0, max: 140, color: 'dash' },
+  { icon: '🧘', labelKey: 'deepLabel', value: 0, max: 210, color: 'deep' },
+  { icon: '📸', labelKey: 'proofShareLabel', value: 0, max: 140, color: 'share' },
+  { icon: '🤝', labelKey: 'empathyLabel', value: 0, max: 200, color: 'empathy' },
+  { icon: '👋', labelKey: 'friendLabel', value: 0, max: 120, color: 'friend' },
 ];
 
 export default function Record() {
@@ -110,9 +104,9 @@ export default function Record() {
         empathySent: Math.min(todayActivity.sentCount, 10) * 0.4, // +0.4/회, 최대 10회 = 4 EP
         empathyReceived: Math.min(todayActivity.receivedCount, 20) * 0.3, // +0.3/회, 최대 20회 = 6 EP
       }
-    : TODAY_EP_BREAKDOWN;
-  const sentCount = useRemote && todayActivity ? todayActivity.sentCount : SENT_COUNT;
-  const recvCount = useRemote && todayActivity ? todayActivity.receivedCount : RECV_COUNT;
+    : EMPTY_EP_BREAKDOWN;
+  const sentCount = useRemote && todayActivity ? todayActivity.sentCount : 0;
+  const recvCount = useRemote && todayActivity ? todayActivity.receivedCount : 0;
   const baseTotal = tb.dash + tb.deep + tb.fullSet + tb.proof + tb.share + tb.empathySent + tb.empathyReceived;
   const finalEp = Math.round(baseTotal * multiplier);
 
@@ -271,7 +265,7 @@ export default function Record() {
               { icon: '🤝', labelKey: 'empathyLabel', value: Math.round(monthActivity.empathyCount * 0.4), max: 200, color: 'empathy', unit: '회', rawCount: monthActivity.empathyCount },
               { icon: '👋', labelKey: 'friendLabel', value: monthActivity.nudgeCount * 2, max: 120, color: 'friend', unit: '회', rawCount: monthActivity.nudgeCount },
             ]
-          : ACTIVITY
+          : EMPTY_ACTIVITY
         ).map((a) => {
           const pct = Math.min((a.value / a.max) * 100, 100);
           return (
@@ -289,23 +283,36 @@ export default function Record() {
             </div>
           );
         })}
-        <div
-          className={styles.breakdownRow}
-          style={{ borderTop: '1px dashed var(--border-strong)', marginTop: 6, paddingTop: 12 }}
-        >
-          <div className={styles.breakdownLabel} style={{ fontWeight: 600 }}>
-            {t('multiplierBonus')}
-          </div>
-          <div className={styles.breakdownBarWrap}>
+        {/* 멀티플라이어 보너스 — streak가 있을 때만 표시, 값은 실데이터 기반 */}
+        {multiplier > 1 && (() => {
+          const baseMonthEp = useRemote && monthActivity
+            ? monthActivity.dashCount * 10 + monthActivity.deepCount * 15
+              + monthActivity.proofCount * 10 + Math.round(monthActivity.empathyCount * 0.4)
+              + monthActivity.nudgeCount * 2
+            : 0;
+          const bonus = Math.round(baseMonthEp * (multiplier - 1));
+          if (bonus <= 0) return null;
+          const pct = Math.min((bonus / 100) * 100, 100);
+          return (
             <div
-              className={styles.breakdownBar}
-              style={{ width: '28%', background: 'var(--gold)' }}
-            />
-          </div>
-          <div className={styles.breakdownValue} style={{ color: 'var(--gold)' }}>
-            +27 EP
-          </div>
-        </div>
+              className={styles.breakdownRow}
+              style={{ borderTop: '1px dashed var(--border-strong)', marginTop: 6, paddingTop: 12 }}
+            >
+              <div className={styles.breakdownLabel} style={{ fontWeight: 600 }}>
+                {t('multiplierBonus')}
+              </div>
+              <div className={styles.breakdownBarWrap}>
+                <div
+                  className={styles.breakdownBar}
+                  style={{ width: `${pct}%`, background: 'var(--gold)' }}
+                />
+              </div>
+              <div className={styles.breakdownValue} style={{ color: 'var(--gold)' }}>
+                +{bonus} EP
+              </div>
+            </div>
+          );
+        })()}
       </div>
 
       {/* 셀카 갤러리 */}

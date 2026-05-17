@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { useLang } from '../i18n/LangContext';
 import { useAuth } from '../context/AuthContext';
 import { useToast } from '../components/Toast';
@@ -50,6 +50,14 @@ export default function Login() {
       </button>
 
       <div className={styles.notice}>{t('loginNotice')}</div>
+
+      <div className={styles.legalNotice}>
+        {t('legalAgreePrefix')}{' '}
+        <Link to="/terms" className={styles.legalLink}>{t('termsLink')}</Link>
+        {t('legalAgreeMid')}
+        <Link to="/privacy" className={styles.legalLink}>{t('privacyLink')}</Link>
+        {t('legalAgreeSuffix')}
+      </div>
     </div>
   );
 }

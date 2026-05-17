@@ -32,6 +32,8 @@ import Complete from './views/Complete';
 import Login from './views/Login';
 import AuthCallback from './views/AuthCallback';
 import ProfileSetup from './views/ProfileSetup';
+import Terms from './views/Terms';
+import Privacy from './views/Privacy';
 
 // 카운트다운/세션/Proof/로그인 화면에서는 BottomNav 숨김
 const FULLSCREEN_PATHS = ['/countdown', '/dash', '/deep', '/proof', '/login', '/auth', '/profile-setup'];
@@ -163,6 +165,8 @@ export default function App() {
                   <Route path="/auth/callback" element={<AuthCallback />} />
                   <Route path="/profile-setup" element={<ProfileSetup />} />
                   <Route path="/profile-edit" element={<ProfileSetup mode="edit" />} />
+                  <Route path="/terms" element={<Terms />} />
+                  <Route path="/privacy" element={<Privacy />} />
                 </Routes>
               </main>
               <ProfileGuard />
