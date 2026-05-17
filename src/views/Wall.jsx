@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import { useLang } from '../i18n/LangContext';
 import { useApp } from '../context/AppContext';
@@ -22,6 +23,7 @@ export default function Wall() {
   const { t, lang } = useLang();
   const { userPosts, sentEncouragements, sendEncouragement, todayDone } = useApp();
   const { user } = useAuth();
+  const navigate = useNavigate();
   const [remoteCircle, setRemoteCircle] = useState([]);
   const [remotePublic, setRemotePublic] = useState([]);
   const [remoteFriends, setRemoteFriends] = useState([]);
@@ -247,6 +249,9 @@ export default function Wall() {
     const d = new Date();
     return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
   })();
+  // 인증된 사용자만 실제 친구 데이터. 비로그인 사용자에게는 빈 배열 →
+  // 데모 친구(지현, 민준 등)를 더 이상 보여주지 않음. 출시 후 첫인상에서
+  // 가짜 친구가 깔리는 문제 방지.
   const friendList = user
     ? remoteFriends.map((f) => {
         const s = friendStats[f.id];
@@ -258,12 +263,11 @@ export default function Wall() {
           emoji_bg: f.emoji_bg || 'linear-gradient(135deg,#fbb040,#f97b9c)',
           color: null,
           streak: s?.streak || 0,
-          // 오늘 세션 완료 여부: user_stats.last_session_date 와 오늘 날짜 비교
           done: s?.last_session_date === todayDateStr,
           isRemote: true,
         };
       })
-    : FRIENDS;
+    : [];
 
   const doneFriends = friendList.filter((f) => f.done);
   const pendingFriends = friendList.filter((f) => !f.done);
@@ -442,6 +446,21 @@ export default function Wall() {
       {/* 내 서클 탭 */}
       {tab === 'circle' && (!loading || hasLoaded) && (
         <div>
+          {/* 비로그인 — 로그인 유도 카드만 표시 (데모 친구·게시물 제거) */}
+          {!user ? (
+            <div className={styles.inviteCta}>
+              <div className={styles.inviteCtaIcon}>💙</div>
+              <div className={styles.inviteCtaTitle}>{t('wallLoginCtaTitle')}</div>
+              <div className={styles.inviteCtaSub}>{t('wallLoginCtaSub')}</div>
+              <button
+                className={styles.inviteCtaBtn}
+                onClick={() => navigate('/login')}
+              >
+                {t('wallLoginCtaBtn')}
+              </button>
+            </div>
+          ) : (
+          <>
           {/* 친구 0명일 때 초대 CTA */}
           {user && hasLoaded && friendList.length === 0 ? (
             <div className={styles.inviteCta}>
@@ -513,104 +532,39 @@ export default function Wall() {
             </div>
           )}
           {myCirclePosts.map(renderMyPost)}
-
-          {/* 친구 피드 (완료한 친구들) — 데모 FRIENDS만 (비인증 시) */}
-          {!user && doneFriends.map((f) => {
-            const sent = sentEncouragements[f.id];
-            const sentEnc = sent ? findEncouragement(sent.encId) : null;
-            return (
-              <FeedCard
-                key={f.id}
-                variant="friend"
-                cardRef={(el) => { cardRefs.current[f.id] = el; }}
-                highlighted={highlightId === f.id}
-                emoji={f.emoji}
-                emojiBg={`linear-gradient(135deg,${f.color})`}
-                name={displayName(f)}
-                meta={`${formatTimeAgo(f.time, lang)} · ${t('dayLabel')} ${f.streak} · ${t('ex' + f.exerciseKey)}`}
-                tag={t(f.moodLabel)}
-                message={t(f.msgKey)}
-                proof={f.hasProof ? { url: null } : null}
-                initialEmpathy={{ sent: f.id * 3 + 5, great: f.id * 2 + 2, me: f.id + 1 }}
-                onEncourage={() => openEncourageFor(f)}
-                encouraged={!!sent}
-                encouragedText={sentEnc ? t(sentEnc.textKey) : ''}
-              />
-            );
-          })}
-
-          {/* 아직 안 한 친구들 - nudge 카드 (비인증 시만 데모) */}
-          {!user && pendingFriends.map((f) => {
-            const sent = !!nudged[f.id];
-            return (
-              <div
-                key={f.id}
-                ref={(el) => { cardRefs.current[f.id] = el; }}
-                className={`${styles.nudgeCard} ${highlightId === f.id ? styles.highlighted : ''}`}
-              >
-                <div className={styles.nudgeTop}>
-                  <div className={styles.user}>
-                    <div
-                      className={styles.avatarSmall}
-                      style={{ background: `linear-gradient(135deg,${f.color})`, opacity: 0.6 }}
-                    >
-                      {f.emoji}
-                    </div>
-                    <div>
-                      <div className={styles.nameSoft}>{displayName(f)}</div>
-                      <div className={styles.meta}>
-                        {t('pendingDays')} {f.streak}
-                      </div>
-                    </div>
-                  </div>
-                  <div className={styles.tagGold}>{t('waitingTag')}</div>
-                </div>
-                <button
-                  className={`${styles.nudgeBtn} ${sent ? styles.sent : ''}`}
-                  onClick={() => sendNudge(f)}
-                  disabled={sent}
-                >
-                  {sent ? t('nudgeBtnSent') : t('nudgeBtnPre')}
-                </button>
-              </div>
-            );
-          })}
+          </>
+          )}
         </div>
       )}
 
       {/* 글로벌 서클 탭 */}
       {tab === 'public' && (!loading || hasLoaded) && (
         <div>
-          {user && hasLoaded && remotePublic.length === 0 && (
-            <div className={styles.emptyCard}>
-              <div className={styles.emptyEmoji}>🌍</div>
-              <div className={styles.emptyTitle}>{t('wallPublicEmptyTitle')}</div>
-              <div className={styles.emptySub}>{t('wallPublicEmptySub')}</div>
+          {/* 비로그인 — 로그인 유도 (데모 글로벌 게시물 제거) */}
+          {!user ? (
+            <div className={styles.inviteCta}>
+              <div className={styles.inviteCtaIcon}>🌍</div>
+              <div className={styles.inviteCtaTitle}>{t('wallLoginCtaTitle')}</div>
+              <div className={styles.inviteCtaSub}>{t('wallLoginCtaSub')}</div>
+              <button
+                className={styles.inviteCtaBtn}
+                onClick={() => navigate('/login')}
+              >
+                {t('wallLoginCtaBtn')}
+              </button>
             </div>
+          ) : (
+            <>
+              {hasLoaded && remotePublic.length === 0 && (
+                <div className={styles.emptyCard}>
+                  <div className={styles.emptyEmoji}>🌍</div>
+                  <div className={styles.emptyTitle}>{t('wallPublicEmptyTitle')}</div>
+                  <div className={styles.emptySub}>{t('wallPublicEmptySub')}</div>
+                </div>
+              )}
+              {remotePublic.map(renderMyPost)}
+            </>
           )}
-          {(user ? remotePublic : userPosts.filter((p) => p.target === 'public')).map(renderMyPost)}
-          {!user && (<>
-          <FeedCard
-            variant="public"
-            emoji="🌸"
-            emojiBg="linear-gradient(135deg,#fbb040,#f97b9c)"
-            name={t('publicLoc1')}
-            meta={`${formatTimeAgo(32, lang)} · ${t('dayLabel')} 23`}
-            tag={t('moodHard')}
-            message={t('publicMsg1')}
-            initialEmpathy={{ sent: 18, great: 12, me: 7 }}
-          />
-          <FeedCard
-            variant="public"
-            emoji="🌙"
-            emojiBg="linear-gradient(135deg,#a78bfa,#f97b9c)"
-            name={t('publicLoc2')}
-            meta={`${formatTimeAgo(120, lang)} · ${t('dayLabel')} 41`}
-            tag={t('moodDidIt')}
-            message={t('publicMsg2')}
-            initialEmpathy={{ sent: 31, great: 24, me: 15 }}
-          />
-          </>)}
         </div>
       )}
 
