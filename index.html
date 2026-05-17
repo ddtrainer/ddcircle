@@ -61,7 +61,45 @@
     <script src="https://t1.kakaocdn.net/kakao_js_sdk/2.7.4/kakao.min.js"></script>
   </head>
   <body data-lang="ko">
+    <!--
+      초기 스플래시 — Chrome PWA 스플래시가 사라진 직후 React 앱이 마운트되기
+      전 짧은 빈 화면 갭을 메움. 벡터 SVG라 어떤 화면에서도 선명. React가
+      #root에 렌더하면 (main.jsx의 createRoot 호출 직후) 자동으로 가려짐.
+    -->
+    <div id="boot-splash" style="
+      position: fixed; inset: 0; z-index: 9999;
+      display: flex; align-items: center; justify-content: center;
+      background: #faf6ee; pointer-events: none;
+      transition: opacity 0.3s ease;
+    ">
+      <img src="/dd-logo.svg" alt="DDCircle" width="220" height="110"
+           style="opacity: 0.9; max-width: 60vw; height: auto;" />
+    </div>
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
+    <script>
+      // React 마운트 감지 — #root에 자식이 생기면 스플래시 페이드아웃
+      (function () {
+        var splash = document.getElementById('boot-splash');
+        var root = document.getElementById('root');
+        if (!splash || !root) return;
+        var obs = new MutationObserver(function () {
+          if (root.firstChild) {
+            splash.style.opacity = '0';
+            setTimeout(function () { splash.remove(); }, 300);
+            obs.disconnect();
+          }
+        });
+        obs.observe(root, { childList: true });
+        // 안전망 — 5초 안에 React가 안 떠도 스플래시는 정리
+        setTimeout(function () {
+          if (splash.parentNode) {
+            splash.style.opacity = '0';
+            setTimeout(function () { splash.remove(); }, 300);
+            obs.disconnect();
+          }
+        }, 5000);
+      })();
+    </script>
   </body>
 </html>
