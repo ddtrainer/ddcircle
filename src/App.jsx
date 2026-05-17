@@ -10,6 +10,7 @@ import BottomNav from './components/layout/BottomNav';
 import IncomingInviteModal from './components/modals/IncomingInviteModal';
 import Onboarding from './components/Onboarding';
 import PWAInstallPrompt from './components/PWAInstallPrompt';
+import InAppBrowserGate from './components/InAppBrowserGate';
 import SWUpdatePrompt from './components/SWUpdatePrompt';
 import SetAlertController from './components/SetAlertController';
 import { initAnalytics } from './utils/analytics';
@@ -158,6 +159,7 @@ export default function App() {
               <ConditionalBottomNav />
               <InviteUrlHandler />
               <Onboarding />
+              <InAppBrowserGate />
               <PWAInstallPrompt />
               <SWUpdatePrompt />
               <SetAlertController />

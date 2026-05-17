@@ -10,6 +10,8 @@ import { MOODS, SHARE_TARGETS } from '../data/moods';
 import { track, Events } from '../utils/analytics';
 import { generateResultCard, shareOrDownload } from '../utils/generateResultCard';
 import { createPost } from '../lib/posts';
+import { isInAppBrowser } from '../utils/inAppBrowser';
+import OpenExternalModal from '../components/modals/OpenExternalModal';
 import styles from './Complete.module.css';
 
 export default function Complete() {
@@ -20,6 +22,7 @@ export default function Complete() {
   const navigate = useNavigate();
   const [sharing, setSharing] = useState(false);
   const [storySharing, setStorySharing] = useState(false);
+  const [externalModalOpen, setExternalModalOpen] = useState(false);
 
   const [shareTarget, setShareTarget] = useState('circle');
   const [selectedMood, setSelectedMood] = useState(null);
@@ -79,24 +82,15 @@ export default function Complete() {
 
   const handleSkipShare = () => finish(false);
 
-  // 카카오톡/페이스북/인스타 등 인앱 브라우저 감지
-  // 이 웹뷰들은 Web Share API(특히 파일 공유)를 지원하지 않아 SNS 공유가 항상 실패함
-  const isInAppBrowser = () => {
-    const ua = (navigator.userAgent || '').toLowerCase();
-    return /kakaotalk|fb_iab|fbav|instagram|line|naver|everytimeapp|whale|daumapps/.test(ua);
-  };
-
   // SNS용 결과 카드 이미지 생성 + 공유/다운로드
   const handleStoryShare = async () => {
     if (storySharing) return;
 
-    // 인앱 브라우저(카카오톡 등) — 공유 시도하지 말고 안내만
+    // 인앱 브라우저(카카오톡 등) — 공유 시도하지 말고 "외부 브라우저로 열기" 모달
     if (isInAppBrowser()) {
       const url = 'https://www.ddcircle.app';
       try { await navigator.clipboard?.writeText(url); } catch {}
-      showToast('🌐', lang === 'en'
-        ? 'Open in Chrome/Safari to share the card (tap ⋮ → Open in browser). Link copied.'
-        : '카카오톡 안에서는 카드 공유가 안 돼요. 우측 상단 ⋮ → "다른 브라우저로 열기"로 진입해 주세요. 링크는 복사됐어요.');
+      setExternalModalOpen(true);
       return;
     }
 
@@ -221,6 +215,12 @@ export default function Complete() {
       <button className={styles.skipShare} onClick={handleSkipShare}>
         {t('skipShareBtn')}
       </button>
+
+      <OpenExternalModal
+        open={externalModalOpen}
+        onClose={() => setExternalModalOpen(false)}
+        reason="share"
+      />
     </div>
   );
 }
