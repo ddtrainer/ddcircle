@@ -46,16 +46,26 @@ function ConditionalBottomNav() {
 // 로그인된 유저가 프로필 설정을 완료하지 않았으면 /profile-setup으로 안내
 const SKIP_GUARD_PATHS = ['/profile-setup', '/auth', '/login'];
 function ProfileGuard() {
-  const { user, loading } = useAuth();
+  const { user, profile, loading } = useAuth();
   const { pathname } = useLocation();
   const navigate = useNavigate();
 
   useEffect(() => {
     if (loading || !user) return;
     if (SKIP_GUARD_PATHS.some((p) => pathname.startsWith(p))) return;
-    const setupDone = localStorage.getItem(`ddcircle.setup.${user.id}`);
-    if (!setupDone) navigate('/profile-setup', { replace: true });
-  }, [user, loading, pathname, navigate]);
+
+    // 설정 완료 기준은 Supabase의 profile.nickname (DB가 단일 진실 소스)
+    // localStorage 플래그만 보면 다른 기기/브라우저로 로그인했을 때 매번
+    // /profile-setup으로 다시 빠지는 문제가 생김. 닉네임이 있으면 통과,
+    // 그리고 로컬 캐시도 채워서 빠른 후속 체크에 활용.
+    if (profile?.nickname) {
+      try { localStorage.setItem(`ddcircle.setup.${user.id}`, '1'); } catch {}
+      return;
+    }
+
+    // 여기까지 왔으면 loading은 끝났고 닉네임이 없음 → 신규 설정 필요
+    navigate('/profile-setup', { replace: true });
+  }, [user, profile, loading, pathname, navigate]);
 
   return null;
 }
