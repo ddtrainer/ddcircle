@@ -7,11 +7,13 @@ const H = 1920;
 // 무드별 시적 카피 (ko/en)
 const MOOD_COPY = {
   alive:   { ko: '살아있네~ DD했다~^^',              en: 'Alive today, DD done!' },
-  hard:    { ko: '버틴 것도 잘한 거예요.',           en: 'Showing up was enough today.' },
-  tired:   { ko: '지친 마음에도 숨이 닿았어요.',     en: 'Even tired, breath found you.' },
-  anxious: { ko: '잠시 멈춰 깊은 호흡, 그걸로 충분해요.', en: 'A pause, a breath. Enough.' },
-  didIt:   { ko: '조용히 한 걸음, 오늘도 충분해요.', en: 'A quiet step. Today is enough.' },
   proud:   { ko: '이 평범한 3분이 1년 뒤를 바꿔요.', en: 'These plain three minutes shape a year.' },
+  joyful:  { ko: '즐거움이 가득한 하루였어요.',       en: 'A day full of joy.' },
+  didIt:   { ko: '조용히 한 걸음, 오늘도 충분해요.', en: 'A quiet step. Today is enough.' },
+  hard:    { ko: '버틴 것도 잘한 거예요.',           en: 'Showing up was enough today.' },
+  blue:    { ko: '가라앉은 날에도, 숨은 멈추지 않았어요.', en: 'Even on a low day, breath kept going.' },
+  anxious: { ko: '잠시 멈춰 깊은 호흡, 그걸로 충분해요.', en: 'A pause, a breath. Enough.' },
+  tired:   { ko: '지친 마음에도 숨이 닿았어요.',     en: 'Even tired, breath found you.' },
 };
 
 // 스트릭 기반 폴백 카피

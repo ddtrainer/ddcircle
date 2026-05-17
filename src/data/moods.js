@@ -3,8 +3,10 @@
 export const MOODS = [
   { id: 'alive', key: 'moodAlive' },
   { id: 'proud', key: 'moodProud' },
+  { id: 'joyful', key: 'moodJoyful' },
   { id: 'didIt', key: 'moodDidIt' },
   { id: 'hard', key: 'moodHard' },
+  { id: 'blue', key: 'moodBlue' },
   { id: 'anxious', key: 'moodAnxious' },
 ];
 
