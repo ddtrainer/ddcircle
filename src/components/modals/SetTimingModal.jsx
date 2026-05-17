@@ -121,15 +121,6 @@ export default function SetTimingModal({ open, onClose }) {
         />
       </div>
 
-      {/* 친구 동기화 */}
-      <div className={styles.toggleRow}>
-        <span className={styles.toggleLabel}>{t('syncFriendsLabel')}</span>
-        <div
-          className={`${styles.toggle} ${draft.sync ? styles.on : ''}`}
-          onClick={() => setDraft((prev) => ({ ...prev, sync: !prev.sync }))}
-        />
-      </div>
-
       {/* 푸시 알림 받기 */}
       <div className={styles.toggleRow}>
         <span className={styles.toggleLabel}>

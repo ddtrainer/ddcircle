@@ -25,7 +25,6 @@ const DEFAULT_USER_EP = {
 const DEFAULT_SET_TIMING = {
   morning: { time: '07:30', enabled: true },
   evening: { time: '19:00', enabled: true },
-  sync: true,
 };
 
 // 사용자 고유 초대 링크 (실제로는 가입 시 서버에서 생성)
