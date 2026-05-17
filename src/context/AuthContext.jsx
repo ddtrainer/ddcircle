@@ -14,16 +14,23 @@ export function AuthProvider({ children }) {
       setProfile(null);
       return;
     }
-    const { data, error } = await supabase
-      .from('profiles')
-      .select('*')
-      .eq('id', userId)
-      .maybeSingle();
-    if (error) {
-      console.error('[auth] profile load error:', error);
-      setProfile(null);
-    } else {
-      setProfile(data);
+    // 프로필 로딩 중에는 loading=true로 — ProfileGuard가 nickname null 상태에서
+    // 성급하게 /profile-setup으로 보내는 레이스를 막음 (OAuth 콜백 직후 특히)
+    setLoading(true);
+    try {
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('id', userId)
+        .maybeSingle();
+      if (error) {
+        console.error('[auth] profile load error:', error);
+        setProfile(null);
+      } else {
+        setProfile(data);
+      }
+    } finally {
+      setLoading(false);
     }
   }, []);
 
@@ -35,7 +42,8 @@ export function AuthProvider({ children }) {
       if (!mounted) return;
       setSession(session);
       if (session?.user) {
-        loadProfile(session.user.id).finally(() => setLoading(false));
+        // loadProfile이 내부에서 loading=false로 마무리하므로 별도 .finally 불필요
+        loadProfile(session.user.id);
       } else {
         setLoading(false);
       }

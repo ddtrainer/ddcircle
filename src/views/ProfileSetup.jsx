@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useApp } from '../context/AppContext';
@@ -40,6 +40,14 @@ export default function ProfileSetup({ mode = 'setup' }) {
   const [emojiBg, setEmojiBg] = useState(profile?.emoji_bg ?? GRADIENTS[0]);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
+
+  // 신규 설정 모드(/profile-setup)인데 이미 닉네임이 있으면 — 어떻게든 진입한
+  // 경우라도 (예: 직접 URL 입력, 가드 레이스) 홈으로 돌려보냄
+  useEffect(() => {
+    if (!isEdit && profile?.nickname) {
+      navigate('/', { replace: true });
+    }
+  }, [isEdit, profile?.nickname, navigate]);
 
   const handleSave = async () => {
     const trimmed = nickname.trim();
