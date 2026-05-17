@@ -1,8 +1,10 @@
 // 인스타 스토리(9:16, 1080x1920) 결과 카드 생성 — 셀카 없이 시적/조용한 카드
 // 반환: Blob (PNG)
+import QRCode from 'qrcode';
 
 const W = 1080;
 const H = 1920;
+const SHARE_URL = 'https://www.ddcircle.app?ref=share-card';
 
 // 무드별 시적 카피 (ko/en)
 const MOOD_COPY = {
@@ -169,19 +171,73 @@ export async function generateResultCard({
   ctx.font = '500 38px "Inter", "Noto Serif KR", sans-serif';
   ctx.fillText(stats.join('  ·  '), W / 2, y + 80);
 
-  // 하단 카피
+  // 하단 카피 (좌측 정렬, QR과 균형)
+  ctx.textAlign = 'left';
+  const leftX = 90;
   ctx.fillStyle = '#7a6d58';
-  ctx.font = `italic 38px "Noto Serif KR", serif`;
-  const subText = lang === 'ko' ? '매일 3분, 함께 호흡하는 작은 의식' : 'A three-minute daily breath together';
-  ctx.fillText(subText, W / 2, 1720);
+  ctx.font = `italic 32px "Noto Serif KR", serif`;
+  const subText = lang === 'ko' ? '매일 3분, 함께 호흡하는' : 'A three-minute daily';
+  const subText2 = lang === 'ko' ? '작은 의식' : 'breath together';
+  ctx.fillText(subText, leftX, 1720);
+  ctx.fillText(subText2, leftX, 1760);
 
   ctx.fillStyle = '#1e9bd8';
-  ctx.font = 'bold 36px "Inter", sans-serif';
-  ctx.fillText('ddcircle.app', W / 2, 1810);
+  ctx.font = 'bold 40px "Inter", sans-serif';
+  ctx.fillText('ddcircle.app', leftX, 1820);
+
+  // QR 코드 — 우측 하단 (스캔하여 웹앱 진입)
+  try {
+    const qrSize = 220;
+    const qrX = W - qrSize - 70;
+    const qrY = 1640;
+    const qrDataUrl = await QRCode.toDataURL(SHARE_URL, {
+      width: qrSize,
+      margin: 1,
+      color: { dark: '#2a241a', light: '#ffffff' },
+      errorCorrectionLevel: 'M',
+    });
+    const qrImg = await loadImage(qrDataUrl);
+    // 흰 배경 + 둥근 모서리 (QR이 카드 배경과 대비되어 잘 스캔되도록)
+    drawRoundedRect(ctx, qrX - 12, qrY - 12, qrSize + 24, qrSize + 24, 16, '#ffffff');
+    ctx.drawImage(qrImg, qrX, qrY, qrSize, qrSize);
+    // QR 아래 작은 안내 텍스트
+    ctx.textAlign = 'center';
+    ctx.fillStyle = '#5a4d38';
+    ctx.font = '600 26px "Inter", "Noto Serif KR", sans-serif';
+    const scanLabel = lang === 'ko' ? '스캔하여 시작' : 'Scan to begin';
+    ctx.fillText(scanLabel, qrX + qrSize / 2, qrY + qrSize + 50);
+  } catch (e) {
+    console.warn('[card] QR generation failed:', e);
+  }
 
   return new Promise((resolve) => {
     canvas.toBlob((blob) => resolve(blob), 'image/png', 0.95);
   });
+}
+
+// 이미지 로드 헬퍼
+function loadImage(src) {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.onload = () => resolve(img);
+    img.onerror = reject;
+    img.src = src;
+  });
+}
+
+// 둥근 사각형 채우기 헬퍼
+function drawRoundedRect(ctx, x, y, w, h, r, fillStyle) {
+  ctx.save();
+  ctx.fillStyle = fillStyle;
+  ctx.beginPath();
+  ctx.moveTo(x + r, y);
+  ctx.arcTo(x + w, y, x + w, y + h, r);
+  ctx.arcTo(x + w, y + h, x, y + h, r);
+  ctx.arcTo(x, y + h, x, y, r);
+  ctx.arcTo(x, y, x + w, y, r);
+  ctx.closePath();
+  ctx.fill();
+  ctx.restore();
 }
 
 // 공유 (Web Share API) 또는 다운로드 fallback
