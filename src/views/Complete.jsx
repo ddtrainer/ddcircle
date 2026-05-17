@@ -101,19 +101,25 @@ export default function Complete() {
         title: 'DDCircle',
         text: shareText,
       });
-      if (result === 'shared+copied') {
-        // 카드 공유 성공 + URL 클립보드 복사됨 → 채팅에 추가로 붙여넣기 가능
+      if (result === 'shared+copied' || result === 'shared') {
         showToast('📸', lang === 'en'
-          ? 'Card shared · link copied — paste in chat for direct entry'
-          : '카드 공유됨 · 링크 복사됨 — 채팅에 붙여넣으면 친구가 바로 들어와요');
-      } else if (result === 'shared') {
-        showToast('📸', t('storyShareSuccess'));
-      } else if (result === 'downloaded+copied') {
+          ? 'Shared · link copied — paste in chat for direct entry'
+          : '공유됨 · 링크 복사됨 — 채팅에 붙여넣으면 친구가 바로 들어와요');
+        // SNS 공유는 세션을 종료하지 않음 — 사용자가 응원나라에도 나누거나 조용히 마칠 수 있게 안내
+        setTimeout(() => {
+          showToast('💡', lang === 'en'
+            ? 'You can also share to Cheerland or finish quietly below'
+            : '아래에서 응원나라에도 나누거나 조용히 마칠 수 있어요');
+        }, 2000);
+      } else if (result === 'unsupported+copied') {
+        // PC 등 Web Share 미지원 — 링크는 복사됐으니 사용자가 직접 붙여넣기
         showToast('📋', lang === 'en'
-          ? 'Card saved · link copied to clipboard'
-          : '카드 저장됨 · 링크가 복사됐어요');
-      } else if (result === 'downloaded') {
-        showToast('📥', lang === 'en' ? 'Card saved' : '카드 저장됨');
+          ? 'PC sharing not supported — link copied, paste in chat'
+          : 'PC는 직접 공유 미지원 — 링크가 복사됐어요, 채팅에 붙여넣으세요');
+      } else if (result === 'unsupported') {
+        showToast('⚠️', lang === 'en'
+          ? 'Sharing not supported on this browser'
+          : '이 브라우저에서는 공유가 지원되지 않아요');
       }
     } catch (e) {
       showToast('⚠️', t('storyShareError'));
@@ -184,6 +190,11 @@ export default function Complete() {
       <button className={styles.storyShareBtn} onClick={handleStoryShare}>
         {t('storyShareBtn')}
       </button>
+      <div className={styles.shareHint}>
+        {lang === 'en'
+          ? 'After sharing externally, you can still share to Cheerland or finish quietly below.'
+          : 'SNS 공유 후에도 응원나라에 나누거나 조용히 마칠 수 있어요.'}
+      </div>
       <button className={styles.skipShare} onClick={handleSkipShare}>
         {t('skipShareBtn')}
       </button>

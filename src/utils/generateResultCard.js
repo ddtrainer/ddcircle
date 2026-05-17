@@ -262,7 +262,6 @@ export async function shareOrDownload(blob, filename = 'ddcircle-today.png', opt
   const file = new File([blob], filename, { type: 'image/png' });
 
   // 항상 URL을 클립보드에 복사 — 공유 성공 여부와 관계없이 사용자가 채팅에 붙여넣을 수 있도록
-  // (카카오톡이 Web Share의 text/url을 무시하는 경우 대비)
   let clipboardOk = false;
   try {
     if (navigator.clipboard?.writeText) {
@@ -271,14 +270,17 @@ export async function shareOrDownload(blob, filename = 'ddcircle-today.png', opt
     }
   } catch { /* ignore */ }
 
-  // 1차: files + url + text 모두 전달 (지원 플랫폼에서 카드+링크 함께 표시)
-  if (navigator.canShare && navigator.canShare({ files: [file] })) {
+  // Web Share API + 파일 지원 여부 (모바일은 대부분 OK, PC 브라우저는 거의 미지원)
+  const canShareFiles = !!(navigator.canShare && navigator.canShare({ files: [file] }));
+
+  // 모바일: 시스템 공유 시트 띄움
+  if (canShareFiles) {
     let payload = { files: [file], title, text };
     try {
       if (navigator.canShare({ files: [file], url, title, text })) {
         payload = { files: [file], title, text, url };
       }
-    } catch { /* canShare가 throw하면 url 없이 진행 */ }
+    } catch { /* ignore */ }
 
     try {
       await navigator.share(payload);
@@ -293,18 +295,11 @@ export async function shareOrDownload(blob, filename = 'ddcircle-today.png', opt
           if (e2.name === 'AbortError') return 'cancelled';
         }
       }
-      // fallthrough to download
+      // 공유 실패 — 아래 unsupported 분기로
     }
   }
 
-  // 2차 fallback: 다운로드 + (위에서 이미 클립보드 복사 시도함)
-  const blobUrl = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = blobUrl;
-  a.download = filename;
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-  setTimeout(() => URL.revokeObjectURL(blobUrl), 1000);
-  return clipboardOk ? 'downloaded+copied' : 'downloaded';
+  // PC 등 Web Share 미지원: 자동 다운로드 안 함 (브라우저 보안 팝업 회피)
+  // 클립보드 복사된 링크를 사용자가 직접 채팅에 붙여넣도록 안내
+  return clipboardOk ? 'unsupported+copied' : 'unsupported';
 }
