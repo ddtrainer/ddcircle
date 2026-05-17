@@ -14,6 +14,10 @@ export default defineConfig({
         short_name: 'DDCircle',
         description: '매일 3분, 함께 호흡하는 작은 의식',
         start_url: '/',
+        // OAuth 콜백(/auth/callback)도 PWA scope 안에서 처리되도록 명시 —
+        // 누락되면 Android Chrome이 콜백을 외부 탭에서 열 수 있어 PWA가
+        // 세션을 못 받는 케이스 발생
+        scope: '/',
         display: 'standalone',
         background_color: '#faf6ee',
         theme_color: '#faf6ee',

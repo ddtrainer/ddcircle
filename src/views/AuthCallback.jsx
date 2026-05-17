@@ -21,17 +21,37 @@ export default function AuthCallback() {
       }
     };
 
-    // onAuthStateChange가 URL fragment 토큰 처리 후 가장 먼저 발화됨
+    // PKCE: URL의 ?code=... 를 명시적으로 세션으로 교환
+    // (detectSessionInUrl=true면 자동도 되지만, 명시 호출이 PWA 컨텍스트에서
+    // 더 안정적이고 실패 시 로깅도 가능)
+    const params = new URLSearchParams(window.location.search);
+    const code = params.get('code');
+    if (code) {
+      supabase.auth.exchangeCodeForSession(code)
+        .then(({ data, error }) => {
+          if (error) {
+            console.error('[auth] code exchange failed:', error);
+            goNext(null);
+          } else {
+            goNext(data.session);
+          }
+        })
+        .catch((e) => {
+          console.error('[auth] code exchange threw:', e);
+          goNext(null);
+        });
+      return; // exchangeCodeForSession 결과로만 진행
+    }
+
+    // 코드가 없으면 — 기존 세션 확인 또는 인증 변경 대기
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       goNext(session);
     });
 
-    // 이미 세션이 있는 경우(새로고침 등) 즉시 처리
     supabase.auth.getSession().then(({ data: { session } }) => {
       goNext(session);
     });
 
-    // 3초 내에 세션을 못 받으면 로그인으로
     const fallback = setTimeout(() => goNext(null), 3000);
 
     return () => {
