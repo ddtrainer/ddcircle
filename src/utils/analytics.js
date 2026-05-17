@@ -25,6 +25,17 @@ export function track(event, properties = {}) {
   try { posthog.capture(event, properties); } catch {}
 }
 
+// 로그인 사용자 식별 — 익명 행동을 식별된 프로필에 묶음
+export function identify(userId, props = {}) {
+  if (!initialized || !userId) return;
+  try { posthog.identify(userId, props); } catch {}
+}
+
+export function resetIdentity() {
+  if (!initialized) return;
+  try { posthog.reset(); } catch {}
+}
+
 // 깔때기 분석을 위한 핵심 이벤트
 export const Events = {
   ONBOARDING_COMPLETED: 'onboarding_completed',

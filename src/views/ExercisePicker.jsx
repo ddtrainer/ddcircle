@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { useLang } from '../i18n/LangContext';
 import { useApp } from '../context/AppContext';
 import { EXERCISES } from '../data/exercises';
+import { unlockAudio } from '../utils/audioUnlock';
+import { track, Events } from '../utils/analytics';
 import ExerciseSVG from '../components/ExerciseSVG';
 import styles from './ExercisePicker.module.css';
 
@@ -15,6 +17,9 @@ export default function ExercisePicker() {
   const onSelect = (key) => {
     setSelectedKey(key);
     setSelectedExercise(key);
+    track(Events.EXERCISE_SELECTED, { exerciseId: key });
+    // iOS 오디오 unlock — 사용자 제스처 콜스택 안에서 호출해야 효과 있음
+    unlockAudio();
     // 0.3초 시각 피드백 후 카운트다운으로
     setTimeout(() => navigate('/countdown/dash'), 300);
   };

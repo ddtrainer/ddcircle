@@ -7,6 +7,7 @@ import { useBreathSound } from '../hooks/useBreathSound';
 import { BREATH_PRESETS, resolveBreathPattern } from '../data/breathPatterns';
 import ProgressDots from '../components/ProgressDots';
 import BreathSettingsModal from '../components/modals/BreathSettingsModal';
+import { track, Events } from '../utils/analytics';
 import styles from './DeepSession.module.css';
 
 export default function DeepSession() {
@@ -27,16 +28,19 @@ export default function DeepSession() {
     durations: pattern.durations,
     totalCycles: pattern.cycles,
     onComplete: () => {
+      track(Events.DEEP_COMPLETED, { patternId: breathPatternId });
       setTimeout(() => navigate('/complete', { replace: true }), 600);
     },
   });
 
-  // 마운트 후 애니메이션 활성화
+  // 마운트 후 애니메이션 활성화 + 시작 이벤트
   useEffect(() => {
+    track(Events.DEEP_STARTED, { patternId: breathPatternId });
     const id = requestAnimationFrame(() => {
       requestAnimationFrame(() => setAnimationReady(true));
     });
     return () => cancelAnimationFrame(id);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // 일시정지 시 진행 중인 transition을 현재 위치에서 고정

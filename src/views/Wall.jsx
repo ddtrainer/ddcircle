@@ -237,7 +237,9 @@ export default function Wall() {
             : m.byPost,
         }));
       } catch (e) {
+        // DB 저장 실패 — 사용자에게 알림 + 친구는 응원을 못 받았다는 사실 명시
         console.error('[encouragement] save failed:', e);
+        showToast('⚠️', t('encSendFailedToast'));
       }
     }
     setEncFriend(null);

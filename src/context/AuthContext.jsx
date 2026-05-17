@@ -1,5 +1,6 @@
 import { createContext, useContext, useEffect, useState, useCallback } from 'react';
 import { supabase } from '../lib/supabase';
+import { identify, resetIdentity } from '../utils/analytics';
 
 const AuthContext = createContext(null);
 
@@ -54,8 +55,10 @@ export function AuthProvider({ children }) {
       setSession(newSession);
       if (newSession?.user) {
         loadProfile(newSession.user.id);
+        identify(newSession.user.id, { email: newSession.user.email });
       } else {
         setProfile(null);
+        resetIdentity();
       }
     });
 

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, lazy, Suspense } from 'react';
 import { BrowserRouter, Routes, Route, useLocation, useNavigate } from 'react-router-dom';
 import { Analytics } from '@vercel/analytics/react';
 import { LangProvider } from './i18n/LangContext';
@@ -21,19 +21,34 @@ initAnalytics();
 // Kakao SDK 초기화 (공유하기)
 initKakao();
 import Home from './views/Home';
-import Wall from './views/Wall';
-import Record from './views/Record';
 import ExercisePicker from './views/ExercisePicker';
 import Countdown from './views/Countdown';
 import DashSession from './views/DashSession';
 import Proof from './views/Proof';
 import DeepSession from './views/DeepSession';
-import Complete from './views/Complete';
 import Login from './views/Login';
 import AuthCallback from './views/AuthCallback';
 import ProfileSetup from './views/ProfileSetup';
-import Terms from './views/Terms';
-import Privacy from './views/Privacy';
+
+// 무거운 뷰는 lazy load — 메인 번들에서 분리해서 초기 로드 가벼워짐
+// Wall(피드+공감+친구+응원), Record(차트+갤러리), Complete(카드 생성+QR)
+const Wall = lazy(() => import('./views/Wall'));
+const Record = lazy(() => import('./views/Record'));
+const Complete = lazy(() => import('./views/Complete'));
+const Terms = lazy(() => import('./views/Terms'));
+const Privacy = lazy(() => import('./views/Privacy'));
+
+// lazy 뷰 로딩 중 표시할 폴백
+function ViewFallback() {
+  return (
+    <div style={{
+      minHeight: '60vh', display: 'flex', alignItems: 'center',
+      justifyContent: 'center', color: 'var(--text-muted)', fontSize: 32,
+    }}>
+      🌿
+    </div>
+  );
+}
 
 // 카운트다운/세션/Proof/로그인 화면에서는 BottomNav 숨김
 const FULLSCREEN_PATHS = ['/countdown', '/dash', '/deep', '/proof', '/login', '/auth', '/profile-setup'];
@@ -151,23 +166,25 @@ export default function App() {
             <BrowserRouter>
               <Header />
               <main>
-                <Routes>
-                  <Route path="/" element={<Home />} />
-                  <Route path="/wall" element={<Wall />} />
-                  <Route path="/record" element={<Record />} />
-                  <Route path="/picker" element={<ExercisePicker />} />
-                  <Route path="/countdown/:target" element={<Countdown />} />
-                  <Route path="/dash" element={<DashSession />} />
-                  <Route path="/proof" element={<Proof />} />
-                  <Route path="/deep" element={<DeepSession />} />
-                  <Route path="/complete" element={<Complete />} />
-                  <Route path="/login" element={<Login />} />
-                  <Route path="/auth/callback" element={<AuthCallback />} />
-                  <Route path="/profile-setup" element={<ProfileSetup />} />
-                  <Route path="/profile-edit" element={<ProfileSetup mode="edit" />} />
-                  <Route path="/terms" element={<Terms />} />
-                  <Route path="/privacy" element={<Privacy />} />
-                </Routes>
+                <Suspense fallback={<ViewFallback />}>
+                  <Routes>
+                    <Route path="/" element={<Home />} />
+                    <Route path="/wall" element={<Wall />} />
+                    <Route path="/record" element={<Record />} />
+                    <Route path="/picker" element={<ExercisePicker />} />
+                    <Route path="/countdown/:target" element={<Countdown />} />
+                    <Route path="/dash" element={<DashSession />} />
+                    <Route path="/proof" element={<Proof />} />
+                    <Route path="/deep" element={<DeepSession />} />
+                    <Route path="/complete" element={<Complete />} />
+                    <Route path="/login" element={<Login />} />
+                    <Route path="/auth/callback" element={<AuthCallback />} />
+                    <Route path="/profile-setup" element={<ProfileSetup />} />
+                    <Route path="/profile-edit" element={<ProfileSetup mode="edit" />} />
+                    <Route path="/terms" element={<Terms />} />
+                    <Route path="/privacy" element={<Privacy />} />
+                  </Routes>
+                </Suspense>
               </main>
               <ProfileGuard />
               <ConditionalBottomNav />

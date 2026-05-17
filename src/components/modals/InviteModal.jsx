@@ -5,6 +5,7 @@ import { useApp } from '../../context/AppContext';
 import { useToast } from '../Toast';
 import { FRIENDS } from '../../data/friends';
 import Modal from './Modal';
+import { track, Events } from '../../utils/analytics';
 import styles from './InviteModal.module.css';
 
 const MAX_CIRCLE = 12;
@@ -45,6 +46,7 @@ export default function InviteModal({ open, onClose }) {
   // 3. navigator.share (모바일 시스템 공유 시트)
   // 4. 링크 자동 복사 + 안내 (데스크톱 / 미지원 환경)
   const shareKakao = async () => {
+    track(Events.INVITE_SENT, { channel: 'kakao_or_share' });
     const text = t('inviteShareText');
     const title = t('inviteShareTitle');
     const ogImageUrl = window.location.origin + '/og-image.png';

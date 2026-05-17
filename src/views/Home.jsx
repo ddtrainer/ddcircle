@@ -7,6 +7,7 @@ import { useNextSetTiming } from '../hooks/useNextSetTiming';
 import SetTimingModal from '../components/modals/SetTimingModal';
 import { CHALLENGES } from '../data/challenges';
 import { track, Events } from '../utils/analytics';
+import { unlockAudio } from '../utils/audioUnlock';
 import styles from './Home.module.css';
 
 export default function Home() {
@@ -17,7 +18,9 @@ export default function Home() {
   const next = useNextSetTiming(setTiming);
   const [setTimingOpen, setSetTimingOpen] = useState(false);
 
-  const goPicker = () => navigate('/picker');
+  // 진입 탭 시점에 오디오 unlock — iOS Safari가 이후 자동 재생되는 종소리/배경음을
+  // 묵음으로 거부하지 않도록 silent buffer를 사용자 제스처 안에서 한 번 재생.
+  const goPicker = () => { unlockAudio(); navigate('/picker'); };
   const goWall = () => navigate('/wall');
 
   // 셋 타이밍 카드 클릭: live면 picker로, 아니면 모달

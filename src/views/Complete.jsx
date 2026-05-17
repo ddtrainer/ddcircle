@@ -29,15 +29,22 @@ export default function Complete() {
   const [empathyMsg, setEmpathyMsg] = useState('');
 
   const finish = (shared) => {
-    const earned = completeSession({ shared });
+    const { earned, save } = completeSession({ shared });
     showToast('✦', `+${earned} EP`);
+    // DB 저장 실패 시 사용자에게 알림 — silent fail 방지 (streak 끊김 원인)
+    save?.catch((e) => {
+      console.error('[stats] recordSession failed:', e);
+      showToast('⚠️', t('saveFailedToast'));
+    });
     track(shared ? Events.SESSION_SHARED : Events.SESSION_SKIPPED_SHARE, {
       earned, mood: selectedMood, target: shareTarget,
     });
     // 챌린지 달성 시 축하 Toast 추가 (약간 지연하여 EP Toast 다음에 표시)
     setTimeout(() => {
-      if (lastChallengeBonus && lastChallengeBonus.completed?.length || lastChallengeBonus?.challenges?.length) {
-        const list = lastChallengeBonus.challenges || [];
+      // && 가 || 보다 우선이라 원래 코드는 잘못된 평가였음.
+      // lastChallengeBonus는 { challenges: [...] } 형태 — challenges 길이만 체크하면 충분.
+      if (lastChallengeBonus?.challenges?.length) {
+        const list = lastChallengeBonus.challenges;
         list.forEach((ch, i) => {
           setTimeout(() => {
             showToast(ch.emoji, `${t('challengeToastTitle')} ${t(ch.titleKey)} +${ch.bonusEp} EP`);

@@ -28,13 +28,47 @@ export async function fetchSentToday(userId) {
   return { byUser, byPost };
 }
 
-// 응원 보내기
+// 응원 보내기 — 중복 발송 방어 (DB unique index + idempotent upsert)
+// 게시물별 응원은 같은 (from, to, post) 쌍에 대해 enc_id를 갱신하는 방식
+// (사용자가 응원 메시지를 바꾸고 싶을 수 있음). 게시물 없는 응원은 하루 1회만.
 export async function sendEncouragement(fromUserId, toUserId, encId, postId = null) {
   if (!fromUserId || !toUserId || !encId) throw new Error('invalid args');
   const row = { from_user: fromUserId, to_user: toUserId, enc_id: encId };
   if (postId) row.post_id = postId;
+
+  // INSERT 후 unique index 위반(23505)은 "이미 보냄"으로 간주 → UPDATE로 enc_id 갱신
   const { error } = await supabase.from('encouragements').insert(row);
   if (error) {
+    if (error.code === '23505') {
+      // 게시물별: post_id 기준으로 enc_id만 교체
+      if (postId) {
+        const { error: upErr } = await supabase
+          .from('encouragements')
+          .update({ enc_id: encId, created_at: new Date().toISOString() })
+          .eq('from_user', fromUserId)
+          .eq('to_user', toUserId)
+          .eq('post_id', postId);
+        if (upErr) {
+          console.error('[encouragements] update after dup error:', upErr);
+          throw upErr;
+        }
+        return;
+      }
+      // 게시물 없는 응원: 오늘자 row 갱신
+      const start = new Date(); start.setHours(0, 0, 0, 0);
+      const { error: upErr } = await supabase
+        .from('encouragements')
+        .update({ enc_id: encId, created_at: new Date().toISOString() })
+        .eq('from_user', fromUserId)
+        .eq('to_user', toUserId)
+        .is('post_id', null)
+        .gte('created_at', start.toISOString());
+      if (upErr) {
+        console.error('[encouragements] update after dup error:', upErr);
+        throw upErr;
+      }
+      return;
+    }
     console.error('[encouragements] insert error:', error);
     throw error;
   }

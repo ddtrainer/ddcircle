@@ -186,18 +186,21 @@ export function AppProvider({ children }) {
       localStorage.setItem('ddcircle.lastSessionDate', dateStr);
     } catch { /* ignore */ }
 
-    // 인증된 유저는 Supabase에 기록 (fire-and-forget)
-    if (user) {
-      recordSession(user.id, {
-        earnedEp: total,
-        hasProof,
-        shared,
-        exerciseId: selectedExercise,
-        breathId: breathPatternId,
-        newStreak,
-      }).catch((e) => console.error('[stats] recordSession failed:', e));
-    }
-    return total;
+    // 인증된 유저는 Supabase에 기록. save 프라미스를 반환해서 호출자가
+    // 실패를 사용자에게 알릴 수 있도록 함 (이전엔 fire-and-forget이라 DB가
+    // 실패해도 사용자는 "+10 EP" 토스트 보고 성공한 줄 알았음).
+    const save = user
+      ? recordSession(user.id, {
+          earnedEp: total,
+          hasProof,
+          shared,
+          exerciseId: selectedExercise,
+          breathId: breathPatternId,
+          newStreak,
+        })
+      : Promise.resolve();
+
+    return { earned: total, save };
   }, [userEp.streak, challengeClaims, challengeJoins, setUserEp, setTodayDone, setTodayCount, setChallengeClaims, setChallengeJoins, user, selectedExercise, breathPatternId]);
 
   // 챌린지 보너스 알림을 소비(읽음 처리)

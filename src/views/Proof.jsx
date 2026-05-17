@@ -4,6 +4,7 @@ import { useLang } from '../i18n/LangContext';
 import { useApp } from '../context/AppContext';
 import { useToast } from '../components/Toast';
 import ProgressDots from '../components/ProgressDots';
+import { track, Events } from '../utils/analytics';
 import styles from './Proof.module.css';
 
 // Proof of Life — 셀카 사진 1장 캡처 (선택사항)
@@ -40,17 +41,22 @@ export default function Proof() {
     navigate('/countdown/deep', { replace: true });
   };
 
-  const handleSkip = () => goToDeep();
+  const handleSkip = () => { track(Events.PROOF_SKIPPED); goToDeep(); };
 
   const handleMainClick = async () => {
     if (phase === 'idle') {
-      if (!navigator.mediaDevices) {
-        showToast('⚠️', t('camDenied'));
+      if (!navigator.mediaDevices?.getUserMedia) {
+        showToast('⚠️', t('camUnsupported'));
         return;
       }
       try {
+        // ideal 사용 — 특정 해상도가 없는 기종에서 OverconstrainedError 회피
         const stream = await navigator.mediaDevices.getUserMedia({
-          video: { facingMode: 'user', width: 640, height: 640 },
+          video: {
+            facingMode: 'user',
+            width: { ideal: 640 },
+            height: { ideal: 640 },
+          },
           audio: false,
         });
         streamRef.current = stream;
@@ -58,8 +64,18 @@ export default function Proof() {
           videoRef.current.srcObject = stream;
         }
         setPhase('ready');
-      } catch {
-        showToast('⚠️', t('camDenied'));
+      } catch (e) {
+        // 에러 종류별 안내 — iOS는 한 번 거부하면 재요청 불가, 설정 가는 법 안내 필요
+        const name = e?.name || '';
+        if (name === 'NotAllowedError' || name === 'PermissionDeniedError') {
+          showToast('🔒', t('camDeniedHelp'));
+        } else if (name === 'NotFoundError' || name === 'DevicesNotFoundError') {
+          showToast('⚠️', t('camNotFound'));
+        } else if (name === 'NotReadableError' || name === 'TrackStartError') {
+          showToast('⚠️', t('camInUse'));
+        } else {
+          showToast('⚠️', t('camDenied'));
+        }
       }
       return;
     }
@@ -88,6 +104,7 @@ export default function Proof() {
         setProofBlob(blob);
         const url = URL.createObjectURL(blob);
         setPreviewUrl(url);
+        track(Events.PROOF_RECORDED, { size: blob.size });
         showToast('✦', t('proofDone'));
         setPhase('done');
         setTimeout(goToDeep, 800);
