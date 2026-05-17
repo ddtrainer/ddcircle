@@ -6,7 +6,7 @@ const H = 1920;
 
 // 무드별 시적 카피 (ko/en)
 const MOOD_COPY = {
-  alive:   { ko: '살아있네~ 오늘도 나는 살아있다.', en: 'Alive ~ today, I am alive.' },
+  alive:   { ko: '살아있네~ DD했다~^^',              en: 'Alive today, DD done!' },
   hard:    { ko: '버틴 것도 잘한 거예요.',           en: 'Showing up was enough today.' },
   tired:   { ko: '지친 마음에도 숨이 닿았어요.',     en: 'Even tired, breath found you.' },
   anxious: { ko: '잠시 멈춰 깊은 호흡, 그걸로 충분해요.', en: 'A pause, a breath. Enough.' },
