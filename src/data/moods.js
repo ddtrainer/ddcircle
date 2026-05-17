@@ -1,5 +1,6 @@
 // 완료 화면의 무드 칩 옵션 (i18n 키와 매칭)
 export const MOODS = [
+  { id: 'alive', key: 'moodAlive' },
   { id: 'hard', key: 'moodHard' },
   { id: 'tired', key: 'moodTired' },
   { id: 'anxious', key: 'moodAnxious' },
