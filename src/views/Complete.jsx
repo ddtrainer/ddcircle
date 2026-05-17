@@ -78,6 +78,49 @@ export default function Complete() {
 
   const handleSkipShare = () => finish(false);
 
+  // 카카오톡으로 공유 — Kakao SDK 피드 템플릿 (클릭 가능한 버튼 포함)
+  // 받은 사람이 QR 스캔 없이 "함께 시작하기" 버튼만 탭하면 웹앱 진입
+  const handleKakaoShare = () => {
+    const url = 'https://www.ddcircle.app?ref=share-kakao';
+    const moodLabel = selectedMood ? t(`mood${selectedMood.charAt(0).toUpperCase() + selectedMood.slice(1)}`) : '';
+    const title = lang === 'en'
+      ? "I did today's 3 minutes 🌱"
+      : '오늘의 3분, 마쳤어요 🌱';
+    const description = empathyMsg.trim()
+      || (moodLabel ? `${moodLabel} · DDCircle` : (lang === 'en' ? 'A small daily ritual we share' : '매일 함께 호흡하는 작은 의식'));
+    const ogImageUrl = window.location.origin + '/og-image.png';
+
+    // 1. Kakao SDK 피드 공유 (가장 깔끔 — 카카오톡에서 클릭 가능 버튼 표시)
+    if (typeof window !== 'undefined' && window.Kakao?.Share?.sendDefault) {
+      try {
+        window.Kakao.Share.sendDefault({
+          objectType: 'feed',
+          content: {
+            title,
+            description,
+            imageUrl: ogImageUrl,
+            imageWidth: 1200,
+            imageHeight: 630,
+            link: { mobileWebUrl: url, webUrl: url },
+          },
+          buttons: [{
+            title: lang === 'en' ? 'Join the circle' : '함께 시작하기',
+            link: { mobileWebUrl: url, webUrl: url },
+          }],
+        });
+        showToast('💛', lang === 'en' ? 'Opening KakaoTalk...' : '카카오톡을 여는 중...');
+        return;
+      } catch (e) {
+        console.warn('Kakao sendDefault failed:', e);
+      }
+    }
+
+    // 2. Fallback: 링크 클립보드 복사 + 안내
+    navigator.clipboard?.writeText(url)
+      .then(() => showToast('📋', lang === 'en' ? 'Link copied — paste in KakaoTalk' : '링크 복사됨 — 카카오톡에 붙여넣기'))
+      .catch(() => showToast('⚠️', lang === 'en' ? 'Share failed — copy the link manually' : '공유 실패 — 링크를 직접 복사해 주세요'));
+  };
+
   // 인스타 스토리용 결과 카드 이미지 생성 + 공유/다운로드
   const handleStoryShare = async () => {
     try {
@@ -177,6 +220,9 @@ export default function Complete() {
       </button>
       <button className={styles.storyShareBtn} onClick={handleStoryShare}>
         {t('storyShareBtn')}
+      </button>
+      <button className={styles.kakaoShareBtn} onClick={handleKakaoShare}>
+        {t('kakaoCompleteShareBtn')}
       </button>
       <button className={styles.skipShare} onClick={handleSkipShare}>
         {t('skipShareBtn')}
