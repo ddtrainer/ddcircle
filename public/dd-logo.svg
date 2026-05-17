@@ -1,0 +1,16 @@
+<svg viewBox="0 0 400 200" xmlns="http://www.w3.org/2000/svg" aria-label="DDCircle">
+  <defs>
+    <linearGradient id="leftD" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ed3a4a" />
+      <stop offset="50%" stop-color="#f47730" />
+      <stop offset="100%" stop-color="#fbb040" />
+    </linearGradient>
+    <linearGradient id="rightD" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#7ed957" />
+      <stop offset="50%" stop-color="#3bbfb0" />
+      <stop offset="100%" stop-color="#1e9bd8" />
+    </linearGradient>
+  </defs>
+  <path d="M 30 20 L 100 20 Q 180 20 180 100 Q 180 180 100 180 L 30 180 Z M 70 60 L 70 140 L 100 140 Q 140 140 140 100 Q 140 60 100 60 Z" fill="url(#leftD)" fill-rule="evenodd" />
+  <path d="M 220 20 L 290 20 Q 370 20 370 100 Q 370 180 290 180 L 220 180 Z M 260 60 L 260 140 L 290 140 Q 330 140 330 100 Q 330 60 290 60 Z" fill="url(#rightD)" fill-rule="evenodd" />
+</svg>

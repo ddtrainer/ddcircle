@@ -133,11 +133,11 @@ export async function generateResultCard({
 
   // 상단 — 좌측 DDCircle 로고 이미지 (닉네임과 비슷한 시각적 무게), 우측 날짜
   try {
-    const logoImg = await loadImage('/dd-logo.png');
-    // dd-logo.png는 1448×1086 (가로형 워드마크) → 비율 1.33:1 유지
-    // 닉네임 폰트(64px)와 시각 균형 맞춰 130px 높이
+    // 투명 SVG 워드마크 사용 — 흰 사각형 여백 없이 글자만
+    // viewBox 400×200 (2:1) → 130px 높이면 260px 너비
+    const logoImg = await loadImage('/dd-logo.svg');
     const logoH = 130;
-    const logoW = Math.round((logoH * logoImg.naturalWidth) / logoImg.naturalHeight);
+    const logoW = Math.round((logoH * (logoImg.naturalWidth || 400)) / (logoImg.naturalHeight || 200));
     ctx.drawImage(logoImg, 90, 90, logoW, logoH);
   } catch (e) {
     // 로고 로드 실패 시 텍스트 폴백
