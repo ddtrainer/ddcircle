@@ -192,23 +192,6 @@
 
 .storyShareBtn:active { transform: scale(0.98); }
 
-.kakaoShareBtn {
-  width: 100%;
-  background: #fee500;
-  border: none;
-  border-radius: 14px;
-  padding: 12px;
-  margin-top: 8px;
-  color: #3c1e1e;
-  font-family: inherit;
-  font-size: 14px;
-  font-weight: 700;
-  cursor: pointer;
-  box-shadow: 0 4px 10px rgba(254, 229, 0, 0.3);
-}
-
-.kakaoShareBtn:active { transform: scale(0.98); }
-
 .skipShare {
   text-align: center;
   background: none;

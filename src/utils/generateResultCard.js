@@ -241,20 +241,29 @@ function drawRoundedRect(ctx, x, y, w, h, r, fillStyle) {
 }
 
 // 공유 (Web Share API) 또는 다운로드 fallback
-// URL을 함께 전달해서 받는 쪽에서 카드를 탭하면 DDCircle 웹앱으로 접속 가능하게 함
-// (카카오톡, iMessage, 디스코드, 슬랙 등 대부분의 메신저에서 작동)
+// 카드 이미지와 함께 URL을 항상 전달하고, 추가로 클립보드에도 복사
+// → 카카오톡처럼 받는 앱이 URL 본문을 무시해도, 사용자가 채팅창에 한 번에 붙여넣어 친구가 진입 가능
 export async function shareOrDownload(blob, filename = 'ddcircle-today.png', opts = {}) {
   const {
     url = 'https://www.ddcircle.app?ref=share-card',
     title = 'DDCircle',
-    text = '매일 3분, 함께 호흡하는 작은 의식\nhttps://www.ddcircle.app',
+    text = `매일 3분, 함께 호흡하는 작은 의식\n👉 ${url}`,
   } = opts;
 
   const file = new File([blob], filename, { type: 'image/png' });
 
+  // 항상 URL을 클립보드에 복사 — 공유 성공 여부와 관계없이 사용자가 채팅에 붙여넣을 수 있도록
+  // (카카오톡이 Web Share의 text/url을 무시하는 경우 대비)
+  let clipboardOk = false;
+  try {
+    if (navigator.clipboard?.writeText) {
+      await navigator.clipboard.writeText(url);
+      clipboardOk = true;
+    }
+  } catch { /* ignore */ }
+
   // 1차: files + url + text 모두 전달 (지원 플랫폼에서 카드+링크 함께 표시)
   if (navigator.canShare && navigator.canShare({ files: [file] })) {
-    // 일부 플랫폼은 files+url 조합을 거부 — 가능 여부 사전 체크
     let payload = { files: [file], title, text };
     try {
       if (navigator.canShare({ files: [file], url, title, text })) {
@@ -264,14 +273,13 @@ export async function shareOrDownload(blob, filename = 'ddcircle-today.png', opt
 
     try {
       await navigator.share(payload);
-      return 'shared';
+      return clipboardOk ? 'shared+copied' : 'shared';
     } catch (e) {
       if (e.name === 'AbortError') return 'cancelled';
-      // DataError 등이면 url 빼고 한 번 더 시도
       if (payload.url) {
         try {
           await navigator.share({ files: [file], title, text });
-          return 'shared';
+          return clipboardOk ? 'shared+copied' : 'shared';
         } catch (e2) {
           if (e2.name === 'AbortError') return 'cancelled';
         }
@@ -280,13 +288,7 @@ export async function shareOrDownload(blob, filename = 'ddcircle-today.png', opt
     }
   }
 
-  // 2차 fallback: 다운로드 + 클립보드에 링크 복사 (사용자가 직접 첨부+붙여넣기)
-  try {
-    if (navigator.clipboard?.writeText) {
-      await navigator.clipboard.writeText(url);
-    }
-  } catch { /* ignore */ }
-
+  // 2차 fallback: 다운로드 + (위에서 이미 클립보드 복사 시도함)
   const blobUrl = URL.createObjectURL(blob);
   const a = document.createElement('a');
   a.href = blobUrl;
@@ -295,5 +297,5 @@ export async function shareOrDownload(blob, filename = 'ddcircle-today.png', opt
   a.click();
   document.body.removeChild(a);
   setTimeout(() => URL.revokeObjectURL(blobUrl), 1000);
-  return 'downloaded';
+  return clipboardOk ? 'downloaded+copied' : 'downloaded';
 }
