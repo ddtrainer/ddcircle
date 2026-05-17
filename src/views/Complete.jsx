@@ -19,6 +19,7 @@ export default function Complete() {
   const { show: showToast } = useToast();
   const navigate = useNavigate();
   const [sharing, setSharing] = useState(false);
+  const [storySharing, setStorySharing] = useState(false);
 
   const [shareTarget, setShareTarget] = useState('circle');
   const [selectedMood, setSelectedMood] = useState(null);
@@ -78,8 +79,28 @@ export default function Complete() {
 
   const handleSkipShare = () => finish(false);
 
+  // 카카오톡/페이스북/인스타 등 인앱 브라우저 감지
+  // 이 웹뷰들은 Web Share API(특히 파일 공유)를 지원하지 않아 SNS 공유가 항상 실패함
+  const isInAppBrowser = () => {
+    const ua = (navigator.userAgent || '').toLowerCase();
+    return /kakaotalk|fb_iab|fbav|instagram|line|naver|everytimeapp|whale|daumapps/.test(ua);
+  };
+
   // SNS용 결과 카드 이미지 생성 + 공유/다운로드
   const handleStoryShare = async () => {
+    if (storySharing) return;
+
+    // 인앱 브라우저(카카오톡 등) — 공유 시도하지 말고 안내만
+    if (isInAppBrowser()) {
+      const url = 'https://www.ddcircle.app';
+      try { await navigator.clipboard?.writeText(url); } catch {}
+      showToast('🌐', lang === 'en'
+        ? 'Open in Chrome/Safari to share the card (tap ⋮ → Open in browser). Link copied.'
+        : '카카오톡 안에서는 카드 공유가 안 돼요. 우측 상단 ⋮ → "다른 브라우저로 열기"로 진입해 주세요. 링크는 복사됐어요.');
+      return;
+    }
+
+    setStorySharing(true);
     try {
       const exercise = EXERCISES.find((e) => e.key === selectedExercise);
       const exerciseLabel = exercise ? t('ex' + exercise.i18n) : '';
@@ -123,6 +144,8 @@ export default function Complete() {
       }
     } catch (e) {
       showToast('⚠️', t('storyShareError'));
+    } finally {
+      setStorySharing(false);
     }
   };
 
@@ -187,8 +210,8 @@ export default function Complete() {
       <button className={styles.shareBtn} onClick={handleShare} disabled={sharing}>
         {sharing ? '...' : t('shareBtn')}
       </button>
-      <button className={styles.storyShareBtn} onClick={handleStoryShare}>
-        {t('storyShareBtn')}
+      <button className={styles.storyShareBtn} onClick={handleStoryShare} disabled={storySharing}>
+        {storySharing ? '...' : t('storyShareBtn')}
       </button>
       <div className={styles.shareHint}>
         {lang === 'en'
