@@ -3,7 +3,7 @@
 
 export const translations = {
   ko: {
-    heroQuote: '<span class="one">1분</span>, 짧은 운동과 깊은 호흡<br>서로의 에너지를 나눕니다.',
+    heroQuote: '<span class="one">1분</span> 짧은 운동, <span class="one">2분</span> 깊은 호흡<br>서로의 에너지를 나눕니다.',
     tapToStart: '탭하여 시작',
     peopleSuffix: '명',
     togetherLabel: '오늘 DD 운동과 호흡을 함께 한 사람들',
