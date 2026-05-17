@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useLang } from '../i18n/LangContext';
 import { useApp } from '../context/AppContext';
@@ -39,16 +39,27 @@ export default function DashSession() {
     }, 200);
   };
 
-  const { seconds, paused, togglePause, skip } = useDashTimer({
+  // skip vs 자연 종료 구분 — EP 정책에 사용 (60초 완주해야만 Dash EP 인정)
+  // skipClickedRef는 onComplete가 호출되는 두 경로(타이머 0초 도달 / skip 버튼)
+  // 중 어느 쪽인지 판별. true면 skip, false면 자연 종료.
+  const skipClickedRef = useRef(false);
+
+  const { seconds, paused, togglePause, skip: timerSkip } = useDashTimer({
     initial: TOTAL,
     onComplete: () => {
+      const fully = !skipClickedRef.current;
+      try { sessionStorage.setItem('ddcircle.session.dashFully', fully ? '1' : '0'); } catch {}
       playDashEnd();
-      track(Events.DASH_COMPLETED, { exercise: selectedExercise });
-      // 0.9초 후 Proof로 (효과음이 끝까지 들리도록 약간 지연)
+      track(Events.DASH_COMPLETED, { exercise: selectedExercise, fully });
       setTimeout(() => navigate('/proof', { replace: true }), 900);
     },
     onMilestone: handleMilestone,
   });
+
+  const skip = () => {
+    skipClickedRef.current = true;
+    timerSkip();
+  };
 
   const ringOffset = RING_CIRCUMFERENCE * (1 - seconds / TOTAL);
   const exerciseI18n = EXERCISES.find((e) => e.key === selectedExercise)?.i18n || 'JumpingJack';

@@ -105,6 +105,7 @@ export async function generateResultCard({
   emoji = '🌸',
   emojiBg = 'linear-gradient(135deg,#fbb040,#f97b9c)',
   lang = 'ko',
+  userMessage = '',  // 사용자가 완료 화면 textarea에 쓴 글 — mood 카피 아래 인용
 }) {
   const canvas = document.createElement('canvas');
   canvas.width = W;
@@ -174,6 +175,19 @@ export async function generateResultCard({
     ctx.fillText(line, W / 2, y);
     y += lang === 'en' ? 88 : 96;
   });
+
+  // 사용자가 직접 쓴 글 — mood 카피 아래에 따옴표 묶음으로 (있을 때만)
+  const userMsg = (userMessage || '').trim().slice(0, 120);
+  if (userMsg) {
+    ctx.fillStyle = '#5a4d38';
+    ctx.font = `400 ${lang === 'en' ? '38px' : '42px'} "Noto Serif KR", serif`;
+    const userLines = wrapText(ctx, `"${userMsg}"`, W - 240);
+    y += 24;
+    userLines.slice(0, 3).forEach((line) => {  // 최대 3줄
+      ctx.fillText(line, W / 2, y);
+      y += lang === 'en' ? 54 : 60;
+    });
+  }
 
   // 통계 라인 (작게)
   const stats = [];

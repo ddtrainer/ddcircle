@@ -24,14 +24,24 @@ export default function DeepSession() {
     [breathPatternId, customBreath]
   );
 
-  const { phase, displaySecond, cycle, totalLeft, paused, togglePause, skip } = useBreathCycle({
+  // skip vs 자연 종료 구분 — 전체 사이클 완주만 Deep EP 인정
+  const skipClickedRef = useRef(false);
+
+  const { phase, displaySecond, cycle, totalLeft, paused, togglePause, skip: cycleSkip } = useBreathCycle({
     durations: pattern.durations,
     totalCycles: pattern.cycles,
     onComplete: () => {
-      track(Events.DEEP_COMPLETED, { patternId: breathPatternId });
+      const fully = !skipClickedRef.current;
+      try { sessionStorage.setItem('ddcircle.session.deepFully', fully ? '1' : '0'); } catch {}
+      track(Events.DEEP_COMPLETED, { patternId: breathPatternId, fully });
       setTimeout(() => navigate('/complete', { replace: true }), 600);
     },
   });
+
+  const skip = () => {
+    skipClickedRef.current = true;
+    cycleSkip();
+  };
 
   // 마운트 후 애니메이션 활성화 + 시작 이벤트
   useEffect(() => {

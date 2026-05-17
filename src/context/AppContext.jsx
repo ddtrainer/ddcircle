@@ -40,6 +40,8 @@ export function AppProvider({ children }) {
   // 실제 오늘 활동 인원 수 — 서버에서 fetch될 때까지 0 (가짜 247 노출 방지)
   const [todayCount, setTodayCount] = useLocalStorage('ddcircle.todayCount', 0);
   const [todayDone, setTodayDone] = useLocalStorage('ddcircle.todayDone', false);
+  // 오늘 세션 횟수 (EP 캡용) — 날짜가 바뀌면 자동 리셋
+  const [todaySessions, setTodaySessions] = useLocalStorage('ddcircle.todaySessions', { date: '', count: 0 });
   const [localInviteCode] = useLocalStorage('ddcircle.inviteCode', generateInviteCode());
   // 인증된 유저는 프로필의 실제 invite_code 사용
   const inviteCode = profile?.invite_code || localInviteCode;
@@ -149,8 +151,28 @@ export function AppProvider({ children }) {
   // 3분 플로우 완료 시 EP 보상 + 통계 갱신 + 챌린지 보너스 처리
   const completeSession = useCallback(({ shared }) => {
     const hasProof = !!proofBlobRef.current;
-    const newStreak = userEp.streak + 1;
-    const baseEarned = calculateEarnedEp({ hasProof, shared, streak: newStreak });
+
+    // Dash/Deep 완주 여부 — DashSession/DeepSession이 sessionStorage에 기록
+    let dashFully = false, deepFully = false;
+    try {
+      dashFully = sessionStorage.getItem('ddcircle.session.dashFully') === '1';
+      deepFully = sessionStorage.getItem('ddcircle.session.deepFully') === '1';
+    } catch { /* defaults */ }
+
+    // 오늘 세션 카운트 (날짜 바뀌면 0부터)
+    const today = new Date();
+    const dateStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+    const todayCountForCap = todaySessions.date === dateStr ? todaySessions.count : 0;
+
+    // streak — 완주가 하나라도 있어야 인정 (둘 다 skip이면 streak 증가 X)
+    const sessionCounts = dashFully || deepFully;
+    const newStreak = sessionCounts ? userEp.streak + 1 : userEp.streak;
+
+    const baseEarned = calculateEarnedEp({
+      dashFully, deepFully, hasProof, shared,
+      streak: newStreak,
+      todaySessionCount: todayCountForCap,
+    });
 
     // 챌린지 평가 — 달성 시 보증+보너스 환급, 실패 시 보증 소각
     const { newClaims, newJoins, bonusEp, stakeRefund, stakeForfeited, completed, forfeited } = evaluateChallenges(
@@ -167,8 +189,9 @@ export function AppProvider({ children }) {
       forfeited.forEach((ch) => resolveStakeForfeited(user.id, ch.id).catch(() => {}));
     }
 
-    // total: 기본 EP + 보너스 EP + 보증 환급분 (소각된 보증은 이미 차감 상태)
-    const total = baseEarned + bonusEp + stakeRefund;
+    // 캡 도달 시 챌린지 보너스/환급도 0으로 (정책: "오늘 EP는 더 이상 안 쌓임")
+    const capReached = todayCountForCap >= 2;
+    const total = capReached ? 0 : baseEarned + bonusEp + stakeRefund;
 
     setUserEp((prev) => ({
       ...prev,
@@ -177,13 +200,21 @@ export function AppProvider({ children }) {
       thisMonth: prev.thisMonth + total,
       streak: newStreak,
     }));
-    setTodayDone(true);
-    setTodayCount((c) => c + 1);
+    if (sessionCounts) {
+      setTodayDone(true);
+      setTodayCount((c) => c + 1);
+    }
+    // 오늘 세션 카운트 증가 (캡 추적용 — 완주 여부와 무관, 세션 진행 자체 카운트)
+    setTodaySessions({ date: dateStr, count: todayCountForCap + 1 });
     // 세션 완료 날짜 저장 — 셋 타이밍 알림이 "오늘 이미 했는지" 정확히 판단하기 위함
     try {
-      const today = new Date();
-      const dateStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
-      localStorage.setItem('ddcircle.lastSessionDate', dateStr);
+      if (sessionCounts) localStorage.setItem('ddcircle.lastSessionDate', dateStr);
+    } catch { /* ignore */ }
+
+    // 다음 세션을 위해 완주 플래그 비움
+    try {
+      sessionStorage.removeItem('ddcircle.session.dashFully');
+      sessionStorage.removeItem('ddcircle.session.deepFully');
     } catch { /* ignore */ }
 
     // 인증된 유저는 Supabase에 기록. save 프라미스를 반환해서 호출자가
@@ -200,8 +231,13 @@ export function AppProvider({ children }) {
         })
       : Promise.resolve();
 
-    return { earned: total, save };
-  }, [userEp.streak, challengeClaims, challengeJoins, setUserEp, setTodayDone, setTodayCount, setChallengeClaims, setChallengeJoins, user, selectedExercise, breathPatternId]);
+    return {
+      earned: total,
+      save,
+      capReached,           // UI에서 "오늘 EP 캡 도달" 안내용
+      dashFully, deepFully, // UI에서 "Skip해서 EP 일부만" 안내용
+    };
+  }, [userEp.streak, challengeClaims, challengeJoins, setUserEp, setTodayDone, setTodayCount, setChallengeClaims, setChallengeJoins, user, selectedExercise, breathPatternId, todaySessions, setTodaySessions]);
 
   // 챌린지 보너스 알림을 소비(읽음 처리)
   const consumeLastChallengeBonus = useCallback(() => setLastChallengeBonus(null), []);

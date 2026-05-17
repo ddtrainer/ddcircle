@@ -29,8 +29,16 @@ export default function Complete() {
   const [empathyMsg, setEmpathyMsg] = useState('');
 
   const finish = (shared) => {
-    const { earned, save } = completeSession({ shared });
-    showToast('✦', `+${earned} EP`);
+    const { earned, save, capReached, dashFully, deepFully } = completeSession({ shared });
+    if (capReached) {
+      showToast('🌙', t('epCapToast'));  // "오늘은 EP 적립 종료 (2회 완료)"
+    } else if (!dashFully && !deepFully) {
+      showToast('🌿', t('epSkippedAll'));  // 둘 다 skip → 0 EP, 격려
+    } else if (!dashFully || !deepFully) {
+      showToast('✦', t('epPartialTpl', { ep: earned }));  // 한쪽 skip → 부분 EP
+    } else {
+      showToast('✦', `+${earned} EP`);
+    }
     // DB 저장 실패 시 사용자에게 알림 — silent fail 방지 (streak 끊김 원인)
     save?.catch((e) => {
       console.error('[stats] recordSession failed:', e);
@@ -114,6 +122,7 @@ export default function Complete() {
         emoji: profile?.emoji || '🌸',
         emojiBg: profile?.emoji_bg || 'linear-gradient(135deg,#fbb040,#f97b9c)',
         lang,
+        userMessage: empathyMsg.trim(),  // textarea에 쓴 글 — 카드에 같이 표시
       });
       const shareText = lang === 'en'
         ? 'A three-minute daily breath together · DDCircle\nhttps://www.ddcircle.app'
