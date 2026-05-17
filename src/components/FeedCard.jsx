@@ -21,6 +21,9 @@ export default function FeedCard({
   onEncourage, // () => void — 부모가 바텀시트 열기
   encouraged,  // 이미 보낸 경우 true
   encouragedText, // 보낸 메시지 텍스트 (있으면 카드에 표시)
+  // 내 게시물에 친구들이 보낸 응원 메시지 (variant === 'mine'일 때만)
+  // [{ encId, text, fromName, fromEmoji, fromEmojiBg }]
+  receivedList,
   // 본인 게시물 삭제 (variant === 'mine'일 때만 부모가 전달)
   onDelete,    // () => void
   // controlled empathy (Supabase 연동 시 부모가 제공)
@@ -103,6 +106,24 @@ export default function FeedCard({
           </button>
         ))}
       </div>
+
+      {/* 내 게시물에 받은 응원 (mine 전용) */}
+      {receivedList && receivedList.length > 0 && (
+        <div className={styles.received}>
+          <div className={styles.receivedLabel}>
+            {t('encReceivedLabel')} · {receivedList.length}
+          </div>
+          {receivedList.map((r, i) => (
+            <div key={i} className={styles.receivedItem}>
+              <span className={styles.receivedAvatar} style={{ background: r.fromEmojiBg }}>
+                {r.fromEmoji}
+              </span>
+              <span className={styles.receivedFrom}>{r.fromName}</span>
+              <span className={styles.receivedText}>{r.text}</span>
+            </div>
+          ))}
+        </div>
+      )}
 
       {/* 한 줄 응원 보내기 (친구 카드 전용) */}
       {onEncourage && (

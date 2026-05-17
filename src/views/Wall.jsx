@@ -11,7 +11,7 @@ import { findEncouragement, getEncouragementText } from '../data/encouragements'
 import { fetchCircleFeed, fetchPublicFeed, normalizePost, deletePost } from '../lib/posts';
 import { fetchFriends } from '../lib/friends';
 import { fetchEmpathiesForPosts, toggleEmpathy } from '../lib/empathies';
-import { fetchSentToday, sendEncouragement as sendEncSupabase } from '../lib/encouragements';
+import { fetchSentToday, fetchReceived, sendEncouragement as sendEncSupabase } from '../lib/encouragements';
 import { fetchUserStatsBulk } from '../lib/stats';
 import FeedCard from '../components/FeedCard';
 import EncourageSheet from '../components/EncourageSheet';
@@ -29,6 +29,9 @@ export default function Wall() {
   // 오늘 보낸 응원: { byUser: {...}, byPost: {...} }
   // byUser → 친구 그리드(친구 1명별 오늘 응원), byPost → 게시물별 응원
   const [remoteEncMap, setRemoteEncMap] = useState({ byUser: {}, byPost: {} });
+  // 본인이 받은 응원 (오늘): { [postId]: [{ encId, fromUserId, ts }, ...] }
+  // 내 게시물 카드 아래에 친구들이 보낸 응원 메시지를 보여주기 위함
+  const [receivedEncByPost, setReceivedEncByPost] = useState({});
   // 친구별 통계: { [userId]: { streak, last_session_date, today_ep } }
   const [friendStats, setFriendStats] = useState({});
   const [loading, setLoading] = useState(false);
@@ -39,11 +42,12 @@ export default function Wall() {
     if (!user) return;
     if (showLoading) setLoading(true);
     try {
-      const [circle, pub, friendsList, encMap] = await Promise.all([
+      const [circle, pub, friendsList, encMap, receivedRows] = await Promise.all([
         fetchCircleFeed(50),
         fetchPublicFeed(50),
         fetchFriends(user.id),
         fetchSentToday(user.id),
+        fetchReceived(user.id, true),
       ]);
       const normCircle = circle.map(normalizePost);
       const normPublic = pub.map(normalizePost);
@@ -51,6 +55,17 @@ export default function Wall() {
       setRemotePublic(normPublic);
       setRemoteFriends(friendsList);
       setRemoteEncMap(encMap);
+      // 받은 응원을 post_id로 그룹핑 (post_id 없는 행 = friend 그리드용 응원은 제외)
+      const receivedMap = {};
+      for (const row of receivedRows) {
+        if (!row.post_id) continue;
+        (receivedMap[row.post_id] ||= []).push({
+          encId: row.enc_id,
+          fromUserId: row.from_user,
+          ts: new Date(row.created_at).getTime(),
+        });
+      }
+      setReceivedEncByPost(receivedMap);
       const allIds = [...new Set([...normCircle, ...normPublic].map((p) => p.id))];
       // 친구 통계 + 게시물 공감 병렬 로드
       const friendIds = (friendsList || []).map((f) => f.id);
@@ -74,6 +89,7 @@ export default function Wall() {
       setFriendStats({});
       setEmpathies({});
       setRemoteEncMap({ byUser: {}, byPost: {} });
+      setReceivedEncByPost({});
       setHasLoaded(false);
       return;
     }
@@ -112,14 +128,31 @@ export default function Wall() {
         (payload) => {
           const encId = payload.new?.enc_id;
           const fromId = payload.new?.from_user;
+          const postId = payload.new?.post_id;
+          const createdAt = payload.new?.created_at;
           const sender = friendsRef.current.find((f) => f.id === fromId);
           const name = sender?.nickname || t('friendFallback');
           if (encId === 'nudge') {
             showToast('👋', t('nudgeReceivedToast', { name }));
             return;
           }
+          // 게시물별 응원이면 상태에도 추가 — 새로고침 없이 즉시 카드 아래에 나타남
+          if (postId) {
+            setReceivedEncByPost((prev) => {
+              const list = prev[postId] || [];
+              if (list.some((r) => r.fromUserId === fromId && r.encId === encId)) return prev;
+              return {
+                ...prev,
+                [postId]: [
+                  ...list,
+                  { encId, fromUserId: fromId, ts: createdAt ? new Date(createdAt).getTime() : Date.now() },
+                ],
+              };
+            });
+          }
           const enc = findEncouragement(encId);
-          showToast(enc?.emoji || '💌', `${name} · ${t(enc?.textKey) || t('encReceivedLabel')}`);
+          const text = getEncouragementText(encId, t) || t('encReceivedLabel');
+          showToast(enc?.emoji || '💌', `${name} · ${text}`);
         }
       )
       .subscribe();
@@ -324,6 +357,20 @@ export default function Wall() {
       ? () => setEncFriend({ id: friendUserId, name: profile?.nickname || '', postId: post.id })
       : undefined;
 
+    // 내 게시물이면 — 친구들이 보낸 응원 메시지 리스트
+    const receivedList = isMine
+      ? (receivedEncByPost[post.id] || []).map((r) => {
+          const sender = remoteFriends.find((f) => f.id === r.fromUserId);
+          return {
+            encId: r.encId,
+            text: getEncouragementText(r.encId, t),
+            fromName: sender?.nickname || t('friendFallback'),
+            fromEmoji: sender?.emoji || '🌸',
+            fromEmojiBg: sender?.emoji_bg || 'linear-gradient(135deg,#fbb040,#f97b9c)',
+          };
+        })
+      : [];
+
     return (
       <FeedCard
         key={post.id}
@@ -343,6 +390,7 @@ export default function Wall() {
         onEncourage={handleEncourageFriend}
         encouraged={!!sentEncRemote}
         encouragedText={sentEncDisplay}
+        receivedList={receivedList}
       />
     );
   };
