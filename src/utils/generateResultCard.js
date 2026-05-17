@@ -131,11 +131,20 @@ export async function generateResultCard({
   ctx.fillStyle = glow2;
   ctx.fillRect(0, 0, W, H);
 
-  // 상단 — 좌측 브랜드, 우측 날짜
-  ctx.textAlign = 'left';
-  ctx.fillStyle = '#5a4d38';
-  ctx.font = 'bold 30px "Inter", sans-serif';
-  ctx.fillText('DDCIRCLE', 100, 150);
+  // 상단 — 좌측 DDCircle 로고 이미지, 우측 날짜
+  try {
+    const logoImg = await loadImage('/dd-logo.png');
+    // dd-logo.png는 1448×1086 (가로형 워드마크) → 비율 1.33:1 유지
+    const logoH = 70;
+    const logoW = Math.round((logoH * logoImg.naturalWidth) / logoImg.naturalHeight);
+    ctx.drawImage(logoImg, 90, 110, logoW, logoH);
+  } catch (e) {
+    // 로고 로드 실패 시 텍스트 폴백
+    ctx.textAlign = 'left';
+    ctx.fillStyle = '#5a4d38';
+    ctx.font = 'bold 30px "Inter", sans-serif';
+    ctx.fillText('DDCIRCLE', 100, 150);
+  }
 
   ctx.textAlign = 'right';
   ctx.font = '500 30px "Inter", sans-serif';
