@@ -131,25 +131,29 @@ export async function generateResultCard({
   ctx.fillStyle = glow2;
   ctx.fillRect(0, 0, W, H);
 
-  // 상단 — 좌측 DDCircle 로고 이미지, 우측 날짜
+  // 상단 — 좌측 DDCircle 로고 이미지 (닉네임과 비슷한 시각적 무게), 우측 날짜
   try {
     const logoImg = await loadImage('/dd-logo.png');
     // dd-logo.png는 1448×1086 (가로형 워드마크) → 비율 1.33:1 유지
-    const logoH = 70;
+    // 닉네임 폰트(64px)와 시각 균형 맞춰 130px 높이
+    const logoH = 130;
     const logoW = Math.round((logoH * logoImg.naturalWidth) / logoImg.naturalHeight);
-    ctx.drawImage(logoImg, 90, 110, logoW, logoH);
+    ctx.drawImage(logoImg, 90, 90, logoW, logoH);
   } catch (e) {
     // 로고 로드 실패 시 텍스트 폴백
     ctx.textAlign = 'left';
     ctx.fillStyle = '#5a4d38';
-    ctx.font = 'bold 30px "Inter", sans-serif';
-    ctx.fillText('DDCIRCLE', 100, 150);
+    ctx.font = 'bold 56px "Inter", sans-serif';
+    ctx.fillText('DDCIRCLE', 100, 170);
   }
 
   ctx.textAlign = 'right';
-  ctx.font = '500 30px "Inter", sans-serif';
+  ctx.textBaseline = 'middle';
+  ctx.font = '500 34px "Inter", sans-serif';
   ctx.fillStyle = '#9a8a70';
-  ctx.fillText(formatDate(lang), W - 100, 150);
+  // 로고 세로 중심에 날짜를 맞춤 (logoY 90 + logoH/2 = 155)
+  ctx.fillText(formatDate(lang), W - 100, 155);
+  ctx.textBaseline = 'alphabetic'; // 이후 텍스트 baseline 원복
 
   // 큰 아바타 (중앙 상단)
   drawAvatar(ctx, W / 2, 540, 180, emojiBg, emoji);
