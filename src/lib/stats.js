@@ -315,3 +315,17 @@ export async function recordSession(userId, data) {
     .eq('user_id', userId);
   if (usErr) console.error('[stats] user_stats update error:', usErr);
 }
+
+// 전체 DDCircle 회원 수 — profiles 테이블 row count
+// 닉네임이 설정된(= 프로필 설정 완료) 사용자만 카운트
+export async function fetchMemberCount() {
+  const { count, error } = await supabase
+    .from('profiles')
+    .select('id', { count: 'exact', head: true })
+    .not('nickname', 'is', null);
+  if (error) {
+    console.error('[stats] fetchMemberCount error:', error);
+    return 0;
+  }
+  return count || 0;
+}

@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { fetchMemberCount } from '../lib/stats';
 import { useNavigate } from 'react-router-dom';
 import { useLang } from '../i18n/LangContext';
 import { useApp } from '../context/AppContext';
@@ -12,11 +13,20 @@ import styles from './Home.module.css';
 
 export default function Home() {
   const { t } = useLang();
-  const { setTiming, todayCount, userEp, challengeClaims, challengeJoins, joinChallenge, leaveChallenge } = useApp();
+  const { setTiming, userEp, challengeClaims, challengeJoins, joinChallenge, leaveChallenge } = useApp();
   const { show: showToast } = useToast();
   const navigate = useNavigate();
   const next = useNextSetTiming(setTiming);
   const [setTimingOpen, setSetTimingOpen] = useState(false);
+
+  // DDCircle 회원수 — 닉네임 설정한 프로필 수. mount 시 1회 fetch.
+  // 가짜 247 대신 진짜 숫자 표시.
+  const [memberCount, setMemberCount] = useState(null);
+  useEffect(() => {
+    let cancelled = false;
+    fetchMemberCount().then((n) => { if (!cancelled) setMemberCount(n); });
+    return () => { cancelled = true; };
+  }, []);
 
   // 진입 탭 시점에 오디오 unlock — iOS Safari가 이후 자동 재생되는 종소리/배경음을
   // 묵음으로 거부하지 않도록 silent buffer를 사용자 제스처 안에서 한 번 재생.
@@ -97,14 +107,14 @@ export default function Home() {
         </div>
       </div>
 
-      {/* 함께 호흡한 사람들 */}
+      {/* DDCircle 회원수 — 닉네임 설정한 프로필 기준 */}
       <div className={styles.together}>
         <div className={styles.togetherNum}>
           <span className={styles.pulseDot}></span>
-          <span>{todayCount}</span>
+          <span>{memberCount === null ? '—' : memberCount.toLocaleString()}</span>
           <span>{t('peopleSuffix')}</span>
         </div>
-        <div className={styles.togetherLabel}>{t('togetherLabel')}</div>
+        <div className={styles.togetherLabel}>{t('memberCountLabel')}</div>
       </div>
 
       {/* 도전 이벤트 섹션 */}
