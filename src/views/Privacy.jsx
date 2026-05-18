@@ -14,7 +14,7 @@ export default function Privacy() {
         <ul>
           <li><strong>Kakao OAuth:</strong> nickname, email address.</li>
           <li><strong>App activity:</strong> session timestamps, exercise/breath selections, EP, streak, mood selections, encouragement messages, friend relationships.</li>
-          <li><strong>User-uploaded media:</strong> selfie ("proof of life") photos that you choose to attach to a session.</li>
+          <li><strong>User-uploaded media:</strong> ✊ fist ("proof of life") photos that you choose to attach to a session.</li>
           <li><strong>Anonymous analytics:</strong> Vercel Analytics aggregate page views (no PII).</li>
         </ul>
 
@@ -61,7 +61,7 @@ export default function Privacy() {
       <ul>
         <li><strong>카카오 OAuth:</strong> 닉네임, 이메일 주소</li>
         <li><strong>앱 활동 데이터:</strong> 세션 시각, 선택한 운동·호흡, EP, 연속일, 무드 선택, 응원 메시지, 친구 관계</li>
-        <li><strong>업로드한 사진:</strong> 사용자가 세션에 첨부한 셀카("PROOF OF LIFE")</li>
+        <li><strong>업로드한 사진:</strong> 사용자가 세션에 첨부한 ✊ 주먹 사진("PROOF OF LIFE")</li>
         <li><strong>익명 분석:</strong> Vercel Analytics 집계 페이지뷰 (개인 식별 정보 없음)</li>
       </ul>
 

@@ -82,7 +82,7 @@ export default function FeedCard({
           {proof.url ? (
             <img src={proof.url} alt="proof" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
           ) : (
-            <div className={styles.proofPlaceholder}>📸</div>
+            <div className={styles.proofPlaceholder}>✊</div>
           )}
           <div className={styles.proofLabel}>{t('proofTag')}</div>
         </div>

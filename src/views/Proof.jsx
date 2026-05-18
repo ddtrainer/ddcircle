@@ -126,7 +126,7 @@ export default function Proof() {
     <div className={styles.proofScreen}>
       <ProgressDots step={2} total={4} />
       <div className={styles.stage}>STEP 2 OF 4</div>
-      <div className={`${styles.title} ${styles.proofColor}`}>📸 Proof of Life</div>
+      <div className={`${styles.title} ${styles.proofColor}`}>✊ Proof of Life</div>
       <div
         className={styles.desc}
         dangerouslySetInnerHTML={{ __html: t('proofDesc') }}
@@ -146,7 +146,7 @@ export default function Proof() {
         )}
         {phase === 'idle' && (
           <div className={styles.placeholder}>
-            <div className={styles.camIcon}>📷</div>
+            <div className={styles.camIcon}>✊</div>
             <p dangerouslySetInnerHTML={{ __html: t('proofPlaceholder') }} />
           </div>
         )}
