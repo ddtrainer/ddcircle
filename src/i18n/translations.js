@@ -69,7 +69,7 @@ export const translations = {
     profileEditSaved: '프로필이 저장됐어요',
     startBtn: '오늘의 3분 시작하기 →',
     browseLink: '먼저 응원나라 둘러보기 →',
-    philosophyText: '"수백만 년, 인류가 이어온 두 가지 —<br>몸을 움직이는 것, 그리고 깊게 숨 쉬는 것.<br><strong>나를 돌보는 이 3분, AI 시대에도 나는 살아있다.</strong>"',
+    philosophyText: '"수백만 년, 인류가 이어온 두 가지 —<br>몸을 움직이는 것, 그리고 깊게 숨 쉬는 것.<br><strong>나를 돌보는 이 3분,<br>AI 시대에도 나는 살아있다.</strong>"',
     pickerTitle: '🔥 어떤 운동을 할까요?',
     pickerSub: '오직 나를 위한 1분, 함께 할 운동을 선택하세요',
     pickerBack: '← 돌아가기',
