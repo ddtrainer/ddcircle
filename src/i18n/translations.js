@@ -7,7 +7,7 @@ export const translations = {
     tapToStart: '탭하여 시작',
     peopleSuffix: '명',
     togetherLabel: '오늘 DD 운동과 호흡을 함께 한 사람들',
-    memberCountLabel: '함께 하는 DDCircle 사람들',
+    memberCountLabel: '함께 하는 DDCircle 회원',
     streakDayBadge: '{n}일째',
     firstStartBadge: '첫 도전',
     encBtn: '💌 응원',
