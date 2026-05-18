@@ -129,6 +129,10 @@ export function AppProvider({ children }) {
   // 받은 초대 (URL ?invite=xxx로 진입 시 설정됨)
   const [pendingInvite, setPendingInvite] = useState(null);
 
+  // 친구 관계 변경 시 Wall이 리프레시하도록 알리는 카운터
+  const [friendsVersion, setFriendsVersion] = useState(0);
+  const bumpFriendsVersion = useCallback(() => setFriendsVersion((v) => v + 1), []);
+
   // 세션 진행 중 상태 — sessionStorage에 보존 (새로고침/백그라운드 복귀에도 살아남음)
   // selectedExercise가 휘발되면 completeSession이 exercise_id를 null로 저장해
   // Record의 활동 기록이 비어 보이는 문제 발생.
@@ -293,6 +297,8 @@ export function AppProvider({ children }) {
         inviteLink: `${typeof window !== 'undefined' ? window.location.origin : 'https://ddcircle.vercel.app'}/?invite=${inviteCode}`,
         pendingInvite,
         setPendingInvite,
+        friendsVersion,
+        bumpFriendsVersion,
       }}
     >
       {children}

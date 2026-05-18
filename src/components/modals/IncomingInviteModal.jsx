@@ -15,7 +15,7 @@ const DEMO_INVITER = {
 
 export default function IncomingInviteModal({ open, onClose }) {
   const { t } = useLang();
-  const { setUserEp, setPendingInvite, pendingInvite } = useApp();
+  const { setUserEp, setPendingInvite, pendingInvite, bumpFriendsVersion } = useApp();
   const { user } = useAuth();
   const { show: showToast } = useToast();
   const [inviter, setInviter] = useState(null);
@@ -74,6 +74,7 @@ export default function IncomingInviteModal({ open, onClose }) {
       // 실제 친구 관계 DB에 생성 (RLS에 따라 INSERT, 중복이면 alreadyFriends)
       await acceptInvite(user.id, pendingInvite.code);
       setUserEp((prev) => ({ ...prev, total: prev.total + 20 }));
+      bumpFriendsVersion();
       markHandled(pendingInvite.code);
       setPendingInvite(null);
       onClose?.();

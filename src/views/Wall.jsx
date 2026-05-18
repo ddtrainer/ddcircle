@@ -21,7 +21,7 @@ import styles from './Wall.module.css';
 
 export default function Wall() {
   const { t, lang } = useLang();
-  const { userPosts, sentEncouragements, sendEncouragement, todayDone } = useApp();
+  const { userPosts, sentEncouragements, sendEncouragement, todayDone, friendsVersion } = useApp();
   const { user } = useAuth();
   const navigate = useNavigate();
   const [remoteCircle, setRemoteCircle] = useState([]);
@@ -95,8 +95,8 @@ export default function Wall() {
       setHasLoaded(false);
       return;
     }
-    refresh(true); // 초기 로드에만 loading UI
-  }, [user, refresh]);
+    refresh(friendsVersion > 0 ? false : true); // 초기 로드만 loading UI, 친구 갱신은 조용히
+  }, [user, refresh, friendsVersion]);
 
   // 최신 게시물 ID + 친구 목록을 ref로 추적 (realtime 콜백 closure 문제 해결)
   const postIdsRef = useRef([]);
