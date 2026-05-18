@@ -94,7 +94,7 @@ export const translations = {
     dashGuide5: '5초만 더!',
     secondsUnit: '초',
     pause: '일시정지', resume: '재개', skip: '건너뛰기 →',
-    proofDesc: '오늘의 운동을 마친 ✊ 한 손을 들어요.<br>주먹 하나로 충분해요.',
+    proofDesc: '오늘의 Dash 운동을 마치고 ✊한 손을 들어요.<br>주먹 하나로 충분해요.',
     proofNoEdit: '✦ DDCircle 시그니처 ✊ · 한 손이면 충분',
     proofPlaceholder: '주먹을 만들고 카메라를 켜요<br>한 번에 찰칵',
     cameraOn: '📷 카메라 켜기',
