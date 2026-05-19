@@ -293,6 +293,7 @@ export function AppProvider({ children }) {
         sendEncouragement,
         lastChallengeBonus,
         consumeLastChallengeBonus,
+        todaySessions,
         inviteCode,
         inviteLink: `${typeof window !== 'undefined' ? window.location.origin : 'https://ddcircle.vercel.app'}/?invite=${inviteCode}`,
         pendingInvite,

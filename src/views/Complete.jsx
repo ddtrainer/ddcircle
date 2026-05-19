@@ -16,7 +16,7 @@ import styles from './Complete.module.css';
 
 export default function Complete() {
   const { t, lang } = useLang();
-  const { proofUrl, getProofBlob, completeSession, addUserPost, selectedExercise, lastChallengeBonus, consumeLastChallengeBonus, userEp } = useApp();
+  const { proofUrl, getProofBlob, completeSession, addUserPost, selectedExercise, lastChallengeBonus, consumeLastChallengeBonus, userEp, todaySessions } = useApp();
   const { user, profile } = useAuth();
   const { show: showToast } = useToast();
   const navigate = useNavigate();
@@ -64,6 +64,11 @@ export default function Complete() {
     navigate('/wall', { replace: true });
   };
 
+  // 오늘 이미 2회 세션을 마쳤으면 proof 사진 저장 불가 (촬영은 허용)
+  const today = new Date();
+  const todayStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+  const proofCapReached = todaySessions.date === todayStr && todaySessions.count >= 2;
+
   const handleShare = async () => {
     if (sharing) return;
     setSharing(true);
@@ -72,9 +77,9 @@ export default function Complete() {
       msg: empathyMsg.trim(),
       target: shareTarget,
       exerciseId: selectedExercise,
-      proofUrl,
+      proofUrl: proofCapReached ? null : proofUrl,
     };
-    // 인증된 유저: Supabase에 저장 (사진은 Storage 업로드)
+    // 인증된 유저: Supabase에 저장 (사진은 Storage 업로드 — 하루 2장 초과 시 저장 생략)
     if (user) {
       try {
         await createPost(user.id, {
@@ -82,7 +87,7 @@ export default function Complete() {
           mood: selectedMood,
           target: shareTarget,
           exerciseId: selectedExercise,
-          proofBlob: getProofBlob(),
+          proofBlob: proofCapReached ? null : getProofBlob(),
         });
       } catch (e) {
         showToast('⚠️', '저장에 실패했어요. 로컬에만 저장됩니다.');
