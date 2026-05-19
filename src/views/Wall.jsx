@@ -390,7 +390,13 @@ export default function Wall() {
     const friendUserId = !isMine ? post.userId : null;
     const sentEncRemote = friendUserId ? remoteEncMap.byPost?.[post.id] : null;
     const sentEncLocal = friendUserId ? sentEncByPost?.[post.id] : null;
-    const sentEnc = sentEncRemote || sentEncLocal;
+    // 더 최신 ts 우선 — 메시지 변경 시 local이 DB보다 먼저 갱신될 수 있음
+    const sentEnc = (() => {
+      if (sentEncLocal && sentEncRemote) {
+        return (sentEncLocal.ts || 0) >= (sentEncRemote.ts || 0) ? sentEncLocal : sentEncRemote;
+      }
+      return sentEncLocal || sentEncRemote;
+    })();
     const sentEncDisplay = sentEnc ? getEncouragementText(sentEnc.encId, t) : '';
     const handleEncourageFriend = friendUserId && user
       ? () => setEncFriend({ id: friendUserId, name: profile?.nickname || '', postId: post.id })
