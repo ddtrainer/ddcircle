@@ -42,7 +42,7 @@ function ensureBells() {
   if (!bellIn) {
     bellIn = new Audio('/audio/bell-in.mp3');
     bellIn.preload = 'auto';
-    bellIn.volume = 0.15;
+    bellIn.volume = 0.1;
   }
   if (!bellOut) {
     bellOut = new Audio('/audio/bell-out.wav');
@@ -119,7 +119,7 @@ export function useBreathSound({ phase, enabled }) {
       if (p && typeof p.catch === 'function') {
         p.catch(() => { /* 자동재생 거부 시 무시 — 첫 사용자 제스처 후엔 정상 동작 */ });
       }
-      fadeBackground(0.22, 1500);
+      fadeBackground(0.11, 1500);
     } else {
       fadeBackground(0, 800);
     }
