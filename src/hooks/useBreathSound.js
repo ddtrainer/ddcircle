@@ -45,9 +45,9 @@ function ensureBells() {
     bellIn.volume = 0.55;
   }
   if (!bellOut) {
-    bellOut = new Audio('/audio/bell-out.mp3');
+    bellOut = new Audio('/audio/bell-out.wav');
     bellOut.preload = 'auto';
-    bellOut.volume = 0.55;
+    bellOut.volume = 1.0;
   }
 }
 
