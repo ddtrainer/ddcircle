@@ -67,7 +67,7 @@ export const translations = {
     profileEditSub: '닉네임과 아바타를 바꿀 수 있어요.',
     profileEditSaveBtn: '저장하기',
     profileEditSaved: '프로필이 저장됐어요',
-    startBtn: '오늘의 3분 시작하기 →',
+    startBtn: '오늘의 3분 DD 시작하기 →',
     browseLink: '먼저 응원나라 둘러보기 →',
     philosophyText: '"수백만 년, 인류가 이어온 두 가지 —<br>몸을 움직이는 것, 그리고 깊게 숨 쉬는 것.<br><strong>나를 돌보는 이 3분,<br>AI 시대에도 나는 살아있다.</strong>"',
     pickerTitle: '🔥 어떤 운동을 할까요?',

@@ -86,7 +86,7 @@ export default function Home() {
           className={styles.heroQuote}
           dangerouslySetInnerHTML={{ __html: t('heroQuote') }}
         />
-        <div className={styles.heroSub}>SHORT EXERCISE · DEEP RELAXATION</div>
+        <div className={styles.heroSub}>DASH EXERCISE · DEEP RELAXATION</div>
       </div>
 
       {/* 호흡 원 */}
@@ -223,9 +223,8 @@ export default function Home() {
         </div>
       </div>
 
-      {/* 시작 버튼 + 둘러보기 링크 */}
+      {/* 시작 버튼 */}
       <button className={styles.startBtn} onClick={goPicker}>{t('startBtn')}</button>
-      <button className={styles.secondaryLink} onClick={goWall}>{t('browseLink')}</button>
 
       {/* 철학 인용 */}
       <div className={styles.philosophy}>
