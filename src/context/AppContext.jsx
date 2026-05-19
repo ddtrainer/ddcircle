@@ -52,6 +52,8 @@ export function AppProvider({ children }) {
   const [challengeJoins, setChallengeJoins] = useLocalStorage('ddcircle.challengeJoins', {});
   const [notificationsEnabled, setNotificationsEnabled] = useLocalStorage('ddcircle.notificationsEnabled', false);
   const [sentEncouragements, setSentEncouragements] = useLocalStorage('ddcircle.sentEncouragements', {});
+  // postId 기준 보낸 응원 캐시 — 네비게이션 후에도 '보냄' 상태 유지
+  const [sentEncByPost, setSentEncByPost] = useLocalStorage('ddcircle.sentEncByPost', {});
 
   // 친구에게 한 줄 응원 보내기 — friendId별 마지막 보낸 메시지 저장
   const sendEncouragement = useCallback((friendId, encId) => {
@@ -62,6 +64,12 @@ export function AppProvider({ children }) {
     // 통계: 보낸 응원 카운터 + 1
     setUserEp((prev) => ({ ...prev, empathySent: (prev.empathySent || 0) + 1 }));
   }, [setSentEncouragements, setUserEp]);
+
+  // DB 저장 성공 후 호출 — postId 기준으로 보낸 응원을 localStorage에 캐싱
+  const markPostEncouraged = useCallback((postId, encId) => {
+    if (!postId) return;
+    setSentEncByPost((prev) => ({ ...prev, [postId]: { encId, ts: Date.now() } }));
+  }, [setSentEncByPost]);
   const [lastChallengeBonus, setLastChallengeBonus] = useState(null);
 
   // === 일회성 마이그레이션: 자동 모드 시절의 challenge 기록 정리 ===
@@ -291,6 +299,8 @@ export function AppProvider({ children }) {
         setNotificationsEnabled,
         sentEncouragements,
         sendEncouragement,
+        sentEncByPost,
+        markPostEncouraged,
         lastChallengeBonus,
         consumeLastChallengeBonus,
         todaySessions,

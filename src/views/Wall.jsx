@@ -22,6 +22,19 @@ import styles from './Wall.module.css';
 export default function Wall() {
   const { t, lang } = useLang();
   const { userPosts, sentEncouragements, sendEncouragement, todayDone, friendsVersion } = useApp();
+  // 보낸 응원 localStorage 캐시 — AppContext 체인 타이밍 문제 우회, 직접 읽기/쓰기
+  const [sentEncByPost, setSentEncByPost] = useState(() => {
+    try {
+      const raw = localStorage.getItem('ddcircle.sentEncByPost') || '{}';
+      const parsed = JSON.parse(raw);
+      console.log('[wall mount] sentEncByPost loaded from localStorage:', parsed);
+      return parsed;
+    } catch { return {}; }
+  });
+  // 안전장치: state 변경 시 localStorage 동기화
+  useEffect(() => {
+    try { localStorage.setItem('ddcircle.sentEncByPost', JSON.stringify(sentEncByPost)); } catch {}
+  }, [sentEncByPost]);
   const { user } = useAuth();
   const navigate = useNavigate();
   const [remoteCircle, setRemoteCircle] = useState([]);
@@ -77,6 +90,8 @@ export default function Wall() {
       ]);
       setEmpathies(emp);
       setFriendStats(stats);
+    } catch (e) {
+      console.error('[wall] refresh error:', e);
     } finally {
       if (showLoading) setLoading(false);
       setHasLoaded(true);
@@ -236,6 +251,21 @@ export default function Wall() {
             ? { ...m.byPost, [encFriend.postId]: entry }
             : m.byPost,
         }));
+        if (encFriend.postId) {
+          const postId = encFriend.postId;
+          const newEntry = { encId, ts: Date.now() };
+          // 1) localStorage 즉시 동기 쓰기 (React 업데이트 큐와 무관하게 보장)
+          try {
+            const cur = JSON.parse(localStorage.getItem('ddcircle.sentEncByPost') || '{}');
+            cur[postId] = newEntry;
+            localStorage.setItem('ddcircle.sentEncByPost', JSON.stringify(cur));
+            console.log('[enc] saved to localStorage:', postId, newEntry);
+          } catch (err) {
+            console.error('[enc] localStorage write failed:', err);
+          }
+          // 2) React 상태 갱신 (현재 화면 즉시 반영)
+          setSentEncByPost((prev) => ({ ...prev, [postId]: newEntry }));
+        }
       } catch (e) {
         // DB 저장 실패 — 사용자에게 알림 + 친구는 응원을 못 받았다는 사실 명시
         console.error('[encouragement] save failed:', e);
@@ -359,7 +389,9 @@ export default function Wall() {
     // 응원은 게시물별로 추적 — 같은 친구의 다른 게시물에 별도로 응원 가능
     const friendUserId = !isMine ? post.userId : null;
     const sentEncRemote = friendUserId ? remoteEncMap.byPost?.[post.id] : null;
-    const sentEncDisplay = sentEncRemote ? getEncouragementText(sentEncRemote.encId, t) : '';
+    const sentEncLocal = friendUserId ? sentEncByPost?.[post.id] : null;
+    const sentEnc = sentEncRemote || sentEncLocal;
+    const sentEncDisplay = sentEnc ? getEncouragementText(sentEnc.encId, t) : '';
     const handleEncourageFriend = friendUserId && user
       ? () => setEncFriend({ id: friendUserId, name: profile?.nickname || '', postId: post.id })
       : undefined;
@@ -395,7 +427,7 @@ export default function Wall() {
         onEmpathyToggle={user ? (key) => handleEmpathyToggle(post.id, key) : undefined}
         onDelete={isMine ? () => handleDeletePost(post) : undefined}
         onEncourage={handleEncourageFriend}
-        encouraged={!!sentEncRemote}
+        encouraged={!!sentEnc}
         encouragedText={sentEncDisplay}
         receivedList={receivedList}
       />
