@@ -101,7 +101,7 @@ export default function Home() {
                 ? `🔥 ${t('streakDayBadge').replace('{n}', userEp.streak)}`
                 : `🌱 ${t('firstStartBadge')}`}
             </div>
-            <div className={styles.time}>3:00</div>
+            <div className={styles.time}>지금 바로</div>
             <div className={styles.cta}>{t('tapToStart')}</div>
           </div>
         </div>

@@ -179,7 +179,7 @@
 }
 
 .label {
-  font-size: 12px;
+  font-size: 14px;
   color: var(--text-muted);
   letter-spacing: 1.5px;
   margin-bottom: 2px;
@@ -189,13 +189,18 @@
 
 .time {
   font-family: 'Noto Serif KR', 'Playfair Display', serif;
-  font-size: 26px;
-  font-weight: 700;
+  font-size: 20px;
+  font-weight: 900;
   line-height: 1.1;
+  letter-spacing: -0.5px;
+  background: linear-gradient(135deg, #e07b4f 0%, #c45e8a 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 .cta {
-  font-size: 13px;
+  font-size: 15px;
   color: var(--text);
   margin-top: 3px;
   font-weight: 600;
