@@ -33,7 +33,7 @@ export const translations = {
     enc_gentle_hug: '토닥토닥, 잘하고 있어요',
     enc_proud: '당신이 자랑스러워요',
     enc_thanks: '오늘 하루 수고했어요',
-    setAlertTitle: '{slot} 셋 시간이에요',
+    setAlertTitle: '{slot} DD 시간이에요',
     setAlertSub: '오늘의 3분, 지금 시작할까요?',
     setAlertStart: '🚀 지금 시작',
     setAlertLater: '나중에',
