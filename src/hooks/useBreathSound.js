@@ -42,12 +42,12 @@ function ensureBells() {
   if (!bellIn) {
     bellIn = new Audio('/audio/bell-in.mp3');
     bellIn.preload = 'auto';
-    bellIn.volume = 0.25;
+    bellIn.volume = 0.15;
   }
   if (!bellOut) {
     bellOut = new Audio('/audio/bell-out.wav');
     bellOut.preload = 'auto';
-    bellOut.volume = 0.9;
+    bellOut.volume = 1.0;
   }
 }
 
