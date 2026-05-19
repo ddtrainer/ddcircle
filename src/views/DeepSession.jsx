@@ -78,6 +78,7 @@ export default function DeepSession() {
   const guideKey =
     phase === 'inhale' ? 'breathInhale' :
     phase === 'hold' ? 'breathHold' :
+    phase === 'postHold' ? 'breathPostHold' :
     'breathExhale';
 
   const displayNum = displaySecond > 0 ? displaySecond : '';
@@ -91,8 +92,9 @@ export default function DeepSession() {
     }
   };
 
-  // hold가 0이면 멈춤 칩 숨김
+  // hold/postHold가 0이면 칩 숨김
   const showHold = pattern.durations.hold > 0;
+  const showPostHold = (pattern.durations.postHold || 0) > 0;
 
   return (
     <div className={styles.session}>
@@ -122,7 +124,7 @@ export default function DeepSession() {
           ⚙ {t('breathCustom')}
           {breathPatternId === 'custom' && (
             <span className={styles.patternMeta}>
-              {' '}{customBreath.inhale}-{customBreath.hold}-{customBreath.exhale}
+              {' '}{customBreath.inhale}-{customBreath.hold}-{customBreath.exhale}-{customBreath.postHold ?? 0}
             </span>
           )}
         </button>
@@ -141,6 +143,11 @@ export default function DeepSession() {
         <div className={`${styles.patternStep} ${styles.exhale} ${phase === 'exhale' ? styles.active : ''}`}>
           {t('patternExhale').replace(/\d+/, pattern.durations.exhale)}
         </div>
+        {showPostHold && (
+          <div className={`${styles.patternStep} ${styles.hold} ${phase === 'postHold' ? styles.active : ''}`}>
+            {t('patternPostHold').replace(/\d+/, pattern.durations.postHold)}
+          </div>
+        )}
       </div>
 
       {/* 호흡 orb */}

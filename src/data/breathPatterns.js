@@ -1,13 +1,15 @@
-// 호흡 프리셋 (들숨-멈춤-날숨, 사이클 수)
+// 호흡 프리셋 (들숨-멈춤-날숨-날숨후멈춤, 사이클 수)
 export const BREATH_PRESETS = [
-  { id: '478', label: '4-7-8', durations: { inhale: 4, hold: 7, exhale: 8 }, cycles: 6 },
-  { id: '36',  label: '3-6',   durations: { inhale: 3, hold: 0, exhale: 6 }, cycles: 6 },
+  { id: '478',  label: '4-7-8 이완호흡',   durations: { inhale: 4, hold: 7, exhale: 8, postHold: 0 }, cycles: 6 },
+  { id: '48',   label: '4-8 안심호흡',     durations: { inhale: 4, hold: 0, exhale: 8, postHold: 0 }, cycles: 6 },
+  { id: '4444', label: '4-4-4-4 멘탈호흡', durations: { inhale: 4, hold: 4, exhale: 4, postHold: 4 }, cycles: 6 },
 ];
 
 export const DEFAULT_CUSTOM_BREATH = {
   inhale: 4,
-  hold: 4,
+  hold: 0,
   exhale: 4,
+  postHold: 0,
   cycles: 6,
 };
 
@@ -16,11 +18,12 @@ export function resolveBreathPattern(patternId, customBreath) {
   if (patternId === 'custom') {
     return {
       id: 'custom',
-      label: `${customBreath.inhale}-${customBreath.hold}-${customBreath.exhale}`,
+      label: `${customBreath.inhale}-${customBreath.hold}-${customBreath.exhale}-${customBreath.postHold ?? 0}`,
       durations: {
         inhale: customBreath.inhale,
         hold: customBreath.hold,
         exhale: customBreath.exhale,
+        postHold: customBreath.postHold ?? 0,
       },
       cycles: customBreath.cycles,
     };

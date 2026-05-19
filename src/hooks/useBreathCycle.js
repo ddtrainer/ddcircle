@@ -1,19 +1,10 @@
 import { useEffect, useReducer, useRef } from 'react';
 
-// 동적 호흡 사이클 (들숨/멈춤/날숨 — 멈춤은 0이면 스킵) × N 사이클
+// 동적 호흡 사이클 (들숨/멈춤/날숨/날숨후멈춤 — 0이면 스킵) × N 사이클
 // 단일 reducer로 phase/phaseSecond/cycle을 원자적으로 갱신 (race 방지)
 
 function totalCycleSec(durations) {
-  return durations.inhale + durations.hold + durations.exhale;
-}
-
-// 다음 phase 계산 (멈춤=0이면 inhale → exhale 직행)
-function nextPhase(currentPhase, durations) {
-  if (currentPhase === 'inhale') {
-    return durations.hold > 0 ? 'hold' : 'exhale';
-  }
-  if (currentPhase === 'hold') return 'exhale';
-  return 'inhale'; // after exhale
+  return durations.inhale + (durations.hold || 0) + durations.exhale + (durations.postHold || 0);
 }
 
 function initState(durations, totalCycles) {
@@ -40,27 +31,27 @@ function reducer(state, action) {
     if (nextSec > 0) {
       return { ...state, phaseSecond: nextSec, totalLeft };
     }
-    // phase 전환
-    if (state.phase === 'exhale') {
+    // phase 종료 — 사이클 마지막 phase인지 판단
+    const d = state.durations;
+    const isLastPhase =
+      (state.phase === 'postHold') ||
+      (state.phase === 'exhale' && !(d.postHold > 0));
+
+    if (isLastPhase) {
       const nextCycle = state.cycle + 1;
       if (nextCycle > state.totalCycles) {
         return { ...state, done: true, totalLeft: 0 };
       }
-      return {
-        ...state,
-        phase: 'inhale',
-        phaseSecond: state.durations.inhale,
-        cycle: nextCycle,
-        totalLeft,
-      };
+      return { ...state, phase: 'inhale', phaseSecond: d.inhale, cycle: nextCycle, totalLeft };
     }
-    const np = nextPhase(state.phase, state.durations);
-    return {
-      ...state,
-      phase: np,
-      phaseSecond: state.durations[np],
-      totalLeft,
-    };
+
+    // 사이클 내 다음 phase로 전환
+    let np;
+    if (state.phase === 'inhale')   np = d.hold > 0 ? 'hold' : 'exhale';
+    else if (state.phase === 'hold') np = 'exhale';
+    else if (state.phase === 'exhale') np = 'postHold'; // postHold > 0 이어야 여기 도달
+
+    return { ...state, phase: np, phaseSecond: d[np], totalLeft };
   }
   if (action.type === 'togglePause') {
     return { ...state, paused: !state.paused };
@@ -86,7 +77,7 @@ export function useBreathCycle({ durations, totalCycles = 6, onComplete }) {
   useEffect(() => {
     dispatch({ type: 'reset', durations, totalCycles });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [durations.inhale, durations.hold, durations.exhale, totalCycles]);
+  }, [durations.inhale, durations.hold, durations.exhale, durations.postHold, totalCycles]);
 
   // done 트리거 감지 → onComplete 호출
   useEffect(() => {
@@ -98,7 +89,7 @@ export function useBreathCycle({ durations, totalCycles = 6, onComplete }) {
     return () => clearInterval(id);
   }, []);
 
-  // 표시용 숫자: 들숨은 1→N (팽창과 함께 증가), 멈춤/날숨은 카운트다운
+  // 표시용 숫자: 들숨은 카운트업, 나머지는 카운트다운
   const fullDuration = state.durations[state.phase];
   const displaySecond =
     state.phase === 'inhale'

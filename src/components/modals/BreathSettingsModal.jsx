@@ -6,10 +6,11 @@ import Modal from './Modal';
 import styles from './BreathSettingsModal.module.css';
 
 const RANGES = {
-  inhale: { min: 1, max: 12 },
-  hold:   { min: 0, max: 20 },
-  exhale: { min: 1, max: 16 },
-  cycles: { min: 2, max: 20 },
+  inhale:   { min: 1, max: 12 },
+  hold:     { min: 0, max: 20 },
+  exhale:   { min: 1, max: 16 },
+  postHold: { min: 0, max: 20 },
+  cycles:   { min: 2, max: 20 },
 };
 
 export default function BreathSettingsModal({ open, onClose }) {
@@ -17,10 +18,10 @@ export default function BreathSettingsModal({ open, onClose }) {
   const { customBreath, setCustomBreath, setBreathPatternId } = useApp();
   const { show: showToast } = useToast();
 
-  const [draft, setDraft] = useState(customBreath);
+  const [draft, setDraft] = useState({ postHold: 0, ...customBreath });
 
   useEffect(() => {
-    if (open) setDraft(customBreath);
+    if (open) setDraft({ postHold: 0, ...customBreath });
   }, [open, customBreath]);
 
   const change = (key, delta) => {
@@ -31,14 +32,14 @@ export default function BreathSettingsModal({ open, onClose }) {
     });
   };
 
-  const totalSec = (draft.inhale + draft.hold + draft.exhale) * draft.cycles;
+  const totalSec = (draft.inhale + (draft.hold || 0) + draft.exhale + (draft.postHold || 0)) * draft.cycles;
   const min = Math.floor(totalSec / 60);
   const sec = totalSec % 60;
 
   const save = () => {
     setCustomBreath(draft);
     setBreathPatternId('custom');
-    showToast('🧘', `${draft.inhale}-${draft.hold}-${draft.exhale}`);
+    showToast('🧘', `${draft.inhale}-${draft.hold}-${draft.exhale}-${draft.postHold ?? 0}`);
     onClose?.();
   };
 
@@ -58,13 +59,14 @@ export default function BreathSettingsModal({ open, onClose }) {
       <div className={styles.title}>{t('breathSettingsTitle')}</div>
       <div className={styles.sub}>{t('breathSettingsSub')}</div>
 
-      <Stepper k="inhale" label={t('breathInhaleLabel')} />
-      <Stepper k="hold"   label={t('breathHoldLabel')} />
-      <Stepper k="exhale" label={t('breathExhaleLabel')} />
-      <Stepper k="cycles" label={t('breathCyclesLabel')} />
+      <Stepper k="inhale"   label={t('breathInhaleLabel')} />
+      <Stepper k="hold"     label={t('breathHoldLabel')} />
+      <Stepper k="exhale"   label={t('breathExhaleLabel')} />
+      <Stepper k="postHold" label={t('breathPostHoldLabel')} />
+      <Stepper k="cycles"   label={t('breathCyclesLabel')} />
 
       <div className={styles.preview}>
-        {draft.inhale}-{draft.hold}-{draft.exhale} × {draft.cycles} = {min}:{sec < 10 ? '0' : ''}{sec}
+        {draft.inhale}-{draft.hold}-{draft.exhale}-{draft.postHold ?? 0} × {draft.cycles} = {min}:{sec < 10 ? '0' : ''}{sec}
       </div>
 
       <div className={styles.actions}>
