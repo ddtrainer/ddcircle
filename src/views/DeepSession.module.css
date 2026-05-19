@@ -35,13 +35,14 @@
   line-height: 1.6;
 }
 
-/* 호흡 패턴 선택 (4-7-8 / 3-6 / 내 호흡) */
+/* 호흡 패턴 선택 — 2×2 그리드 */
 .patternPicker {
-  display: flex;
-  gap: 6px;
-  flex-wrap: wrap;
-  justify-content: center;
-  margin-bottom: 14px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  width: 100%;
+  max-width: 340px;
+  margin: 0 auto 14px;
 }
 
 .patternBtn {
