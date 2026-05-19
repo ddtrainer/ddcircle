@@ -15,7 +15,14 @@ export default function DeepSession() {
   const navigate = useNavigate();
   const { breathPatternId, setBreathPatternId, customBreath } = useApp();
   const [soundOn, setSoundOn] = useState(true);
+  const [soundReady, setSoundReady] = useState(false);
   const [animationReady, setAnimationReady] = useState(false);
+
+  useEffect(() => {
+    setSoundReady(false);
+    const id = setTimeout(() => setSoundReady(true), 1500);
+    return () => clearTimeout(id);
+  }, [breathPatternId]);
   const [settingsOpen, setSettingsOpen] = useState(false);
 
   // 현재 적용된 호흡 설정
@@ -30,6 +37,7 @@ export default function DeepSession() {
   const { phase, displaySecond, cycle, totalLeft, paused, togglePause, skip: cycleSkip } = useBreathCycle({
     durations: pattern.durations,
     totalCycles: pattern.cycles,
+    enabled: soundReady,
     onComplete: () => {
       const fully = !skipClickedRef.current;
       try { sessionStorage.setItem('ddcircle.session.deepFully', fully ? '1' : '0'); } catch {}
@@ -53,8 +61,22 @@ export default function DeepSession() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // 일시정지 시 진행 중인 transition을 현재 위치에서 고정
+  // soundReady=false 구간(딜레이 대기): orb를 즉시 작은 상태로 고정
+  // soundReady=true: inline style 해제 → CSS phase 클래스가 transition 시작
   const orbRef = useRef(null);
+  useEffect(() => {
+    const el = orbRef.current;
+    if (!el) return;
+    if (!soundReady) {
+      el.style.transition = 'none';
+      el.style.transform = 'scale(0.4)';
+    } else {
+      el.style.transition = '';
+      el.style.transform = '';
+    }
+  }, [soundReady]);
+
+  // 일시정지 시 진행 중인 transition을 현재 위치에서 고정
   useEffect(() => {
     const el = orbRef.current;
     if (!el) return;
@@ -69,7 +91,7 @@ export default function DeepSession() {
   }, [paused]);
 
   // phase 전환 시 효과음 (durations 동적)
-  useBreathSound({ phase, enabled: soundOn && !paused, durations: pattern.durations });
+  useBreathSound({ phase, enabled: soundOn && !paused && soundReady, durations: pattern.durations });
 
   const minutes = Math.floor(totalLeft / 60);
   const seconds = totalLeft % 60;
@@ -154,7 +176,11 @@ export default function DeepSession() {
       <div className={styles.breathZone}>
         <div
           ref={orbRef}
-          className={`${styles.orbOuter} ${animationReady ? styles[phase] : ''}`}
+          className={`${styles.orbOuter} ${animationReady && soundReady ? styles[phase] : ''}`}
+          style={{
+            '--inhale-dur': `${pattern.durations.inhale}s`,
+            '--exhale-dur': `${pattern.durations.exhale}s`,
+          }}
         >
           <div className={styles.orbInner}>{displayNum}</div>
         </div>
