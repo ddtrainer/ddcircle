@@ -10,10 +10,10 @@ function todayStr(now = new Date()) {
   return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
 }
 
-// 슬롯 시간과 현재 시간 차이(분) — 양수면 지났음
-function minutesDiff(now, slotTime) {
+// 슬롯 시간의 오늘 Date ms 반환
+function slotMs(now, slotTime) {
   const [h, m] = slotTime.split(':').map(Number);
-  return (now.getHours() - h) * 60 + (now.getMinutes() - m);
+  return new Date(now.getFullYear(), now.getMonth(), now.getDate(), h, m, 0, 0).getTime();
 }
 
 export function useSetAlerts({ setTiming, onAlert }) {
@@ -25,45 +25,91 @@ export function useSetAlerts({ setTiming, onAlert }) {
   useEffect(() => { historyRef.current = history; }, [history]);
 
   useEffect(() => {
+    let timerId = null;
+
+    const getSlots = () => {
+      const userSlots = [];
+      if (setTiming.morning?.enabled) userSlots.push({ id: 'morning', time: setTiming.morning.time, icon: '🌅' });
+      if (setTiming.evening?.enabled) userSlots.push({ id: 'evening', time: setTiming.evening.time, icon: '🌇' });
+      return userSlots.length > 0 ? userSlots : DEFAULT_SLOTS;
+    };
+
+    const scheduleNext = (now) => {
+      clearTimeout(timerId);
+      const slots = getSlots();
+      let minDelay = Infinity;
+
+      slots.forEach((slot) => {
+        const sm = slotMs(now, slot.time);
+        const diffMs = now.getTime() - sm; // 양수 = 지났음
+
+        if (diffMs < 0) {
+          // 슬롯 시간 전 → 정확히 슬롯 시간에 예약 (+200ms 버퍼)
+          const delay = -diffMs + 200;
+          if (delay < minDelay) minDelay = delay;
+        } else if (diffMs <= 30 * 60 * 1000) {
+          // 슬롯 시간 ~ 30분 이내: 반복 예약 (5분마다)
+          const today = todayStr(now);
+          const key = `${slot.id}|${today}`;
+          const lastFiredAt = historyRef.current[key];
+          if (lastFiredAt) {
+            const msToRepeat = 5 * 60 * 1000 - (now.getTime() - lastFiredAt);
+            if (msToRepeat > 0 && msToRepeat < minDelay) minDelay = msToRepeat;
+          }
+        } else {
+          // 30분 초과 → 내일 슬롯 시간까지 예약
+          const nextDay = sm + 24 * 60 * 60 * 1000;
+          const delay = nextDay - now.getTime() + 200;
+          if (delay < minDelay) minDelay = delay;
+        }
+      });
+
+      // 슬롯 없거나 계산 실패 시 1분 폴백
+      const delay = Math.max(1000, minDelay === Infinity ? 60000 : minDelay);
+      timerId = setTimeout(check, delay);
+    };
+
     const check = () => {
       const now = new Date();
       const today = todayStr(now);
 
-      const lastSessionDate = (() => {
-        try { return localStorage.getItem('ddcircle.lastSessionDate'); } catch { return null; }
-      })();
-      if (lastSessionDate === today) return;
+      // 오늘 이미 세션 완료 시 다음 슬롯만 예약
+      try {
+        if (localStorage.getItem('ddcircle.lastSessionDate') === today) {
+          scheduleNext(now);
+          return;
+        }
+      } catch { /* ignore */ }
 
-      const userSlots = [];
-      if (setTiming.morning?.enabled) userSlots.push({ id: 'morning', time: setTiming.morning.time, icon: '🌅' });
-      if (setTiming.evening?.enabled) userSlots.push({ id: 'evening', time: setTiming.evening.time, icon: '🌇' });
-      const slots = userSlots.length > 0 ? userSlots : DEFAULT_SLOTS;
+      const slots = getSlots();
 
       slots.forEach((slot) => {
-        const diff = minutesDiff(now, slot.time);
-        // 슬롯 시간 ~ 30분 이내: 사용자가 시작하지 않으면 5분마다 반복
-        const inWindow = diff >= 0 && diff <= 30;
-        const key = `${slot.id}|${today}`;
-        if (inWindow) {
-          const lastFiredAt = historyRef.current[key]; // 타임스탬프 or undefined
-          const msSinceFired = lastFiredAt ? now - lastFiredAt : Infinity;
+        const sm = slotMs(now, slot.time);
+        const diffMs = now.getTime() - sm; // 양수 = 지났음
+
+        // 슬롯 시간 ~ 30분 이내
+        if (diffMs >= 0 && diffMs <= 30 * 60 * 1000) {
+          const key = `${slot.id}|${today}`;
+          const lastFiredAt = historyRef.current[key];
+          const msSinceFired = lastFiredAt ? now.getTime() - lastFiredAt : Infinity;
           if (msSinceFired >= 5 * 60 * 1000) {
             setHistory((prev) => ({ ...prev, [key]: now.getTime() }));
             onAlertRef.current?.(slot);
           }
         }
       });
+
+      scheduleNext(now);
     };
 
     check();
-    const id = setInterval(check, 30000);
 
-    // 탭이 다시 포그라운드로 돌아올 때 즉시 재확인 (백그라운드 지연 보정)
+    // 탭이 포그라운드로 돌아올 때 즉시 재확인
     const onVisible = () => { if (document.visibilityState === 'visible') check(); };
     document.addEventListener('visibilitychange', onVisible);
 
     return () => {
-      clearInterval(id);
+      clearTimeout(timerId);
       document.removeEventListener('visibilitychange', onVisible);
     };
   }, [setTiming, setHistory]);
