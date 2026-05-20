@@ -13,10 +13,10 @@ import styles from './Home.module.css';
 
 export default function Home() {
   const { t } = useLang();
-  const { setTiming, userEp, challengeClaims, challengeJoins, joinChallenge, leaveChallenge } = useApp();
+  const { setTiming, todayDone, userEp, challengeClaims, challengeJoins, joinChallenge, leaveChallenge } = useApp();
   const { show: showToast } = useToast();
   const navigate = useNavigate();
-  const next = useNextSetTiming(setTiming);
+  const next = useNextSetTiming(setTiming, todayDone);
   const [setTimingOpen, setSetTimingOpen] = useState(false);
 
   // DDCircle 회원수 — 닉네임 설정한 프로필 수. mount 시 1회 fetch.

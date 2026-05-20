@@ -3,7 +3,8 @@ import { useLang } from '../i18n/LangContext';
 
 // 셋 타이밍(아침/저녁) 다음 슬롯 계산. 1분마다 갱신.
 // setTiming = { morning: { time, enabled }, evening: { time, enabled }, sync }
-export function useNextSetTiming(setTiming) {
+// doneToday: 오늘 이미 세션 완료 시 live 모드 건너뜀
+export function useNextSetTiming(setTiming, doneToday = false) {
   const { lang, t } = useLang();
   const [tick, setTick] = useState(0);
 
@@ -43,7 +44,7 @@ export function useNextSetTiming(setTiming) {
     const slotTime = new Date(now);
     slotTime.setHours(s.hour, s.min, 0, 0);
     let diff = slotTime - now;
-    if (diff > -30 * 60 * 1000 && diff <= 0) {
+    if (!doneToday && diff > -30 * 60 * 1000 && diff <= 0) {
       isLive = true;
       nextSlot = s;
       minDiff = diff;
