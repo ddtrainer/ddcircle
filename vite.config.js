@@ -38,6 +38,11 @@ export default defineConfig({
       },
       workbox: {
         globPatterns: ['**/*.{js,css,html,svg,png,ico,woff,woff2}'],
+        // 새 SW가 설치 즉시 기존 SW 대체 → 옛 JS 서빙 방지
+        // PWA에서 코드 fix가 사용자에게 즉시 전달되도록 보장.
+        skipWaiting: true,
+        clientsClaim: true,
+        cleanupOutdatedCaches: true,
         // Supabase/Vercel Analytics 등 외부 API는 캐시 제외
         navigateFallbackDenylist: [/^\/api\//, /^\/auth\//],
         runtimeCaching: [
