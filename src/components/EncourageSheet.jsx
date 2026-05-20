@@ -8,7 +8,7 @@ import styles from './EncourageSheet.module.css';
 // encId 형태:
 //  - 프리셋: 'today_great', 'together' 등
 //  - 커스텀: 'custom:사용자가 입력한 텍스트'
-const MAX_CUSTOM_LEN = 15;
+const MAX_CUSTOM_LEN = 50;
 
 export default function EncourageSheet({ open, friendName, onSelect, onClose }) {
   const { t } = useLang();
@@ -50,7 +50,7 @@ export default function EncourageSheet({ open, friendName, onSelect, onClose }) 
           ))}
         </div>
 
-        {/* 직접 쓰기 — 15자 이내 */}
+        {/* 직접 쓰기 — 50자 이내 */}
         <div className={styles.customDivider}>
           <span>{t('customEncDivider')}</span>
         </div>

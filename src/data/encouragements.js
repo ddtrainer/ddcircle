@@ -1,5 +1,5 @@
 // 한 줄 응원 메시지 프리셋 (큐레이팅된 따뜻한 메시지)
-// 사용자는 프리셋 선택 또는 직접 입력(15자 이내) 둘 다 가능
+// 사용자는 프리셋 선택 또는 직접 입력(50자 이내) 둘 다 가능
 // 직접 입력은 enc_id에 'custom:내용' 형태로 저장됨
 export const ENCOURAGEMENTS = [
   { id: 'today_great', emoji: '✨', textKey: 'enc_today_great' },
