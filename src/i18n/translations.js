@@ -4,6 +4,7 @@
 export const translations = {
   ko: {
     heroQuote: '<span class="one">1분</span> 짧게 운동하고, 깊게 심호흡하며<br>서로의 에너지를 나눕니다.',
+    nowStart: '지금 바로',
     tapToStart: '탭하여 시작',
     peopleSuffix: '명',
     togetherLabel: '오늘 DD 운동과 호흡을 함께 한 사람들',
@@ -350,6 +351,7 @@ export const translations = {
   },
   en: {
     heroQuote: '<span class="one">One minute</span> to move,<br>two minutes to breathe,<br>shared energy.',
+    nowStart: 'Right now',
     tapToStart: 'Tap to start',
     peopleSuffix: '',
     togetherLabel: 'people did DDCircle today',
