@@ -3,8 +3,8 @@ import { useLang } from '../i18n/LangContext';
 import styles from './PWAInstallPrompt.module.css';
 
 const DISMISS_KEY = 'ddcircle.pwaDismissedAt';
-const DISMISS_COOLDOWN_MS = 7 * 24 * 60 * 60 * 1000; // 7일
-const SHOW_DELAY_MS = 8000; // 첫 방문 후 8초 뒤 노출
+const DISMISS_COOLDOWN_MS = 3 * 24 * 60 * 60 * 1000; // 3일
+const SHOW_DELAY_MS = 5000; // 첫 방문 후 5초 뒤 노출
 
 function isStandalone() {
   if (typeof window === 'undefined') return false;
