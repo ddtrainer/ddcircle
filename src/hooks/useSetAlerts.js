@@ -41,12 +41,16 @@ export function useSetAlerts({ setTiming, onAlert }) {
 
       slots.forEach((slot) => {
         const diff = minutesDiff(now, slot.time);
-        // 0~2분 이내(지났거나 막 됐거나) — 백그라운드 지연 보정
-        const inWindow = diff >= 0 && diff <= 2;
+        // 슬롯 시간 ~ 30분 이내: 사용자가 시작하지 않으면 5분마다 반복
+        const inWindow = diff >= 0 && diff <= 30;
         const key = `${slot.id}|${today}`;
-        if (inWindow && !historyRef.current[key]) {
-          setHistory((prev) => ({ ...prev, [key]: true }));
-          onAlertRef.current?.(slot);
+        if (inWindow) {
+          const lastFiredAt = historyRef.current[key]; // 타임스탬프 or undefined
+          const msSinceFired = lastFiredAt ? now - lastFiredAt : Infinity;
+          if (msSinceFired >= 5 * 60 * 1000) {
+            setHistory((prev) => ({ ...prev, [key]: now.getTime() }));
+            onAlertRef.current?.(slot);
+          }
         }
       });
     };
