@@ -218,9 +218,35 @@ export function AppProvider({ children }) {
     }
     // 오늘 세션 카운트 증가 (캡 추적용 — 완주 여부와 무관, 세션 진행 자체 카운트)
     setTodaySessions({ date: dateStr, count: todayCountForCap + 1 });
-    // 세션 완료 날짜 저장 — 셋 타이밍 알림이 "오늘 이미 했는지" 정확히 판단하기 위함
+    // 세션 완료 시 슬롯별 충족 기록 — 아침 세션을 했다고 저녁 알림까지 막으면 안 됨.
+    // 현재 시각이 슬롯 시간 -10분 ~ +30분 범위에 들면 그 슬롯만 충족 처리.
     try {
-      if (sessionCounts) localStorage.setItem('ddcircle.lastSessionDate', dateStr);
+      if (sessionCounts) {
+        const slotsConfig = [];
+        if (setTiming.morning?.enabled) slotsConfig.push({ id: 'morning', time: setTiming.morning.time });
+        if (setTiming.evening?.enabled) slotsConfig.push({ id: 'evening', time: setTiming.evening.time });
+        if (slotsConfig.length === 0) {
+          slotsConfig.push({ id: 'default-morning', time: '09:00' });
+          slotsConfig.push({ id: 'default-evening', time: '18:00' });
+        }
+        const raw = localStorage.getItem('ddcircle.slotsSatisfied');
+        const satisfied = {};
+        try {
+          const parsed = raw ? JSON.parse(raw) : {};
+          // 오늘 날짜 항목만 유지 (어제 이전은 자동 폐기)
+          Object.keys(parsed).forEach((k) => { if (parsed[k] === dateStr) satisfied[k] = dateStr; });
+        } catch { /* reset */ }
+        const nowMs = today.getTime();
+        for (const s of slotsConfig) {
+          const [h, m] = s.time.split(':').map(Number);
+          const sm = new Date(today.getFullYear(), today.getMonth(), today.getDate(), h, m, 0, 0).getTime();
+          const diff = nowMs - sm;
+          if (diff >= -10 * 60 * 1000 && diff <= 30 * 60 * 1000) {
+            satisfied[s.id] = dateStr;
+          }
+        }
+        localStorage.setItem('ddcircle.slotsSatisfied', JSON.stringify(satisfied));
+      }
     } catch { /* ignore */ }
 
     // 다음 세션을 위해 완주 플래그 비움
@@ -249,7 +275,7 @@ export function AppProvider({ children }) {
       capReached,           // UI에서 "오늘 EP 캡 도달" 안내용
       dashFully, deepFully, // UI에서 "Skip해서 EP 일부만" 안내용
     };
-  }, [userEp.streak, challengeClaims, challengeJoins, setUserEp, setTodayDone, setTodayCount, setChallengeClaims, setChallengeJoins, user, selectedExercise, breathPatternId, todaySessions, setTodaySessions]);
+  }, [userEp.streak, challengeClaims, challengeJoins, setUserEp, setTodayDone, setTodayCount, setChallengeClaims, setChallengeJoins, user, selectedExercise, breathPatternId, todaySessions, setTodaySessions, setTiming]);
 
   // 챌린지 보너스 알림을 소비(읽음 처리)
   const consumeLastChallengeBonus = useCallback(() => setLastChallengeBonus(null), []);

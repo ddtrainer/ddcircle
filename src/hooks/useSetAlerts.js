@@ -41,12 +41,15 @@ export function useSetAlerts({ setTiming, onAlert }) {
 
     const tryFireAlerts = (now) => {
       const today = todayStr(now);
+      // 슬롯별 충족 기록 — 아침 슬롯 만족했어도 저녁 슬롯 알림은 별도로 발사
+      let satisfied = {};
       try {
-        if (localStorage.getItem('ddcircle.lastSessionDate') === today) return;
+        satisfied = JSON.parse(localStorage.getItem('ddcircle.slotsSatisfied') || '{}');
       } catch { /* ignore */ }
 
       const slots = getSlots();
       slots.forEach((slot) => {
+        if (satisfied[slot.id] === today) return; // 이 슬롯은 오늘 이미 충족
         const sm = slotMs(now, slot.time);
         const diffMs = now.getTime() - sm;
         if (diffMs >= 0 && diffMs <= 30 * 60 * 1000) {
