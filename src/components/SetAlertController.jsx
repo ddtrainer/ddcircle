@@ -5,14 +5,46 @@ import { useLang } from '../i18n/LangContext';
 import { useSetAlerts } from '../hooks/useSetAlerts';
 import SetAlertModal from './SetAlertModal';
 
+// 타이밍 도달 시 bell-in.mp3 재생 — 권한 불필요, 탭 열려있을 때 항상 작동
+function playAlertBell() {
+  try {
+    const audio = new Audio('/audio/bell-in.mp3');
+    audio.volume = 0.9;
+    audio.play().catch(() => {
+      // 자동재생 정책으로 막힌 경우 Web Audio API 폴백 (딩동 2회)
+      try {
+        const AC = window.AudioContext || window.webkitAudioContext;
+        if (!AC) return;
+        const ctx = new AC();
+        const bell = (freq, t0) => {
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.type = 'sine';
+          osc.frequency.value = freq;
+          gain.gain.setValueAtTime(0.6, t0);
+          gain.gain.exponentialRampToValueAtTime(0.001, t0 + 1.2);
+          osc.start(t0);
+          osc.stop(t0 + 1.2);
+        };
+        bell(880, ctx.currentTime);
+        bell(660, ctx.currentTime + 0.35);
+        bell(880, ctx.currentTime + 1.3);
+        bell(660, ctx.currentTime + 1.65);
+        setTimeout(() => ctx.close(), 4000);
+      } catch { /* 무시 */ }
+    });
+  } catch { /* 무시 */ }
+}
+
 // 셋 알림 컨트롤러
-// - 인앱 모달 (앱 열려있을 때)
-// - 브라우저 푸시 알림 (권한 허용 + 탭 백그라운드 시)
+// - 인앱 모달 + 알림음 (탭 열려있을 때)
+// - OS 푸시 알림 (권한 허용 시, 백그라운드 보조)
 export default function SetAlertController() {
   const { setTiming, notificationsEnabled } = useApp();
 
-  // 앱 진입 시 OS 알림 권한 자동 요청 (notificationsEnabled 기본 true)
-  // — iOS Safari는 Notification 미지원이므로 조용히 무시
+  // 앱 진입 시 OS 알림 권한 자동 요청
   useEffect(() => {
     if (
       notificationsEnabled &&
@@ -22,6 +54,7 @@ export default function SetAlertController() {
       Notification.requestPermission().catch(() => {});
     }
   }, [notificationsEnabled]);
+
   const { t } = useLang();
   const navigate = useNavigate();
   const [activeSlot, setActiveSlot] = useState(null);
@@ -29,10 +62,13 @@ export default function SetAlertController() {
   useSetAlerts({
     setTiming,
     onAlert: (slot) => {
-      // 인앱 모달 표시
+      // 1) 알림음 재생 — 탭 열려있을 때 즉시 소리
+      playAlertBell();
+
+      // 2) 인앱 모달 표시
       setActiveSlot(slot);
 
-      // 브라우저 알림 — 서비스 워커 우선 (Android Chrome PWA에서 더 안정적), 폴백은 Notification API
+      // 3) OS 푸시 알림 — 권한 있을 때 보조 (백그라운드 대비)
       try {
         if (
           notificationsEnabled &&
@@ -64,7 +100,7 @@ export default function SetAlertController() {
           }
         }
       } catch {
-        /* 일부 환경(특히 iOS Safari)은 Notification 미지원 — 무시 */
+        /* iOS Safari 등 Notification 미지원 환경 — 무시 */
       }
     },
   });
