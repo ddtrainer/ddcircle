@@ -10,7 +10,6 @@ function todayStr(now = new Date()) {
   return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
 }
 
-// 슬롯 시간의 오늘 Date ms 반환
 function slotMs(now, slotTime) {
   const [h, m] = slotTime.split(':').map(Number);
   return new Date(now.getFullYear(), now.getMonth(), now.getDate(), h, m, 0, 0).getTime();
@@ -26,6 +25,8 @@ export function useSetAlerts({ setTiming, onAlert }) {
 
   useEffect(() => {
     let timerId = null;
+    // 30초 폴백 인터벌 — 모바일 OS가 setTimeout을 스로틀할 때 대비
+    let pollId = null;
 
     const getSlots = () => {
       const userSlots = [];
@@ -48,7 +49,7 @@ export function useSetAlerts({ setTiming, onAlert }) {
           const delay = -diffMs + 200;
           if (delay < minDelay) minDelay = delay;
         } else if (diffMs <= 30 * 60 * 1000) {
-          // 슬롯 시간 ~ 30분 이내: 반복 예약 (5분마다)
+          // 슬롯 시간 ~ 30분 이내: 5분마다 반복
           const today = todayStr(now);
           const key = `${slot.id}|${today}`;
           const lastFiredAt = historyRef.current[key];
@@ -64,7 +65,6 @@ export function useSetAlerts({ setTiming, onAlert }) {
         }
       });
 
-      // 슬롯 없거나 계산 실패 시 1분 폴백
       const delay = Math.max(1000, minDelay === Infinity ? 60000 : minDelay);
       timerId = setTimeout(check, delay);
     };
@@ -73,7 +73,6 @@ export function useSetAlerts({ setTiming, onAlert }) {
       const now = new Date();
       const today = todayStr(now);
 
-      // 오늘 이미 세션 완료 시 다음 슬롯만 예약
       try {
         if (localStorage.getItem('ddcircle.lastSessionDate') === today) {
           scheduleNext(now);
@@ -87,7 +86,6 @@ export function useSetAlerts({ setTiming, onAlert }) {
         const sm = slotMs(now, slot.time);
         const diffMs = now.getTime() - sm; // 양수 = 지났음
 
-        // 슬롯 시간 ~ 30분 이내
         if (diffMs >= 0 && diffMs <= 30 * 60 * 1000) {
           const key = `${slot.id}|${today}`;
           const lastFiredAt = historyRef.current[key];
@@ -104,12 +102,37 @@ export function useSetAlerts({ setTiming, onAlert }) {
 
     check();
 
+    // 모바일 폴백: 30초마다 슬롯 시간 근처인지 확인
+    // iOS/Android가 장시간 setTimeout을 스로틀해도 이 인터벌이 알림을 잡아냄
+    pollId = setInterval(() => {
+      const now = new Date();
+      const today = todayStr(now);
+      try {
+        if (localStorage.getItem('ddcircle.lastSessionDate') === today) return;
+      } catch { /* ignore */ }
+      const slots = getSlots();
+      slots.forEach((slot) => {
+        const sm = slotMs(now, slot.time);
+        const diffMs = now.getTime() - sm;
+        if (diffMs >= 0 && diffMs <= 30 * 60 * 1000) {
+          const key = `${slot.id}|${today}`;
+          const lastFiredAt = historyRef.current[key];
+          const msSinceFired = lastFiredAt ? now.getTime() - lastFiredAt : Infinity;
+          if (msSinceFired >= 5 * 60 * 1000) {
+            setHistory((prev) => ({ ...prev, [key]: now.getTime() }));
+            onAlertRef.current?.(slot);
+          }
+        }
+      });
+    }, 30000);
+
     // 탭이 포그라운드로 돌아올 때 즉시 재확인
     const onVisible = () => { if (document.visibilityState === 'visible') check(); };
     document.addEventListener('visibilitychange', onVisible);
 
     return () => {
       clearTimeout(timerId);
+      clearInterval(pollId);
       document.removeEventListener('visibilitychange', onVisible);
     };
   }, [setTiming, setHistory]);
