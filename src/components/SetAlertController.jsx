@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useApp } from '../context/AppContext';
 import { useLang } from '../i18n/LangContext';
@@ -10,6 +10,18 @@ import SetAlertModal from './SetAlertModal';
 // - 브라우저 푸시 알림 (권한 허용 + 탭 백그라운드 시)
 export default function SetAlertController() {
   const { setTiming, notificationsEnabled } = useApp();
+
+  // 앱 진입 시 OS 알림 권한 자동 요청 (notificationsEnabled 기본 true)
+  // — iOS Safari는 Notification 미지원이므로 조용히 무시
+  useEffect(() => {
+    if (
+      notificationsEnabled &&
+      typeof Notification !== 'undefined' &&
+      Notification.permission === 'default'
+    ) {
+      Notification.requestPermission().catch(() => {});
+    }
+  }, [notificationsEnabled]);
   const { t } = useLang();
   const navigate = useNavigate();
   const [activeSlot, setActiveSlot] = useState(null);

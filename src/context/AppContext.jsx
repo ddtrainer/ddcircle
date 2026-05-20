@@ -50,7 +50,7 @@ export function AppProvider({ children }) {
   const [customBreath, setCustomBreath] = useLocalStorage('ddcircle.customBreath', DEFAULT_CUSTOM_BREATH);
   const [challengeClaims, setChallengeClaims] = useLocalStorage('ddcircle.challengeClaims', {});
   const [challengeJoins, setChallengeJoins] = useLocalStorage('ddcircle.challengeJoins', {});
-  const [notificationsEnabled, setNotificationsEnabled] = useLocalStorage('ddcircle.notificationsEnabled', false);
+  const [notificationsEnabled, setNotificationsEnabled] = useLocalStorage('ddcircle.notificationsEnabled', true);
   const [sentEncouragements, setSentEncouragements] = useLocalStorage('ddcircle.sentEncouragements', {});
   // postId 기준 보낸 응원 캐시 — 네비게이션 후에도 '보냄' 상태 유지
   const [sentEncByPost, setSentEncByPost] = useLocalStorage('ddcircle.sentEncByPost', {});

@@ -1,59 +1,51 @@
 import { useEffect, useRef } from 'react';
 import { useLocalStorage } from './useLocalStorage';
 
-// 기본 알림 시간 — 사용자가 morning/evening을 둘 다 설정하지 않은 경우 자동 적용
 const DEFAULT_SLOTS = [
   { id: 'default-morning', time: '09:00', icon: '🌅' },
   { id: 'default-evening', time: '18:00', icon: '🌇' },
 ];
 
-// 오늘 날짜 문자열 (로컬 타임존 기준 YYYY-MM-DD)
 function todayStr(now = new Date()) {
   return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
 }
 
-// 셋 시간 도달 시 onAlert(slot) 호출. 30초마다 체크.
-// - 같은 슬롯/같은 날은 1회만
-// - 오늘 세션 이미 완료했으면 알림 안 함
-// - 사용자가 morning/evening 모두 미설정 시 기본 슬롯(09:00, 18:00) 사용
-// slot = { id, time: 'HH:MM', icon }
+// 슬롯 시간과 현재 시간 차이(분) — 양수면 지났음
+function minutesDiff(now, slotTime) {
+  const [h, m] = slotTime.split(':').map(Number);
+  return (now.getHours() - h) * 60 + (now.getMinutes() - m);
+}
+
 export function useSetAlerts({ setTiming, onAlert }) {
   const [history, setHistory] = useLocalStorage('ddcircle.setAlertHistory', {});
   const onAlertRef = useRef(onAlert);
+  const historyRef = useRef(history);
 
   useEffect(() => { onAlertRef.current = onAlert; }, [onAlert]);
+  useEffect(() => { historyRef.current = history; }, [history]);
 
   useEffect(() => {
     const check = () => {
       const now = new Date();
       const today = todayStr(now);
 
-      // 오늘 이미 세션 했으면 알림 발사 안 함 (날짜 기반 정확 비교)
       const lastSessionDate = (() => {
-        try { return localStorage.getItem('ddcircle.lastSessionDate'); }
-        catch { return null; }
+        try { return localStorage.getItem('ddcircle.lastSessionDate'); } catch { return null; }
       })();
-      const sessionDoneToday = lastSessionDate === today;
-      if (sessionDoneToday) return;
+      if (lastSessionDate === today) return;
 
-      // 사용자 설정 슬롯 수집
       const userSlots = [];
-      if (setTiming.morning?.enabled) {
-        userSlots.push({ id: 'morning', time: setTiming.morning.time, icon: '🌅' });
-      }
-      if (setTiming.evening?.enabled) {
-        userSlots.push({ id: 'evening', time: setTiming.evening.time, icon: '🌇' });
-      }
-      // 사용자가 아무것도 설정 안 했으면 기본 슬롯 사용
+      if (setTiming.morning?.enabled) userSlots.push({ id: 'morning', time: setTiming.morning.time, icon: '🌅' });
+      if (setTiming.evening?.enabled) userSlots.push({ id: 'evening', time: setTiming.evening.time, icon: '🌇' });
       const slots = userSlots.length > 0 ? userSlots : DEFAULT_SLOTS;
 
       slots.forEach((slot) => {
-        const [h, m] = slot.time.split(':').map(Number);
-        // 분 단위 정확히 일치하는 순간 (30초 폴링이라 최대 30s 지연)
-        const matches = now.getHours() === h && now.getMinutes() === m;
+        const diff = minutesDiff(now, slot.time);
+        // 0~2분 이내(지났거나 막 됐거나) — 백그라운드 지연 보정
+        const inWindow = diff >= 0 && diff <= 2;
         const key = `${slot.id}|${today}`;
-        if (matches && !history[key]) {
-          setHistory((prev) => ({ ...prev, [key]: true, _cleanedAt: today }));
+        if (inWindow && !historyRef.current[key]) {
+          setHistory((prev) => ({ ...prev, [key]: true }));
           onAlertRef.current?.(slot);
         }
       });
@@ -61,6 +53,14 @@ export function useSetAlerts({ setTiming, onAlert }) {
 
     check();
     const id = setInterval(check, 30000);
-    return () => clearInterval(id);
-  }, [setTiming, history, setHistory]);
+
+    // 탭이 다시 포그라운드로 돌아올 때 즉시 재확인 (백그라운드 지연 보정)
+    const onVisible = () => { if (document.visibilityState === 'visible') check(); };
+    document.addEventListener('visibilitychange', onVisible);
+
+    return () => {
+      clearInterval(id);
+      document.removeEventListener('visibilitychange', onVisible);
+    };
+  }, [setTiming, setHistory]);
 }
