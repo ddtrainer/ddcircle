@@ -69,6 +69,12 @@ export default function SetTimingModal({ open, onClose }) {
   const save = () => {
     setSetTiming(draft);
     setNotificationsEnabled(draftNotif);
+    // 타이밍 저장 = 재테스트 신호. 슬롯 충족·발사 기록 초기화하여
+    // 새 시간에 알림이 정상 발사되도록 한다.
+    try {
+      localStorage.removeItem('ddcircle.slotsSatisfied');
+      localStorage.removeItem('ddcircle.setAlertHistory');
+    } catch { /* ignore */ }
     showToast('⏰', t('setTimingSaved'));
     onClose?.();
   };

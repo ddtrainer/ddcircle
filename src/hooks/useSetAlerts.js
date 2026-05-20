@@ -1,5 +1,4 @@
 import { useEffect, useRef } from 'react';
-import { useLocalStorage } from './useLocalStorage';
 
 const DEFAULT_SLOTS = [
   { id: 'default-morning', time: '09:00', icon: '🌅' },
@@ -15,14 +14,28 @@ function slotMs(now, slotTime) {
   return new Date(now.getFullYear(), now.getMonth(), now.getDate(), h, m, 0, 0).getTime();
 }
 
+// localStorage를 직접 읽고 쓴다. useLocalStorage(React state)와 분리한 이유:
+// SetTimingModal에서 타이밍 저장 시 localStorage를 직접 비우는데, React state는
+// 비워지지 않아 historyRef가 옛 값을 계속 참조하는 stale 버그가 있었음.
+function readHistory() {
+  try {
+    return JSON.parse(localStorage.getItem('ddcircle.setAlertHistory') || '{}');
+  } catch { return {}; }
+}
+function writeHistory(obj) {
+  try { localStorage.setItem('ddcircle.setAlertHistory', JSON.stringify(obj)); } catch { /* ignore */ }
+}
+function readSatisfied() {
+  try {
+    return JSON.parse(localStorage.getItem('ddcircle.slotsSatisfied') || '{}');
+  } catch { return {}; }
+}
+
 export function useSetAlerts({ setTiming, onAlert }) {
-  const [history, setHistory] = useLocalStorage('ddcircle.setAlertHistory', {});
   const onAlertRef = useRef(onAlert);
-  const historyRef = useRef(history);
   const setTimingRef = useRef(setTiming);
 
   useEffect(() => { onAlertRef.current = onAlert; }, [onAlert]);
-  useEffect(() => { historyRef.current = history; }, [history]);
   useEffect(() => { setTimingRef.current = setTiming; }, [setTiming]);
 
   useEffect(() => {
@@ -41,11 +54,8 @@ export function useSetAlerts({ setTiming, onAlert }) {
 
     const tryFireAlerts = (now) => {
       const today = todayStr(now);
-      // 슬롯별 충족 기록 — 아침 슬롯 만족했어도 저녁 슬롯 알림은 별도로 발사
-      let satisfied = {};
-      try {
-        satisfied = JSON.parse(localStorage.getItem('ddcircle.slotsSatisfied') || '{}');
-      } catch { /* ignore */ }
+      const satisfied = readSatisfied();
+      const history = readHistory();
 
       const slots = getSlots();
       slots.forEach((slot) => {
@@ -54,10 +64,10 @@ export function useSetAlerts({ setTiming, onAlert }) {
         const diffMs = now.getTime() - sm;
         if (diffMs >= 0 && diffMs <= 30 * 60 * 1000) {
           const key = `${slot.id}|${today}`;
-          const lastFiredAt = historyRef.current[key];
+          const lastFiredAt = history[key];
           const msSinceFired = lastFiredAt ? now.getTime() - lastFiredAt : Infinity;
           if (msSinceFired >= 5 * 60 * 1000) {
-            setHistory((prev) => ({ ...prev, [key]: now.getTime() }));
+            writeHistory({ ...history, [key]: now.getTime() });
             onAlertRef.current?.(slot);
           }
         }
@@ -67,6 +77,7 @@ export function useSetAlerts({ setTiming, onAlert }) {
     const scheduleNext = (now) => {
       clearTimeout(timerId);
       const slots = getSlots();
+      const history = readHistory();
       let minDelay = Infinity;
 
       slots.forEach((slot) => {
@@ -79,7 +90,7 @@ export function useSetAlerts({ setTiming, onAlert }) {
         } else if (diffMs <= 30 * 60 * 1000) {
           const today = todayStr(now);
           const key = `${slot.id}|${today}`;
-          const lastFiredAt = historyRef.current[key];
+          const lastFiredAt = history[key];
           if (lastFiredAt) {
             const msToRepeat = 5 * 60 * 1000 - (now.getTime() - lastFiredAt);
             if (msToRepeat > 0 && msToRepeat < minDelay) minDelay = msToRepeat;
@@ -102,7 +113,6 @@ export function useSetAlerts({ setTiming, onAlert }) {
       scheduleNext(now);
     };
 
-    // 모든 검사 진입점 — 최소 1초 간격 디바운스
     const recheck = () => {
       const nowMs = Date.now();
       if (nowMs - lastCheckTime < 1000) return;
@@ -114,8 +124,7 @@ export function useSetAlerts({ setTiming, onAlert }) {
     // 폴백 인터벌: 모바일 OS의 setTimeout 스로틀링 대비 (15초)
     pollId = setInterval(recheck, 15000);
 
-    // requestAnimationFrame 기반 백업 체크 — 60초마다
-    // 모바일 브라우저가 setInterval보다 rAF를 더 안정적으로 유지하는 경우 대비
+    // requestAnimationFrame 기반 백업 — 60초마다
     let rafLastCheck = Date.now();
     const rafTick = () => {
       const nowMs = Date.now();
@@ -127,8 +136,7 @@ export function useSetAlerts({ setTiming, onAlert }) {
     };
     rafId = requestAnimationFrame(rafTick);
 
-    // 사용자 상호작용/포커스/가시성 변경 시 즉시 재확인
-    // 모바일에서 사용자가 화면을 만지면 슬롯 시간이 지났는지 즉시 체크
+    // 사용자 상호작용/포커스/가시성 변경 시 즉시 재확인 (모바일 신뢰성)
     const onVisible = () => { if (document.visibilityState === 'visible') recheck(); };
     const onFocus = () => recheck();
     const onTouch = () => recheck();
@@ -152,6 +160,5 @@ export function useSetAlerts({ setTiming, onAlert }) {
       document.removeEventListener('click', onTouch);
       document.removeEventListener('scroll', onTouch);
     };
-    // setTiming은 ref로 읽으므로 deps에서 제외 — 매번 effect 재실행 방지
-  }, [setHistory]);
+  }, []);
 }
