@@ -50,18 +50,21 @@ function buildRow({ subscription, setTiming, userId, lang }) {
 }
 
 // 푸시 구독 생성 + Supabase 동기화. 권한 미허용 시 자동으로 권한 요청.
-export async function enablePushSubscription({ setTiming, userId, lang }) {
-  if (!isPushSupported() || !isSupabaseConfigured || !VAPID_PUBLIC_KEY) return null;
+// onError(stage) 콜백으로 각 실패 지점을 호출자에게 알려 토스트 등으로 표시.
+export async function enablePushSubscription({ setTiming, userId, lang, onError }) {
+  if (!isPushSupported()) { onError?.('브라우저가 푸시 미지원'); return null; }
+  if (!isSupabaseConfigured) { onError?.('Supabase 미설정'); return null; }
+  if (!VAPID_PUBLIC_KEY) { onError?.('VAPID 공개키 누락 (env)'); return null; }
 
   if (Notification.permission === 'default') {
     const result = await Notification.requestPermission().catch(() => 'denied');
-    if (result !== 'granted') return null;
+    if (result !== 'granted') { onError?.(`권한 ${result}`); return null; }
   } else if (Notification.permission !== 'granted') {
-    return null;
+    onError?.(`권한 ${Notification.permission}`); return null;
   }
 
   const reg = await getRegistration();
-  if (!reg) return null;
+  if (!reg) { onError?.('SW 등록 없음'); return null; }
 
   let sub = await reg.pushManager.getSubscription();
   if (!sub) {
@@ -72,6 +75,7 @@ export async function enablePushSubscription({ setTiming, userId, lang }) {
       });
     } catch (e) {
       console.error('[push] subscribe failed', e);
+      onError?.(`구독 실패: ${e?.message || e}`);
       return null;
     }
   }
@@ -82,6 +86,7 @@ export async function enablePushSubscription({ setTiming, userId, lang }) {
     .upsert(row, { onConflict: 'endpoint' });
   if (error) {
     console.error('[push] supabase upsert failed', error);
+    onError?.(`DB 저장: ${error.message}`);
     return null;
   }
   return sub;

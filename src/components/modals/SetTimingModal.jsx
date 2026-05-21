@@ -69,27 +69,38 @@ export default function SetTimingModal({ open, onClose }) {
     }));
   };
 
-  const save = () => {
+  const [saving, setSaving] = useState(false);
+  const save = async () => {
+    if (saving) return;
+    setSaving(true);
     setSetTiming(draft);
     setNotificationsEnabled(draftNotif);
-    // 타이밍 저장 = 재테스트 신호. 슬롯 충족·발사 기록 초기화하여
-    // 새 시간에 알림이 정상 발사되도록 한다.
+    // 타이밍 저장 = 재테스트 신호. 슬롯 충족·발사 기록 초기화.
     try {
       localStorage.removeItem('ddcircle.slotsSatisfied');
       localStorage.removeItem('ddcircle.setAlertHistory');
     } catch { /* ignore */ }
 
-    // Web Push 구독 동기화 — 백그라운드/앱 종료 상태에서도 OS 알림이 뜨도록
-    // Supabase에 구독·슬롯 시간을 저장. enable이면 구독, disable이면 해제.
-    // 사용자 흐름은 막지 않도록 비동기 fire-and-forget (실패해도 인앱 알림은 작동).
+    // Web Push 구독 동기화 — 모달은 구독 완료까지 열어둠.
+    // 권한 팝업과 모달 백드롭 충돌 회피 + 실패 시 사용자에게 토스트로 안내.
+    let pushOk = true;
     if (draftNotif) {
-      enablePushSubscription({ setTiming: draft, userId: user?.id, lang })
-        .catch((e) => console.error('[push] enable failed', e));
+      const result = await enablePushSubscription({
+        setTiming: draft,
+        userId: user?.id,
+        lang,
+        onError: (msg) => {
+          pushOk = false;
+          showToast('⚠️', `푸시 알림 설정 실패: ${msg}`);
+        },
+      });
+      if (result) pushOk = true;
     } else {
-      disablePushSubscription().catch((e) => console.error('[push] disable failed', e));
+      try { await disablePushSubscription(); } catch (e) { console.error('[push] disable failed', e); }
     }
 
-    showToast('⏰', t('setTimingSaved'));
+    if (pushOk) showToast('⏰', t('setTimingSaved'));
+    setSaving(false);
     onClose?.();
   };
 
@@ -155,8 +166,8 @@ export default function SetTimingModal({ open, onClose }) {
         />
       </div>
 
-      <button className={styles.saveBtn} onClick={save}>
-        {t('saveBtn')}
+      <button className={styles.saveBtn} onClick={save} disabled={saving}>
+        {saving ? '...' : t('saveBtn')}
       </button>
     </Modal>
   );
