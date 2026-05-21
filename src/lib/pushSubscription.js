@@ -46,6 +46,9 @@ function buildRow({ subscription, setTiming, userId, lang }) {
     evening_enabled: !!setTiming.evening?.enabled,
     timezone: Intl.DateTimeFormat().resolvedOptions().timeZone || 'Asia/Seoul',
     lang: lang || 'ko',
+    // 저장 = 재테스트 신호 → 오늘 발송 기록 초기화하여 알림 다시 받을 수 있게 함
+    last_sent_morning: null,
+    last_sent_evening: null,
   };
 }
 
