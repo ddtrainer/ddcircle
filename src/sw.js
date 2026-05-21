@@ -17,7 +17,7 @@ precacheAndRoute(self.__WB_MANIFEST);
 // Web Push 수신 — Edge Function에서 발송된 푸시를 받아 OS 알림 표시.
 // 페이로드 형식: { title, body, tag, url }
 self.addEventListener('push', (event) => {
-  let data = {};
+  let data;
   try {
     data = event.data ? event.data.json() : {};
   } catch {
