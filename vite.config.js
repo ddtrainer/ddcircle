@@ -8,6 +8,12 @@ export default defineConfig({
     react(),
     VitePWA({
       registerType: 'autoUpdate',
+      strategies: 'injectManifest',
+      srcDir: 'src',
+      filename: 'sw.js',
+      injectManifest: {
+        globPatterns: ['**/*.{js,css,html,svg,png,ico,woff,woff2}'],
+      },
       includeAssets: [
         'dd-logo-128.png', 'dd-logo-192.png', 'dd-logo-512.png',
         'apple-touch-icon.png', 'favicon.svg', 'og-image.png',
@@ -36,35 +42,9 @@ export default defineConfig({
           { src: '/dd-logo-512.png', sizes: '512x512', type: 'image/png', purpose: 'maskable' },
         ],
       },
-      workbox: {
-        globPatterns: ['**/*.{js,css,html,svg,png,ico,woff,woff2}'],
-        // 새 SW가 설치 즉시 기존 SW 대체 → 옛 JS 서빙 방지
-        // PWA에서 코드 fix가 사용자에게 즉시 전달되도록 보장.
-        skipWaiting: true,
-        clientsClaim: true,
-        cleanupOutdatedCaches: true,
-        // Supabase/Vercel Analytics 등 외부 API는 캐시 제외
-        navigateFallbackDenylist: [/^\/api\//, /^\/auth\//],
-        runtimeCaching: [
-          {
-            urlPattern: ({ url }) => url.origin === 'https://fonts.googleapis.com' || url.origin === 'https://fonts.gstatic.com',
-            handler: 'CacheFirst',
-            options: {
-              cacheName: 'google-fonts',
-              expiration: { maxEntries: 30, maxAgeSeconds: 60 * 60 * 24 * 365 },
-            },
-          },
-          {
-            // Supabase Storage 이미지 (셀카) 캐시
-            urlPattern: ({ url }) => /supabase\.co\/storage\/v1\/object\/public\//.test(url.href),
-            handler: 'CacheFirst',
-            options: {
-              cacheName: 'supabase-images',
-              expiration: { maxEntries: 100, maxAgeSeconds: 60 * 60 * 24 * 30 },
-            },
-          },
-        ],
-      },
+      // injectManifest 전략 — workbox 옵션은 src/sw.js 내부에서 처리
+      // (skipWaiting, clientsClaim, cleanupOutdatedCaches는 sw.js에 인라인)
+      // runtimeCaching(fonts, supabase-images)은 v1에선 생략, 필요 시 sw.js에 추가
       devOptions: {
         enabled: false, // 개발 모드에서는 서비스 워커 비활성 (HMR 충돌 방지)
       },

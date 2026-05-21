@@ -1,14 +1,17 @@
 import { useEffect, useState } from 'react';
 import { useLang } from '../../i18n/LangContext';
 import { useApp } from '../../context/AppContext';
+import { useAuth } from '../../context/AuthContext';
 import { useToast } from '../Toast';
+import { enablePushSubscription, disablePushSubscription } from '../../lib/pushSubscription';
 import Modal from './Modal';
 import styles from './SetTimingModal.module.css';
 
 // 셋 타이밍(아침/저녁 알림 시간) 설정 모달
 export default function SetTimingModal({ open, onClose }) {
-  const { t } = useLang();
+  const { t, lang } = useLang();
   const { setTiming, setSetTiming, notificationsEnabled, setNotificationsEnabled } = useApp();
+  const { user } = useAuth();
   const { show: showToast } = useToast();
 
   // 모달 내부 임시 상태 — 저장 누르기 전까지는 컨텍스트에 반영 X
@@ -75,6 +78,17 @@ export default function SetTimingModal({ open, onClose }) {
       localStorage.removeItem('ddcircle.slotsSatisfied');
       localStorage.removeItem('ddcircle.setAlertHistory');
     } catch { /* ignore */ }
+
+    // Web Push 구독 동기화 — 백그라운드/앱 종료 상태에서도 OS 알림이 뜨도록
+    // Supabase에 구독·슬롯 시간을 저장. enable이면 구독, disable이면 해제.
+    // 사용자 흐름은 막지 않도록 비동기 fire-and-forget (실패해도 인앱 알림은 작동).
+    if (draftNotif) {
+      enablePushSubscription({ setTiming: draft, userId: user?.id, lang })
+        .catch((e) => console.error('[push] enable failed', e));
+    } else {
+      disablePushSubscription().catch((e) => console.error('[push] disable failed', e));
+    }
+
     showToast('⏰', t('setTimingSaved'));
     onClose?.();
   };
