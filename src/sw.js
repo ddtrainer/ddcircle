@@ -24,14 +24,17 @@ self.addEventListener('push', (event) => {
     data = { title: 'DDCircle', body: event.data?.text() || '' };
   }
   const title = data.title || 'DDCircle';
+  // 매 푸시마다 고유 tag로 워치 등 보조 기기가 중복으로 인식해 미러링 누락하는 문제 회피
+  const uniqueTag = `${data.tag || 'ddcircle-dd'}-${Date.now()}`;
   const options = {
     body: data.body || '',
     icon: '/dd-logo-192.png',
     badge: '/dd-logo-128.png',
-    tag: data.tag || 'ddcircle-dd',
+    tag: uniqueTag,
     renotify: true,
-    requireInteraction: false,
-    vibrate: [200, 100, 200],
+    requireInteraction: true,        // 사용자가 닫기 전까지 알림 유지
+    silent: false,                    // 시스템 알림음 강제 (silent=false 명시)
+    vibrate: [400, 150, 400, 150, 400],  // 더 강한 진동 패턴
     data: { url: data.url || '/picker' },
   };
   event.waitUntil(self.registration.showNotification(title, options));
