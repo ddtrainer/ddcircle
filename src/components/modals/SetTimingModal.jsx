@@ -5,6 +5,7 @@ import { useAuth } from '../../context/AuthContext';
 import { useToast } from '../Toast';
 import { enablePushSubscription, disablePushSubscription } from '../../lib/pushSubscription';
 import Modal from './Modal';
+import LoginPromptModal from './LoginPromptModal';
 import styles from './SetTimingModal.module.css';
 
 // 셋 타이밍(아침/저녁 알림 시간) 설정 모달
@@ -17,12 +18,23 @@ export default function SetTimingModal({ open, onClose }) {
   // 모달 내부 임시 상태 — 저장 누르기 전까지는 컨텍스트에 반영 X
   const [draft, setDraft] = useState(setTiming);
   const [draftNotif, setDraftNotif] = useState(notificationsEnabled);
+  const [loginPromptOpen, setLoginPromptOpen] = useState(false);
 
   // 푸시 알림 토글 — 항상 상태 변경 가능 (인앱 알림은 권한과 무관)
   // 브라우저 푸시 권한은 ON 시도 시 best-effort로 요청
   const toggleNotif = async () => {
     const turningOn = !draftNotif;
     setDraftNotif(turningOn); // 무조건 상태 반영 (시각적 즉시 반응)
+
+    // 소프트 게이트: 비로그인 사용자가 푸시 켤 때 로그인 유도 (1일 1회 빈도 제한)
+    if (turningOn && !user) {
+      const todayKey = new Date().toISOString().slice(0, 10);
+      const lastShown = localStorage.getItem('ddcircle.pushPromptShown');
+      if (lastShown !== todayKey) {
+        setLoginPromptOpen(true);
+        localStorage.setItem('ddcircle.pushPromptShown', todayKey);
+      }
+    }
 
     // ON 시도 시 브라우저 푸시 권한 추가 요청 (선택 사항)
     if (turningOn) {
@@ -169,6 +181,12 @@ export default function SetTimingModal({ open, onClose }) {
       <button className={styles.saveBtn} onClick={save} disabled={saving}>
         {saving ? '...' : t('saveBtn')}
       </button>
+
+      <LoginPromptModal
+        open={loginPromptOpen}
+        reason="push"
+        onClose={() => setLoginPromptOpen(false)}
+      />
     </Modal>
   );
 }

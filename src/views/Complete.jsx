@@ -12,6 +12,7 @@ import { generateResultCard, shareOrDownload } from '../utils/generateResultCard
 import { createPost } from '../lib/posts';
 import { isInAppBrowser } from '../utils/inAppBrowser';
 import OpenExternalModal from '../components/modals/OpenExternalModal';
+import LoginPromptModal from '../components/modals/LoginPromptModal';
 import styles from './Complete.module.css';
 
 export default function Complete() {
@@ -23,6 +24,7 @@ export default function Complete() {
   const [sharing, setSharing] = useState(false);
   const [storySharing, setStorySharing] = useState(false);
   const [externalModalOpen, setExternalModalOpen] = useState(false);
+  const [loginPromptOpen, setLoginPromptOpen] = useState(false);
 
   const [shareTarget, setShareTarget] = useState('circle');
   const [selectedMood, setSelectedMood] = useState(null);
@@ -69,8 +71,8 @@ export default function Complete() {
   const todayStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
   const proofCapReached = todaySessions.date === todayStr && todaySessions.count >= 2;
 
-  const handleShare = async () => {
-    if (sharing) return;
+  // 실제 공유 실행 — 로그인 여부에 따라 Supabase or 로컬 저장
+  const doShare = async () => {
     setSharing(true);
     const payload = {
       mood: selectedMood,
@@ -79,7 +81,6 @@ export default function Complete() {
       exerciseId: selectedExercise,
       proofUrl: proofCapReached ? null : proofUrl,
     };
-    // 인증된 유저: Supabase에 저장 (사진은 Storage 업로드 — 하루 2장 초과 시 저장 생략)
     if (user) {
       try {
         await createPost(user.id, {
@@ -91,13 +92,22 @@ export default function Complete() {
         });
       } catch (e) {
         showToast('⚠️', '저장에 실패했어요. 로컬에만 저장됩니다.');
-        addUserPost(payload); // 폴백
+        addUserPost(payload);
       }
     } else {
-      // 비인증: 로컬에만
       addUserPost(payload);
     }
     finish(true);
+  };
+
+  const handleShare = async () => {
+    if (sharing) return;
+    // 소프트 게이트: 비로그인이면 로그인 유도. '나중에' 시 로컬 저장으로 진행.
+    if (!user) {
+      setLoginPromptOpen(true);
+      return;
+    }
+    await doShare();
   };
 
   const handleSkipShare = () => finish(false);
@@ -241,6 +251,13 @@ export default function Complete() {
         open={externalModalOpen}
         onClose={() => setExternalModalOpen(false)}
         reason="share"
+      />
+
+      <LoginPromptModal
+        open={loginPromptOpen}
+        reason="share"
+        onClose={() => setLoginPromptOpen(false)}
+        onSkip={async () => { setLoginPromptOpen(false); await doShare(); }}
       />
     </div>
   );

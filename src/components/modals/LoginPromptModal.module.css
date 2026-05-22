@@ -1,0 +1,70 @@
+.body {
+  text-align: center;
+  padding: 8px 4px 4px;
+}
+
+.icon {
+  font-size: 48px;
+  margin-bottom: 12px;
+}
+
+.title {
+  font-family: 'Noto Serif KR', 'Playfair Display', serif;
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 8px;
+  line-height: 1.4;
+}
+
+.sub {
+  font-size: 14px;
+  color: var(--text-soft);
+  line-height: 1.6;
+  margin-bottom: 22px;
+  white-space: pre-line;
+}
+
+.kakaoBtn {
+  width: 100%;
+  background: #fee500;
+  color: #3a1d1d;
+  border: none;
+  border-radius: 14px;
+  padding: 14px;
+  font-family: inherit;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.kakaoBtn:active { transform: scale(0.98); }
+
+.signInLink {
+  width: 100%;
+  background: none;
+  border: none;
+  color: var(--text-soft);
+  font-family: inherit;
+  font-size: 13px;
+  padding: 6px;
+  cursor: pointer;
+  text-decoration: underline;
+  margin-bottom: 4px;
+}
+
+.laterBtn {
+  width: 100%;
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  font-family: inherit;
+  font-size: 14px;
+  padding: 8px;
+  cursor: pointer;
+}

@@ -3,9 +3,11 @@ import { fetchMemberCount } from '../lib/stats';
 import { useNavigate } from 'react-router-dom';
 import { useLang } from '../i18n/LangContext';
 import { useApp } from '../context/AppContext';
+import { useAuth } from '../context/AuthContext';
 import { useToast } from '../components/Toast';
 import { useNextSetTiming } from '../hooks/useNextSetTiming';
 import SetTimingModal from '../components/modals/SetTimingModal';
+import LoginPromptModal from '../components/modals/LoginPromptModal';
 import { CHALLENGES } from '../data/challenges';
 import { track, Events } from '../utils/analytics';
 import { unlockAudio } from '../utils/audioUnlock';
@@ -13,11 +15,37 @@ import styles from './Home.module.css';
 
 export default function Home() {
   const { t } = useLang();
-  const { setTiming, todayDone, userEp, challengeClaims, challengeJoins, joinChallenge, leaveChallenge } = useApp();
+  const { setTiming, todayDone, todayCount, userEp, challengeClaims, challengeJoins, joinChallenge, leaveChallenge } = useApp();
+  const { user } = useAuth();
   const { show: showToast } = useToast();
   const navigate = useNavigate();
   const next = useNextSetTiming(setTiming, todayDone);
   const [setTimingOpen, setSetTimingOpen] = useState(false);
+  const [loginPrompt, setLoginPrompt] = useState({ open: false, reason: 'second', data: null });
+
+  // 소프트 게이트: 비로그인 사용자에게 의미 있는 순간에 로그인 유도.
+  // 일일 1회 빈도 제한 (localStorage에 dismiss 날짜 저장)
+  useEffect(() => {
+    if (user) return;
+    const todayKey = new Date().toISOString().slice(0, 10);
+    const lastShown = localStorage.getItem('ddcircle.loginPromptShown');
+    if (lastShown === todayKey) return;
+
+    // 우선순위: streak 3+ > 2회차 세션
+    if (userEp.streak >= 3) {
+      const tid = setTimeout(() => {
+        setLoginPrompt({ open: true, reason: 'streak', data: { n: userEp.streak } });
+        localStorage.setItem('ddcircle.loginPromptShown', todayKey);
+      }, 1500);
+      return () => clearTimeout(tid);
+    } else if (todayCount >= 1) {
+      const tid = setTimeout(() => {
+        setLoginPrompt({ open: true, reason: 'second', data: null });
+        localStorage.setItem('ddcircle.loginPromptShown', todayKey);
+      }, 1500);
+      return () => clearTimeout(tid);
+    }
+  }, [user, userEp.streak, todayCount]);
 
   // DDCircle 회원수 — 닉네임 설정한 프로필 수. mount 시 1회 fetch.
   // 가짜 247 대신 진짜 숫자 표시.
@@ -233,6 +261,13 @@ export default function Home() {
 
       {/* 셋 타이밍 모달 */}
       <SetTimingModal open={setTimingOpen} onClose={() => setSetTimingOpen(false)} />
+
+      <LoginPromptModal
+        open={loginPrompt.open}
+        reason={loginPrompt.reason}
+        data={loginPrompt.data}
+        onClose={() => setLoginPrompt({ ...loginPrompt, open: false })}
+      />
     </div>
   );
 }
