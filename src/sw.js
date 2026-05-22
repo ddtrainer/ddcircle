@@ -28,13 +28,13 @@ self.addEventListener('push', (event) => {
   const uniqueTag = `${data.tag || 'ddcircle-dd'}-${Date.now()}`;
   const options = {
     body: data.body || '',
-    // icon 생략: 우측 큰 로고 제거 (좌측 상단 작은 앱 아이콘은 PWA manifest에서 자동)
-    badge: '/dd-logo-128.png',
+    icon: '/notif-running.png',       // 우측 작은 러닝 아이콘
+    badge: '/dd-logo-128.png',         // 상태바 작은 모노 아이콘
     tag: uniqueTag,
     renotify: true,
-    requireInteraction: true,        // 사용자가 닫기 전까지 알림 유지
-    silent: false,                    // 시스템 알림음 강제 (silent=false 명시)
-    vibrate: [400, 150, 400, 150, 400],  // 더 강한 진동 패턴
+    requireInteraction: true,
+    silent: false,
+    vibrate: [400, 150, 400, 150, 400],
     data: { url: data.url || '/picker' },
   };
   event.waitUntil(self.registration.showNotification(title, options));
