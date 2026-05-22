@@ -28,7 +28,7 @@ self.addEventListener('push', (event) => {
   const uniqueTag = `${data.tag || 'ddcircle-dd'}-${Date.now()}`;
   const options = {
     body: data.body || '',
-    icon: '/notif-running.png',       // 우측 작은 러닝 아이콘
+    icon: '/notif-running-v2.png',    // 우측 작은 러닝 아이콘 (v2: 캐시 무효화)
     badge: '/dd-logo-128.png',         // 상태바 작은 모노 아이콘
     tag: uniqueTag,
     renotify: true,

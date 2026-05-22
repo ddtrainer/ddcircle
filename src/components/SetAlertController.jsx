@@ -75,8 +75,7 @@ export default function SetAlertController() {
           typeof Notification !== 'undefined' &&
           Notification.permission === 'granted'
         ) {
-          const slotName = t(slot.id === 'morning' ? 'morning' : 'evening');
-          const title = `${slot.icon} ${t('setAlertTitle').replace('{slot}', slotName)}`;
+          const title = t('setAlertTitle');
           const body = t('setAlertSub');
           const options = {
             body,

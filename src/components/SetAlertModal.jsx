@@ -12,7 +12,7 @@ export default function SetAlertModal({ open, slot, onStart, onLater }) {
       <div className={styles.card} onClick={(e) => e.stopPropagation()}>
         <div className={styles.icon}>{slot.icon}</div>
         <div className={styles.title}>
-          {t('setAlertTitle').replace('{slot}', t(slot.id === 'morning' ? 'morning' : 'evening'))}
+          {t('setAlertTitle')}
         </div>
         <div className={styles.sub}>{t('setAlertSub')}</div>
         <button className={styles.startBtn} onClick={onStart}>
