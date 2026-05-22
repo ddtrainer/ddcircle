@@ -28,7 +28,7 @@ self.addEventListener('push', (event) => {
   const uniqueTag = `${data.tag || 'ddcircle-dd'}-${Date.now()}`;
   const options = {
     body: data.body || '',
-    icon: '/dd-logo-192.png',
+    // icon 생략: 우측 큰 로고 제거 (좌측 상단 작은 앱 아이콘은 PWA manifest에서 자동)
     badge: '/dd-logo-128.png',
     tag: uniqueTag,
     renotify: true,
