@@ -45,18 +45,24 @@
 
 .kakaoBtn:active { transform: scale(0.98); }
 
-.signInLink {
+.googleBtn {
   width: 100%;
-  background: none;
-  border: none;
-  color: var(--text-soft);
+  background: #ffffff;
+  color: #1f1f1f;
+  border: 1px solid #dadce0;
+  border-radius: 14px;
+  padding: 12px;
   font-family: inherit;
-  font-size: 13px;
-  padding: 6px;
+  font-size: 15px;
+  font-weight: 600;
   cursor: pointer;
-  text-decoration: underline;
-  margin-bottom: 4px;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
 }
+.googleBtn:active { transform: scale(0.98); }
 
 .laterBtn {
   width: 100%;

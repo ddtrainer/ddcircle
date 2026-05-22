@@ -84,6 +84,20 @@ export function AuthProvider({ children }) {
     }
   }, []);
 
+  // Google OAuth — 글로벌 사용자 대상 (카카오 미보유)
+  const signInWithGoogle = useCallback(async () => {
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: 'google',
+      options: {
+        redirectTo: `${window.location.origin}/auth/callback`,
+      },
+    });
+    if (error) {
+      console.error('[auth] google sign-in error:', error);
+      throw error;
+    }
+  }, []);
+
   const signOut = useCallback(async () => {
     await supabase.auth.signOut();
   }, []);
@@ -99,6 +113,7 @@ export function AuthProvider({ children }) {
     loading,
     isAuthenticated: !!session?.user,
     signInWithKakao,
+    signInWithGoogle,
     signOut,
     refreshProfile,
   };

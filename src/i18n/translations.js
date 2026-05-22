@@ -49,6 +49,7 @@ export const translations = {
     loginTitle: 'DDCircle에 오신 걸 환영해요',
     loginSub: '매일 3분, 함께 호흡하는 작은 의식',
     loginKakao: '카카오로 시작하기',
+    loginGoogle: 'Google로 시작하기',
     loggingIn: '로그인 중...',
     loginNotice: '로그인하면 친구와 함께 응원하고, EP가 영구 저장돼요.',
 
@@ -408,6 +409,7 @@ export const translations = {
     loginTitle: 'Welcome to DDCircle',
     loginSub: 'Three minutes a day, a small ritual we share.',
     loginKakao: 'Continue with Kakao',
+    loginGoogle: 'Continue with Google',
     loggingIn: 'Signing in...',
     loginNotice: 'Sign in to cheer friends on and keep your EP forever.',
 
