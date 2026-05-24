@@ -115,6 +115,25 @@
   margin-bottom: 2px;
 }
 
+.targetLabel {
+  display: block;
+  line-height: 1.2;
+}
+
+.targetSub {
+  display: block;
+  font-size: 11px;
+  font-weight: 400;
+  color: var(--text-muted);
+  margin-top: 3px;
+  line-height: 1.2;
+}
+
+.targetChip.active .targetSub {
+  color: var(--warm);
+  opacity: 0.85;
+}
+
 .moodRow {
   display: flex;
   gap: 6px;

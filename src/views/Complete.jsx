@@ -203,7 +203,8 @@ export default function Complete() {
               onClick={() => setShareTarget(tg.id)}
             >
               <span className={styles.targetIcon}>{tg.icon}</span>
-              {t(tg.labelKey)}
+              <span className={styles.targetLabel}>{t(tg.labelKey)}</span>
+              {tg.subKey && <span className={styles.targetSub}>{t(tg.subKey)}</span>}
             </button>
           ))}
         </div>
