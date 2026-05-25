@@ -169,8 +169,13 @@
   font-family: inherit;
   /* 16px 미만이면 iOS Safari가 포커스 시 자동 줌 */
   font-size: 16px;
+  line-height: 1.6;
+  /* auto-grow: useEffect에서 scrollHeight로 높이 동적 조절 */
   resize: none;
+  overflow: hidden;
+  min-height: 96px;
   outline: none;
+  transition: border-color 0.15s, background 0.15s;
 }
 
 .empathyTextarea::placeholder {

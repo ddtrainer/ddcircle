@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useLang } from '../i18n/LangContext';
 import { useApp } from '../context/AppContext';
@@ -7,6 +7,7 @@ import { useToast } from '../components/Toast';
 import ProgressDots from '../components/ProgressDots';
 import { EXERCISES } from '../data/exercises';
 import { MOODS, SHARE_TARGETS } from '../data/moods';
+import { getTodayPrompt } from '../data/dailyPrompts';
 import { track, Events } from '../utils/analytics';
 import { generateResultCard, shareOrDownload } from '../utils/generateResultCard';
 import { createPost } from '../lib/posts';
@@ -29,6 +30,17 @@ export default function Complete() {
   const [shareTarget, setShareTarget] = useState('circle');
   const [selectedMood, setSelectedMood] = useState(null);
   const [empathyMsg, setEmpathyMsg] = useState('');
+  const textareaRef = useRef(null);
+  // 매일 다른 prompt — 자정 넘어가면 자동으로 새 문구
+  const todayPrompt = useMemo(() => getTodayPrompt(lang), [lang]);
+
+  // auto-grow textarea: 내용에 맞춰 높이 자동 확장
+  useEffect(() => {
+    const el = textareaRef.current;
+    if (!el) return;
+    el.style.height = 'auto';
+    el.style.height = `${el.scrollHeight}px`;
+  }, [empathyMsg]);
 
   const finish = (shared) => {
     const { earned, save, capReached, dashFully, deepFully } = completeSession({ shared });
@@ -223,11 +235,13 @@ export default function Complete() {
           ))}
         </div>
 
-        {/* empathy textarea */}
+        {/* 일기 입력 — 매일 다른 prompt로 영감 주기 */}
+        <div className={styles.label}>{t('oneLineLabel')}</div>
         <textarea
+          ref={textareaRef}
           className={styles.empathyTextarea}
-          rows={3}
-          placeholder={t('empathyPlaceholder')}
+          rows={4}
+          placeholder={todayPrompt}
           value={empathyMsg}
           onChange={(e) => setEmpathyMsg(e.target.value)}
         />
