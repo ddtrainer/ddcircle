@@ -51,6 +51,36 @@ function ensureBells() {
   }
 }
 
+// 멈춤(hold/postHold) 차임 — 화면 안 봐도 "지금 멈춰" 신호 주는 용도
+// 별도 음원 파일 없이 Web Audio API로 부드러운 사인파 톤 합성 (A5 880Hz, 짧고 가벼움)
+// 들숨/날숨 벨과 음역대를 분리해 청각적으로 구분 가능
+let holdAudioCtx = null;
+function playHoldChime() {
+  try {
+    if (!holdAudioCtx) {
+      const Ctx = window.AudioContext || window.webkitAudioContext;
+      if (!Ctx) return;
+      holdAudioCtx = new Ctx();
+    }
+    // iOS Safari 등에서 컨텍스트가 suspended 상태일 수 있음 — 사용자 제스처 후엔 resume 가능
+    if (holdAudioCtx.state === 'suspended') {
+      holdAudioCtx.resume().catch(() => {});
+    }
+    const ctx = holdAudioCtx;
+    const now = ctx.currentTime;
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(880, now); // A5 — 차임 톤
+    gain.gain.setValueAtTime(0, now);
+    gain.gain.linearRampToValueAtTime(0.08, now + 0.02);   // 빠른 attack
+    gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.7); // 부드러운 decay
+    osc.connect(gain).connect(ctx.destination);
+    osc.start(now);
+    osc.stop(now + 0.75);
+  } catch { /* AudioContext 미지원/실패 시 무시 */ }
+}
+
 // 배경음 볼륨 페이드 (currentTime은 보존 → 일시정지/재개 시 위치 유지)
 let fadeTimer = null;
 function fadeBackground(targetVol, durationMs) {
@@ -106,8 +136,10 @@ export function useBreathSound({ phase, enabled }) {
       } else if (phase === 'exhale' && bellOut) {
         bellOut.currentTime = 0;
         bellOut.play().catch(() => { /* ignore */ });
+      } else if (phase === 'hold' || phase === 'postHold') {
+        // 멈춤 phase 진입 — 합성 차임으로 신호 (화면 안 보고도 들림)
+        playHoldChime();
       }
-      // 'hold' phase는 별도 종소리 없음 (자연스러운 정적 유지)
     } catch { /* ignore */ }
   }, [phase, enabled]);
 
