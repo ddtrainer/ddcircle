@@ -1,6 +1,8 @@
 import { useEffect, useState, useRef } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useLang } from '../i18n/LangContext';
+import { useApp } from '../context/AppContext';
+import { EXERCISES } from '../data/exercises';
 import styles from './Countdown.module.css';
 
 // 3 → 2 → 1 → GO! 카운트다운
@@ -9,6 +11,8 @@ export default function Countdown() {
   const { t } = useLang();
   const navigate = useNavigate();
   const { target = 'dash' } = useParams();
+  const { preferredExercise } = useApp();
+  const currentExercise = EXERCISES.find((e) => e.key === preferredExercise);
   const [count, setCount] = useState(3);
   const [showGo, setShowGo] = useState(false);
   // 같은 숫자 다시 떴을 때도 pop 애니메이션 재생용 키
@@ -54,6 +58,22 @@ export default function Countdown() {
       <div className={styles.hint}>
         {t(isDash ? 'countdownDashHint' : 'countdownDeepHint')}
       </div>
+
+      {/* Dash 준비 단계에서만 — 오늘 운동 표시 + 변경 진입로 */}
+      {isDash && currentExercise && (
+        <button
+          type="button"
+          className={styles.preferChip}
+          onClick={() => {
+            // 카운트다운 중단 후 Picker로 돌아감 (다시 선택하면 새 카운트다운 시작)
+            finishedRef.current = true;
+            navigate('/picker', { replace: true });
+          }}
+        >
+          {t('preferLabel')} <strong>{t('ex' + currentExercise.i18n)}</strong>
+          <span className={styles.preferEdit}>{t('preferChange')}</span>
+        </button>
+      )}
 
       <div className={`${styles.circle} ${isDash ? styles.dashCircle : styles.deepCircle}`}>
         <div className={`${styles.ring} ${isDash ? styles.dashRing : styles.deepRing}`}></div>
