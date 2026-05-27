@@ -23,8 +23,8 @@ export default function EPModal({ open, onClose }) {
       {/* 기본 점수 */}
       <div className={styles.sectionTitle}>{t('basicScoring')}</div>
       <div className={styles.scoringTable}>
-        <Row label={t('dashCompleteShort')} pts="+10" />
         <Row label={t('deepCompleteShort')} pts="+15" />
+        <Row label={t('dashCompleteShort')} pts="+10" />
         <Row label={t('fullSetShort')} pts="+5" />
         <Row label={t('proofShort')} pts="+5" />
         <Row label={t('shareShort')} pts="+5" />

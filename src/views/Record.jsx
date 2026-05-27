@@ -19,9 +19,10 @@ const EMPTY_EP_BREAKDOWN = {
   empathySent: 0, empathyReceived: 0,
 };
 
+// 신규 활동 순서(Deep → Dash)에 맞춰 표시도 호흡 먼저
 const EMPTY_ACTIVITY = [
-  { icon: '🔥', labelKey: 'dashLabel', value: 0, max: 140, color: 'dash' },
   { icon: '🧘', labelKey: 'deepLabel', value: 0, max: 210, color: 'deep' },
+  { icon: '🔥', labelKey: 'dashLabel', value: 0, max: 140, color: 'dash' },
   { icon: '📸', labelKey: 'proofShareLabel', value: 0, max: 140, color: 'share' },
   { icon: '🤝', labelKey: 'empathyLabel', value: 0, max: 200, color: 'empathy' },
   { icon: '👋', labelKey: 'friendLabel', value: 0, max: 120, color: 'friend' },
@@ -201,8 +202,8 @@ export default function Record() {
             +{finalEp}<span className={styles.unit}>EP</span>
           </div>
         </div>
-        <EpLine icon="🔥" name={t('dashCompleteRow')} sub={`(${t('seconds60')})`} value={tb.dash} />
         <EpLine icon="🧘" name={t('deepCompleteRow')} sub={`(${t('cycles6')})`} value={tb.deep} />
+        <EpLine icon="🔥" name={t('dashCompleteRow')} sub={`(${t('seconds60')})`} value={tb.dash} />
         <EpLine icon="✦" name={t('fullSetBonus')} value={tb.fullSet} bonus />
         <EpLine icon="📸" name={t('proofCapture')} value={tb.proof} />
         <EpLine icon="💙" name={t('shareEp')} value={tb.share} />
@@ -267,8 +268,8 @@ export default function Record() {
         <div className={styles.chartTitle}>{t('activityBreakdown')}</div>
         {(useRemote && monthActivity
           ? [
-              { icon: '🔥', labelKey: 'dashLabel', value: monthActivity.dashCount * 10, max: 140, color: 'dash', unit: '회', rawCount: monthActivity.dashCount },
               { icon: '🧘', labelKey: 'deepLabel', value: monthActivity.deepCount * 15, max: 210, color: 'deep', unit: '회', rawCount: monthActivity.deepCount },
+              { icon: '🔥', labelKey: 'dashLabel', value: monthActivity.dashCount * 10, max: 140, color: 'dash', unit: '회', rawCount: monthActivity.dashCount },
               { icon: '📸', labelKey: 'proofShareLabel', value: monthActivity.proofCount * 10, max: 140, color: 'share', unit: '회', rawCount: monthActivity.proofCount },
               { icon: '🤝', labelKey: 'empathyLabel', value: Math.round(monthActivity.empathyCount * 0.4), max: 200, color: 'empathy', unit: '회', rawCount: monthActivity.empathyCount },
               { icon: '👋', labelKey: 'friendLabel', value: monthActivity.nudgeCount * 2, max: 120, color: 'friend', unit: '회', rawCount: monthActivity.nudgeCount },

@@ -1,6 +1,6 @@
 import styles from './ProgressDots.module.css';
 
-// 4단계 진행 표시점 (Dash → Proof → Deep → Complete)
+// 4단계 진행 표시점 (Deep → Dash → Proof → Complete)
 // step: 1~4, 현재 단계
 export default function ProgressDots({ step = 1, total = 4 }) {
   return (
