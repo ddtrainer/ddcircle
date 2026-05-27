@@ -42,15 +42,16 @@ export default function Header() {
         <div className={styles.logoWrap}>
           <svg className={styles.logo} viewBox="0 0 400 200" xmlns="http://www.w3.org/2000/svg" aria-label="DDCircle">
             <defs>
+              {/* Deep-first 리브랜드: 왼쪽 D는 Deep(녹→청), 오른쪽 D는 Dash(빨→주황) */}
               <linearGradient id="leftD" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" stopColor="#ed3a4a" />
-                <stop offset="50%" stopColor="#f47730" />
-                <stop offset="100%" stopColor="#fbb040" />
-              </linearGradient>
-              <linearGradient id="rightD" x1="0%" y1="0%" x2="100%" y2="100%">
                 <stop offset="0%" stopColor="#7ed957" />
                 <stop offset="50%" stopColor="#3bbfb0" />
                 <stop offset="100%" stopColor="#1e9bd8" />
+              </linearGradient>
+              <linearGradient id="rightD" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stopColor="#ed3a4a" />
+                <stop offset="50%" stopColor="#f47730" />
+                <stop offset="100%" stopColor="#fbb040" />
               </linearGradient>
             </defs>
             <path d="M 30 20 L 100 20 Q 180 20 180 100 Q 180 180 100 180 L 30 180 Z M 70 60 L 70 140 L 100 140 Q 140 140 140 100 Q 140 60 100 60 Z" fill="url(#leftD)" fillRule="evenodd" />
