@@ -10,7 +10,10 @@ import { MOODS, SHARE_TARGETS } from '../data/moods';
 import { getTodayPrompt } from '../data/dailyPrompts';
 import { track, Events } from '../utils/analytics';
 import { generateResultCard, shareOrDownload } from '../utils/generateResultCard';
-import { createPost } from '../lib/posts';
+import { createPost, fetchMyPosts } from '../lib/posts';
+import { detectAnyMilestone, markMilestoneSeen } from '../lib/milestones';
+import { chapterKey as toChapterKey } from '../lib/chapters';
+import MilestoneModal from '../components/modals/MilestoneModal';
 import { isInAppBrowser } from '../utils/inAppBrowser';
 import OpenExternalModal from '../components/modals/OpenExternalModal';
 import LoginPromptModal from '../components/modals/LoginPromptModal';
@@ -26,6 +29,7 @@ export default function Complete() {
   const [storySharing, setStorySharing] = useState(false);
   const [externalModalOpen, setExternalModalOpen] = useState(false);
   const [loginPromptOpen, setLoginPromptOpen] = useState(false);
+  const [milestone, setMilestone] = useState(null);
 
   const [shareTarget, setShareTarget] = useState('circle');
   const [selectedMood, setSelectedMood] = useState(null);
@@ -93,6 +97,7 @@ export default function Complete() {
       exerciseId: selectedExercise,
       proofUrl: proofCapReached ? null : proofUrl,
     };
+    let saved = false;
     if (user) {
       try {
         await createPost(user.id, {
@@ -102,6 +107,7 @@ export default function Complete() {
           exerciseId: selectedExercise,
           proofBlob: proofCapReached ? null : getProofBlob(),
         });
+        saved = true;
       } catch (e) {
         showToast('⚠️', '저장에 실패했어요. 로컬에만 저장됩니다.');
         addUserPost(payload);
@@ -109,6 +115,29 @@ export default function Complete() {
     } else {
       addUserPost(payload);
     }
+
+    // 마일스톤 감지 — 표지 진화 또는 챕터 완성. 알림 띄우면 finish는 모달 닫을 때.
+    if (saved && user) {
+      try {
+        const allPosts = await fetchMyPosts(user.id, 500);
+        const ms = detectAnyMilestone(allPosts, toChapterKey(new Date()), user.id);
+        if (ms) {
+          setMilestone(ms);
+          setSharing(false);
+          return; // finish는 모달 닫을 때 호출
+        }
+      } catch { /* milestone check 실패는 무시 — 정상 흐름 유지 */ }
+    }
+
+    finish(true);
+  };
+
+  // 마일스톤 모달 닫기 — seen 기록 후 finish 흐름 이어감
+  const handleMilestoneClose = () => {
+    if (milestone && user) {
+      markMilestoneSeen(milestone, user.id, toChapterKey(new Date()));
+    }
+    setMilestone(null);
     finish(true);
   };
 
@@ -287,6 +316,12 @@ export default function Complete() {
         reason="share"
         onClose={() => setLoginPromptOpen(false)}
         onSkip={async () => { setLoginPromptOpen(false); await doShare(); }}
+      />
+
+      <MilestoneModal
+        open={!!milestone}
+        milestone={milestone}
+        onClose={handleMilestoneClose}
       />
     </div>
   );
