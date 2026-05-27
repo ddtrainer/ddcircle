@@ -59,7 +59,9 @@ export default function Home() {
 
   // 진입 탭 시점에 오디오 unlock — iOS Safari가 이후 자동 재생되는 종소리/배경음을
   // 묵음으로 거부하지 않도록 silent buffer를 사용자 제스처 안에서 한 번 재생.
-  const goPicker = () => { unlockAudio(); navigate('/picker'); };
+  // 신규 흐름: Home → /countdown/deep → Deep 2분 → /picker → /countdown/dash → ...
+  // (Picker는 Deep 끝난 뒤 등장해 "이어서 할 운동" 의미가 분명해짐)
+  const goPicker = () => { unlockAudio(); navigate('/countdown/deep'); };
   const goWall = () => navigate('/wall');
 
   // 셋 타이밍 카드 클릭: live면 picker로, 아니면 모달

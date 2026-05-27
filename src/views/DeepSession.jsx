@@ -42,8 +42,8 @@ export default function DeepSession() {
       const fully = !skipClickedRef.current;
       try { sessionStorage.setItem('ddcircle.session.deepFully', fully ? '1' : '0'); } catch {}
       track(Events.DEEP_COMPLETED, { patternId: breathPatternId, fully });
-      // 신규 순서: 호흡(Deep) 종료 후 → 운동(Dash) 카운트다운으로
-      setTimeout(() => navigate('/countdown/dash', { replace: true }), 600);
+      // 신규 순서: Deep 종료 → Picker(이어서 할 운동 선택) → 카운트다운 → Dash
+      setTimeout(() => navigate('/picker', { replace: true }), 600);
     },
   });
 

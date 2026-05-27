@@ -1,7 +1,7 @@
 // 커스텀 Service Worker (vite-plugin-pwa injectManifest 전략)
 // - Workbox 프리캐시 (앱 자원)
 // - Web Push 알림 수신 (백그라운드/앱 종료 상태에서도 OS 알림 표시)
-// - 알림 클릭 시 /picker로 이동
+// - 알림 클릭 시 /countdown/deep로 이동 (신규 흐름: Deep 먼저)
 
 import { precacheAndRoute, cleanupOutdatedCaches } from 'workbox-precaching';
 import { clientsClaim } from 'workbox-core';
@@ -35,7 +35,7 @@ self.addEventListener('push', (event) => {
     requireInteraction: true,
     silent: false,
     vibrate: [400, 150, 400, 150, 400],
-    data: { url: data.url || '/picker' },
+    data: { url: data.url || '/countdown/deep' },
   };
   event.waitUntil(self.registration.showNotification(title, options));
 });
@@ -43,7 +43,7 @@ self.addEventListener('push', (event) => {
 // 알림 클릭 → 기존 탭 있으면 포커스+이동, 없으면 새 창 열기
 self.addEventListener('notificationclick', (event) => {
   event.notification.close();
-  const targetUrl = event.notification.data?.url || '/picker';
+  const targetUrl = event.notification.data?.url || '/countdown/deep';
   event.waitUntil(
     self.clients
       .matchAll({ type: 'window', includeUncontrolled: true })

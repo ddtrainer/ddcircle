@@ -20,15 +20,17 @@ export default function ExercisePicker() {
     track(Events.EXERCISE_SELECTED, { exerciseId: key });
     // iOS 오디오 unlock — 사용자 제스처 콜스택 안에서 호출해야 효과 있음
     unlockAudio();
-    // 신규 순서: Deep(호흡) → Dash(운동) → Proof(셀카) → Complete
-    // 운동 전 호흡으로 진입 저항 ↓ & 호흡 품질 ↑
-    setTimeout(() => navigate('/countdown/deep'), 300);
+    // Picker는 Deep 직후에 등장 — 선택 후 바로 Dash 카운트다운
+    setTimeout(() => navigate('/countdown/dash'), 300);
   };
 
   return (
     <div className={styles.pickerScreen}>
       <div className={styles.title}>{t('pickerTitle')}</div>
-      <div className={styles.sub}>{t('pickerSub')}</div>
+      <div
+        className={styles.sub}
+        dangerouslySetInnerHTML={{ __html: t('pickerSub') }}
+      />
 
       <div className={styles.grid}>
         {EXERCISES.map((ex) => (

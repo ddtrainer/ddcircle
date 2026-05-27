@@ -82,7 +82,7 @@ export default function SetAlertController() {
             icon: '/dd-logo-128.png',
             badge: '/dd-logo-128.png',
             tag: `ddcircle-set-${slot.id}`,
-            data: { url: '/picker' },
+            data: { url: '/countdown/deep' },
           };
           if (navigator.serviceWorker?.getRegistration) {
             navigator.serviceWorker.getRegistration().then((reg) => {
@@ -90,12 +90,12 @@ export default function SetAlertController() {
                 reg.showNotification(title, options);
               } else {
                 const n = new Notification(title, options);
-                n.onclick = () => { window.focus(); navigate('/picker'); n.close(); };
+                n.onclick = () => { window.focus(); navigate('/countdown/deep'); n.close(); };
               }
             });
           } else {
             const n = new Notification(title, options);
-            n.onclick = () => { window.focus(); navigate('/picker'); n.close(); };
+            n.onclick = () => { window.focus(); navigate('/countdown/deep'); n.close(); };
           }
         }
       } catch {
@@ -106,7 +106,7 @@ export default function SetAlertController() {
 
   const handleStart = () => {
     setActiveSlot(null);
-    navigate('/picker');
+    navigate('/countdown/deep');
   };
   const handleLater = () => setActiveSlot(null);
 
