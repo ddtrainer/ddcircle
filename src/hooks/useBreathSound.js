@@ -52,8 +52,8 @@ function ensureBells() {
 }
 
 // 멈춤(hold/postHold) 차임 — 화면 안 봐도 "지금 멈춰" 신호 주는 용도
-// 별도 음원 파일 없이 Web Audio API로 부드러운 사인파 톤 합성 (A5 880Hz, 짧고 가벼움)
-// 들숨/날숨 벨과 음역대를 분리해 청각적으로 구분 가능
+// 두 개 사인파 중첩(880Hz + 1320Hz=5도)으로 풍성한 차임 톤. 게인 크게 (0.5).
+// 들숨/날숨 벨과 명확히 구분되고, 멀리서도 들리도록 충분히 큼.
 let holdAudioCtx = null;
 function playHoldChime() {
   try {
@@ -68,16 +68,33 @@ function playHoldChime() {
     }
     const ctx = holdAudioCtx;
     const now = ctx.currentTime;
-    const osc = ctx.createOscillator();
-    const gain = ctx.createGain();
-    osc.type = 'sine';
-    osc.frequency.setValueAtTime(880, now); // A5 — 차임 톤
-    gain.gain.setValueAtTime(0, now);
-    gain.gain.linearRampToValueAtTime(0.08, now + 0.02);   // 빠른 attack
-    gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.7); // 부드러운 decay
-    osc.connect(gain).connect(ctx.destination);
-    osc.start(now);
-    osc.stop(now + 0.75);
+
+    // 마스터 게인 — clipping 방지를 위해 2개 osc 후 별도 단계로 조절
+    const master = ctx.createGain();
+    master.gain.setValueAtTime(0, now);
+    master.gain.linearRampToValueAtTime(0.55, now + 0.015);    // 강한 attack, 즉시 큰 소리
+    master.gain.exponentialRampToValueAtTime(0.18, now + 0.4); // 살짝 sustain
+    master.gain.exponentialRampToValueAtTime(0.0001, now + 1.2); // 길게 fade
+    master.connect(ctx.destination);
+
+    // 기본 톤 A5 (880Hz) — 또렷한 메인
+    const osc1 = ctx.createOscillator();
+    osc1.type = 'sine';
+    osc1.frequency.setValueAtTime(880, now);
+    const g1 = ctx.createGain();
+    g1.gain.setValueAtTime(0.6, now);
+    osc1.connect(g1).connect(master);
+
+    // 5도 위 E6 (1320Hz) — 차임 느낌 + 존재감
+    const osc2 = ctx.createOscillator();
+    osc2.type = 'sine';
+    osc2.frequency.setValueAtTime(1320, now);
+    const g2 = ctx.createGain();
+    g2.gain.setValueAtTime(0.4, now);
+    osc2.connect(g2).connect(master);
+
+    osc1.start(now); osc2.start(now);
+    osc1.stop(now + 1.25); osc2.stop(now + 1.25);
   } catch { /* AudioContext 미지원/실패 시 무시 */ }
 }
 
