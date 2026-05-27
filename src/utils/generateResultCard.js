@@ -134,11 +134,10 @@ export async function generateResultCard({
 
   // 상단 — 좌측 DDCircle 로고 이미지 (닉네임과 비슷한 시각적 무게), 우측 날짜
   try {
-    // 투명 SVG 워드마크 사용 — 흰 사각형 여백 없이 글자만
-    // viewBox 400×200 (2:1) → 130px 높이면 260px 너비
-    const logoImg = await loadImage('/dd-logo.svg');
+    // 새 워드마크 PNG (1672×941). 카드 배경이 #faf6ee로 PNG 배경과 거의 동일해 자연스럽게 묻힘.
+    const logoImg = await loadImage('/dd-logo.png');
     const logoH = 130;
-    const logoW = Math.round((logoH * (logoImg.naturalWidth || 400)) / (logoImg.naturalHeight || 200));
+    const logoW = Math.round((logoH * (logoImg.naturalWidth || 1672)) / (logoImg.naturalHeight || 941));
     ctx.drawImage(logoImg, 90, 90, logoW, logoH);
   } catch (e) {
     // 로고 로드 실패 시 텍스트 폴백
