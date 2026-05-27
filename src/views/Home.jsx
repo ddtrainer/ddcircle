@@ -8,6 +8,7 @@ import { useToast } from '../components/Toast';
 import { useNextSetTiming } from '../hooks/useNextSetTiming';
 import SetTimingModal from '../components/modals/SetTimingModal';
 import LoginPromptModal from '../components/modals/LoginPromptModal';
+import YesterdayPageCard from '../components/assets/YesterdayPageCard';
 import { CHALLENGES } from '../data/challenges';
 import { track, Events } from '../utils/analytics';
 import { unlockAudio } from '../utils/audioUnlock';
@@ -253,6 +254,9 @@ export default function Home() {
 
       {/* 시작 버튼 */}
       <button className={styles.startBtn} onClick={goPicker}>{t('startBtn')}</button>
+
+      {/* 어제(또는 최근)의 페이지 미니 카드 — 재방문 + 책장 발견 */}
+      <YesterdayPageCard />
 
       {/* 철학 인용 */}
       <div className={styles.philosophy}>

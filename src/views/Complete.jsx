@@ -262,6 +262,20 @@ export default function Complete() {
         {t('skipShareBtn')}
       </button>
 
+      {/* 책장 진입 — 방금 쓴 페이지를 즉시 확인 */}
+      {user && (
+        <button
+          className={styles.peekBookBtn}
+          onClick={() => {
+            const d = new Date();
+            const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
+            navigate(`/book/${key}`);
+          }}
+        >
+          {t('peekTodayPage')}
+        </button>
+      )}
+
       <OpenExternalModal
         open={externalModalOpen}
         onClose={() => setExternalModalOpen(false)}
