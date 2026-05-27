@@ -115,7 +115,7 @@ export default function Home() {
           className={styles.heroQuote}
           dangerouslySetInnerHTML={{ __html: t('heroQuote') }}
         />
-        <div className={styles.heroSub}>DEEP RELAXATION · DASH EXERCISE</div>
+        <div className={styles.heroSub}>DEEP RELAXATION, DASH EXERCISE.</div>
       </div>
 
       {/* 호흡 원 */}

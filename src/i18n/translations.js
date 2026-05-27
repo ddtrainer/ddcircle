@@ -3,7 +3,7 @@
 
 export const translations = {
   ko: {
-    heroQuote: '<span class="one">2분</span> 깊게 심호흡하고, 1분 짧게 운동하며<br>서로의 에너지를 나눕니다.',
+    heroQuote: '깊게 심호흡하고, <span class="one">1분</span> 짧게 운동하며<br>서로의 에너지를 나눕니다.',
     nowStart: '지금 바로',
     tapToStart: '탭하여 시작',
     peopleSuffix: '명',
@@ -393,7 +393,7 @@ export const translations = {
     welcomeBonusToast: '환영합니다 · 첫 발걸음 보너스 +{n} EP',
   },
   en: {
-    heroQuote: '<span class="one">Two minutes</span> to breathe,<br>one minute to move,<br>shared energy.',
+    heroQuote: 'Breathe deeply, then a <span class="one">sharp minute</span> of movement,<br>shared energy.',
     nowStart: 'Right now',
     tapToStart: 'Tap to start',
     peopleSuffix: '',
