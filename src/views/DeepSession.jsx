@@ -13,7 +13,7 @@ import styles from './DeepSession.module.css';
 export default function DeepSession() {
   const { t } = useLang();
   const navigate = useNavigate();
-  const { breathPatternId, setBreathPatternId, customBreath } = useApp();
+  const { breathPatternId, setBreathPatternId, customBreath, preferredExercise, setSelectedExercise } = useApp();
   const [soundOn, setSoundOn] = useState(true);
   const [soundReady, setSoundReady] = useState(false);
   const [animationReady, setAnimationReady] = useState(false);
@@ -42,8 +42,17 @@ export default function DeepSession() {
       const fully = !skipClickedRef.current;
       try { sessionStorage.setItem('ddcircle.session.deepFully', fully ? '1' : '0'); } catch {}
       track(Events.DEEP_COMPLETED, { patternId: breathPatternId, fully });
-      // 신규 순서: Deep 종료 → Picker(이어서 할 운동 선택) → 카운트다운 → Dash
-      setTimeout(() => navigate('/picker', { replace: true }), 600);
+      // Deep 종료 후 분기:
+      //   - 선호 운동 저장됨 → Picker 스킵하고 바로 Dash 카운트다운 (재방문 사용자)
+      //   - 선호 운동 없음 → Picker 노출 (첫 사용자 또는 명시적 변경 진입)
+      setTimeout(() => {
+        if (preferredExercise) {
+          setSelectedExercise(preferredExercise);
+          navigate('/countdown/dash', { replace: true });
+        } else {
+          navigate('/picker', { replace: true });
+        }
+      }, 600);
     },
   });
 

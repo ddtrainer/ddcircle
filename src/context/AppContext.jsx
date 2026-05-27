@@ -147,6 +147,13 @@ export function AppProvider({ children }) {
   const [selectedExercise, setSelectedExercise] = useSessionStorage(
     'ddcircle.session.exercise', 'jumping-jack'
   );
+
+  // 장기 선호 운동 — Picker에서 선택할 때마다 저장됨.
+  // null이면 Picker를 한 번도 안 거친 사용자 → Deep 끝나면 Picker 노출.
+  // 값 있으면 Picker 스킵하고 Dash 카운트다운으로 직행 (Home에서 '변경' 가능)
+  const [preferredExercise, setPreferredExercise] = useLocalStorage(
+    'ddcircle.preferredExercise', null
+  );
   const proofBlobRef = useRef(null);
   const [proofUrl, setProofUrl] = useState(null);
 
@@ -307,6 +314,8 @@ export function AppProvider({ children }) {
         todayDone,
         selectedExercise,
         setSelectedExercise,
+        preferredExercise,
+        setPreferredExercise,
         proofUrl,
         getProofBlob: () => proofBlobRef.current,
         setProofBlob,

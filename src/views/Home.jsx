@@ -10,13 +10,14 @@ import SetTimingModal from '../components/modals/SetTimingModal';
 import LoginPromptModal from '../components/modals/LoginPromptModal';
 import YesterdayPageCard from '../components/assets/YesterdayPageCard';
 import { CHALLENGES } from '../data/challenges';
+import { EXERCISES } from '../data/exercises';
 import { track, Events } from '../utils/analytics';
 import { unlockAudio } from '../utils/audioUnlock';
 import styles from './Home.module.css';
 
 export default function Home() {
   const { t } = useLang();
-  const { setTiming, todayDone, todayCount, userEp, challengeClaims, challengeJoins, joinChallenge, leaveChallenge } = useApp();
+  const { setTiming, todayDone, todayCount, userEp, challengeClaims, challengeJoins, joinChallenge, leaveChallenge, preferredExercise } = useApp();
   const { user } = useAuth();
   const { show: showToast } = useToast();
   const navigate = useNavigate();
@@ -256,6 +257,22 @@ export default function Home() {
 
       {/* 시작 버튼 */}
       <button className={styles.startBtn} onClick={goPicker}>{t('startBtn')}</button>
+
+      {/* 선호 운동 칩 — 한 번 선택 후 Picker 자동 스킵, 여기서만 변경 가능 */}
+      {preferredExercise && (() => {
+        const ex = EXERCISES.find((e) => e.key === preferredExercise);
+        if (!ex) return null;
+        return (
+          <button
+            type="button"
+            className={styles.preferChip}
+            onClick={() => { unlockAudio(); navigate('/picker'); }}
+          >
+            {t('preferLabel')} <strong>{t('ex' + ex.i18n)}</strong>
+            <span className={styles.preferEdit}>{t('preferChange')}</span>
+          </button>
+        );
+      })()}
 
       {/* 어제(또는 최근)의 페이지 미니 카드 — 재방문 + 책장 발견 */}
       <YesterdayPageCard />

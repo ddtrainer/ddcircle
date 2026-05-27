@@ -412,6 +412,33 @@
 
 .startBtn:active { transform: scale(0.98); }
 
+.preferChip {
+  display: block;
+  margin: 0 auto 14px;
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  font-family: inherit;
+  font-size: 13px;
+  cursor: pointer;
+  padding: 4px 8px;
+}
+
+.preferChip strong {
+  color: var(--text-soft);
+  font-weight: 700;
+  margin: 0 2px;
+}
+
+.preferEdit {
+  color: var(--cool);
+  margin-left: 6px;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.preferChip:active { transform: scale(0.97); }
+
 .secondaryLink {
   display: block;
   text-align: center;

@@ -10,13 +10,14 @@ import styles from './ExercisePicker.module.css';
 
 export default function ExercisePicker() {
   const { t } = useLang();
-  const { setSelectedExercise } = useApp();
+  const { setSelectedExercise, setPreferredExercise } = useApp();
   const navigate = useNavigate();
   const [selectedKey, setSelectedKey] = useState(null);
 
   const onSelect = (key) => {
     setSelectedKey(key);
     setSelectedExercise(key);
+    setPreferredExercise(key); // 다음 세션부터 Picker 자동 스킵
     track(Events.EXERCISE_SELECTED, { exerciseId: key });
     // iOS 오디오 unlock — 사용자 제스처 콜스택 안에서 호출해야 효과 있음
     unlockAudio();
