@@ -1,0 +1,59 @@
+.shelfSection {
+  margin: 12px 16px 18px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 16px 4px 8px;
+  box-shadow: var(--shadow-sm);
+}
+
+.header {
+  padding: 0 12px 10px;
+}
+
+.title {
+  font-family: 'Noto Serif KR', 'Playfair Display', serif;
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 4px;
+}
+
+.subtitle {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.shelf {
+  position: relative;
+  padding: 4px 0 14px;
+}
+
+.shelfInner {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  padding: 6px 16px 12px;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+}
+
+.shelfInner::-webkit-scrollbar {
+  display: none;
+}
+
+.shelfInner > * {
+  scroll-snap-align: start;
+}
+
+/* 책장 선반 — 책 아래 나무 막대 느낌 */
+.plank {
+  position: absolute;
+  left: 8px;
+  right: 8px;
+  bottom: 0;
+  height: 6px;
+  background: linear-gradient(180deg, #c4a36a 0%, #8d6e3f 100%);
+  border-radius: 3px;
+  box-shadow: 0 3px 6px rgba(0,0,0,0.15);
+}

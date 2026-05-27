@@ -8,7 +8,7 @@ export default function BottomNav() {
   const items = [
     { to: '/', icon: '🏠', label: t('navHomeLabel'), end: true },
     { to: '/wall', icon: '💙', label: t('navWallLabel') },
-    { to: '/record', icon: '📊', label: t('navRecordLabel') },
+    { to: '/record', icon: '💎', label: t('navRecordLabel') },
   ];
 
   return (

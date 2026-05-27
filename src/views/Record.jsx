@@ -8,6 +8,7 @@ import { fetchMyPosts } from '../lib/posts';
 import { fetchUserStats, fetchLastNDaysEp, fetchTodayBreakdown, fetchMonthActivity } from '../lib/stats';
 import TreeSVG from '../components/TreeSVG';
 import EPModal from '../components/modals/EPModal';
+import AssetsHeader from '../components/assets/AssetsHeader';
 import styles from './Record.module.css';
 
 // 데이터가 아직 로드되지 않았거나 비인증 사용자의 빈 상태 — 모두 0
@@ -29,8 +30,9 @@ const EMPTY_ACTIVITY = [
 export default function Record() {
   const { t } = useLang();
   const { userEp } = useApp();
-  const { user } = useAuth();
+  const { user, profile } = useAuth();
   const [epModalOpen, setEpModalOpen] = useState(false);
+  const [allPosts, setAllPosts] = useState([]); // 책장용 — proof 없는 글도 포함
   const [proofPosts, setProofPosts] = useState([]);
   const [lightbox, setLightbox] = useState(null);
   const [remoteStats, setRemoteStats] = useState(null);   // user_stats row
@@ -40,6 +42,7 @@ export default function Record() {
 
   useEffect(() => {
     if (!user) {
+      setAllPosts([]);
       setProofPosts([]);
       setRemoteStats(null);
       setRemoteChart(null);
@@ -57,6 +60,7 @@ export default function Record() {
         fetchMonthActivity(user.id),
       ]);
       if (cancelled) return;
+      setAllPosts(posts);
       setProofPosts(posts.filter((p) => p.has_proof && p.proof_url));
       setRemoteStats(stats);
       setRemoteChart(chart);
@@ -124,6 +128,14 @@ export default function Record() {
 
   return (
     <div className={styles.record}>
+      {/* 자산 헤더 — 책장 + EP/배지/NFT 잔액 */}
+      <AssetsHeader
+        posts={allPosts}
+        ownerName={profile?.nickname || ''}
+        totalEp={ep}
+        badgeCount={0}
+      />
+
       {/* 생명나무 카드 */}
       <div className={styles.treeCard}>
         <div className={styles.treeBadge}>LEVEL {cur.id}</div>

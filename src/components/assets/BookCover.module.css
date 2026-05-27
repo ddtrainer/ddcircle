@@ -1,0 +1,113 @@
+.book {
+  position: relative;
+  width: 130px;
+  height: 180px;
+  flex-shrink: 0;
+  border: none;
+  padding: 0;
+  background: none;
+  cursor: pointer;
+  font-family: inherit;
+  filter: drop-shadow(2px 4px 8px rgba(0,0,0,0.15));
+  transition: transform 0.18s ease, filter 0.18s ease;
+}
+
+.book:hover {
+  transform: translateY(-3px);
+  filter: drop-shadow(3px 6px 12px rgba(0,0,0,0.22));
+}
+
+.book:active {
+  transform: translateY(-1px) scale(0.98);
+}
+
+.spine {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 10px;
+  height: 100%;
+  border-radius: 3px 0 0 3px;
+  filter: brightness(0.85);
+}
+
+.cover {
+  position: absolute;
+  left: 10px;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  border-radius: 0 6px 6px 0;
+  padding: 14px 10px 10px;
+  color: rgba(255, 255, 255, 0.95);
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  /* 종이 결 살짝 */
+  background-image: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(0,0,0,0.06));
+}
+
+.stageIcon {
+  font-size: 36px;
+  margin-bottom: 8px;
+  filter: drop-shadow(0 1px 2px rgba(0,0,0,0.2));
+}
+
+.chapterTitle {
+  font-family: 'Noto Serif KR', 'Playfair Display', serif;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.2;
+  margin-bottom: 4px;
+}
+
+.pageCount {
+  font-size: 11px;
+  opacity: 0.85;
+  margin-top: auto;
+}
+
+.emptyHint {
+  font-size: 11px;
+  opacity: 0.75;
+  font-style: italic;
+  margin-top: auto;
+}
+
+.gradeBadge {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  background: rgba(0,0,0,0.25);
+  color: rgba(255,255,255,0.9);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  padding: 2px 6px;
+  border-radius: 8px;
+  text-transform: uppercase;
+}
+
+.ownerStamp {
+  position: absolute;
+  bottom: 8px;
+  right: 10px;
+  font-family: 'Noto Serif KR', serif;
+  font-size: 10px;
+  font-style: italic;
+  opacity: 0.7;
+}
+
+.current {
+  animation: glow 2.4s ease-in-out infinite;
+}
+
+@keyframes glow {
+  0%, 100% {
+    filter: drop-shadow(2px 4px 8px rgba(0,0,0,0.15));
+  }
+  50% {
+    filter: drop-shadow(2px 4px 14px rgba(212, 145, 50, 0.4));
+  }
+}

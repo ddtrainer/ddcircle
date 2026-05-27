@@ -1,0 +1,57 @@
+.wrap {
+  margin-bottom: 12px;
+}
+
+.assetGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin: 0 16px 18px;
+}
+
+.assetCard {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 12px 8px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.assetIcon {
+  font-size: 22px;
+  margin-bottom: 4px;
+}
+
+.assetValue {
+  font-family: 'Noto Serif KR', 'Playfair Display', serif;
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--text);
+  line-height: 1.1;
+}
+
+.assetLabel {
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+.locked {
+  opacity: 0.55;
+  background: var(--bg-soft);
+}
+
+.comingSoon {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  background: var(--warm-soft);
+  color: var(--warm);
+  font-size: 9px;
+  font-weight: 700;
+  padding: 2px 5px;
+  border-radius: 5px;
+  letter-spacing: 0.3px;
+}

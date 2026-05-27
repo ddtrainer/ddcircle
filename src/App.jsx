@@ -34,6 +34,7 @@ import ProfileSetup from './views/ProfileSetup';
 // Wall(피드+공감+친구+응원), Record(차트+갤러리), Complete(카드 생성+QR)
 const Wall = lazy(() => import('./views/Wall'));
 const Record = lazy(() => import('./views/Record'));
+const Book = lazy(() => import('./views/Book'));
 const Complete = lazy(() => import('./views/Complete'));
 const Terms = lazy(() => import('./views/Terms'));
 const Privacy = lazy(() => import('./views/Privacy'));
@@ -51,7 +52,7 @@ function ViewFallback() {
 }
 
 // 카운트다운/세션/Proof/로그인 화면에서는 BottomNav 숨김
-const FULLSCREEN_PATHS = ['/countdown', '/dash', '/deep', '/proof', '/login', '/auth', '/profile-setup'];
+const FULLSCREEN_PATHS = ['/countdown', '/dash', '/deep', '/proof', '/login', '/auth', '/profile-setup', '/book'];
 
 function ConditionalBottomNav() {
   const { pathname } = useLocation();
@@ -171,6 +172,7 @@ export default function App() {
                     <Route path="/" element={<Home />} />
                     <Route path="/wall" element={<Wall />} />
                     <Route path="/record" element={<Record />} />
+                    <Route path="/book/:chapterKey" element={<Book />} />
                     <Route path="/picker" element={<ExercisePicker />} />
                     <Route path="/countdown/:target" element={<Countdown />} />
                     <Route path="/dash" element={<DashSession />} />
