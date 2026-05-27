@@ -83,6 +83,13 @@
   font-weight: 500;
 }
 
+.labelHint {
+  margin-left: 8px;
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--text-muted);
+}
+
 .shareTarget {
   display: flex;
   gap: 6px;

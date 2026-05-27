@@ -264,8 +264,11 @@ export default function Complete() {
           ))}
         </div>
 
-        {/* 일기 입력 — 매일 다른 prompt로 영감 주기 */}
-        <div className={styles.label}>{t('oneLineLabel')}</div>
+        {/* 일기 입력 — 무작위 질문 placeholder + 자유 작성 안내 */}
+        <div className={styles.label}>
+          {t('oneLineLabel')}
+          <span className={styles.labelHint}>{t('oneLineHint')}</span>
+        </div>
         <textarea
           ref={textareaRef}
           className={styles.empathyTextarea}
