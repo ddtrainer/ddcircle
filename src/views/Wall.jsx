@@ -419,6 +419,7 @@ export default function Wall() {
       <FeedCard
         key={post.id}
         variant={isMine ? 'mine' : 'friend'}
+        avatarUrl={profile?.avatar_url || null}
         emoji={profile?.emoji || (isMine ? '✨' : '🌸')}
         emojiBg={profile?.emoji_bg || (isMine ? 'linear-gradient(135deg,#f47730,#1e9bd8)' : 'linear-gradient(135deg,#fbb040,#f97b9c)')}
         name={isMine ? t('mineLabel') : (profile?.nickname || '')}

@@ -89,12 +89,23 @@ export default function Header() {
             <div className={styles.menuWrap} ref={menuRef}>
               <button
                 className={styles.avatarBtn}
-                style={{ background: profile?.emoji_bg || 'linear-gradient(135deg,#fde2e4,#fad2e1)' }}
+                style={profile?.avatar_url
+                  ? { padding: 0, overflow: 'hidden' }
+                  : { background: profile?.emoji_bg || 'linear-gradient(135deg,#fde2e4,#fad2e1)' }
+                }
                 onClick={() => setMenuOpen((v) => !v)}
                 aria-label="user menu"
                 aria-expanded={menuOpen}
               >
-                {profile?.emoji || '🌸'}
+                {profile?.avatar_url ? (
+                  <img
+                    src={profile.avatar_url}
+                    alt=""
+                    style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
+                  />
+                ) : (
+                  profile?.emoji || '🌸'
+                )}
               </button>
               {menuOpen && (
                 <div className={styles.menu} role="menu">

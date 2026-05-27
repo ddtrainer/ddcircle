@@ -136,7 +136,7 @@ export async function fetchMyPosts(userId, limit = 30) {
 export async function fetchCircleFeed(limit = 50) {
   const { data, error } = await supabase
     .from('posts')
-    .select('*, profiles:user_id (id, nickname, emoji, emoji_bg)')
+    .select('*, profiles:user_id (id, nickname, emoji, emoji_bg, avatar_url)')
     .order('created_at', { ascending: false })
     .limit(limit);
   if (error) {
@@ -150,7 +150,7 @@ export async function fetchCircleFeed(limit = 50) {
 export async function fetchPublicFeed(limit = 50) {
   const { data, error } = await supabase
     .from('posts')
-    .select('*, profiles:user_id (id, nickname, emoji, emoji_bg)')
+    .select('*, profiles:user_id (id, nickname, emoji, emoji_bg, avatar_url)')
     .eq('target', 'public')
     .order('created_at', { ascending: false })
     .limit(limit);

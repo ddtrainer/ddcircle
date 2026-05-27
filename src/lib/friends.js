@@ -5,7 +5,7 @@ export async function fetchProfileByInviteCode(code) {
   if (!code) return null;
   const { data, error } = await supabase
     .from('profiles')
-    .select('id, nickname, emoji, emoji_bg, invite_code, created_at')
+    .select('id, nickname, emoji, emoji_bg, avatar_url, invite_code, created_at')
     .eq('invite_code', code)
     .maybeSingle();
   if (error) {
@@ -32,7 +32,7 @@ export async function fetchFriends(userId) {
   const friendIds = rows.map((r) => (r.user_a === userId ? r.user_b : r.user_a));
   const { data: profiles, error: pErr } = await supabase
     .from('profiles')
-    .select('id, nickname, emoji, emoji_bg, invite_code')
+    .select('id, nickname, emoji, emoji_bg, avatar_url, invite_code')
     .in('id', friendIds);
   if (pErr) {
     console.error('[friends] fetch profiles error:', pErr);

@@ -1,10 +1,11 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useApp } from '../context/AppContext';
 import { useLang } from '../i18n/LangContext';
 import { supabase } from '../lib/supabase';
 import { applyWelcomeBonus } from '../lib/stats';
+import { uploadAvatar, deleteAvatar, processAvatar } from '../lib/avatar';
 import { useToast } from '../components/Toast';
 import styles from './ProfileSetup.module.css';
 
@@ -38,8 +39,41 @@ export default function ProfileSetup({ mode = 'setup' }) {
   const [nickname, setNickname] = useState(profile?.nickname ?? '');
   const [emoji, setEmoji] = useState(profile?.emoji ?? '🌸');
   const [emojiBg, setEmojiBg] = useState(profile?.emoji_bg ?? GRADIENTS[0]);
+  const [avatarUrl, setAvatarUrl] = useState(profile?.avatar_url ?? null);
+  const [avatarUploading, setAvatarUploading] = useState(false);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
+  const fileInputRef = useRef(null);
+
+  // 갤러리에서 이미지 선택 → 클라이언트 리사이즈 → Storage 업로드 → URL 보관
+  // (DB 저장은 handleSave에서 nickname/emoji와 함께 한 번에 처리)
+  const handlePickFile = (e) => {
+    const file = e.target.files?.[0];
+    if (!file || !user) return;
+    setError('');
+    setAvatarUploading(true);
+    (async () => {
+      try {
+        const blob = await processAvatar(file);
+        const url = await uploadAvatar(user.id, blob);
+        setAvatarUrl(url);
+      } catch (err) {
+        console.error('[profile-setup] avatar upload failed:', err);
+        showToast('⚠️', t('avatarUploadFailed'));
+      } finally {
+        setAvatarUploading(false);
+        // input 리셋 — 같은 파일 다시 선택 가능
+        if (fileInputRef.current) fileInputRef.current.value = '';
+      }
+    })();
+  };
+
+  const handleRemoveAvatar = async () => {
+    if (!user) return;
+    setAvatarUrl(null);
+    // Storage 파일도 함께 정리 (실패해도 무시)
+    try { await deleteAvatar(user.id); } catch {}
+  };
 
   // 신규 설정 모드(/profile-setup)인데 이미 닉네임이 있으면 — 어떻게든 진입한
   // 경우라도 (예: 직접 URL 입력, 가드 레이스) 홈으로 돌려보냄
@@ -60,7 +94,7 @@ export default function ProfileSetup({ mode = 'setup' }) {
     try {
       const { error: dbError } = await supabase
         .from('profiles')
-        .update({ nickname: trimmed, emoji, emoji_bg: emojiBg })
+        .update({ nickname: trimmed, emoji, emoji_bg: emojiBg, avatar_url: avatarUrl })
         .eq('id', user.id);
 
       if (dbError) throw dbError;
@@ -112,8 +146,42 @@ export default function ProfileSetup({ mode = 'setup' }) {
       <h1 className={styles.title}>{isEdit ? t('profileEditTitle') : t('profileSetupTitle')}</h1>
       <p className={styles.sub}>{isEdit ? t('profileEditSub') : t('profileSetupSub')}</p>
 
-      <div className={styles.avatar} style={{ background: emojiBg }}>
-        {emoji}
+      {/* 아바타 미리보기 — 사진 있으면 사진, 없으면 이모지 + 배경 */}
+      {avatarUrl ? (
+        <img src={avatarUrl} alt="" className={styles.avatarImg} />
+      ) : (
+        <div className={styles.avatar} style={{ background: emojiBg }}>
+          {emoji}
+        </div>
+      )}
+
+      {/* 사진 업로드 / 제거 컨트롤 */}
+      <div className={styles.avatarActions}>
+        <input
+          ref={fileInputRef}
+          type="file"
+          accept="image/*"
+          onChange={handlePickFile}
+          style={{ display: 'none' }}
+        />
+        <button
+          type="button"
+          className={styles.uploadBtn}
+          onClick={() => fileInputRef.current?.click()}
+          disabled={avatarUploading}
+        >
+          {avatarUploading ? t('avatarUploading') : (avatarUrl ? t('avatarChange') : t('avatarUpload'))}
+        </button>
+        {avatarUrl && (
+          <button
+            type="button"
+            className={styles.removeBtn}
+            onClick={handleRemoveAvatar}
+            disabled={avatarUploading}
+          >
+            {t('avatarRemove')}
+          </button>
+        )}
       </div>
 
       <section className={styles.section}>

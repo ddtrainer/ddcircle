@@ -9,6 +9,7 @@ export default function FeedCard({
   variant = 'public',
   emoji,
   emojiBg,
+  avatarUrl,          // 있으면 이모지 대신 업로드된 사진 표시
   name,
   meta,
   tag,
@@ -57,8 +58,15 @@ export default function FeedCard({
     >
       <div className={styles.top}>
         <div className={styles.user}>
-          <div className={styles.avatar} style={{ background: emojiBg }}>
-            {emoji}
+          <div
+            className={styles.avatar}
+            style={avatarUrl ? { padding: 0, overflow: 'hidden' } : { background: emojiBg }}
+          >
+            {avatarUrl ? (
+              <img src={avatarUrl} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} loading="lazy" />
+            ) : (
+              emoji
+            )}
           </div>
           <div>
             <div className={styles.name}>{name}</div>
