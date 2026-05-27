@@ -78,6 +78,32 @@
   justify-content: center;
   margin-bottom: 32px;
   position: relative;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.circle:active { transform: scale(0.98); }
+
+/* 일시정지 상태 — 펄스 멈추고 원 살짝 차분하게 */
+.paused .ring {
+  animation-play-state: paused;
+  opacity: 0.4;
+}
+
+.pausedBadge {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 80px;
+  color: rgba(0, 0, 0, 0.18);
+  pointer-events: none;
+}
+
+.paused .num {
+  opacity: 0.45;
 }
 
 .dashCircle {
@@ -132,6 +158,17 @@
   100% { transform: scale(1); opacity: 1; letter-spacing: 2px; }
 }
 
+.btnRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.btnDivider {
+  color: var(--text-muted);
+}
+
+.pauseBtn,
 .skip {
   background: none;
   border: 1px solid var(--border-strong);
@@ -144,7 +181,11 @@
   transition: all 0.2s;
 }
 
+.pauseBtn:hover,
 .skip:hover {
   color: var(--text);
   border-color: var(--text-soft);
 }
+
+.pauseBtn:active,
+.skip:active { transform: scale(0.97); }
