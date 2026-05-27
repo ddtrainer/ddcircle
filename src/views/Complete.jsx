@@ -82,10 +82,9 @@ export default function Complete() {
     navigate('/wall', { replace: true });
   };
 
-  // 오늘 이미 2회 세션을 마쳤으면 proof 사진 저장 불가 (촬영은 허용)
-  const today = new Date();
-  const todayStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
-  const proofCapReached = todaySessions.date === todayStr && todaySessions.count >= 2;
+  // ⚠️ proof 캡 제거 (구: count >= 2 시 사진 silent drop) — 사용자가 그 이상
+  // 세션을 한 경우에도 본인 인증 사진은 항상 저장. EP 캡은 별도로 유지(2회까지).
+  const proofCapReached = false;
 
   // 실제 공유 실행 — 로그인 여부에 따라 Supabase or 로컬 저장
   const doShare = async () => {
@@ -100,14 +99,19 @@ export default function Complete() {
     let saved = false;
     if (user) {
       try {
-        await createPost(user.id, {
+        const blob = getProofBlob();
+        const res = await createPost(user.id, {
           message: empathyMsg.trim(),
           mood: selectedMood,
           target: shareTarget,
           exerciseId: selectedExercise,
-          proofBlob: proofCapReached ? null : getProofBlob(),
+          proofBlob: blob,
         });
         saved = true;
+        // 사진을 찍었는데 업로드만 실패한 경우 사용자에게 명시적 안내 (글은 저장됨)
+        if (blob && res?.proofUploadFailed) {
+          showToast('📷', t('proofUploadFailed'));
+        }
       } catch (e) {
         showToast('⚠️', '저장에 실패했어요. 로컬에만 저장됩니다.');
         addUserPost(payload);

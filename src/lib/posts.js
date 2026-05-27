@@ -41,16 +41,19 @@ export async function uploadProofImage(userId, blob) {
 
 // 게시물 생성 (proofBlob이 있으면 먼저 업로드)
 // data: { message, mood, target, exerciseId, breathId, proofBlob }
+// 반환: { ...row, proofUploadFailed?: true } — 글은 저장됐지만 사진 업로드 실패 시 플래그
 export async function createPost(userId, data) {
   if (!userId) throw new Error('not authenticated');
 
   let proofUrl = null;
+  let proofUploadFailed = false;
   if (data.proofBlob) {
     try {
       proofUrl = await uploadProofImage(userId, data.proofBlob);
     } catch (e) {
-      // 업로드 실패해도 글은 저장 (사진 없이)
-      console.warn('[posts] proof upload failed, posting without proof');
+      // 업로드 실패해도 글은 저장 (사진 없이). 호출자가 사용자에게 알릴 수 있도록 플래그.
+      console.error('[posts] proof upload failed:', e);
+      proofUploadFailed = true;
     }
   }
 
@@ -78,7 +81,7 @@ export async function createPost(userId, data) {
     console.error('[posts] insert error:', error);
     throw error;
   }
-  return post;
+  return { ...post, proofUploadFailed };
 }
 
 // 게시물 삭제 (본인 게시물만 — RLS가 강제)
