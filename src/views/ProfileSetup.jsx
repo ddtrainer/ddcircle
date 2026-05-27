@@ -184,36 +184,42 @@ export default function ProfileSetup({ mode = 'setup' }) {
         )}
       </div>
 
-      <section className={styles.section}>
-        <label className={styles.label}>{t('profileEmojiLabel')}</label>
-        <div className={styles.emojiRow}>
-          {EMOJIS.map((e) => (
-            <button
-              key={e}
-              className={`${styles.emojiBtn} ${e === emoji ? styles.selected : ''}`}
-              onClick={() => setEmoji(e)}
-              type="button"
-            >
-              {e}
-            </button>
-          ))}
-        </div>
-      </section>
+      {/* 사진 업로드 시 이모지/배경 picker 자동 숨김 — 사진이 원 전체를 채워 의미 없음.
+          사진 제거 시 다시 등장. emoji/emojiBg 값은 DB에 보존(향후 복귀 대비). */}
+      {!avatarUrl && (
+        <>
+          <section className={styles.section}>
+            <label className={styles.label}>{t('profileEmojiLabel')}</label>
+            <div className={styles.emojiRow}>
+              {EMOJIS.map((e) => (
+                <button
+                  key={e}
+                  className={`${styles.emojiBtn} ${e === emoji ? styles.selected : ''}`}
+                  onClick={() => setEmoji(e)}
+                  type="button"
+                >
+                  {e}
+                </button>
+              ))}
+            </div>
+          </section>
 
-      <section className={styles.section}>
-        <label className={styles.label}>{t('profileBgLabel')}</label>
-        <div className={styles.bgRow}>
-          {GRADIENTS.map((g) => (
-            <button
-              key={g}
-              className={`${styles.bgBtn} ${g === emojiBg ? styles.selected : ''}`}
-              style={{ background: g }}
-              onClick={() => setEmojiBg(g)}
-              type="button"
-            />
-          ))}
-        </div>
-      </section>
+          <section className={styles.section}>
+            <label className={styles.label}>{t('profileBgLabel')}</label>
+            <div className={styles.bgRow}>
+              {GRADIENTS.map((g) => (
+                <button
+                  key={g}
+                  className={`${styles.bgBtn} ${g === emojiBg ? styles.selected : ''}`}
+                  style={{ background: g }}
+                  onClick={() => setEmojiBg(g)}
+                  type="button"
+                />
+              ))}
+            </div>
+          </section>
+        </>
+      )}
 
       <section className={styles.section}>
         <label className={styles.label} htmlFor="nickname">
