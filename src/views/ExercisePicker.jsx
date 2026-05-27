@@ -20,8 +20,9 @@ export default function ExercisePicker() {
     track(Events.EXERCISE_SELECTED, { exerciseId: key });
     // iOS 오디오 unlock — 사용자 제스처 콜스택 안에서 호출해야 효과 있음
     unlockAudio();
-    // 0.3초 시각 피드백 후 카운트다운으로
-    setTimeout(() => navigate('/countdown/dash'), 300);
+    // 신규 순서: Deep(호흡) → Dash(운동) → Proof(셀카) → Complete
+    // 운동 전 호흡으로 진입 저항 ↓ & 호흡 품질 ↑
+    setTimeout(() => navigate('/countdown/deep'), 300);
   };
 
   return (

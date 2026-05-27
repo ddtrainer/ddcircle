@@ -47,6 +47,15 @@
   font-weight: 600;
 }
 
+.breathHint {
+  font-size: 12px;
+  color: var(--text-muted);
+  font-style: italic;
+  margin: -8px 0 14px;
+  padding: 0 8px;
+  text-align: center;
+}
+
 .cameraZone {
   width: 280px;
   height: 280px;

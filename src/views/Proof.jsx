@@ -34,14 +34,15 @@ export default function Proof() {
     }
   };
 
-  const goToDeep = () => {
+  // 신규 순서: Proof 완료 후 → 바로 Complete (호흡은 운동 전에 이미 끝남)
+  const goNext = () => {
     if (navigatedRef.current) return;
     navigatedRef.current = true;
     stopCamera();
-    navigate('/countdown/deep', { replace: true });
+    navigate('/complete', { replace: true });
   };
 
-  const handleSkip = () => { track(Events.PROOF_SKIPPED); goToDeep(); };
+  const handleSkip = () => { track(Events.PROOF_SKIPPED); goNext(); };
 
   const handleMainClick = async () => {
     if (phase === 'idle') {
@@ -107,7 +108,7 @@ export default function Proof() {
         track(Events.PROOF_RECORDED, { size: blob.size });
         showToast('✦', t('proofDone'));
         setPhase('done');
-        setTimeout(goToDeep, 800);
+        setTimeout(goNext, 800);
       },
       'image/jpeg',
       0.85,
@@ -124,14 +125,18 @@ export default function Proof() {
 
   return (
     <div className={styles.proofScreen}>
-      <ProgressDots step={2} total={4} />
-      <div className={styles.stage}>STEP 2 OF 4</div>
+      <ProgressDots step={3} total={4} />
+      <div className={styles.stage}>STEP 3 OF 4</div>
       <div className={`${styles.title} ${styles.proofColor}`}>✊ Proof of Life</div>
       <div
         className={styles.desc}
         dangerouslySetInnerHTML={{ __html: t('proofDesc') }}
       />
       <div className={styles.noEdit}>{t('proofNoEdit')}</div>
+      {/* 운동 직후 호흡 정리 안내 — 신규 흐름(호흡→운동→셀카)에서 셀카 직전 cool-down 신호 */}
+      {phase === 'idle' && (
+        <div className={styles.breathHint}>{t('proofBreathHint')}</div>
+      )}
 
       <div className={styles.cameraZone}>
         <video

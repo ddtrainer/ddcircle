@@ -68,8 +68,8 @@ export default function DashSession() {
 
   return (
     <div className={styles.session}>
-      <ProgressDots step={1} total={4} />
-      <div className={styles.stage}>STEP 1 OF 4</div>
+      <ProgressDots step={2} total={4} />
+      <div className={styles.stage}>STEP 2 OF 4</div>
       <div className={`${styles.title} ${styles.dashColor}`}>🔥 Dash</div>
       <div className={styles.desc}>{desc}</div>
 

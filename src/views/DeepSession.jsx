@@ -42,7 +42,8 @@ export default function DeepSession() {
       const fully = !skipClickedRef.current;
       try { sessionStorage.setItem('ddcircle.session.deepFully', fully ? '1' : '0'); } catch {}
       track(Events.DEEP_COMPLETED, { patternId: breathPatternId, fully });
-      setTimeout(() => navigate('/complete', { replace: true }), 600);
+      // 신규 순서: 호흡(Deep) 종료 후 → 운동(Dash) 카운트다운으로
+      setTimeout(() => navigate('/countdown/dash', { replace: true }), 600);
     },
   });
 
@@ -120,8 +121,8 @@ export default function DeepSession() {
 
   return (
     <div className={styles.session}>
-      <ProgressDots step={3} total={4} />
-      <div className={styles.stage}>STEP 3 OF 4</div>
+      <ProgressDots step={1} total={4} />
+      <div className={styles.stage}>STEP 1 OF 4</div>
       <div className={`${styles.title} ${styles.deepColor}`}>🧘 Deep</div>
       <div
         className={styles.desc}
