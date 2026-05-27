@@ -45,7 +45,7 @@ export default function Login() {
     <div className={styles.screen}>
       <div className={styles.hero}>
         <div className={styles.logo}>
-          <img src="/dd-logo.png" alt="DDCircle" width={80} height={80} />
+          <img src="/dd-logo-192.png" alt="DDCircle" width={80} height={80} />
         </div>
         <div className={styles.title}>{t('loginTitle')}</div>
         <div className={styles.sub}>{t('loginSub')}</div>

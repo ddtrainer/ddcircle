@@ -74,7 +74,7 @@ export default function PWAInstallPrompt() {
     return (
       <div className={styles.banner}>
         <button className={styles.close} onClick={dismiss} aria-label="Close">×</button>
-        <img src="/dd-logo.png" alt="DDCircle" className={styles.icon} />
+        <img src="/dd-logo-192.png" alt="DDCircle" className={styles.icon} />
         <div className={styles.text}>
           <div className={styles.title}>{t('pwaInstallTitle')}</div>
           <div className={styles.sub}>{t('pwaInstallSub')}</div>
@@ -89,7 +89,7 @@ export default function PWAInstallPrompt() {
     return (
       <div className={styles.banner}>
         <button className={styles.close} onClick={dismiss} aria-label="Close">×</button>
-        <img src="/dd-logo.png" alt="DDCircle" className={styles.icon} />
+        <img src="/dd-logo-192.png" alt="DDCircle" className={styles.icon} />
         <div className={styles.text}>
           <div className={styles.title}>{t('pwaInstallTitle')}</div>
           <div className={styles.sub}>{t('pwaInstallIosGuide')}</div>

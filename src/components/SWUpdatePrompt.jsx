@@ -46,7 +46,7 @@ export default function SWUpdatePrompt() {
         onClick={() => setNeedRefresh(false)}
         aria-label="Close"
       >×</button>
-      <img src="/dd-logo.png" alt="DDCircle" className={styles.icon} />
+      <img src="/dd-logo-192.png" alt="DDCircle" className={styles.icon} />
       <div className={styles.text}>
         <div className={styles.title}>{t('swUpdateTitle')}</div>
         <div className={styles.sub}>{t('swUpdateSub')}</div>
