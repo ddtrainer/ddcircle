@@ -243,3 +243,30 @@
   color: var(--text-soft);
   word-break: break-word;
 }
+
+/* 'private' (나만 보기) 게시물 — 본인 피드에 자물쇠 표식과 함께 노출 */
+.card.private {
+  border-style: dashed;
+  border-color: var(--border-strong);
+  background: var(--bg-soft);
+}
+
+.privateBadge {
+  background: rgba(0, 0, 0, 0.06);
+  color: var(--text-soft);
+  font-size: 11px;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 999px;
+  letter-spacing: 0.3px;
+  flex-shrink: 0;
+}
+
+.privateHint {
+  font-size: 11px;
+  color: var(--text-muted);
+  font-style: italic;
+  margin-top: 4px;
+  padding: 6px 10px;
+  border-top: 1px dashed var(--border);
+}

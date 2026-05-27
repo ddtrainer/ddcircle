@@ -366,9 +366,8 @@ export default function Wall() {
   const displayName = (f) => (lang === 'ko' ? f.name : f.enName);
 
   // 인증 상태면 원격 피드 우선, 아니면 로컬
-  const myCirclePosts = user
-    ? remoteCircle
-    : userPosts.filter((p) => p.target !== 'private');
+  // 본인 'private'도 본인 피드엔 표시 (카드에 자물쇠 표식으로 식별)
+  const myCirclePosts = user ? remoteCircle : userPosts;
 
   const renderMyPost = (post) => {
     const mood = MOODS.find((m) => m.id === post.mood);
@@ -436,6 +435,7 @@ export default function Wall() {
         encouraged={!!sentEnc}
         encouragedText={sentEncDisplay}
         receivedList={receivedList}
+        isPrivate={isMine && post.target === 'private'}
       />
     );
   };

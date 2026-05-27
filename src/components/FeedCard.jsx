@@ -17,6 +17,7 @@ export default function FeedCard({
   initialEmpathy = { sent: 0, great: 0, me: 0 },
   cardRef,
   highlighted,
+  isPrivate = false,  // 'private' 게시물 — 자물쇠 표식 + 하단 안내 표시
   // 응원 보내기 (친구 카드만 사용)
   onEncourage, // () => void — 부모가 바텀시트 열기
   encouraged,  // 이미 보낸 경우 true
@@ -52,7 +53,7 @@ export default function FeedCard({
   return (
     <div
       ref={cardRef}
-      className={`${styles.card} ${styles[variant]} ${highlighted ? styles.highlighted : ''}`}
+      className={`${styles.card} ${styles[variant]} ${highlighted ? styles.highlighted : ''} ${isPrivate ? styles.private : ''}`}
     >
       <div className={styles.top}>
         <div className={styles.user}>
@@ -64,7 +65,12 @@ export default function FeedCard({
             <div className={styles.meta}>{meta}</div>
           </div>
         </div>
-        {tag && <div className={styles.tag}>{tag}</div>}
+        {isPrivate && (
+          <div className={styles.privateBadge} aria-label={t('privateBadge')}>
+            🔒 {t('privateBadge')}
+          </div>
+        )}
+        {!isPrivate && tag && <div className={styles.tag}>{tag}</div>}
         {onDelete && (
           <button
             className={styles.deleteBtn}
@@ -89,6 +95,10 @@ export default function FeedCard({
       )}
 
       <div className={styles.msg}>{message}</div>
+
+      {isPrivate && (
+        <div className={styles.privateHint}>ⓘ {t('privateHint')}</div>
+      )}
 
       <div className={styles.empathy}>
         {[

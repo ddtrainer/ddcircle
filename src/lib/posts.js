@@ -126,12 +126,14 @@ export async function fetchMyPosts(userId, limit = 30) {
   return data || [];
 }
 
-// 서클 피드: 본인 + 친구의 'circle'/'public' 게시물 (RLS가 자동으로 필터링)
+// 서클 피드: 본인 모든 게시물 + 친구의 'circle'/'public' 게시물
+// .neq('target','me') 제거 — 본인의 'me'(나만 보기) 게시물도 본인 피드엔 노출되어야 함.
+// 친구의 'me' 게시물은 RLS가 자동으로 차단하므로 안전.
+// 카드에 'private' 표식이 붙어 본인에게도 시각적으로 구분됨.
 export async function fetchCircleFeed(limit = 50) {
   const { data, error } = await supabase
     .from('posts')
     .select('*, profiles:user_id (id, nickname, emoji, emoji_bg)')
-    .neq('target', 'me')
     .order('created_at', { ascending: false })
     .limit(limit);
   if (error) {
