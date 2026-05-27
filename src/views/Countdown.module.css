@@ -41,28 +41,30 @@
 
 /* Dash 준비 단계 — "오늘 운동: ◯◯ 변경" 칩 */
 .preferChip {
-  background: var(--bg-soft);
-  border: 1px solid var(--border);
+  background: var(--surface);
+  border: 1px solid var(--border-strong);
   border-radius: 999px;
-  padding: 8px 16px;
+  padding: 10px 20px;
   font-family: inherit;
-  font-size: 14px;
-  color: var(--text-soft);
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text);
   cursor: pointer;
   margin-bottom: 20px;
   box-shadow: var(--shadow-sm);
 }
 
 .preferChip strong {
-  color: var(--text);
-  font-weight: 700;
+  color: var(--warm);
+  font-weight: 800;
   margin: 0 4px;
 }
 
 .preferEdit {
   color: var(--cool);
-  margin-left: 8px;
-  font-size: 13px;
+  margin-left: 10px;
+  font-size: 14px;
+  font-weight: 600;
   text-decoration: underline;
   text-underline-offset: 2px;
 }

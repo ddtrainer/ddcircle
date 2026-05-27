@@ -145,14 +145,14 @@ export function AppProvider({ children }) {
   // selectedExercise가 휘발되면 completeSession이 exercise_id를 null로 저장해
   // Record의 활동 기록이 비어 보이는 문제 발생.
   const [selectedExercise, setSelectedExercise] = useSessionStorage(
-    'ddcircle.session.exercise', 'jumping-jack'
+    'ddcircle.session.exercise', 'jog'
   );
 
   // 장기 선호 운동 — Picker에서 선택할 때마다 저장됨.
-  // null이면 Picker를 한 번도 안 거친 사용자 → Deep 끝나면 Picker 노출.
-  // 값 있으면 Picker 스킵하고 Dash 카운트다운으로 직행 (Home에서 '변경' 가능)
+  // 기본값 'jog'(제자리 뛰기) — 첫 사용자도 chip에 즉시 노출 + Picker 자동 스킵.
+  // 사용자는 Countdown 화면의 "변경"으로 언제든 다른 운동 선택 가능.
   const [preferredExercise, setPreferredExercise] = useLocalStorage(
-    'ddcircle.preferredExercise', null
+    'ddcircle.preferredExercise', 'jog'
   );
   const proofBlobRef = useRef(null);
   const [proofUrl, setProofUrl] = useState(null);

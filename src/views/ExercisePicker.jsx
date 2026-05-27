@@ -49,7 +49,8 @@ export default function ExercisePicker() {
         ))}
       </div>
 
-      <button className={styles.back} onClick={() => navigate('/')}>
+      {/* 신규 흐름: Picker는 Dash 카운트다운에서 "변경" 으로 진입 → 취소 시 동일 화면으로 복귀 */}
+      <button className={styles.back} onClick={() => navigate('/countdown/dash', { replace: true })}>
         {t('pickerBack')}
       </button>
     </div>
