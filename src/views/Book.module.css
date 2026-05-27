@@ -270,3 +270,161 @@
   opacity: 0.3;
   cursor: not-allowed;
 }
+
+/* 한눈에 보기 페이지 — 표지 다음에 등장하는 차례/요약 */
+.overviewPage {
+  flex: 1;
+  max-width: 520px;
+  background: #fdfaf2;
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+  padding: 28px 22px 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.overviewHead {
+  text-align: center;
+  border-bottom: 1px dashed rgba(0,0,0,0.12);
+  padding-bottom: 14px;
+}
+
+.overviewLabel {
+  font-family: 'Inter', sans-serif;
+  font-size: 11px;
+  letter-spacing: 3px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+
+.overviewTitle {
+  font-family: 'Noto Serif KR', 'Playfair Display', serif;
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 4px;
+}
+
+.overviewStage {
+  font-size: 13px;
+  color: var(--text-soft);
+  letter-spacing: 0.5px;
+}
+
+.statRow {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+
+.statBox {
+  text-align: center;
+  background: rgba(0,0,0,0.03);
+  border-radius: 10px;
+  padding: 12px 6px;
+}
+
+.statNum {
+  font-family: 'Noto Serif KR', 'Playfair Display', serif;
+  font-size: 26px;
+  font-weight: 700;
+  color: var(--text);
+  line-height: 1;
+}
+
+.statLabel {
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-top: 4px;
+}
+
+.topMoodRow {
+  background: rgba(0,0,0,0.03);
+  border-radius: 999px;
+  padding: 8px 16px;
+  font-size: 13px;
+  color: var(--text-soft);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.topMoodLabel { color: var(--text-muted); }
+.topMoodValue { color: var(--text); font-weight: 600; }
+.topMoodCount { color: var(--text-muted); font-size: 12px; }
+
+.calendarWrap {
+  background: rgba(0,0,0,0.02);
+  border-radius: 10px;
+  padding: 12px 8px;
+}
+
+.calendarHead,
+.calendarGrid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 4px;
+}
+
+.calCellHead {
+  text-align: center;
+  font-family: 'Inter', sans-serif;
+  font-size: 10px;
+  color: var(--text-muted);
+  letter-spacing: 1px;
+  padding-bottom: 6px;
+}
+
+.calCell {
+  position: relative;
+  aspect-ratio: 1 / 1;
+  background: none;
+  border: none;
+  border-radius: 6px;
+  font-family: inherit;
+  font-size: 12px;
+  color: var(--text-soft);
+  cursor: pointer;
+  padding: 2px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.calCell:disabled {
+  cursor: default;
+  background: transparent;
+}
+
+.calEmpty { opacity: 0.15; }
+
+.calActive {
+  background: rgba(212, 145, 50, 0.18);
+  color: var(--text);
+  font-weight: 700;
+}
+
+.calActive:hover {
+  background: rgba(212, 145, 50, 0.32);
+}
+
+.calToday {
+  outline: 2px solid var(--warm);
+  outline-offset: -1px;
+}
+
+.calDay {
+  line-height: 1;
+}
+
+.calDot {
+  font-size: 6px;
+  line-height: 1;
+  color: var(--warm);
+  margin-top: 2px;
+}
