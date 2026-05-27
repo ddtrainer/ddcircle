@@ -32,9 +32,7 @@ export default function Record() {
   const { userEp } = useApp();
   const { user, profile } = useAuth();
   const [epModalOpen, setEpModalOpen] = useState(false);
-  const [allPosts, setAllPosts] = useState([]); // 책장용 — proof 없는 글도 포함
-  const [proofPosts, setProofPosts] = useState([]);
-  const [lightbox, setLightbox] = useState(null);
+  const [allPosts, setAllPosts] = useState([]); // 책장용 — 모든 글
   const [remoteStats, setRemoteStats] = useState(null);   // user_stats row
   const [remoteChart, setRemoteChart] = useState(null);   // [{date, earnedEp}, ...]
   const [todayActivity, setTodayActivity] = useState(null); // 오늘 활동
@@ -43,7 +41,6 @@ export default function Record() {
   useEffect(() => {
     if (!user) {
       setAllPosts([]);
-      setProofPosts([]);
       setRemoteStats(null);
       setRemoteChart(null);
       setTodayActivity(null);
@@ -61,7 +58,6 @@ export default function Record() {
       ]);
       if (cancelled) return;
       setAllPosts(posts);
-      setProofPosts(posts.filter((p) => p.has_proof && p.proof_url));
       setRemoteStats(stats);
       setRemoteChart(chart);
       setTodayActivity(today);
@@ -327,51 +323,7 @@ export default function Record() {
         })()}
       </div>
 
-      {/* 셀카 갤러리 */}
-      <div className={styles.galleryCard}>
-        <div className={styles.chartTitle}>{t('galleryTitle')}</div>
-        {proofPosts.length === 0 ? (
-          <div className={styles.galleryEmpty}>
-            {user ? t('galleryEmpty') : t('galleryLoginPrompt')}
-          </div>
-        ) : (
-          <div className={styles.galleryGrid}>
-            {proofPosts.map((p) => {
-              const d = new Date(p.created_at);
-              const dateLabel = `${d.getMonth() + 1}/${d.getDate()}`;
-              return (
-                <button
-                  key={p.id}
-                  type="button"
-                  className={styles.galleryCell}
-                  onClick={() => setLightbox(p)}
-                >
-                  <img src={p.proof_url} alt={dateLabel} loading="lazy" />
-                  <span className={styles.galleryDate}>{dateLabel}</span>
-                </button>
-              );
-            })}
-          </div>
-        )}
-      </div>
-
-      {/* 라이트박스 */}
-      {lightbox && (
-        <div className={styles.lightboxOverlay} onClick={() => setLightbox(null)}>
-          <div className={styles.lightboxInner} onClick={(e) => e.stopPropagation()}>
-            <button
-              className={styles.lightboxClose}
-              onClick={() => setLightbox(null)}
-              aria-label="Close"
-            >×</button>
-            <img src={lightbox.proof_url} alt="" />
-            <div className={styles.lightboxMeta}>
-              {new Date(lightbox.created_at).toLocaleString(undefined, { dateStyle: 'long', timeStyle: 'short' })}
-              {lightbox.message ? ` · ${lightbox.message}` : ''}
-            </div>
-          </div>
-        </div>
-      )}
+      {/* 셀카 갤러리는 책장(스크랩북)이 흡수 — 자산 헤더에서 책 페이지로 확인 */}
 
       {/* EP 시스템 안내 모달 */}
       <EPModal open={epModalOpen} onClose={() => setEpModalOpen(false)} />
