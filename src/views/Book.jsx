@@ -8,7 +8,6 @@ import {
   chapterLabel,
   chapterBookMeta,
   groupByChapter,
-  pageId,
 } from '../lib/chapters';
 import { MOODS } from '../data/moods';
 import styles from './Book.module.css';
@@ -227,7 +226,12 @@ export default function Book() {
 
             <footer className={styles.pageFooter}>
               <span className={styles.verifiedMark}>✓ Verified</span>
-              <span className={styles.polId}>{pageId(post)}</span>
+              <span className={styles.polId}>
+                {new Date(post.created_at).toLocaleTimeString(
+                  lang === 'en' ? 'en-US' : 'ko-KR',
+                  { hour: 'numeric', minute: '2-digit' }
+                )}
+              </span>
             </footer>
           </article>
         )}
