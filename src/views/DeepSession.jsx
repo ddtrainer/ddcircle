@@ -7,12 +7,17 @@ import { useBreathCycle } from '../hooks/useBreathCycle';
 import { useWimHofCycle } from '../hooks/useWimHofCycle';
 import { useBreathSound, playBellIn, playBellOut, playHoldChime } from '../hooks/useBreathSound';
 import { BREATH_PRESETS, resolveBreathPattern, buildWimHofScript } from '../data/breathPatterns';
-import { getLevelDef } from '../lib/ddLevel';
+import { getLevelDef, DEEP_LEVELS } from '../lib/ddLevel';
 import ProgressDots from '../components/ProgressDots';
 import BreathSettingsModal from '../components/modals/BreathSettingsModal';
-import GuideModal from '../components/modals/GuideModal';
+import { useToast } from '../components/Toast';
 import { track, Events } from '../utils/analytics';
 import styles from './DeepSession.module.css';
+
+// breathId → 해당 호흡이 열리는 DD 레벨. 현재 레벨 이하만 선택 가능, 그 위는 잠금.
+const BREATH_REQUIRED_LEVEL = Object.fromEntries(
+  DEEP_LEVELS.map((l) => [l.breathId, l.level])
+);
 
 export default function DeepSession() {
   const { t } = useLang();
@@ -21,7 +26,19 @@ export default function DeepSession() {
   const isWim = breathPatternId === 'custom';
   const { deepLevel } = useLevel();
   const deepDef = getLevelDef('deep', deepLevel);
-  const [guideOpen, setGuideOpen] = useState(false);
+  const toast = useToast();
+
+  // 현재 레벨보다 높은 단계의 호흡인지 (잠금 여부)
+  const isLocked = (id) => (BREATH_REQUIRED_LEVEL[id] ?? 1) > deepLevel;
+
+  // 저장된 선택이 현재 레벨에서 잠긴 호흡이면 현재 레벨 기본 호흡으로 보정
+  // (잠긴 패턴이 실제로 재생되는 것을 방지)
+  useEffect(() => {
+    if (isLocked(breathPatternId)) {
+      setBreathPatternId(deepDef.breathId);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [deepLevel, breathPatternId]);
   const [soundOn, setSoundOn] = useState(true);
   const [soundReady, setSoundReady] = useState(false);
   const [animationReady, setAnimationReady] = useState(false);
@@ -171,6 +188,11 @@ export default function DeepSession() {
 
   // 패턴 선택 핸들러
   const selectPattern = (id) => {
+    if (isLocked(id)) {
+      const reqLevel = BREATH_REQUIRED_LEVEL[id] ?? 1;
+      toast.show('🔒', t('breathLockedNotice').replace('{lv}', reqLevel));
+      return;
+    }
     if (id === 'custom') {
       // 윔호프 호흡 — 선택과 동시에 횟수 조절 모달 열기
       setBreathPatternId('custom');
@@ -200,36 +222,43 @@ export default function DeepSession() {
         dangerouslySetInnerHTML={{ __html: t('deepDesc') }}
       />
 
-      {/* DD 레벨 배지 + 가이드 진입 (타이머/흐름 비간섭) */}
-      <button className={styles.levelChip} onClick={() => setGuideOpen(true)}>
-        {deepDef.emoji} Lv.{deepLevel} {deepDef.name} · ×{deepDef.multiplier} EP · 가이드
-      </button>
-
       {/* 호흡 패턴 선택 */}
       <div className={styles.patternPicker}>
-        {BREATH_PRESETS.map((p) => (
-          <button
-            key={p.id}
-            className={`${styles.patternBtn} ${breathPatternId === p.id ? styles.patternActive : ''} ${deepDef.breathId === p.id ? styles.levelMatch : ''}`}
-            onClick={() => selectPattern(p.id)}
-          >
-            {deepDef.breathId === p.id && <span className={styles.levelMatchEmoji}>{deepDef.emoji}</span>}
-            {p.id === '48' && '⚙ '}
-            {t('breath' + p.id)}
-            {p.id === '48' && breathPatternId === '48' && (
-              <span className={styles.patternMeta}>
-                {' '}{naturalBreath.inhale}-{naturalBreath.exhale}
-              </span>
-            )}
-          </button>
-        ))}
-        <button
-          className={`${styles.patternBtn} ${breathPatternId === 'custom' ? styles.patternActive : ''} ${deepDef.breathId === 'custom' ? styles.levelMatch : ''}`}
-          onClick={() => selectPattern('custom')}
-        >
-          {deepDef.breathId === 'custom' && <span className={styles.levelMatchEmoji}>{deepDef.emoji}</span>}
-          ⚙ {t('breathCustom')}
-        </button>
+        {BREATH_PRESETS.map((p) => {
+          const locked = isLocked(p.id);
+          return (
+            <button
+              key={p.id}
+              className={`${styles.patternBtn} ${breathPatternId === p.id ? styles.patternActive : ''} ${deepDef.breathId === p.id ? styles.levelMatch : ''} ${locked ? styles.locked : ''}`}
+              onClick={() => selectPattern(p.id)}
+              aria-disabled={locked}
+            >
+              {locked && <span className={styles.lockEmoji}>🔒</span>}
+              {!locked && deepDef.breathId === p.id && <span className={styles.levelMatchEmoji}>{deepDef.emoji}</span>}
+              {!locked && p.id === '48' && '⚙ '}
+              {t('breath' + p.id)}
+              {!locked && p.id === '48' && breathPatternId === '48' && (
+                <span className={styles.patternMeta}>
+                  {' '}{naturalBreath.inhale}-{naturalBreath.exhale}
+                </span>
+              )}
+            </button>
+          );
+        })}
+        {(() => {
+          const locked = isLocked('custom');
+          return (
+            <button
+              className={`${styles.patternBtn} ${breathPatternId === 'custom' ? styles.patternActive : ''} ${deepDef.breathId === 'custom' ? styles.levelMatch : ''} ${locked ? styles.locked : ''}`}
+              onClick={() => selectPattern('custom')}
+              aria-disabled={locked}
+            >
+              {locked ? <span className={styles.lockEmoji}>🔒</span>
+                : deepDef.breathId === 'custom' && <span className={styles.levelMatchEmoji}>{deepDef.emoji}</span>}
+              {!locked && '⚙ '}{t('breathCustom')}
+            </button>
+          );
+        })()}
       </div>
 
       {/* 단계 인디케이터 (숫자 표시) */}
@@ -331,7 +360,6 @@ export default function DeepSession() {
       </div>
 
       <BreathSettingsModal open={settingsOpen} mode={settingsMode} onClose={() => setSettingsOpen(false)} />
-      <GuideModal open={guideOpen} onClose={() => setGuideOpen(false)} track="deep" level={deepLevel} />
     </div>
   );
 }

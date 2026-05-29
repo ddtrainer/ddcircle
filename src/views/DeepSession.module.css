@@ -102,6 +102,21 @@
   margin-right: 3px;
 }
 
+/* 현재 레벨보다 높은 호흡 — 잠금 (흐림 + 🔒, 선택 불가) */
+.patternBtn.locked {
+  opacity: 0.45;
+  color: var(--text-muted);
+  background: var(--surface);
+  border-style: dashed;
+  box-shadow: none;
+  cursor: not-allowed;
+}
+
+.lockEmoji {
+  margin-right: 3px;
+  font-size: 12px;
+}
+
 .patternMeta {
   font-size: 12px;
   font-weight: 500;
