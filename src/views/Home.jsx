@@ -258,10 +258,7 @@ export default function Home() {
         </div>
       </div>
 
-      {/* 시작 버튼 */}
-      <button className={styles.startBtn} onClick={goPicker}>{t('startBtn')}</button>
-
-      {/* 선호 운동 변경은 Dash 카운트다운 화면에서 — 발견성을 위해 흐름 위에 노출 */}
+      {/* 시작 동선은 상단 히어로 호흡 서클로 일원화 (하단 중복 버튼 제거) */}
 
       {/* 어제(또는 최근)의 페이지 미니 카드 — 재방문 + 책장 발견 */}
       <YesterdayPageCard />

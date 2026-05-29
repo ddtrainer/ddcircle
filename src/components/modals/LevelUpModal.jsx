@@ -4,7 +4,7 @@ import styles from './LevelUpModal.module.css';
 
 // 레벨업 축하 모달. track: 'deep' | 'dash', level: 새로 도달한 레벨.
 // safetyRequired 레벨(Lv.4)이면 안전 안내 확인 버튼을 강조한다.
-const TRACK_LABEL = { deep: 'Deep · 심호흡', dash: 'Dash · 운동' };
+const TRACK_LABEL = { deep: 'Deep · 호흡', dash: 'Dash · 운동' };
 
 export default function LevelUpModal({ open, onClose, track, level }) {
   const def = getLevelDef(track, level);

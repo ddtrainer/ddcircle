@@ -12,7 +12,7 @@ export default function DdLevelCard() {
   const totalEp = userEp?.total ?? 0;
 
   const tracks = [
-    { key: 'deep', label: 'Deep · 심호흡', levels: DEEP_LEVELS, current: deepLevel },
+    { key: 'deep', label: 'Deep · 호흡', levels: DEEP_LEVELS, current: deepLevel },
     { key: 'dash', label: 'Dash · 운동', levels: DASH_LEVELS, current: dashLevel },
   ];
 
