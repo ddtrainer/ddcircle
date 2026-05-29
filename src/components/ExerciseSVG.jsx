@@ -23,7 +23,9 @@ export default function ExerciseSVG({ type = 'jumping-jack', size = 130, paused 
   if (lottieSrc) return <ExerciseLottie src={lottieSrc} size={size} paused={paused} />;
   const src = VIDEO_MAP[type];
   if (!src) return null;
-  return <ExerciseVideo src={src} size={size} paused={paused} />;
+  // 마운틴 클라이머 원본 영상은 인물이 왼쪽을 향함 → 좌우 반전해 오른쪽을 보게 함
+  const flipX = type === 'mountain-climber';
+  return <ExerciseVideo src={src} size={size} paused={paused} flipX={flipX} />;
 }
 
 // Lottie 애니메이션 렌더 (autoplay + loop, paused prop과 동기화)
@@ -80,7 +82,7 @@ function ExerciseLottie({ src, size, paused }) {
 
 // 영상 기반 운동 동작 (autoplay + loop + muted, paused prop과 동기화)
 // 첫 프레임 준비 전 검은 화면 방지: 투명 배경 + 페이드 인
-function ExerciseVideo({ src, size, paused }) {
+function ExerciseVideo({ src, size, paused, flipX = false }) {
   const ref = useRef(null);
   const [ready, setReady] = useState(false);
 
@@ -144,6 +146,7 @@ function ExerciseVideo({ src, size, paused }) {
         backgroundColor: 'transparent',
         opacity: ready ? 1 : 0,
         transition: 'opacity 0.25s ease-out',
+        transform: flipX ? 'scaleX(-1)' : undefined,
       }}
     />
   );
