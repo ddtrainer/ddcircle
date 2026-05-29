@@ -5,7 +5,7 @@ import { recordSession, migrateLocalStats } from '../lib/stats';
 import { recordStakeDeclared, resolveStakeWon, resolveStakeForfeited, cancelStake } from '../lib/challenges';
 import { findChallenge } from '../data/challenges';
 import { calculateEarnedEp } from '../utils/ep';
-import { DEFAULT_CUSTOM_BREATH } from '../data/breathPatterns';
+import { DEFAULT_CUSTOM_BREATH, DEFAULT_NATURAL_BREATH, DEFAULT_WIM_HOF_ROUNDS, DEFAULT_WIM_HOF_CYCLES, DEFAULT_WIM_HOF_RETENTION } from '../data/breathPatterns';
 import { evaluateChallenges } from '../data/challenges';
 
 const AppContext = createContext(null);
@@ -48,6 +48,10 @@ export function AppProvider({ children }) {
   const [userPosts, setUserPosts] = useLocalStorage('ddcircle.userPosts', []);
   const [breathPatternId, setBreathPatternId] = useLocalStorage('ddcircle.breathPatternId', '478');
   const [customBreath, setCustomBreath] = useLocalStorage('ddcircle.customBreath', DEFAULT_CUSTOM_BREATH);
+  const [naturalBreath, setNaturalBreath] = useLocalStorage('ddcircle.naturalBreath', DEFAULT_NATURAL_BREATH);
+  const [wimHofRounds, setWimHofRounds] = useLocalStorage('ddcircle.wimHofRounds', DEFAULT_WIM_HOF_ROUNDS);
+  const [wimHofCycles, setWimHofCycles] = useLocalStorage('ddcircle.wimHofCycles', DEFAULT_WIM_HOF_CYCLES);
+  const [wimHofRetention, setWimHofRetention] = useLocalStorage('ddcircle.wimHofRetention', DEFAULT_WIM_HOF_RETENTION);
   const [challengeClaims, setChallengeClaims] = useLocalStorage('ddcircle.challengeClaims', {});
   const [challengeJoins, setChallengeJoins] = useLocalStorage('ddcircle.challengeJoins', {});
   const [notificationsEnabled, setNotificationsEnabled] = useLocalStorage('ddcircle.notificationsEnabled', true);
@@ -327,6 +331,14 @@ export function AppProvider({ children }) {
         setBreathPatternId,
         customBreath,
         setCustomBreath,
+        naturalBreath,
+        setNaturalBreath,
+        wimHofRounds,
+        setWimHofRounds,
+        wimHofCycles,
+        setWimHofCycles,
+        wimHofRetention,
+        setWimHofRetention,
         challengeClaims,
         challengeJoins,
         joinChallenge,

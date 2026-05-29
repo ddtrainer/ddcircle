@@ -7,7 +7,7 @@
 export const CHALLENGES = [
   { id: '3day',   target: 3,   stakeEp: 3,   bonusEp: 30,   emoji: '🌱', titleKey: 'challenge3day',   descKey: 'challenge3dayDesc'   },
   { id: '7day',   target: 7,   stakeEp: 10,  bonusEp: 70,   emoji: '🔥', titleKey: 'challenge7day',   descKey: 'challenge7dayDesc'   },
-  { id: '14day',  target: 14,  stakeEp: 20,  bonusEp: 150,  emoji: '⭐', titleKey: 'challenge14day',  descKey: 'challenge14dayDesc'  },
+  { id: '21day',  target: 21,  stakeEp: 20,  bonusEp: 150,  emoji: '⭐', titleKey: 'challenge21day',  descKey: 'challenge21dayDesc'  },
   { id: '30day',  target: 30,  stakeEp: 50,  bonusEp: 300,  emoji: '👑', titleKey: 'challenge30day',  descKey: 'challenge30dayDesc'  },
   { id: '60day',  target: 60,  stakeEp: 100, bonusEp: 600,  emoji: '💎', titleKey: 'challenge60day',  descKey: 'challenge60dayDesc'  },
   { id: '100day', target: 100, stakeEp: 200, bonusEp: 1000, emoji: '🏆', titleKey: 'challenge100day', descKey: 'challenge100dayDesc' },

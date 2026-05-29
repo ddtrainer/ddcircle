@@ -8,7 +8,7 @@
 }
 
 .header {
-  margin-bottom: 8px;
+  margin-bottom: 10px;
 }
 
 .tag {
@@ -18,64 +18,146 @@
   text-transform: uppercase;
 }
 
-.row {
-  width: 100%;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 10px 4px;
-  background: none;
-  border: none;
+.track {
+  padding: 12px 0;
   border-top: 1px solid var(--border);
-  font-family: inherit;
-  text-align: left;
-  cursor: pointer;
 }
 
-.row:first-of-type {
+.track:first-of-type {
   border-top: none;
+  padding-top: 0;
 }
 
-.row:active {
-  opacity: 0.7;
+.trackHead {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 10px;
 }
 
-.emoji {
-  font-size: 26px;
+.trackLabel {
+  font-size: 12px;
+  color: var(--text-muted);
   flex-shrink: 0;
 }
 
-.info {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  flex: 1;
+.trackNow {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text);
+  text-align: right;
   min-width: 0;
 }
 
-.track {
-  font-size: 12px;
-  color: var(--text-muted);
+.steps {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
-.name {
-  font-size: 14px;
-  font-weight: 600;
-  color: var(--text);
+.stepWrap {
+  display: flex;
+  align-items: center;
+  flex: 1;
 }
 
-.multiplier {
-  font-size: 13px;
+.stepWrap:first-child {
+  flex: 0 0 auto;
+}
+
+.connector {
+  flex: 1;
+  height: 2px;
+  background: var(--border);
+  margin: 0 4px;
+  align-self: center;
+}
+
+.step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 6px 8px;
+  border-radius: 12px;
+  border: 1.5px solid transparent;
+  flex-shrink: 0;
+}
+
+.stepEmoji {
+  font-size: 22px;
+  line-height: 1;
+}
+
+.stepLv {
+  font-size: 11px;
   font-weight: 700;
   color: var(--text);
-  background: var(--bg-soft);
-  padding: 4px 10px;
-  border-radius: 999px;
-  flex-shrink: 0;
+  line-height: 1;
 }
 
-.chevron {
-  font-size: 20px;
+.stepMul {
+  font-size: 11px;
+  font-weight: 700;
   color: var(--text-muted);
-  flex-shrink: 0;
+}
+
+.step.done {
+  opacity: 0.9;
+}
+
+.step.current {
+  border-color: var(--cool);
+  background: var(--cool-soft);
+}
+
+.step.current .stepMul {
+  color: var(--cool);
+}
+
+.step.unlocked {
+  opacity: 0.95;
+}
+
+.step.locked {
+  opacity: 0.4;
+}
+
+.progress {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 10px;
+  font-size: 12px;
+}
+
+.progressLabel {
+  color: var(--text-muted);
+}
+
+.progressMeta {
+  color: var(--text);
+  font-weight: 600;
+}
+
+.met {
+  color: var(--cool);
+}
+
+.readyBadge {
+  font-size: 11px;
+  font-weight: 700;
+  color: #fff;
+  background: var(--cool);
+  padding: 2px 8px;
+  border-radius: 999px;
+}
+
+.maxText {
+  margin-top: 10px;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--cool);
 }

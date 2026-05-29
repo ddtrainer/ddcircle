@@ -81,6 +81,27 @@
   color: var(--cool);
 }
 
+/* 레벨에 맞는 호흡 패턴 표시 (선택 상태와 별개로 공존) */
+/* 선택(파란 --cool)과 확실히 구분되도록 초록 계열 사용 */
+.patternBtn.levelMatch {
+  border-color: #5bbf3a;
+  color: #4a9e2e;
+  background: rgba(126, 217, 87, 0.14);
+  box-shadow: var(--shadow-sm), inset 0 0 0 2px rgba(126, 217, 87, 0.55);
+}
+
+/* 레벨 일치 + 선택 동시: 선택(파란) 우선, 초록 링은 유지 */
+.patternBtn.levelMatch.patternActive {
+  border-color: var(--cool);
+  color: var(--cool);
+  background: var(--cool-soft);
+  box-shadow: var(--shadow-sm), inset 0 0 0 2px rgba(126, 217, 87, 0.7);
+}
+
+.levelMatchEmoji {
+  margin-right: 3px;
+}
+
 .patternMeta {
   font-size: 12px;
   font-weight: 500;
@@ -213,6 +234,11 @@
   color: var(--text);
   font-weight: 700;
   margin-right: 2px;
+}
+
+.cycleSuffix {
+  color: var(--text-soft);
+  opacity: 0.8;
 }
 
 .totalTime {
