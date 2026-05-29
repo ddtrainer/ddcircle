@@ -26,14 +26,17 @@ export function calculateEarnedEp({
   shared = false,
   streak = 0,
   todaySessionCount = 0,  // 이번 세션 포함 전 카운트 (0이면 오늘 첫 세션)
+  // DD 레벨 배율 — 트랙별 완주 점수에만 곱한다. 미지정 시 1.0 (기존 동작 유지).
+  deepMultiplier = 1,
+  dashMultiplier = 1,
 }) {
   // 하루 2회 캡 — 3회차부터 0 EP
   if (todaySessionCount >= DAILY_EP_CAP_SESSIONS) return 0;
 
   let ep = 0;
-  if (dashFully) ep += 10;
-  if (deepFully) ep += 15;
-  if (dashFully && deepFully) ep += 5;  // Full Set 보너스
+  if (dashFully) ep += 10 * dashMultiplier;
+  if (deepFully) ep += 15 * deepMultiplier;
+  if (dashFully && deepFully) ep += 5;  // Full Set 보너스 (배율 미적용)
   if (hasProof) ep += 5;
   if (shared) ep += 5;
   return Math.round(ep * getMultiplier(streak));

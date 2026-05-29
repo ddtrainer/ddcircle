@@ -9,6 +9,7 @@ import { useNextSetTiming } from '../hooks/useNextSetTiming';
 import SetTimingModal from '../components/modals/SetTimingModal';
 import LoginPromptModal from '../components/modals/LoginPromptModal';
 import YesterdayPageCard from '../components/assets/YesterdayPageCard';
+import DdLevelCard from '../components/DdLevelCard';
 import { CHALLENGES } from '../data/challenges';
 import { track, Events } from '../utils/analytics';
 import { unlockAudio } from '../utils/audioUnlock';
@@ -137,6 +138,9 @@ export default function Home() {
           </div>
         </div>
       </div>
+
+      {/* DD 레벨 카드 — 현재 Deep/Dash 레벨 + 가이드 진입 */}
+      <DdLevelCard />
 
       {/* DDCircle 회원수 — 닉네임 설정한 프로필 기준 */}
       <div className={styles.together}>

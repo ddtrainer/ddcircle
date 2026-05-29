@@ -168,7 +168,7 @@ export function AppProvider({ children }) {
   }, [proofUrl]);
 
   // 3분 플로우 완료 시 EP 보상 + 통계 갱신 + 챌린지 보너스 처리
-  const completeSession = useCallback(({ shared }) => {
+  const completeSession = useCallback(({ shared, deepMultiplier = 1, dashMultiplier = 1 } = {}) => {
     const hasProof = !!proofBlobRef.current;
 
     // Dash/Deep 완주 여부 — DashSession/DeepSession이 sessionStorage에 기록
@@ -191,6 +191,7 @@ export function AppProvider({ children }) {
       dashFully, deepFully, hasProof, shared,
       streak: newStreak,
       todaySessionCount: todayCountForCap,
+      deepMultiplier, dashMultiplier,
     });
 
     // 챌린지 평가 — 달성 시 보증+보너스 환급, 실패 시 보증 소각

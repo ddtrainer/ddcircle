@@ -2,11 +2,14 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useLang } from '../i18n/LangContext';
 import { useApp } from '../context/AppContext';
+import { useLevel } from '../context/LevelContext';
 import { useBreathCycle } from '../hooks/useBreathCycle';
 import { useBreathSound } from '../hooks/useBreathSound';
 import { BREATH_PRESETS, resolveBreathPattern } from '../data/breathPatterns';
+import { getLevelDef } from '../lib/ddLevel';
 import ProgressDots from '../components/ProgressDots';
 import BreathSettingsModal from '../components/modals/BreathSettingsModal';
+import GuideModal from '../components/modals/GuideModal';
 import { track, Events } from '../utils/analytics';
 import styles from './DeepSession.module.css';
 
@@ -14,6 +17,9 @@ export default function DeepSession() {
   const { t } = useLang();
   const navigate = useNavigate();
   const { breathPatternId, setBreathPatternId, customBreath, preferredExercise, setSelectedExercise } = useApp();
+  const { deepLevel } = useLevel();
+  const deepDef = getLevelDef('deep', deepLevel);
+  const [guideOpen, setGuideOpen] = useState(false);
   const [soundOn, setSoundOn] = useState(true);
   const [soundReady, setSoundReady] = useState(false);
   const [animationReady, setAnimationReady] = useState(false);
@@ -138,6 +144,11 @@ export default function DeepSession() {
         dangerouslySetInnerHTML={{ __html: t('deepDesc') }}
       />
 
+      {/* DD 레벨 배지 + 가이드 진입 (타이머/흐름 비간섭) */}
+      <button className={styles.levelChip} onClick={() => setGuideOpen(true)}>
+        {deepDef.emoji} Lv.{deepLevel} {deepDef.name} · ×{deepDef.multiplier} EP · 가이드
+      </button>
+
       {/* 호흡 패턴 선택 */}
       <div className={styles.patternPicker}>
         {BREATH_PRESETS.map((p) => (
@@ -229,6 +240,7 @@ export default function DeepSession() {
       </div>
 
       <BreathSettingsModal open={settingsOpen} onClose={() => setSettingsOpen(false)} />
+      <GuideModal open={guideOpen} onClose={() => setGuideOpen(false)} track="deep" level={deepLevel} />
     </div>
   );
 }

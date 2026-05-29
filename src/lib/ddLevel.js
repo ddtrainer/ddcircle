@@ -1,0 +1,79 @@
+// DD 레벨 시스템 — Deep / Dash 각각 Lv.1~4
+// 기존 EP 기반 TREE_LEVELS(treeLevels.js)와는 별개 개념. 충돌 없음.
+// 개발스펙 v2.0 기준. 기존 호흡/운동 콘텐츠는 절대 수정하지 않음.
+
+// 공통 잠금 해제 조건 (Lv.2~4). Lv.1은 즉시 개방.
+//   Lv.2: 3일 연속 + 누적 EP 30
+//   Lv.3: 7일 연속 + 누적 EP 100
+//   Lv.4: 21일 연속 + 누적 EP 300 (안전 안내 팝업 필수)
+const UNLOCK = {
+  1: { streak: 0, ep: 0 },
+  2: { streak: 3, ep: 30 },
+  3: { streak: 7, ep: 100 },
+  4: { streak: 21, ep: 300 },
+};
+
+// Deep 레벨 — 모두 2분 고정. breathId는 기존 breathPatterns.js 프리셋과 매핑.
+export const DEEP_LEVELS = [
+  { level: 1, emoji: '🌱', name: '씨앗',  method: '자연호흡',         breathId: '48',   multiplier: 1.0, unlock: UNLOCK[1] },
+  { level: 2, emoji: '🌿', name: '새싹',  method: '4-7-8 호흡',      breathId: '478',  multiplier: 1.5, unlock: UNLOCK[2] },
+  { level: 3, emoji: '🌳', name: '나무',  method: '박스 브리딩',      breathId: '4444', multiplier: 2.0, unlock: UNLOCK[3] },
+  { level: 4, emoji: '🌲', name: '숲',    method: '위모 호흡(단축형)', breathId: 'custom', multiplier: 3.0, unlock: UNLOCK[4], safetyRequired: true },
+];
+
+// Dash 레벨 — 모두 1분 고정. exerciseKeys는 기존 exercises.js 키와 매핑.
+export const DASH_LEVELS = [
+  { level: 1, emoji: '🌱', name: '씨앗',  method: '제자리 걷기 / 스트레칭', exerciseKeys: ['jog', 'free'],            multiplier: 1.0, unlock: UNLOCK[1] },
+  { level: 2, emoji: '🌿', name: '새싹',  method: '스쿼트 / 팔굽혀펴기',     exerciseKeys: ['squat'],                  multiplier: 1.5, unlock: UNLOCK[2] },
+  { level: 3, emoji: '🌳', name: '나무',  method: '버피 / 점핑잭',          exerciseKeys: ['burpee', 'jumping-jack'], multiplier: 2.0, unlock: UNLOCK[3] },
+  { level: 4, emoji: '🌲', name: '숲',    method: 'HIIT 미니 (20초×3세트)',  exerciseKeys: ['running'],                multiplier: 3.0, unlock: UNLOCK[4], safetyRequired: true },
+];
+
+export const MAX_LEVEL = 4;
+
+// 스트릭 부스터 (개발스펙 v2.0) — getMultiplier(ep.js)와는 별개의 DD 레벨용 부스터.
+//   Day 1-3   ×1.0
+//   Day 4-7   ×1.5
+//   Day 8-30  ×2.0
+//   Day 31-100 ×3.0
+//   Day 101+  ×5.0
+export function streakBooster(streak = 0) {
+  if (streak >= 101) return 5.0;
+  if (streak >= 31) return 3.0;
+  if (streak >= 8) return 2.0;
+  if (streak >= 4) return 1.5;
+  return 1.0;
+}
+
+function levelsFor(track) {
+  return track === 'deep' ? DEEP_LEVELS : DASH_LEVELS;
+}
+
+export function getLevelDef(track, level) {
+  const list = levelsFor(track);
+  return list.find((l) => l.level === level) || list[0];
+}
+
+export function getMultiplier(track, level) {
+  return getLevelDef(track, level).multiplier;
+}
+
+// 주어진 스트릭/누적EP로 해제 가능한 최고 레벨 계산.
+export function highestUnlockedLevel(track, { streak = 0, totalEp = 0 } = {}) {
+  const list = levelsFor(track);
+  let best = 1;
+  for (const l of list) {
+    if (streak >= l.unlock.streak && totalEp >= l.unlock.ep) best = l.level;
+  }
+  return best;
+}
+
+// 현재 레벨에서 다음 레벨로 올라갈 수 있는지 확인.
+// 반환: { canLevelUp, nextLevel, next } — 더 올라갈 수 없으면 canLevelUp=false.
+export function checkLevelUp(track, currentLevel, { streak = 0, totalEp = 0 } = {}) {
+  const nextLevel = currentLevel + 1;
+  if (nextLevel > MAX_LEVEL) return { canLevelUp: false, nextLevel: null, next: null };
+  const next = getLevelDef(track, nextLevel);
+  const canLevelUp = streak >= next.unlock.streak && totalEp >= next.unlock.ep;
+  return { canLevelUp, nextLevel, next };
+}

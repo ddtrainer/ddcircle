@@ -1,0 +1,81 @@
+.card {
+  margin: 16px 0 18px;
+  padding: 14px 16px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  box-shadow: var(--shadow-sm);
+}
+
+.header {
+  margin-bottom: 8px;
+}
+
+.tag {
+  font-size: 12px;
+  letter-spacing: 2px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+}
+
+.row {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 4px;
+  background: none;
+  border: none;
+  border-top: 1px solid var(--border);
+  font-family: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.row:first-of-type {
+  border-top: none;
+}
+
+.row:active {
+  opacity: 0.7;
+}
+
+.emoji {
+  font-size: 26px;
+  flex-shrink: 0;
+}
+
+.info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+  min-width: 0;
+}
+
+.track {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.name {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.multiplier {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text);
+  background: var(--bg-soft);
+  padding: 4px 10px;
+  border-radius: 999px;
+  flex-shrink: 0;
+}
+
+.chevron {
+  font-size: 20px;
+  color: var(--text-muted);
+  flex-shrink: 0;
+}

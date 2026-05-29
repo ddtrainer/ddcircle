@@ -2,11 +2,14 @@ import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useLang } from '../../i18n/LangContext';
 import { useAuth } from '../../context/AuthContext';
+import { useLevel } from '../../context/LevelContext';
+import { renderNickname } from '../../lib/nickname';
 import styles from './Header.module.css';
 
 export default function Header() {
   const { lang, setLang } = useLang();
   const { user, profile, signOut } = useAuth();
+  const { deepLevel, dashLevel } = useLevel();
   const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef(null);
@@ -110,7 +113,9 @@ export default function Header() {
               {menuOpen && (
                 <div className={styles.menu} role="menu">
                   {profile?.nickname && (
-                    <div className={styles.menuHeader}>{profile.nickname}</div>
+                    <div className={styles.menuHeader}>
+                      {renderNickname(profile, { deepLevel, dashLevel })}
+                    </div>
                   )}
                   <button className={styles.menuItem} onClick={handleEdit} role="menuitem">
                     {lang === 'ko' ? '프로필 편집' : 'Edit profile'}

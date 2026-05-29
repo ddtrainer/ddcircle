@@ -4,6 +4,7 @@ import { Analytics } from '@vercel/analytics/react';
 import { LangProvider } from './i18n/LangContext';
 import { AppProvider, useApp } from './context/AppContext';
 import { AuthProvider, useAuth } from './context/AuthContext';
+import { LevelProvider } from './context/LevelContext';
 import { ToastProvider } from './components/Toast';
 import Header from './components/layout/Header';
 import BottomNav from './components/layout/BottomNav';
@@ -163,6 +164,7 @@ export default function App() {
     <LangProvider>
       <AuthProvider>
         <AppProvider>
+          <LevelProvider>
           <ToastProvider>
             <BrowserRouter>
               <Header />
@@ -199,6 +201,7 @@ export default function App() {
               <Analytics />
             </BrowserRouter>
           </ToastProvider>
+          </LevelProvider>
         </AppProvider>
       </AuthProvider>
     </LangProvider>
