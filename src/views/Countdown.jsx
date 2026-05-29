@@ -4,6 +4,7 @@ import { useLang } from '../i18n/LangContext';
 import { useApp } from '../context/AppContext';
 import { useLevel } from '../context/LevelContext';
 import { getLevelDef } from '../lib/ddLevel';
+import GuideModal from '../components/modals/GuideModal';
 import styles from './Countdown.module.css';
 
 // 5 → 4 → 3 → 2 → 1 → GO! 카운트다운
@@ -14,9 +15,11 @@ export default function Countdown() {
   const navigate = useNavigate();
   const { target = 'dash' } = useParams();
   const { selectedExercise, setSelectedExercise, setPreferredExercise } = useApp();
-  const { dashLevel } = useLevel();
+  const { dashLevel, deepLevel } = useLevel();
   const dashDef = getLevelDef('dash', dashLevel);
+  const deepDef = getLevelDef('deep', deepLevel);
   const dashOptions = dashDef.options || [];
+  const [guideOpen, setGuideOpen] = useState(false);
   const [count, setCount] = useState(5);
   const [showGo, setShowGo] = useState(false);
   const [paused, setPaused] = useState(false);
@@ -82,6 +85,20 @@ export default function Countdown() {
         {t(isDash ? 'countdownDashHint' : 'countdownDeepHint')}
       </div>
 
+      {/* Deep 준비 단계에서만 — 레벨 배지 + 가이드 진입 (실행 화면은 호흡에만 집중) */}
+      {!isDash && (
+        <button className={styles.levelChip} onClick={() => setGuideOpen(true)}>
+          {deepDef.emoji} Lv.{deepLevel} {deepDef.name} · ×{deepDef.multiplier} EP · 가이드
+        </button>
+      )}
+
+      {/* Dash 준비 단계에서만 — 레벨 배지 + 가이드 진입 (실행 화면은 운동에만 집중) */}
+      {isDash && (
+        <button className={styles.levelChip} onClick={() => setGuideOpen(true)}>
+          {dashDef.emoji} Lv.{dashLevel} {dashDef.name} · ×{dashDef.multiplier} EP · 가이드
+        </button>
+      )}
+
       {/* Dash 준비 단계에서만 — 현재 레벨의 운동 종목 선택 (인라인 변경) */}
       {isDash && dashOptions.length > 0 && (
         <div className={styles.exSelect}>
@@ -144,6 +161,13 @@ export default function Countdown() {
           {t('countdownSkip')}
         </button>
       </div>
+
+      <GuideModal
+        open={guideOpen}
+        onClose={() => setGuideOpen(false)}
+        track={isDash ? 'dash' : 'deep'}
+        level={isDash ? dashLevel : deepLevel}
+      />
     </div>
   );
 }

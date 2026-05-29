@@ -30,14 +30,35 @@ export default function GuideModal({ open, onClose, track, level }) {
       )}
 
       <div className={styles.sectionTitle}>방법</div>
-      <ol className={styles.methodList}>
-        {guide.method.map((step, i) => (
-          <li key={i}>{step}</li>
-        ))}
-      </ol>
+      {guide.methodSections ? (
+        guide.methodSections.map((sec) => (
+          <div key={sec.heading}>
+            <div className={styles.methodVersion}>{sec.heading}</div>
+            <ol className={styles.methodList}>
+              {sec.steps.map((step, i) => (
+                <li key={i}>{step}</li>
+              ))}
+            </ol>
+          </div>
+        ))
+      ) : (
+        <ol className={styles.methodList}>
+          {guide.method.map((step, i) => (
+            <li key={i}>{step}</li>
+          ))}
+        </ol>
+      )}
 
       <div className={styles.sectionTitle}>효과</div>
-      <p className={styles.effect}>{guide.effect}</p>
+      {Array.isArray(guide.effect) ? (
+        <ul className={styles.effectList}>
+          {guide.effect.map((e, i) => (
+            <li key={i}>{e}</li>
+          ))}
+        </ul>
+      ) : (
+        <p className={styles.effect}>{guide.effect}</p>
+      )}
 
       {guide.searchKeywords?.length > 0 && (
         <>

@@ -2,15 +2,12 @@ import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useLang } from '../i18n/LangContext';
 import { useApp } from '../context/AppContext';
-import { useLevel } from '../context/LevelContext';
 import { EXERCISES } from '../data/exercises';
 import { useDashTimer } from '../hooks/useDashTimer';
 import { playDashStart, playDashEnd } from '../hooks/useDashSound';
-import { getLevelDef } from '../lib/ddLevel';
 import { track, Events } from '../utils/analytics';
 import ProgressDots from '../components/ProgressDots';
 import ExerciseSVG from '../components/ExerciseSVG';
-import GuideModal from '../components/modals/GuideModal';
 import styles from './DashSession.module.css';
 
 const TOTAL = 60;
@@ -28,10 +25,7 @@ function hiitSegment(seconds) {
 export default function DashSession() {
   const { t } = useLang();
   const { selectedExercise } = useApp();
-  const { dashLevel } = useLevel();
-  const dashDef = getLevelDef('dash', dashLevel);
   const navigate = useNavigate();
-  const [guideOpen, setGuideOpen] = useState(false);
   const [guide, setGuide] = useState('');
   const [guideVisible, setGuideVisible] = useState(true);
 
@@ -90,11 +84,6 @@ export default function DashSession() {
       <div className={`${styles.title} ${styles.dashColor}`}>🔥 Dash</div>
       <div className={styles.desc}>{desc}</div>
 
-      {/* DD 레벨 배지 + 가이드 진입 (타이머/흐름 비간섭) */}
-      <button className={styles.levelChip} onClick={() => setGuideOpen(true)}>
-        {dashDef.emoji} Lv.{dashLevel} {dashDef.name} · ×{dashDef.multiplier} EP · 가이드
-      </button>
-
       <div className={styles.exerciseZone}>
         <div className={styles.timerRingOuter}>
           <svg viewBox="0 0 120 120">
@@ -131,8 +120,6 @@ export default function DashSession() {
           {t('skip')}
         </button>
       </div>
-
-      <GuideModal open={guideOpen} onClose={() => setGuideOpen(false)} track="dash" level={dashLevel} />
     </div>
   );
 }
