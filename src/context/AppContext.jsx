@@ -5,7 +5,7 @@ import { recordSession, migrateLocalStats } from '../lib/stats';
 import { recordStakeDeclared, resolveStakeWon, resolveStakeForfeited, cancelStake } from '../lib/challenges';
 import { findChallenge } from '../data/challenges';
 import { calculateEarnedEp } from '../utils/ep';
-import { DEFAULT_CUSTOM_BREATH, DEFAULT_NATURAL_BREATH, DEFAULT_WIM_HOF_ROUNDS, DEFAULT_WIM_HOF_CYCLES, DEFAULT_WIM_HOF_RETENTION } from '../data/breathPatterns';
+import { DEFAULT_CUSTOM_BREATH, DEFAULT_NATURAL_BREATH, DEFAULT_WIM_HOF_ROUNDS, DEFAULT_WIM_HOF_CYCLES, DEFAULT_WIM_HOF_RETENTION, DEFAULT_WIM_HOF_RECOVERY, DEFAULT_WIM_HOF_FINISH } from '../data/breathPatterns';
 import { evaluateChallenges } from '../data/challenges';
 
 const AppContext = createContext(null);
@@ -52,6 +52,8 @@ export function AppProvider({ children }) {
   const [wimHofRounds, setWimHofRounds] = useLocalStorage('ddcircle.wimHofRounds', DEFAULT_WIM_HOF_ROUNDS);
   const [wimHofCycles, setWimHofCycles] = useLocalStorage('ddcircle.wimHofCycles', DEFAULT_WIM_HOF_CYCLES);
   const [wimHofRetention, setWimHofRetention] = useLocalStorage('ddcircle.wimHofRetention', DEFAULT_WIM_HOF_RETENTION);
+  const [wimHofRecovery, setWimHofRecovery] = useLocalStorage('ddcircle.wimHofRecovery', DEFAULT_WIM_HOF_RECOVERY);
+  const [wimHofFinish, setWimHofFinish] = useLocalStorage('ddcircle.wimHofFinish', DEFAULT_WIM_HOF_FINISH);
   const [challengeClaims, setChallengeClaims] = useLocalStorage('ddcircle.challengeClaims', {});
   const [challengeJoins, setChallengeJoins] = useLocalStorage('ddcircle.challengeJoins', {});
   const [notificationsEnabled, setNotificationsEnabled] = useLocalStorage('ddcircle.notificationsEnabled', true);
@@ -339,6 +341,10 @@ export function AppProvider({ children }) {
         setWimHofCycles,
         wimHofRetention,
         setWimHofRetention,
+        wimHofRecovery,
+        setWimHofRecovery,
+        wimHofFinish,
+        setWimHofFinish,
         challengeClaims,
         challengeJoins,
         joinChallenge,

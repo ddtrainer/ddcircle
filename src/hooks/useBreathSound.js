@@ -51,11 +51,25 @@ function ensureBells() {
   }
 }
 
+// 들숨/날숨 벨 — 외부(윔호프 등)에서 stage 전환 시점에 직접 호출
+export function playBellIn() {
+  ensureBells();
+  try {
+    if (bellIn) { bellIn.currentTime = 0; bellIn.play().catch(() => {}); }
+  } catch { /* ignore */ }
+}
+export function playBellOut() {
+  ensureBells();
+  try {
+    if (bellOut) { bellOut.currentTime = 0; bellOut.play().catch(() => {}); }
+  } catch { /* ignore */ }
+}
+
 // 멈춤(hold/postHold) 차임 — 화면 안 봐도 "지금 멈춰" 신호 주는 용도
 // 두 개 사인파 중첩(880Hz + 1320Hz=5도)으로 풍성한 차임 톤. 게인 크게 (0.5).
 // 들숨/날숨 벨과 명확히 구분되고, 멀리서도 들리도록 충분히 큼.
 let holdAudioCtx = null;
-function playHoldChime() {
+export function playHoldChime() {
   try {
     if (!holdAudioCtx) {
       const Ctx = window.AudioContext || window.webkitAudioContext;
@@ -133,12 +147,12 @@ function fadeBackground(targetVol, durationMs) {
 // enabled: false면 모든 사운드 정지
 // durations: 호환성 위해 받지만 현재 시스템에선 미사용
 // ============================================================
-export function useBreathSound({ phase, enabled }) {
+export function useBreathSound({ phase, enabled, bells = true }) {
   const lastPhaseRef = useRef(null);
 
-  // 1) phase 전환 시 종소리
+  // 1) phase 전환 시 종소리 (bells=false면 배경음만 — 윔호프는 stage 기반으로 별도 처리)
   useEffect(() => {
-    if (!enabled) {
+    if (!enabled || !bells) {
       lastPhaseRef.current = null;
       return;
     }
@@ -158,7 +172,7 @@ export function useBreathSound({ phase, enabled }) {
         playHoldChime();
       }
     } catch { /* ignore */ }
-  }, [phase, enabled]);
+  }, [phase, enabled, bells]);
 
   // 2) 배경음 lifecycle (enabled가 토글될 때마다 페이드)
   useEffect(() => {

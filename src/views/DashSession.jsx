@@ -16,6 +16,15 @@ import styles from './DashSession.module.css';
 const TOTAL = 60;
 const RING_CIRCUMFERENCE = 351.86; // 2 * π * 56
 
+// HIIT 미니(Lv.4) 임시 구현 — 전용 에셋이 없어 기존 영상 3종을 20초씩 연속 재생.
+//   0~20초: 버피 / 20~40초: 마운틴 클라이머 / 40~60초: 점핑잭
+// seconds는 60→0 카운트다운이므로 남은 시간 기준으로 구간을 나눈다.
+function hiitSegment(seconds) {
+  if (seconds > 40) return 'burpee';
+  if (seconds > 20) return 'mountain-climber';
+  return 'jumping-jack';
+}
+
 export default function DashSession() {
   const { t } = useLang();
   const { selectedExercise } = useApp();
@@ -68,7 +77,9 @@ export default function DashSession() {
   };
 
   const ringOffset = RING_CIRCUMFERENCE * (1 - seconds / TOTAL);
-  const exerciseI18n = EXERCISES.find((e) => e.key === selectedExercise)?.i18n || 'JumpingJack';
+  const isHiit = selectedExercise === 'hiit';
+  const displayExercise = isHiit ? hiitSegment(seconds) : selectedExercise;
+  const exerciseI18n = EXERCISES.find((e) => e.key === displayExercise)?.i18n || 'JumpingJack';
   const exerciseName = t(`ex${exerciseI18n}`);
   const desc = t('dashExNameTpl', { ex: exerciseName });
 
@@ -98,7 +109,7 @@ export default function DashSession() {
         </div>
         <div className={styles.exerciseAnim}>
           <div className={styles.exerciseSvgContainer}>
-            <ExerciseSVG type={selectedExercise} size={130} paused={paused} />
+            <ExerciseSVG type={displayExercise} size={130} paused={paused} />
           </div>
         </div>
       </div>

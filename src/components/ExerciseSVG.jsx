@@ -10,12 +10,72 @@ const VIDEO_MAP = {
   'burpee': '/exercises/burpee.mp4',
   'running': '/exercises/running.mp4',
   'free': '/exercises/free.mp4',
+  'mountain-climber': '/exercises/mountain-climber.mp4',
+};
+
+// Lottie(JSON) 기반 동작 — 기존 6개 MP4와는 별도 렌더 경로. 기존 영상은 절대 건드리지 않음.
+const LOTTIE_MAP = {
+  'pushup': '/exercises/pushup.json',
 };
 
 export default function ExerciseSVG({ type = 'jumping-jack', size = 130, paused = false }) {
+  const lottieSrc = LOTTIE_MAP[type];
+  if (lottieSrc) return <ExerciseLottie src={lottieSrc} size={size} paused={paused} />;
   const src = VIDEO_MAP[type];
   if (!src) return null;
   return <ExerciseVideo src={src} size={size} paused={paused} />;
+}
+
+// Lottie 애니메이션 렌더 (autoplay + loop, paused prop과 동기화)
+function ExerciseLottie({ src, size, paused }) {
+  const containerRef = useRef(null);
+  const animRef = useRef(null);
+  const [ready, setReady] = useState(false);
+
+  useEffect(() => {
+    let cancelled = false;
+    let anim = null;
+    (async () => {
+      const lottie = (await import('lottie-web')).default;
+      if (cancelled || !containerRef.current) return;
+      anim = lottie.loadAnimation({
+        container: containerRef.current,
+        renderer: 'svg',
+        loop: true,
+        autoplay: true,
+        path: src,
+      });
+      anim.addEventListener('DOMLoaded', () => setReady(true));
+      animRef.current = anim;
+    })();
+    return () => {
+      cancelled = true;
+      if (anim) anim.destroy();
+      animRef.current = null;
+    };
+  }, [src]);
+
+  useEffect(() => {
+    const anim = animRef.current;
+    if (!anim) return;
+    if (paused) anim.pause();
+    else anim.play();
+  }, [paused, ready]);
+
+  return (
+    <div
+      ref={containerRef}
+      aria-label="exercise demonstration"
+      style={{
+        width: size,
+        height: size,
+        borderRadius: '50%',
+        overflow: 'hidden',
+        opacity: ready ? 1 : 0,
+        transition: 'opacity 0.25s ease-out',
+      }}
+    />
+  );
 }
 
 // 영상 기반 운동 동작 (autoplay + loop + muted, paused prop과 동기화)

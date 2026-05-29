@@ -71,6 +71,65 @@
 
 .preferChip:active { transform: scale(0.97); }
 
+.exSelect {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.exSelectLabel {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-soft, var(--text));
+}
+
+.exOptions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+}
+
+.exChip {
+  background: var(--surface);
+  border: 1px solid var(--border-strong);
+  border-radius: 999px;
+  padding: 8px 18px;
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text);
+  cursor: pointer;
+  box-shadow: var(--shadow-sm);
+}
+
+.exChip:active { transform: scale(0.97); }
+
+.exChipActive {
+  background: var(--warm);
+  border-color: var(--warm);
+  color: #fff;
+}
+
+.exChipEmpty {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: transparent;
+  border-style: dashed;
+  color: var(--text-soft, #999);
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.exChipSoon {
+  font-size: 11px;
+  font-weight: 600;
+  opacity: 0.7;
+}
+
 .circle {
   width: 220px;
   height: 220px;

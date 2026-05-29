@@ -53,16 +53,24 @@ export function resolveBreathPattern(patternId, customBreath, naturalBreath) {
 export const DEFAULT_WIM_HOF_ROUNDS = 30;
 export const WIM_HOF_RETENTION_SEC = 45;
 export const DEFAULT_WIM_HOF_RETENTION = WIM_HOF_RETENTION_SEC;
-export const WIM_HOF_RECOVERY = { inhale: 4, hold: 15, exhale: 10 };
+export const WIM_HOF_RECOVERY_INHALE = 4;
+export const DEFAULT_WIM_HOF_RECOVERY = 15; // 회복 호흡 숨 참기 (사용자 조절 가능)
+export const DEFAULT_WIM_HOF_FINISH = 8;    // 마무리 날숨 (사용자 조절 가능)
 export const WIM_HOF_CYCLES = 2;
 export const DEFAULT_WIM_HOF_CYCLES = 1;
 
 // 윔호프 호흡 스크립트 생성
-// 구조 고정: 과호흡(power) → 숨 참기(retention) → 회복 호흡(recovery)
+// 구조 고정: 과호흡(power) → 숨 참기(retention) → 회복 호흡(recovery: 들숨+참기) → 마무리 날숨(finish)
 // 각 step: { phase, duration, stage, round?, totalRounds? }
 //   phase: 'inhale' | 'exhale' | 'hold' (orb/사운드/카운터 표시용)
-//   stage: 'power' | 'retention' | 'recovery'
-export function buildWimHofScript(rounds = DEFAULT_WIM_HOF_ROUNDS, cycles = DEFAULT_WIM_HOF_CYCLES, retention = DEFAULT_WIM_HOF_RETENTION) {
+//   stage: 'power' | 'retention' | 'recovery' | 'finish'
+export function buildWimHofScript(
+  rounds = DEFAULT_WIM_HOF_ROUNDS,
+  cycles = DEFAULT_WIM_HOF_CYCLES,
+  retention = DEFAULT_WIM_HOF_RETENTION,
+  recoveryHold = DEFAULT_WIM_HOF_RECOVERY,
+  finishExhale = DEFAULT_WIM_HOF_FINISH,
+) {
   const steps = [];
   for (let c = 1; c <= cycles; c++) {
     const meta = { cycle: c, totalCycles: cycles };
@@ -71,9 +79,9 @@ export function buildWimHofScript(rounds = DEFAULT_WIM_HOF_ROUNDS, cycles = DEFA
       steps.push({ phase: 'exhale', duration: 1, stage: 'power', round: i, totalRounds: rounds, ...meta });
     }
     steps.push({ phase: 'hold', duration: retention, stage: 'retention', ...meta });
-    steps.push({ phase: 'inhale', duration: WIM_HOF_RECOVERY.inhale, stage: 'recovery', ...meta });
-    steps.push({ phase: 'hold', duration: WIM_HOF_RECOVERY.hold, stage: 'recovery', ...meta });
-    steps.push({ phase: 'exhale', duration: WIM_HOF_RECOVERY.exhale, stage: 'recovery', ...meta });
+    steps.push({ phase: 'inhale', duration: WIM_HOF_RECOVERY_INHALE, stage: 'recovery', ...meta });
+    steps.push({ phase: 'hold', duration: recoveryHold, stage: 'recovery', ...meta });
+    steps.push({ phase: 'exhale', duration: finishExhale, stage: 'finish', ...meta });
   }
   return steps;
 }

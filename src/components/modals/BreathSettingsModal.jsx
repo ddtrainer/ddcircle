@@ -14,17 +14,20 @@ const RANGES = {
   rounds:    { min: 20, max: 40 },
   wimCycles: { min: 1, max: 5 },
   retention: { min: 15, max: 120, step: 15 },
+  recovery:  { min: 10, max: 30, step: 5 },
+  finish:    { min: 4, max: 12 },
 };
 
 export default function BreathSettingsModal({ open, onClose, mode = 'custom' }) {
   const { t } = useLang();
   const { customBreath, setCustomBreath, naturalBreath, setNaturalBreath, setBreathPatternId,
-    wimHofRounds, setWimHofRounds, wimHofCycles, setWimHofCycles, wimHofRetention, setWimHofRetention } = useApp();
+    wimHofRounds, setWimHofRounds, wimHofCycles, setWimHofCycles, wimHofRetention, setWimHofRetention,
+    wimHofRecovery, setWimHofRecovery, wimHofFinish, setWimHofFinish } = useApp();
   const { show: showToast } = useToast();
 
   const isNatural = mode === 'natural';
   const isWim = mode === 'wimhof';
-  const wimSource = { rounds: wimHofRounds, wimCycles: wimHofCycles, retention: wimHofRetention };
+  const wimSource = { rounds: wimHofRounds, wimCycles: wimHofCycles, retention: wimHofRetention, recovery: wimHofRecovery, finish: wimHofFinish };
   const source = isWim ? wimSource : isNatural ? naturalBreath : customBreath;
 
   const [draft, setDraft] = useState({ postHold: 0, ...source });
@@ -32,7 +35,7 @@ export default function BreathSettingsModal({ open, onClose, mode = 'custom' }) 
   useEffect(() => {
     if (open) setDraft(isWim ? wimSource : { postHold: 0, ...source });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [open, source, wimHofRounds, wimHofCycles, wimHofRetention]);
+  }, [open, source, wimHofRounds, wimHofCycles, wimHofRetention, wimHofRecovery, wimHofFinish]);
 
   const change = (key, dir) => {
     setDraft((prev) => {
@@ -46,8 +49,8 @@ export default function BreathSettingsModal({ open, onClose, mode = 'custom' }) 
   const min = Math.floor(totalSec / 60);
   const sec = totalSec % 60;
 
-  // 윔호프 예상 소요: [과호흡(2초×rounds) + 참기 + 회복(4+15+10)] × 사이클
-  const wimSec = (draft.rounds * 2 + draft.retention + 29) * draft.wimCycles;
+  // 윔호프 예상 소요: [과호흡(2초×rounds) + 참기 + 회복(들숨4+참기) + 마무리 날숨] × 사이클
+  const wimSec = (draft.rounds * 2 + draft.retention + 4 + (draft.recovery || 0) + (draft.finish || 0)) * draft.wimCycles;
   const wimMin = Math.floor(wimSec / 60);
   const wimSecRem = wimSec % 60;
 
@@ -56,6 +59,8 @@ export default function BreathSettingsModal({ open, onClose, mode = 'custom' }) 
       setWimHofRounds(draft.rounds);
       setWimHofCycles(draft.wimCycles);
       setWimHofRetention(draft.retention);
+      setWimHofRecovery(draft.recovery);
+      setWimHofFinish(draft.finish);
       setBreathPatternId('custom');
       showToast('🌬️', `${t('wimHofRoundsShort').replace('{n}', draft.rounds)} · ${draft.wimCycles}${t('wimHofCycleUnit')}`);
       onClose?.();
@@ -95,6 +100,8 @@ export default function BreathSettingsModal({ open, onClose, mode = 'custom' }) 
         <>
           <Stepper k="rounds"    label={t('wimHofRoundsLabel')} />
           <Stepper k="retention" label={t('wimHofRetentionLabel')} />
+          <Stepper k="recovery"  label={t('wimHofRecoveryLabel')} />
+          <Stepper k="finish"    label={t('wimHofFinishLabel')} />
           <Stepper k="wimCycles" label={t('wimHofCyclesLabel')} />
           <div className={styles.preview}>
             {t('wimHofRoundsShort').replace('{n}', draft.rounds)} · {t('wimHofRetention')} {draft.retention}s · {draft.wimCycles}{t('wimHofCycleUnit')} · ≈ {wimMin}:{wimSecRem < 10 ? '0' : ''}{wimSecRem}

@@ -2,7 +2,8 @@ import { useEffect, useState, useRef } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useLang } from '../i18n/LangContext';
 import { useApp } from '../context/AppContext';
-import { EXERCISES } from '../data/exercises';
+import { useLevel } from '../context/LevelContext';
+import { getLevelDef } from '../lib/ddLevel';
 import styles from './Countdown.module.css';
 
 // 5 → 4 → 3 → 2 → 1 → GO! 카운트다운
@@ -12,8 +13,10 @@ export default function Countdown() {
   const { t } = useLang();
   const navigate = useNavigate();
   const { target = 'dash' } = useParams();
-  const { preferredExercise } = useApp();
-  const currentExercise = EXERCISES.find((e) => e.key === preferredExercise);
+  const { selectedExercise, setSelectedExercise, setPreferredExercise } = useApp();
+  const { dashLevel } = useLevel();
+  const dashDef = getLevelDef('dash', dashLevel);
+  const dashOptions = dashDef.options || [];
   const [count, setCount] = useState(5);
   const [showGo, setShowGo] = useState(false);
   const [paused, setPaused] = useState(false);
@@ -53,6 +56,16 @@ export default function Countdown() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [paused]);
 
+  // 현재 레벨에 보유 에셋이 있고, 선택값이 그 레벨 옵션에 없으면 첫 보유 종목으로 보정
+  useEffect(() => {
+    if (!isDash) return;
+    const keys = dashDef.exerciseKeys || [];
+    if (keys.length > 0 && !keys.includes(selectedExercise)) {
+      setSelectedExercise(keys[0]);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isDash, dashLevel]);
+
   const skip = () => proceed();
   const togglePause = () => {
     if (finishedRef.current) return;
@@ -69,20 +82,35 @@ export default function Countdown() {
         {t(isDash ? 'countdownDashHint' : 'countdownDeepHint')}
       </div>
 
-      {/* Dash 준비 단계에서만 — 오늘 운동 표시 + 변경 진입로 */}
-      {isDash && currentExercise && (
-        <button
-          type="button"
-          className={styles.preferChip}
-          onClick={() => {
-            // 카운트다운 중단 후 Picker로 돌아감 (다시 선택하면 새 카운트다운 시작)
-            finishedRef.current = true;
-            navigate('/picker', { replace: true });
-          }}
-        >
-          {t('preferLabel')} <strong>{t('ex' + currentExercise.i18n)}</strong>
-          <span className={styles.preferEdit}>{t('preferChange')}</span>
-        </button>
+      {/* Dash 준비 단계에서만 — 현재 레벨의 운동 종목 선택 (인라인 변경) */}
+      {isDash && dashOptions.length > 0 && (
+        <div className={styles.exSelect}>
+          <div className={styles.exSelectLabel}>
+            {dashDef.emoji} {dashDef.name} · {t('preferLabel')}
+          </div>
+          <div className={styles.exOptions}>
+            {dashOptions.map((opt, i) => {
+              const disabled = opt.key == null;
+              const active = !disabled && opt.key === selectedExercise;
+              return (
+                <button
+                  key={opt.key ?? `empty-${i}`}
+                  type="button"
+                  disabled={disabled}
+                  className={`${styles.exChip} ${active ? styles.exChipActive : ''} ${disabled ? styles.exChipEmpty : ''}`}
+                  onClick={() => {
+                    if (disabled) return;
+                    setSelectedExercise(opt.key);
+                    setPreferredExercise(opt.key);
+                  }}
+                >
+                  {opt.label}
+                  {disabled && <span className={styles.exChipSoon}>{t('exComingSoon')}</span>}
+                </button>
+              );
+            })}
+          </div>
+        </div>
       )}
 
       <button

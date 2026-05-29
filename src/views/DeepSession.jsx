@@ -5,7 +5,7 @@ import { useApp } from '../context/AppContext';
 import { useLevel } from '../context/LevelContext';
 import { useBreathCycle } from '../hooks/useBreathCycle';
 import { useWimHofCycle } from '../hooks/useWimHofCycle';
-import { useBreathSound } from '../hooks/useBreathSound';
+import { useBreathSound, playBellIn, playBellOut, playHoldChime } from '../hooks/useBreathSound';
 import { BREATH_PRESETS, resolveBreathPattern, buildWimHofScript } from '../data/breathPatterns';
 import { getLevelDef } from '../lib/ddLevel';
 import ProgressDots from '../components/ProgressDots';
@@ -17,7 +17,7 @@ import styles from './DeepSession.module.css';
 export default function DeepSession() {
   const { t } = useLang();
   const navigate = useNavigate();
-  const { breathPatternId, setBreathPatternId, customBreath, naturalBreath, wimHofRounds, wimHofCycles, wimHofRetention, preferredExercise, setSelectedExercise } = useApp();
+  const { breathPatternId, setBreathPatternId, customBreath, naturalBreath, wimHofRounds, wimHofCycles, wimHofRetention, wimHofRecovery, wimHofFinish, preferredExercise, setSelectedExercise } = useApp();
   const isWim = breathPatternId === 'custom';
   const { deepLevel } = useLevel();
   const deepDef = getLevelDef('deep', deepLevel);
@@ -69,7 +69,7 @@ export default function DeepSession() {
   });
 
   // 윔호프 스크립트 엔진 (과호흡 → 참기 → 회복)
-  const wimScript = useMemo(() => buildWimHofScript(wimHofRounds, wimHofCycles, wimHofRetention), [wimHofRounds, wimHofCycles, wimHofRetention]);
+  const wimScript = useMemo(() => buildWimHofScript(wimHofRounds, wimHofCycles, wimHofRetention, wimHofRecovery, wimHofFinish), [wimHofRounds, wimHofCycles, wimHofRetention, wimHofRecovery, wimHofFinish]);
   const wimEngine = useWimHofCycle({
     script: wimScript,
     enabled: soundReady && isWim,
@@ -125,9 +125,23 @@ export default function DeepSession() {
     }
   }, [paused]);
 
-  // phase 전환 시 효과음 — 윔호프 과호흡 단계는 너무 빨라 효과음 비활성
-  const soundEnabled = soundOn && !paused && soundReady && (!isWim || wimStage !== 'power');
-  useBreathSound({ phase, enabled: soundEnabled, durations: pattern.durations });
+  // 배경음 + phase 효과음 — 윔호프는 phase 벨을 끄고(bells:false) stage 기반으로 직접 신호
+  const soundEnabled = soundOn && !paused && soundReady;
+  useBreathSound({ phase, enabled: soundEnabled, bells: !isWim, durations: pattern.durations });
+
+  // 윔호프 stage 전환 신호음 (사이클당 stage 진입 시점에 1회)
+  //   과호흡 시작 → 들숨 벨 1회 / 숨 참기 시작 → 멈춤 차임
+  //   회복 호흡 시작 → 들숨 벨 / 마무리 날숨 시작 → 날숨 벨
+  const lastWimSigRef = useRef(null);
+  useEffect(() => {
+    if (!isWim || !soundEnabled) { lastWimSigRef.current = null; return; }
+    const sig = `${wimEngine.cycle}:${wimStage}`;
+    if (sig === lastWimSigRef.current) return;
+    lastWimSigRef.current = sig;
+    if (wimStage === 'power' || wimStage === 'recovery') playBellIn();
+    else if (wimStage === 'retention') playHoldChime();
+    else if (wimStage === 'finish') playBellOut();
+  }, [isWim, soundEnabled, wimStage, wimEngine.cycle]);
 
   const minutes = Math.floor(totalLeft / 60);
   const seconds = totalLeft % 60;
@@ -142,9 +156,9 @@ export default function DeepSession() {
   if (isWim) {
     if (wimStage === 'power') guideKey = 'wimHofPowerGuide';
     else if (wimStage === 'retention') guideKey = 'wimHofRetentionGuide';
+    else if (wimStage === 'finish') guideKey = 'wimHofFinishGuide';
     else if (phase === 'inhale') guideKey = 'wimHofRecoveryInhaleGuide';
-    else if (phase === 'hold') guideKey = 'wimHofRecoveryHoldGuide';
-    else guideKey = 'wimHofRecoveryExhaleGuide';
+    else guideKey = 'wimHofRecoveryHoldGuide';
   } else {
     guideKey =
       phase === 'inhale' ? 'breathInhale' :
@@ -215,11 +229,6 @@ export default function DeepSession() {
         >
           {deepDef.breathId === 'custom' && <span className={styles.levelMatchEmoji}>{deepDef.emoji}</span>}
           ⚙ {t('breathCustom')}
-          {breathPatternId === 'custom' && (
-            <span className={styles.patternMeta}>
-              {' '}{t('wimHofRoundsShort').replace('{n}', wimHofRounds)}
-            </span>
-          )}
         </button>
       </div>
 
@@ -232,7 +241,7 @@ export default function DeepSession() {
           <div className={`${styles.patternStep} ${styles.hold} ${wimStage === 'retention' ? styles.active : ''}`}>
             {t('wimHofRetention')}
           </div>
-          <div className={`${styles.patternStep} ${styles.exhale} ${wimStage === 'recovery' ? styles.active : ''}`}>
+          <div className={`${styles.patternStep} ${styles.exhale} ${wimStage === 'recovery' || wimStage === 'finish' ? styles.active : ''}`}>
             {t('wimHofRecovery')}
           </div>
         </div>
@@ -286,7 +295,7 @@ export default function DeepSession() {
                 <span>{t('wimHofRoundLabel').replace('{cur}', '').replace('{tot}', wimEngine.totalRounds)}</span>
               </>
             ) : (
-              <span>{t(wimStage === 'retention' ? 'wimHofRetention' : 'wimHofRecovery')}</span>
+              <span>{t(wimStage === 'retention' ? 'wimHofRetention' : wimStage === 'finish' ? 'wimHofFinish' : 'wimHofRecovery')}</span>
             )}
             {wimEngine.totalCycles > 1 && (
               <span className={styles.cycleSuffix}>

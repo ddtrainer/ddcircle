@@ -21,12 +21,22 @@ export const DEEP_LEVELS = [
   { level: 4, emoji: '🌲', name: '숲',    method: '위모 호흡(단축형)', breathId: 'custom', multiplier: 3.0, unlock: UNLOCK[4], safetyRequired: true },
 ];
 
-// Dash 레벨 — 모두 1분 고정. exerciseKeys는 기존 exercises.js 키와 매핑.
+// Dash 레벨 — 모두 1분 고정. 개발스펙 v2.0 전체 구성표 기준.
+//   options: 레벨별 운동 선택지. key=null 은 애니메이션 에셋이 아직 없는 종목(빈 슬롯).
+//   exerciseKeys: 실제 재생 가능한(에셋 보유) 키만. 기본 선택값 계산 등에 사용.
 export const DASH_LEVELS = [
-  { level: 1, emoji: '🌱', name: '씨앗',  method: '제자리 걷기 / 스트레칭', exerciseKeys: ['jog', 'free'],            multiplier: 1.0, unlock: UNLOCK[1] },
-  { level: 2, emoji: '🌿', name: '새싹',  method: '스쿼트 / 팔굽혀펴기',     exerciseKeys: ['squat'],                  multiplier: 1.5, unlock: UNLOCK[2] },
-  { level: 3, emoji: '🌳', name: '나무',  method: '버피 / 점핑잭',          exerciseKeys: ['burpee', 'jumping-jack'], multiplier: 2.0, unlock: UNLOCK[3] },
-  { level: 4, emoji: '🌲', name: '숲',    method: 'HIIT 미니 (20초×3세트)',  exerciseKeys: ['running'],                multiplier: 3.0, unlock: UNLOCK[4], safetyRequired: true },
+  { level: 1, emoji: '🌱', name: '씨앗',  method: '걷기 / 러닝',
+    options: [{ key: 'jog', label: '걷기' }, { key: 'running', label: '러닝' }],
+    exerciseKeys: ['jog', 'running'], multiplier: 1.0, unlock: UNLOCK[1] },
+  { level: 2, emoji: '🌿', name: '새싹',  method: '스쿼트 / 팔굽혀펴기',
+    options: [{ key: 'squat', label: '스쿼트' }, { key: 'pushup', label: '팔굽혀펴기' }],
+    exerciseKeys: ['squat', 'pushup'], multiplier: 1.5, unlock: UNLOCK[2] },
+  { level: 3, emoji: '🌳', name: '나무',  method: '버피 / 점핑잭',
+    options: [{ key: 'burpee', label: '버피' }, { key: 'jumping-jack', label: '점핑잭' }],
+    exerciseKeys: ['burpee', 'jumping-jack'], multiplier: 2.0, unlock: UNLOCK[3] },
+  { level: 4, emoji: '🌲', name: '숲',    method: 'HIIT 미니',
+    options: [{ key: 'hiit', label: 'HIIT 미니' }],
+    exerciseKeys: ['hiit'], multiplier: 3.0, unlock: UNLOCK[4], safetyRequired: true },
 ];
 
 export const MAX_LEVEL = 4;

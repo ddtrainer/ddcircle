@@ -7,4 +7,6 @@ export const EXERCISES = [
   { key: 'jumping-jack', i18n: 'JumpingJack' },
   { key: 'burpee', i18n: 'Burpee' },
   { key: 'free', i18n: 'Free' },
+  { key: 'mountain-climber', i18n: 'MountainClimber' },
+  { key: 'hiit', i18n: 'Hiit' },
 ];
