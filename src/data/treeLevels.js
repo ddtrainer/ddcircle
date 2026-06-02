@@ -1,10 +1,10 @@
 // 6단계 생명나무 레벨
 export const TREE_LEVELS = [
-  { id: 1, key: 'level1', emoji: '🌱', min: 0, max: 200 },
+  { id: 1, key: 'level1', emoji: '🌰', min: 0, max: 200 },
   { id: 2, key: 'level2', emoji: '🌿', min: 200, max: 600 },
   { id: 3, key: 'level3', emoji: '🌳', min: 600, max: 1500 },
-  { id: 4, key: 'level4', emoji: '🌲', min: 1500, max: 4000 },
-  { id: 5, key: 'level5', emoji: '🌸', min: 4000, max: 10000 },
+  { id: 4, key: 'level4', emoji: '🌸', min: 1500, max: 4000 },
+  { id: 5, key: 'level5', emoji: '🍎', min: 4000, max: 10000 },
   { id: 6, key: 'level6', emoji: '🌟', min: 10000, max: 999999 },
 ];
 

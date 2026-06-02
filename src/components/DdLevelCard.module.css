@@ -1,6 +1,6 @@
 .card {
   margin: 16px 0 18px;
-  padding: 14px 16px;
+  padding: 16px;
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: 16px;
@@ -8,25 +8,33 @@
 }
 
 .header {
-  margin-bottom: 10px;
+  margin-bottom: 14px;
 }
 
 .tag {
-  font-size: 15px;
+  font-size: 16px;
   font-weight: 800;
-  letter-spacing: 2px;
+  letter-spacing: 0.3px;
   color: var(--text);
-  text-transform: uppercase;
 }
 
+.intro {
+  margin: 4px 0 0;
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: var(--text-muted);
+}
+
+/* 트랙(Deep/Dash) — --tc(테마색), --tc-soft(연한 배경)을 인라인으로 받는다 */
 .track {
-  padding: 12px 0;
-  border-top: 1px solid var(--border);
+  padding: 14px;
+  border-radius: 14px;
+  background: var(--tc-soft);
+  border: 1px solid var(--border);
 }
 
-.track:first-of-type {
-  border-top: none;
-  padding-top: 0;
+.track + .track {
+  margin-top: 12px;
 }
 
 .trackHead {
@@ -34,27 +42,46 @@
   align-items: baseline;
   justify-content: space-between;
   gap: 8px;
-  margin-bottom: 10px;
+  margin-bottom: 12px;
 }
 
-.trackLabel {
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--text);
+.trackTitle {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
   flex-shrink: 0;
 }
 
-.trackNow {
-  font-size: 13px;
-  font-weight: 600;
+.trackLabel {
+  font-size: 15px;
+  font-weight: 800;
+  color: var(--tc);
+  letter-spacing: 0.3px;
+}
+
+.trackSub {
+  font-size: 15px;
+  font-weight: 800;
   color: var(--text);
+  letter-spacing: 0.3px;
+}
+
+.trackNow {
+  font-size: 12px;
+  color: var(--text-soft);
   text-align: right;
   min-width: 0;
 }
 
+.trackNow b {
+  font-weight: 700;
+  color: var(--text);
+}
+
+/* 레벨 로드맵 */
 .steps {
   display: flex;
-  align-items: center;
+  align-items: stretch;
   justify-content: space-between;
 }
 
@@ -70,29 +97,53 @@
 
 .connector {
   flex: 1;
-  height: 2px;
-  background: var(--border);
+  height: 3px;
+  border-radius: 2px;
+  background: var(--border-strong);
   margin: 0 4px;
+  margin-bottom: 18px;
   align-self: center;
 }
 
+.connectorDone {
+  background: var(--tc);
+}
+
 .step {
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 2px;
-  padding: 6px 8px;
+  gap: 3px;
+  padding: 8px 8px 6px;
   border-radius: 12px;
   border: 1.5px solid transparent;
+  background: var(--surface);
   flex-shrink: 0;
+  min-width: 52px;
+}
+
+.nowPill {
+  position: absolute;
+  top: -9px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  color: #fff;
+  background: var(--tc);
+  padding: 1px 7px;
+  border-radius: 999px;
+  white-space: nowrap;
 }
 
 .stepEmoji {
-  font-size: 22px;
+  font-size: 24px;
   line-height: 1;
 }
 
-.stepLv {
+.stepName {
   font-size: 11px;
   font-weight: 700;
   color: var(--text);
@@ -100,66 +151,100 @@
 }
 
 .stepMul {
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 700;
   color: var(--text-muted);
 }
 
 .step.done {
-  opacity: 0.9;
+  border-color: var(--border-strong);
 }
 
 .step.current {
-  border-color: var(--cool);
-  background: var(--cool-soft);
+  border-color: var(--tc);
+  box-shadow: 0 0 0 3px var(--tc-soft);
 }
 
 .step.current .stepMul {
-  color: var(--cool);
+  color: var(--tc);
 }
 
 .step.unlocked {
-  opacity: 0.95;
+  border-color: var(--tc);
+  border-style: dashed;
 }
 
 .step.locked {
-  opacity: 0.4;
+  background: transparent;
+  opacity: 0.5;
 }
 
+/* 다음 레벨 진행 */
 .progress {
+  margin-top: 14px;
+}
+
+.progressTop {
   display: flex;
   align-items: center;
-  flex-wrap: wrap;
-  gap: 6px;
-  margin-top: 10px;
-  font-size: 12px;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 6px;
 }
 
 .progressLabel {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.bar {
+  height: 7px;
+  border-radius: 999px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  overflow: hidden;
+}
+
+.barFill {
+  display: block;
+  height: 100%;
+  border-radius: 999px;
+  background: var(--tc);
+  transition: width 0.4s ease-out;
+}
+
+.reqs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 14px;
+  margin-top: 7px;
+}
+
+.req {
+  font-size: 12px;
+  font-weight: 600;
   color: var(--text-muted);
 }
 
-.progressMeta {
-  color: var(--text);
-  font-weight: 600;
-}
-
 .met {
-  color: var(--cool);
+  color: var(--tc);
+  font-weight: 700;
 }
 
 .readyBadge {
   font-size: 11px;
-  font-weight: 700;
+  font-weight: 800;
   color: #fff;
-  background: var(--cool);
-  padding: 2px 8px;
+  background: var(--tc);
+  padding: 2px 9px;
   border-radius: 999px;
+  flex-shrink: 0;
 }
 
 .maxText {
-  margin-top: 10px;
-  font-size: 12px;
+  margin-top: 12px;
+  font-size: 12.5px;
   font-weight: 700;
-  color: var(--cool);
+  color: var(--tc);
 }

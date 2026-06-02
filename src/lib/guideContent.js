@@ -9,7 +9,7 @@
 
 export const DEEP_GUIDE = {
   1: {
-    title: '🌱 씨앗 · 자연호흡',
+    title: '🌰 씨앗 · 자연호흡',
     video: null,
     method: [
       '편안하게 앉거나 누워서 등을 곧게 폅니다.',
@@ -65,7 +65,7 @@ export const DEEP_GUIDE = {
     searchKeywords: ['박스 브리딩', 'Box breathing Navy SEAL'],
   },
   4: {
-    title: '🌲 숲 · 윔호프 호흡 (단축형)',
+    title: '🌸 꽃 · 윔호프 호흡 (단축형)',
     video: null,
     method: [
       '편안하게 앉거나 눕습니다.',
@@ -88,7 +88,7 @@ export const DEEP_GUIDE = {
 
 export const DASH_GUIDE = {
   1: {
-    title: '🌱 씨앗 · 걷기 / 러닝 / 스트레칭',
+    title: '🌰 씨앗 · 걷기 / 러닝 / 스트레칭',
     video: null,
     methodSections: [
       {
@@ -197,7 +197,7 @@ export const DASH_GUIDE = {
     searchKeywords: ['버피 운동 방법', '점핑잭 정확한 자세'],
   },
   4: {
-    title: '🌲 숲 · HIIT 미니 (20초×3세트)',
+    title: '🌸 꽃 · HIIT 미니 (20초×3세트)',
     video: null,
     method: [
       '세트 1 (0~20초): 버피를 최대한 빠르게 반복합니다.',
