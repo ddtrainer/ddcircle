@@ -9,7 +9,7 @@
 
 export const DEEP_GUIDE = {
   1: {
-    title: '🌰 씨앗 · 자연호흡',
+    title: '① 입문 · 자연호흡',
     video: null,
     method: [
       '편안하게 앉거나 누워서 등을 곧게 폅니다.',
@@ -27,7 +27,7 @@ export const DEEP_GUIDE = {
     searchKeywords: ['자연 호흡 명상', '5분 호흡 명상 입문'],
   },
   2: {
-    title: '🌿 새싹 · 4-7-8 호흡',
+    title: '② 기본 · 4-7-8 호흡',
     video: null,
     method: [
       '혀끝을 윗니 뒤 입천장에 가볍게 댑니다.',
@@ -46,7 +46,7 @@ export const DEEP_GUIDE = {
     searchKeywords: ['4-7-8 호흡법', 'Dr. Andrew Weil 4-7-8 breathing'],
   },
   3: {
-    title: '🌳 나무 · 박스 브리딩',
+    title: '③ 숙련 · 박스 브리딩',
     video: null,
     method: [
       '등을 곧게 펴고 어깨에 힘을 뺍니다.',
@@ -65,7 +65,7 @@ export const DEEP_GUIDE = {
     searchKeywords: ['박스 브리딩', 'Box breathing Navy SEAL'],
   },
   4: {
-    title: '🌸 꽃 · 윔호프 호흡 (단축형)',
+    title: '④ 전문 · 윔호프 호흡 (단축형)',
     video: null,
     method: [
       '편안하게 앉거나 눕습니다.',
@@ -88,7 +88,7 @@ export const DEEP_GUIDE = {
 
 export const DASH_GUIDE = {
   1: {
-    title: '🌰 씨앗 · 걷기 / 러닝 / 스트레칭',
+    title: '① 입문 · 걷기 / 러닝 / 스트레칭',
     video: null,
     methodSections: [
       {
@@ -131,7 +131,7 @@ export const DASH_GUIDE = {
     searchKeywords: ['1분 스트레칭', '제자리 걷기 운동'],
   },
   2: {
-    title: '🌿 새싹 · 스쿼트 / 팔굽혀펴기',
+    title: '② 기본 · 스쿼트 / 팔굽혀펴기',
     video: null,
     methodSections: [
       {
@@ -164,7 +164,7 @@ export const DASH_GUIDE = {
     searchKeywords: ['스쿼트 정확한 자세', '무릎 팔굽혀펴기'],
   },
   3: {
-    title: '🌳 나무 · 버피 / 점핑잭',
+    title: '③ 숙련 · 버피 / 점핑잭',
     video: null,
     methodSections: [
       {
@@ -197,7 +197,7 @@ export const DASH_GUIDE = {
     searchKeywords: ['버피 운동 방법', '점핑잭 정확한 자세'],
   },
   4: {
-    title: '🌸 꽃 · HIIT 미니 (20초×3세트)',
+    title: '④ 전문 · HIIT 미니 (20초×3세트)',
     video: null,
     method: [
       '세트 1 (0~20초): 버피를 최대한 빠르게 반복합니다.',
