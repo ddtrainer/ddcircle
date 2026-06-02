@@ -25,6 +25,53 @@
   color: var(--text-muted);
 }
 
+/* 연속(streak) + 유예일(grace) 안내 줄 */
+.streakRow {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 10px;
+  padding: 8px 10px;
+  border-radius: 10px;
+  background: var(--bg, #f6f7f9);
+  border: 1px solid var(--border);
+}
+
+.streakFlame {
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--text);
+  white-space: nowrap;
+}
+
+.graceHint {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+/* 오늘 이미 완료 — 안정 상태(초록 톤) */
+.grace_safeToday {
+  background: rgba(34, 197, 94, 0.10);
+  border-color: rgba(34, 197, 94, 0.35);
+}
+.grace_safeToday .graceHint { color: #15803d; }
+
+/* 유예 소진 임박 — 주의(노랑 톤) */
+.grace_atRisk {
+  background: rgba(245, 158, 11, 0.12);
+  border-color: rgba(245, 158, 11, 0.40);
+}
+.grace_atRisk .graceHint { color: #b45309; font-weight: 700; }
+
+/* 연속 끊김 — 경고(빨강 톤) */
+.grace_broken {
+  background: rgba(239, 68, 68, 0.10);
+  border-color: rgba(239, 68, 68, 0.35);
+}
+.grace_broken .graceHint { color: #b91c1c; font-weight: 700; }
+
 /* 트랙(Deep/Dash) — --tc(테마색), --tc-soft(연한 배경)을 인라인으로 받는다 */
 .track {
   padding: 14px;

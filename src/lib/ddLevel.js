@@ -57,6 +57,18 @@ export function streakBooster(streak = 0) {
   return 1.0;
 }
 
+// 스트릭 유예일(grace) — 며칠까지 거른 날을 봐주는지 (티어별 차등).
+//   입문(streak<3)·기본(3~6)  → 1일
+//   숙련(7~20)               → 2일
+//   전문(21+)                → 3일
+// 유예일을 초과해 비우면 스트릭이 1로 초기화된다.
+// (악용 가드는 의도적으로 없음 — 추후 별도 도입 예정)
+export function graceDaysFor(streak = 0) {
+  if (streak >= 21) return 3;
+  if (streak >= 7) return 2;
+  return 1;
+}
+
 function levelsFor(track) {
   return track === 'deep' ? DEEP_LEVELS : DASH_LEVELS;
 }

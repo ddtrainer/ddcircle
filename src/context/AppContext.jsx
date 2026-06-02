@@ -5,6 +5,7 @@ import { recordSession, migrateLocalStats } from '../lib/stats';
 import { recordStakeDeclared, resolveStakeWon, resolveStakeForfeited, cancelStake } from '../lib/challenges';
 import { findChallenge } from '../data/challenges';
 import { calculateEarnedEp } from '../utils/ep';
+import { graceDaysFor } from '../lib/ddLevel';
 import { DEFAULT_CUSTOM_BREATH, DEFAULT_NATURAL_BREATH, DEFAULT_WIM_HOF_ROUNDS, DEFAULT_WIM_HOF_CYCLES, DEFAULT_WIM_HOF_RETENTION, DEFAULT_WIM_HOF_RECOVERY, DEFAULT_WIM_HOF_FINISH } from '../data/breathPatterns';
 import { evaluateChallenges } from '../data/challenges';
 
@@ -18,6 +19,8 @@ const DEFAULT_USER_EP = {
   today: 0,
   thisMonth: 0,
   streak: 0,
+  // 스트릭이 마지막으로 +1 된 달력 날짜(YYYY-MM-DD). 하루 1회만 인정 + 유예일 계산 기준.
+  streakDate: null,
   empathySent: 0,
   empathyReceived: 0,
 };
@@ -31,6 +34,15 @@ const DEFAULT_SET_TIMING = {
 // 데모: 첫 방문 시 랜덤 코드 생성하여 localStorage 저장
 function generateInviteCode() {
   return 'gangsan-' + Math.random().toString(36).slice(2, 8);
+}
+
+// 두 'YYYY-MM-DD' 날짜 사이의 달력 일수 차 (시간대 영향 없는 정수 계산).
+function daysBetween(fromStr, toStr) {
+  const [fy, fm, fd] = fromStr.split('-').map(Number);
+  const [ty, tm, td] = toStr.split('-').map(Number);
+  const from = Date.UTC(fy, fm - 1, fd);
+  const to = Date.UTC(ty, tm - 1, td);
+  return Math.round((to - from) / 86400000);
 }
 
 export function AppProvider({ children }) {
@@ -189,9 +201,27 @@ export function AppProvider({ children }) {
     const dateStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
     const todayCountForCap = todaySessions.date === dateStr ? todaySessions.count : 0;
 
-    // streak — 완주가 하나라도 있어야 인정 (둘 다 skip이면 streak 증가 X)
+    // streak — 달력 날짜 기준. 완주가 하나라도 있어야 인정 (둘 다 skip이면 변화 X).
+    //   · 하루에 여러 번 완주해도 +1은 하루 1회만 (streakDate로 중복 방지)
+    //   · 마지막 인정일과 오늘 사이에 거른 날이 유예일(graceDaysFor) 이내면 연속 유지(+1)
+    //   · 유예일을 초과해 비우면 1로 초기화
     const sessionCounts = dashFully || deepFully;
-    const newStreak = sessionCounts ? userEp.streak + 1 : userEp.streak;
+    let newStreak = userEp.streak;
+    let newStreakDate = userEp.streakDate ?? null;
+    if (sessionCounts) {
+      if (userEp.streakDate === dateStr) {
+        // 오늘 이미 인정됨 — 그대로 유지
+        newStreak = userEp.streak;
+      } else if (!userEp.streakDate) {
+        // 첫 인정
+        newStreak = 1;
+      } else {
+        const missedDays = daysBetween(userEp.streakDate, dateStr) - 1; // 사이에 거른 날 수
+        const grace = graceDaysFor(userEp.streak);
+        newStreak = missedDays <= grace ? userEp.streak + 1 : 1;
+      }
+      newStreakDate = dateStr;
+    }
 
     const baseEarned = calculateEarnedEp({
       dashFully, deepFully, hasProof, shared,
@@ -225,6 +255,7 @@ export function AppProvider({ children }) {
       today: prev.today + total,
       thisMonth: prev.thisMonth + total,
       streak: newStreak,
+      streakDate: newStreakDate,
     }));
     if (sessionCounts) {
       setTodayDone(true);
@@ -289,7 +320,7 @@ export function AppProvider({ children }) {
       capReached,           // UI에서 "오늘 EP 캡 도달" 안내용
       dashFully, deepFully, // UI에서 "Skip해서 EP 일부만" 안내용
     };
-  }, [userEp.streak, challengeClaims, challengeJoins, setUserEp, setTodayDone, setTodayCount, setChallengeClaims, setChallengeJoins, user, selectedExercise, breathPatternId, todaySessions, setTodaySessions, setTiming]);
+  }, [userEp.streak, userEp.streakDate, challengeClaims, challengeJoins, setUserEp, setTodayDone, setTodayCount, setChallengeClaims, setChallengeJoins, user, selectedExercise, breathPatternId, todaySessions, setTodaySessions, setTiming]);
 
   // 챌린지 보너스 알림을 소비(읽음 처리)
   const consumeLastChallengeBonus = useCallback(() => setLastChallengeBonus(null), []);
