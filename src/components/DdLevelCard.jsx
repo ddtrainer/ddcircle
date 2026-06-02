@@ -87,7 +87,7 @@ export default function DdLevelCard() {
                 <span className={styles.trackSub}>{sub}</span>
               </div>
               <span className={styles.trackNow}>
-                지금 <b>Lv.{current} {def.name}</b> · {def.method}
+                <b>Lv.{current} {def.name}</b> · {def.method}
               </span>
             </div>
 
