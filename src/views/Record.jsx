@@ -3,7 +3,7 @@ import { useLang } from '../i18n/LangContext';
 import { useApp } from '../context/AppContext';
 import { useAuth } from '../context/AuthContext';
 import { TREE_LEVELS, getCurrentLevel, getNextLevel, LAST_14_DAYS } from '../data/treeLevels';
-import { getMultiplier } from '../utils/ep';
+import { getMultiplier, epToDdt, epToNextDdt, EP_PER_DDT } from '../utils/ep';
 import { fetchMyPosts } from '../lib/posts';
 import { fetchUserStats, fetchLastNDaysEp, fetchTodayBreakdown, fetchMonthActivity } from '../lib/stats';
 import TreeSVG from '../components/TreeSVG';
@@ -81,6 +81,10 @@ export default function Record() {
     : userEp;
 
   const ep = displayStats.total;
+  // DD 토큰(DDT) — 누적 EP를 전환 비율로 환산. 100 EP = 1 DDT.
+  const ddt = epToDdt(ep);
+  const ddtNextEp = epToNextDdt(ep); // 다음 1 DDT까지 남은 EP
+  const ddtProgressPct = Math.round(((EP_PER_DDT - ddtNextEp) / EP_PER_DDT) * 100);
   const cur = getCurrentLevel(ep);
   const next = getNextLevel(ep);
   const epToNext = Math.max(0, next.min - ep);
@@ -154,13 +158,57 @@ export default function Record() {
         </div>
       </div>
 
-      {/* DDT 안내 */}
-      <div className={styles.ddtNotice}>
-        <div className={styles.ddtIcon}>💎</div>
-        <div
-          className={styles.ddtText}
-          dangerouslySetInnerHTML={{ __html: t('ddtNoticeText') }}
-        />
+      {/* DD 토큰 — Proof-of-DD 카운터 */}
+      <div className={styles.tokenCard}>
+        <div className={styles.tokenTop}>
+          <span className={styles.tokenIcon}>💎</span>
+          <span className={styles.tokenLabel}>{t('ddtMyToken')}</span>
+        </div>
+        <div className={styles.tokenAmount}>
+          <span className={styles.tokenNum}>{ddt.toLocaleString()}</span>
+          <span className={styles.tokenUnit}>DDT</span>
+        </div>
+        <div className={styles.tokenProof}>{t('ddtBasis', { ep: ep.toLocaleString() })}</div>
+        <div className={styles.tokenProgressWrap}>
+          <div className={styles.tokenProgressBar} style={{ width: `${ddtProgressPct}%` }} />
+        </div>
+        <div className={styles.tokenNext}>{t('ddtNextLabel', { ep: ddtNextEp.toLocaleString() })}</div>
+        <div className={styles.tokenRule}>{t('ddtRule')}</div>
+      </div>
+
+      {/* DD 토큰 미래 가치 로드맵 */}
+      <div className={styles.roadmapCard}>
+        <div className={styles.roadmapTitle}>{t('ddtRoadmapTitle')}</div>
+        <ol className={styles.roadmap}>
+          <li className={`${styles.roadStep} ${styles.roadNow}`}>
+            <span className={styles.roadDot} />
+            <div className={styles.roadBody}>
+              <span className={styles.roadPhase}>{t('ddtPhaseNowTag')}</span>
+              <span className={styles.roadText}>{t('ddtPhaseNow')}</span>
+            </div>
+          </li>
+          <li className={styles.roadStep}>
+            <span className={styles.roadDot} />
+            <div className={styles.roadBody}>
+              <span className={styles.roadPhase}>{t('ddtPhase1Tag')}</span>
+              <span className={styles.roadText}>{t('ddtPhase1')}</span>
+            </div>
+          </li>
+          <li className={styles.roadStep}>
+            <span className={styles.roadDot} />
+            <div className={styles.roadBody}>
+              <span className={styles.roadPhase}>{t('ddtPhase2Tag')}</span>
+              <span className={styles.roadText}>{t('ddtPhase2')}</span>
+            </div>
+          </li>
+          <li className={styles.roadStep}>
+            <span className={styles.roadDot} />
+            <div className={styles.roadBody}>
+              <span className={styles.roadPhase}>{t('ddtPhase3Tag')}</span>
+              <span className={styles.roadText}>{t('ddtPhase3')}</span>
+            </div>
+          </li>
+        </ol>
         <div className={styles.ddtLink} onClick={() => setEpModalOpen(true)}>
           {t('learnMore')}
         </div>

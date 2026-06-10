@@ -22,6 +22,7 @@ initAnalytics();
 // Kakao SDK 초기화 (공유하기)
 initKakao();
 import Home from './views/Home';
+import Grow from './views/Grow';
 import ExercisePicker from './views/ExercisePicker';
 import Countdown from './views/Countdown';
 import DashSession from './views/DashSession';
@@ -172,6 +173,7 @@ export default function App() {
                 <Suspense fallback={<ViewFallback />}>
                   <Routes>
                     <Route path="/" element={<Home />} />
+                    <Route path="/grow" element={<Grow />} />
                     <Route path="/wall" element={<Wall />} />
                     <Route path="/record" element={<Record />} />
                     <Route path="/book/:chapterKey" element={<Book />} />

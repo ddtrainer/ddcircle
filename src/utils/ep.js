@@ -11,6 +11,21 @@
 // 또한 하루 2회까지만 EP 인정. 3회차 이후는 EP 0 (세션 진행 자체는 허용).
 export const DAILY_EP_CAP_SESSIONS = 2;
 
+// DD 토큰(DDT) 전환 — 누적 EP를 토큰으로 환산하는 비율.
+//   100 EP = 1 DDT (원래 설계). 전환은 누적 EP 기준이며 차감하지 않는다(표시용 환산).
+export const EP_PER_DDT = 100;
+
+// 누적 EP → 보유 DDT (내림). ep 100당 1개.
+export function epToDdt(ep = 0) {
+  return Math.floor((Number(ep) || 0) / EP_PER_DDT);
+}
+
+// 다음 1 DDT까지 남은 EP (1~EP_PER_DDT). 진행 안내용.
+export function epToNextDdt(ep = 0) {
+  const rem = (Number(ep) || 0) % EP_PER_DDT;
+  return EP_PER_DDT - rem;
+}
+
 export function getMultiplier(streak) {
   if (streak >= 100) return 1.5;
   if (streak >= 30) return 1.3;
