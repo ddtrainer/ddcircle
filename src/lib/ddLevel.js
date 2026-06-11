@@ -18,9 +18,9 @@ const UNLOCK = {
 //   ※ 식물 생애주기 은유는 '생명나무 레벨'(treeLevels.js) 전용으로 역할 분리함.
 export const DEEP_LEVELS = [
   { level: 1, emoji: '①', name: '입문',  method: '자연호흡',         breathId: '48',   multiplier: 1.0, unlock: UNLOCK[1] },
-  { level: 2, emoji: '②', name: '기본',  method: '4-7-8 호흡',      breathId: '478',  multiplier: 1.5, unlock: UNLOCK[2] },
-  { level: 3, emoji: '③', name: '숙련',  method: '박스 브리딩',      breathId: '4444', multiplier: 2.0, unlock: UNLOCK[3] },
-  { level: 4, emoji: '④', name: '전문',  method: '윔호프 호흡(단축형)', breathId: 'custom', multiplier: 3.0, unlock: UNLOCK[4], safetyRequired: true },
+  { level: 2, emoji: '②', name: '기본',  method: '신경 안정 호흡',     breathId: '478',  multiplier: 1.5, unlock: UNLOCK[2] },
+  { level: 3, emoji: '③', name: '숙련',  method: '멘탈 강화 호흡',     breathId: '4444', multiplier: 2.0, unlock: UNLOCK[3] },
+  { level: 4, emoji: '④', name: '전문',  method: '면역력 강화 호흡',    breathId: 'custom', multiplier: 3.0, unlock: UNLOCK[4], safetyRequired: true },
 ];
 
 // Dash 레벨 — 모두 1분 고정. 개발스펙 v2.0 전체 구성표 기준.

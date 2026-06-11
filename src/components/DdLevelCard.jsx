@@ -1,5 +1,6 @@
 import { useLevel } from '../context/LevelContext';
 import { useApp } from '../context/AppContext';
+import { useLang } from '../i18n/LangContext';
 import { DEEP_LEVELS, DASH_LEVELS, getLevelDef, checkLevelUp, MAX_LEVEL, graceDaysFor } from '../lib/ddLevel';
 import styles from './DdLevelCard.module.css';
 
@@ -16,6 +17,7 @@ function daysBetween(fromStr, toStr) {
 export default function DdLevelCard() {
   const { deepLevel, dashLevel } = useLevel();
   const { userEp } = useApp();
+  const { lang } = useLang();
   const streak = userEp?.streak ?? 0;
   const totalEp = userEp?.total ?? 0;
   const streakDate = userEp?.streakDate ?? null;
@@ -51,8 +53,8 @@ export default function DdLevelCard() {
   }
 
   const tracks = [
-    { key: 'deep', label: 'Deep', sub: '호흡', color: 'var(--cool)', soft: 'var(--cool-soft)', levels: DEEP_LEVELS, current: deepLevel },
-    { key: 'dash', label: 'Dash', sub: '운동', color: 'var(--warm)', soft: 'var(--warm-soft)', levels: DASH_LEVELS, current: dashLevel },
+    { key: 'deep', label: lang === 'ko' ? '숨-Deep' : 'Soom-Deep', color: 'var(--cool)', soft: 'var(--cool-soft)', levels: DEEP_LEVELS, current: deepLevel },
+    { key: 'dash', label: lang === 'ko' ? '핏-Dash' : 'Fit-Dash', color: 'var(--warm)', soft: 'var(--warm-soft)', levels: DASH_LEVELS, current: dashLevel },
   ];
 
   return (
@@ -66,7 +68,7 @@ export default function DdLevelCard() {
         </div>
       </div>
 
-      {tracks.map(({ key, label, sub, color, soft, levels, current }) => {
+      {tracks.map(({ key, label, color, soft, levels, current }) => {
         const def = getLevelDef(key, current);
         const { canLevelUp, next } = checkLevelUp(key, current, { streak, totalEp });
         const isMax = current >= MAX_LEVEL;
@@ -84,7 +86,6 @@ export default function DdLevelCard() {
             <div className={styles.trackHead}>
               <div className={styles.trackTitle}>
                 <span className={styles.trackLabel}>{label}</span>
-                <span className={styles.trackSub}>{sub}</span>
               </div>
               <span className={styles.trackNow}>
                 <b>Lv.{current} {def.name}</b> · {def.method}

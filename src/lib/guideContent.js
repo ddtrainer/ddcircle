@@ -27,7 +27,7 @@ export const DEEP_GUIDE = {
     searchKeywords: ['자연 호흡 명상', '5분 호흡 명상 입문'],
   },
   2: {
-    title: '② 기본 · 4-7-8 호흡',
+    title: '② 기본 · 신경 안정 호흡 (4-7-8)',
     video: null,
     method: [
       '혀끝을 윗니 뒤 입천장에 가볍게 댑니다.',
@@ -46,7 +46,7 @@ export const DEEP_GUIDE = {
     searchKeywords: ['4-7-8 호흡법', 'Dr. Andrew Weil 4-7-8 breathing'],
   },
   3: {
-    title: '③ 숙련 · 박스 브리딩',
+    title: '③ 숙련 · 멘탈 강화 호흡 (박스 브리딩)',
     video: null,
     method: [
       '등을 곧게 펴고 어깨에 힘을 뺍니다.',
@@ -65,7 +65,7 @@ export const DEEP_GUIDE = {
     searchKeywords: ['박스 브리딩', 'Box breathing Navy SEAL'],
   },
   4: {
-    title: '④ 전문 · 윔호프 호흡 (단축형)',
+    title: '④ 전문 · 면역력 강화 호흡 (윔호프)',
     video: null,
     method: [
       '편안하게 앉거나 눕습니다.',
