@@ -7,6 +7,7 @@ import { useDashTimer } from '../hooks/useDashTimer';
 import { playDashStart, playDashEnd } from '../hooks/useDashSound';
 import { track, Events } from '../utils/analytics';
 import ProgressDots from '../components/ProgressDots';
+import FireIcon from '../components/FireIcon';
 import ExerciseSVG from '../components/ExerciseSVG';
 import styles from './DashSession.module.css';
 
@@ -81,7 +82,10 @@ export default function DashSession() {
     <div className={styles.session}>
       <ProgressDots step={2} total={4} />
       <div className={styles.stage}>STEP 2 OF 4</div>
-      <div className={`${styles.title} ${styles.dashColor}`}>🔥 Dash</div>
+      <div className={styles.title}>
+        <FireIcon className={styles.fireIcon} />
+        <span dangerouslySetInnerHTML={{ __html: t('dashSessionTitle') }} />
+      </div>
       <div className={styles.desc}>{desc}</div>
 
       <div className={styles.exerciseZone}>

@@ -29,6 +29,36 @@
 .dashColor { color: var(--warm); }
 .deepColor { color: var(--cool); }
 
+/* Deep 라벨 강조 — '숨/Soom'·'Deep'을 녹청색으로 */
+.next :global(.hl) {
+  color: #16a597;
+  font-weight: 800;
+}
+
+/* 숨(Deep) 바람 아이콘 — 🧘 대체 */
+.windIcon {
+  height: 1.25em;
+  width: auto;
+  vertical-align: middle;
+  margin-right: 6px;
+  margin-top: -2px;
+}
+
+/* Dash 라벨 강조 — '핏/Fit'·'Dash'를 주황빨강으로 */
+.next :global(.hl-warm) {
+  color: #ef4a2a;
+  font-weight: 800;
+}
+
+/* Dash 불꽃 아이콘 — 🔥 대체 (세로형 불꽃) */
+.fireIcon {
+  height: 1.3em;
+  width: auto;
+  vertical-align: middle;
+  margin-right: 6px;
+  margin-top: -2px;
+}
+
 .levelChip {
   display: inline-block;
   margin-bottom: 24px;

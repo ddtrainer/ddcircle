@@ -5,6 +5,8 @@ import { useApp } from '../context/AppContext';
 import { useLevel } from '../context/LevelContext';
 import { getLevelDef } from '../lib/ddLevel';
 import GuideModal from '../components/modals/GuideModal';
+import WindIcon from '../components/WindIcon';
+import FireIcon from '../components/FireIcon';
 import styles from './Countdown.module.css';
 
 // 5 → 4 → 3 → 2 → 1 → GO! 카운트다운
@@ -78,8 +80,11 @@ export default function Countdown() {
   return (
     <div className={styles.countdown}>
       <div className={styles.stage}>{t('countdownReady')}</div>
-      <div className={`${styles.next} ${isDash ? styles.dashColor : styles.deepColor}`}>
-        {t(isDash ? 'countdownDashNext' : 'countdownDeepNext')}
+      <div className={styles.next}>
+        {isDash
+          ? <FireIcon className={styles.fireIcon} />
+          : <WindIcon className={styles.windIcon} />}
+        <span dangerouslySetInnerHTML={{ __html: t(isDash ? 'countdownDashNext' : 'countdownDeepNext') }} />
       </div>
       <div className={styles.hint}>
         {t(isDash ? 'countdownDashHint' : 'countdownDeepHint')}

@@ -42,25 +42,13 @@ export default function Header() {
   return (
     <header className={styles.header}>
       <div className={styles.inner}>
-        <div className={styles.logoWrap}>
-          <svg className={styles.logo} viewBox="0 0 400 200" xmlns="http://www.w3.org/2000/svg" aria-label="DDCircle">
-            <defs>
-              {/* Deep-first 리브랜드: 왼쪽 D는 Deep(녹→청), 오른쪽 D는 Dash(빨→주황) */}
-              <linearGradient id="leftD" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" stopColor="#7ed957" />
-                <stop offset="50%" stopColor="#3bbfb0" />
-                <stop offset="100%" stopColor="#1e9bd8" />
-              </linearGradient>
-              <linearGradient id="rightD" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" stopColor="#ed3a4a" />
-                <stop offset="50%" stopColor="#f47730" />
-                <stop offset="100%" stopColor="#fbb040" />
-              </linearGradient>
-            </defs>
-            <path d="M 30 20 L 100 20 Q 180 20 180 100 Q 180 180 100 180 L 30 180 Z M 70 60 L 70 140 L 100 140 Q 140 140 140 100 Q 140 60 100 60 Z" fill="url(#leftD)" fillRule="evenodd" />
-            <path d="M 220 20 L 290 20 Q 370 20 370 100 Q 370 180 290 180 L 220 180 Z M 260 60 L 260 140 L 290 140 Q 330 140 330 100 Q 330 60 290 60 Z" fill="url(#rightD)" fillRule="evenodd" />
-          </svg>
-          <span className={styles.label}>CIRCLE</span>
+        <div className={styles.logoWrap} aria-label="숨-핏 By DDCircle">
+          {/* 숨-핏 워드마크 — 무지개 그라데이션(브랜드 컬러) + 한 줄 태그라인, 아래 By DDCircle */}
+          <div className={styles.brandTop}>
+            <span className={styles.brandMark}>{lang === 'ko' ? '숨-핏' : 'Soom-Fit'}</span>
+            <span className={styles.brandTag}>{lang === 'ko' ? '숨 쉬고 운동해' : 'Breathe & Move'}</span>
+          </div>
+          <span className={styles.brandBy}>By DDCircle</span>
         </div>
 
         <div className={styles.right}>

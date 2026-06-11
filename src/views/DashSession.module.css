@@ -28,6 +28,21 @@
 
 .dashColor { color: var(--warm); }
 
+/* Dash 타이틀 강조 — '핏/Fit'·'Dash'를 주황빨강으로 */
+.title :global(.hl-warm) {
+  color: #ef4a2a;
+  font-weight: 800;
+}
+
+/* Dash 불꽃 아이콘 — 🔥 대체 (세로형 불꽃) */
+.fireIcon {
+  height: 1.2em;
+  width: auto;
+  vertical-align: middle;
+  margin-right: 6px;
+  margin-top: -2px;
+}
+
 .desc {
   font-size: 15px;
   color: var(--text-soft);

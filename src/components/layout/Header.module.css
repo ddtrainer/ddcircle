@@ -21,22 +21,43 @@
 
 .logoWrap {
   display: flex;
-  align-items: center;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1px;
+}
+
+.brandTop {
+  display: flex;
+  align-items: baseline;
   gap: 8px;
 }
 
-.logo {
-  height: 30px;
-  width: auto;
-  display: block;
+.brandBy {
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.4px;
+  color: #1559b3; /* 딥블루 */
 }
 
-.label {
-  font-size: 14px;
-  letter-spacing: 3px;
-  color: var(--text);
-  margin-top: 2px;
+/* 숨-핏 워드마크 — 무지개 그라데이션 텍스트 */
+.brandMark {
+  font-size: 27px;
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: 0.5px;
+  font-family: 'Inter', 'Noto Sans KR', sans-serif;
+  background: linear-gradient(100deg, #7ed957 0%, #3bbfb0 26%, #fbb040 58%, #f47730 80%, #ed3a4a 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.brandTag {
+  font-size: 15px;
   font-weight: 700;
+  letter-spacing: 0.2px;
+  color: var(--text);
+  margin-top: 3px;
 }
 
 .right {

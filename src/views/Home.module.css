@@ -114,6 +114,13 @@
   font-weight: 700;
 }
 
+/* 핵심 구절 강조 — 굵고 크게(다크) 처리해 한눈에 들어오게 */
+.heroQuote :global(.em) {
+  font-weight: 800;
+  font-size: 1.12em;
+  color: var(--text);
+}
+
 .heroSub {
   font-size: 13px;
   color: var(--text-secondary, #888);

@@ -9,6 +9,7 @@ import { useBreathSound, playBellIn, playBellOut, playHoldChime } from '../hooks
 import { BREATH_PRESETS, resolveBreathPattern, buildWimHofScript } from '../data/breathPatterns';
 import { getLevelDef, DEEP_LEVELS } from '../lib/ddLevel';
 import ProgressDots from '../components/ProgressDots';
+import WindIcon from '../components/WindIcon';
 import BreathSettingsModal from '../components/modals/BreathSettingsModal';
 import { useToast } from '../components/Toast';
 import { track, Events } from '../utils/analytics';
@@ -216,11 +217,10 @@ export default function DeepSession() {
     <div className={styles.session}>
       <ProgressDots step={1} total={4} />
       <div className={styles.stage}>STEP 1 OF 4</div>
-      <div className={`${styles.title} ${styles.deepColor}`}>🧘 Deep</div>
-      <div
-        className={styles.desc}
-        dangerouslySetInnerHTML={{ __html: t('deepDesc') }}
-      />
+      <div className={styles.title}>
+        <WindIcon className={styles.windIcon} />
+        <span dangerouslySetInnerHTML={{ __html: t('deepSessionTitle') }} />
+      </div>
 
       {/* 호흡 패턴 선택 */}
       <div className={styles.patternPicker}>

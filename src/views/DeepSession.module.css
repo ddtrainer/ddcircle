@@ -28,6 +28,21 @@
 
 .deepColor { color: var(--cool); }
 
+/* Deep 타이틀 강조 — '숨/Soom'·'Deep'을 녹청색으로 */
+.title :global(.hl) {
+  color: #16a597;
+  font-weight: 800;
+}
+
+/* 숨(Deep) 바람 아이콘 — 🧘 대체 */
+.windIcon {
+  height: 1.15em;
+  width: auto;
+  vertical-align: middle;
+  margin-right: 7px;
+  margin-top: -3px;
+}
+
 .desc {
   font-size: 15px;
   color: var(--text-soft);
@@ -58,7 +73,7 @@
   gap: 8px;
   width: 100%;
   max-width: 340px;
-  margin: 0 auto 14px;
+  margin: 18px auto 14px;
 }
 
 .patternBtn {
