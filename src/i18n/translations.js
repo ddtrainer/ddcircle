@@ -3,7 +3,7 @@
 
 export const translations = {
   ko: {
-    heroQuote: '하루 <span class="one">3분</span><span class="em">, 깊게 숨 쉬고 운동</span>하며<br>함께 에너지 기운을 나누세요~',
+    heroQuote: '하루 <span class="one">3분</span><span class="em">, 깊게 숨 쉬고 운동</span>하며<br>당신의 에너지 기운을 나누세요~',
     nowStart: '지금 바로',
     tapToStart: '탭하여 시작',
     peopleSuffix: '명',
@@ -207,6 +207,7 @@ export const translations = {
     cycleOf: ' / 6 사이클',
     timeLeftLabel: '남은 시간',
     completeTitle: '오늘도 성공하셨어요',
+    celebrateWellDone: '잘했어요!',
     completeSub: '모든 것이 잘 될 거예요.',
     shareWithLabel: '누구와 나눌까요?',
     targetCircle: '내 서클', targetGlobal: '글로벌 서클', targetPrivate: '나만 보기',
@@ -452,7 +453,7 @@ export const translations = {
     welcomeBonusToast: '환영합니다 · 첫 발걸음 보너스 +{n} EP',
   },
   en: {
-    heroQuote: 'A daily <span class="one">3 minutes</span><span class="em"> — breathe deeply and move</span>,<br>sharing energy together~',
+    heroQuote: 'A daily <span class="one">3 minutes</span><span class="em"> — breathe deeply and move</span>,<br>sharing your energy~',
     nowStart: 'Right now',
     tapToStart: 'Tap to start',
     peopleSuffix: '',
@@ -655,6 +656,7 @@ export const translations = {
     cycleOf: ' / 6 cycles',
     timeLeftLabel: 'Time left',
     completeTitle: 'You did it today',
+    celebrateWellDone: 'Well done!',
     completeSub: 'All will be well.',
     shareWithLabel: 'Share with...',
     targetCircle: 'My Circle', targetGlobal: 'Global Circle', targetPrivate: 'Just me',

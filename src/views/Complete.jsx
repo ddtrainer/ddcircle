@@ -15,6 +15,7 @@ import { createPost, fetchMyPosts } from '../lib/posts';
 import { detectAnyMilestone, markMilestoneSeen } from '../lib/milestones';
 import { chapterKey as toChapterKey } from '../lib/chapters';
 import MilestoneModal from '../components/modals/MilestoneModal';
+import Celebration from '../components/Celebration';
 import { isInAppBrowser } from '../utils/inAppBrowser';
 import OpenExternalModal from '../components/modals/OpenExternalModal';
 import LoginPromptModal from '../components/modals/LoginPromptModal';
@@ -32,6 +33,16 @@ export default function Complete() {
   const [externalModalOpen, setExternalModalOpen] = useState(false);
   const [loginPromptOpen, setLoginPromptOpen] = useState(false);
   const [milestone, setMilestone] = useState(null);
+  // 풀세트 완료(호흡+운동 둘 다 완주) 축하 폭죽 — 진입 시 1회.
+  // completeSession()이 플래그를 비우기 전(= finish 호출 전)이라 mount 시점에 읽을 수 있다.
+  const [celebrate, setCelebrate] = useState(false);
+  useEffect(() => {
+    try {
+      const deep = sessionStorage.getItem('ddcircle.session.deepFully') === '1';
+      const dash = sessionStorage.getItem('ddcircle.session.dashFully') === '1';
+      if (deep && dash) setCelebrate(true);
+    } catch { /* sessionStorage 불가 시 무시 */ }
+  }, []);
 
   const [shareTarget, setShareTarget] = useState('circle');
   const [selectedMood, setSelectedMood] = useState(null);
@@ -332,6 +343,13 @@ export default function Complete() {
         milestone={milestone}
         onClose={handleMilestoneClose}
       />
+
+      {celebrate && (
+        <Celebration
+          text={t('celebrateWellDone')}
+          onDone={() => setCelebrate(false)}
+        />
+      )}
     </div>
   );
 }
