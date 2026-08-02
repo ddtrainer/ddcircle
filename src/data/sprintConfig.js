@@ -1,6 +1,10 @@
 // 전력질주(스프린트) 자동 감지 — 상수/설정. (신규 기능 전용, 기존 로직과 무관)
+export const GRAVITY = 9.81; // 중력 크기(m/s²) — magnitude에서 빼서 '동적 가속'만 추출
+
 export const SPRINT = {
-  DEFAULT_THRESHOLD: 15,       // m/s² — Y축(상하) 피크 임계값 기본값
+  // 방향 무관 감지: dyn = |가속도 크기| - 중력. 발 착지 스파이크(dyn) 임계값.
+  DEFAULT_THRESHOLD: 7,        // m/s² — 동적 가속(dyn) 피크 임계값 기본값
+  CALIB_CAPTURE_THRESHOLD: 3,  // 캘리브레이션 캡처용 낮은 임계값
   MIN_PEAK_INTERVAL_MS: 200,   // 중복 카운트 방지 최소 피크 간격
   MEASURE_MS: 60000,           // 1분 측정
   COUNTDOWN_SEC: 3,            // 측정 시작 전 카운트다운
@@ -8,24 +12,24 @@ export const SPRINT = {
   INTRO_DAYS: 3,              // 첫 N일간 강도 선택 화면 노출(4일차부터 전력질주 기본)
   LOW_SIGNAL_MS: 8000,       // 이 시간 동안 피크 없으면 "더 세게" 안내
   MIN_VALID_COUNT: 20,       // 유효 인정 최소 횟수(1분)
-  // 검증(웹 대체) 임계 — 걸음센서 불가로 리듬/축분포 기반
-  RHYTHM_CV_MAX: 0.55,       // 피크 간격 변동계수(표준편차/평균) 상한
-  Y_DOMINANCE_MIN: 0.42,     // 전체 에너지 중 Y축 비중 하한
-  ABUSE_COUNT_GAP: 10,       // (참고) 원 스펙의 걸음센서 차이 기준 — 웹에선 대체지표로 환산
+  // 검증(웹 대체) — 걸음센서 불가로 리듬 규칙성 + 최소 횟수 기반.
+  // 완화됨: 실사용자가 중간에 속도를 바꿔도 정상으로 인정(0.55 → 0.75).
+  RHYTHM_CV_MAX: 0.75,       // 피크 간격 변동계수(표준편차/평균) 상한
 };
 
 export const SPRINT_KEYS = {
-  threshold: 'ddcircle.sprint.threshold',   // 개인 캘리브레이션 임계값
+  // v2: 감지 방식이 Y축 → 방향무관(magnitude)로 바뀌어 임계값 의미가 달라짐 → 재보정 유도.
+  threshold: 'ddcircle.sprint.threshold2', // 개인 캘리브레이션 임계값(dyn)
   firstUse:  'ddcircle.sprint.firstUseDate', // 첫 사용일(YYYY-MM-DD)
 };
 
-// 평균 진폭 → 강도 퍼센타일(상위 %). 러프 기준표(기기 편차 있어 근사).
+// 평균 dyn 진폭 → 강도 퍼센타일(상위 %). dyn 스케일 기준(러프, 기기 편차 있어 근사).
 export function intensityPercentile(avgAmp) {
-  if (avgAmp >= 32) return 10;
-  if (avgAmp >= 28) return 20;
-  if (avgAmp >= 24) return 35;
-  if (avgAmp >= 20) return 50;
-  if (avgAmp >= 17) return 70;
+  if (avgAmp >= 15) return 10;
+  if (avgAmp >= 12) return 20;
+  if (avgAmp >= 9) return 35;
+  if (avgAmp >= 7) return 50;
+  if (avgAmp >= 5) return 70;
   return 90;
 }
 

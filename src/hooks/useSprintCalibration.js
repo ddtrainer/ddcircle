@@ -31,8 +31,11 @@ export function useSprintCalibration({ start, stop }) {
   const runCalibration = useCallback((durationMs = SPRINT.CALIB_MS) => {
     return new Promise((resolve) => {
       setStatus('running');
-      // 낮은 임계값으로 우선 감지해 진폭 샘플 확보
-      const det = createSprintDetector({ threshold: 11, minIntervalMs: SPRINT.MIN_PEAK_INTERVAL_MS });
+      // 낮은 임계값으로 우선 감지해 dyn 진폭 샘플 확보(방향 무관 스케일)
+      const det = createSprintDetector({
+        threshold: SPRINT.CALIB_CAPTURE_THRESHOLD,
+        minIntervalMs: SPRINT.MIN_PEAK_INTERVAL_MS,
+      });
       start((x, y, z, ts) => det.addSample(x, y, z, ts));
       setTimeout(() => {
         stop();
@@ -41,7 +44,8 @@ export function useSprintCalibration({ start, stop }) {
         if (peakAmps.length >= 2) {
           const sorted = [...peakAmps].sort((a, b) => a - b);
           const median = sorted[Math.floor(sorted.length / 2)];
-          th = Math.min(24, Math.max(11, median * 0.55));
+          // 개인 임계값 = dyn 피크 중앙값의 50%, [5,13] 클램프(정지 오탐 방지)
+          th = Math.min(13, Math.max(5, median * 0.5));
         }
         try { localStorage.setItem(SPRINT_KEYS.threshold, String(th)); } catch { /* ignore */ }
         setThreshold(th);
