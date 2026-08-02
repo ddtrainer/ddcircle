@@ -40,6 +40,8 @@ const Book = lazy(() => import('./views/Book'));
 const Complete = lazy(() => import('./views/Complete'));
 const Terms = lazy(() => import('./views/Terms'));
 const Privacy = lazy(() => import('./views/Privacy'));
+// 전력질주 자동 감지 (신규 기능 — 옵션)
+const SprintDetect = lazy(() => import('./components/AutoDetect/SprintDetect'));
 
 // lazy 뷰 로딩 중 표시할 폴백
 function ViewFallback() {
@@ -54,7 +56,7 @@ function ViewFallback() {
 }
 
 // 카운트다운/세션/Proof/로그인 화면에서는 BottomNav 숨김
-const FULLSCREEN_PATHS = ['/countdown', '/dash', '/deep', '/proof', '/login', '/auth', '/profile-setup', '/book'];
+const FULLSCREEN_PATHS = ['/countdown', '/dash', '/deep', '/proof', '/login', '/auth', '/profile-setup', '/book', '/sprint'];
 
 function ConditionalBottomNav() {
   const { pathname } = useLocation();
@@ -180,6 +182,7 @@ export default function App() {
                     <Route path="/picker" element={<ExercisePicker />} />
                     <Route path="/countdown/:target" element={<Countdown />} />
                     <Route path="/dash" element={<DashSession />} />
+                    <Route path="/sprint" element={<SprintDetect />} />
                     <Route path="/proof" element={<Proof />} />
                     <Route path="/deep" element={<DeepSession />} />
                     <Route path="/complete" element={<Complete />} />

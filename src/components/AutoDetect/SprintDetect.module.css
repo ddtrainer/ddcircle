@@ -1,0 +1,166 @@
+.screen {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px 20px calc(24px + env(safe-area-inset-bottom));
+  background: var(--bg);
+}
+
+.panel {
+  width: 100%;
+  max-width: 360px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+}
+
+.badge {
+  display: inline-block;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  color: #fff;
+  background: var(--warm);
+  padding: 4px 12px;
+  border-radius: 999px;
+}
+
+.title {
+  margin: 4px 0 0;
+  font-size: 30px;
+  font-weight: 800;
+  color: var(--warm);
+}
+
+.desc {
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--text-soft);
+  word-break: keep-all;
+}
+
+.choiceHint {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-muted);
+}
+
+.safety {
+  margin: 0;
+  font-size: 13px;
+  color: var(--text-muted);
+  background: var(--warm-soft);
+  border-radius: 10px;
+  padding: 8px 12px;
+}
+
+.big {
+  font-size: 64px;
+  line-height: 1.2;
+}
+
+.primary {
+  width: 100%;
+  padding: 15px;
+  font-size: 16px;
+  font-weight: 800;
+  font-family: inherit;
+  color: #fff;
+  background: var(--warm);
+  border: none;
+  border-radius: 14px;
+  cursor: pointer;
+  box-shadow: var(--shadow-sm);
+  transition: transform 0.1s, opacity 0.15s;
+}
+.primary:active { transform: scale(0.98); }
+.primary:disabled { opacity: 0.6; cursor: default; }
+
+.lowBtn {
+  width: 100%;
+  padding: 12px;
+  font-size: 14px;
+  font-weight: 700;
+  font-family: inherit;
+  color: var(--text-soft);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  cursor: pointer;
+}
+
+.exit {
+  background: none;
+  border: none;
+  font-family: inherit;
+  font-size: 13px;
+  color: var(--text-muted);
+  cursor: pointer;
+  margin-top: 2px;
+}
+
+.privacy {
+  margin: 2px 0 0;
+  font-size: 12px;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+
+/* 카운트다운 */
+.countdownNum {
+  font-size: 120px;
+  font-weight: 800;
+  color: var(--warm);
+  line-height: 1;
+}
+
+/* 측정 중 */
+.liveCount {
+  font-size: 96px;
+  font-weight: 800;
+  color: var(--warm);
+  line-height: 1;
+}
+.liveLabel {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text-soft);
+  margin-top: -6px;
+}
+.remain {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text-muted);
+  margin-top: 8px;
+}
+.warn {
+  margin: 4px 0 0;
+  font-size: 14px;
+  font-weight: 700;
+  color: #b45309;
+  background: rgba(245, 158, 11, 0.12);
+  border-radius: 10px;
+  padding: 8px 12px;
+}
+
+/* 결과 */
+.resultCount {
+  font-size: 80px;
+  font-weight: 800;
+  color: var(--warm);
+  line-height: 1;
+}
+.resultCount span {
+  font-size: 24px;
+  margin-left: 6px;
+}
+.resultIntensity {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text);
+}

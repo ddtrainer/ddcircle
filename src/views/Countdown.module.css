@@ -50,6 +50,23 @@
   font-weight: 800;
 }
 
+/* [신규] 전력질주 자동 감지 진입 버튼 (Dash Lv.1 옵션) */
+.sprintEntry {
+  margin: 4px 0 18px;
+  padding: 11px 20px;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 800;
+  color: #fff;
+  background: linear-gradient(135deg, #ef4a2a, #f47730, #fbb040);
+  border: none;
+  border-radius: 999px;
+  cursor: pointer;
+  box-shadow: var(--shadow-sm);
+  transition: transform 0.1s;
+}
+.sprintEntry:active { transform: scale(0.97); }
+
 /* Dash 불꽃 아이콘 — 🔥 대체 (세로형 불꽃) */
 .fireIcon {
   height: 1.3em;

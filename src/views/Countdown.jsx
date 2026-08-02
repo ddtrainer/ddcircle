@@ -7,6 +7,7 @@ import { getLevelDef } from '../lib/ddLevel';
 import GuideModal from '../components/modals/GuideModal';
 import WindIcon from '../components/WindIcon';
 import FireIcon from '../components/FireIcon';
+import { deviceMotionSupported } from '../hooks/useDeviceMotion';
 import styles from './Countdown.module.css';
 
 // 5 → 4 → 3 → 2 → 1 → GO! 카운트다운
@@ -133,6 +134,18 @@ export default function Countdown() {
             })}
           </div>
         </div>
+      )}
+
+      {/* [신규·옵션] 전력질주 자동 감지 — Dash Lv.1 + DeviceMotion 지원 기기에서만 노출.
+          미노출/미지원이면 기존 흐름 그대로. 기존 로직은 건드리지 않음. */}
+      {isDash && dashLevel === 1 && deviceMotionSupported() && (
+        <button
+          type="button"
+          className={styles.sprintEntry}
+          onClick={() => navigate('/sprint')}
+        >
+          ⚡ {t('sprintEntryBtn')}
+        </button>
       )}
 
       <button
