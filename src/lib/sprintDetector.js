@@ -1,16 +1,21 @@
-// 전력질주 피크 감지 — 순수 로직(React 무관, 테스트 용이).
-// 방향 무관(orientation-independent): 가속도 '전체 크기(magnitude)'에서 중력을 뺀
-//   dyn = sqrt(x²+y²+z²) - GRAVITY  (정지 시 ~0, 발 착지 시 큰 양의 스파이크)
-// 를 추적한다. magnitude는 방향에 불변이라 폰을 어떻게 쥐어도 동일하게 동작.
-// dyn이 threshold를 상향 돌파 → 로컬 최대 기록 → 하향 복귀 시,
-// 직전 피크로부터 minIntervalMs 이상 지났으면 1회로 카운트.
+// 전력질주 스텝 계수 — 적응형(self-adjusting) 피크 계수. (React 무관, 순수 로직)
+//
+// 배경: '고정 임계값 상향돌파' 방식은 격한 연속 운동에서 신호가 임계값 위에 머물러
+//   내려오는 순간이 없어 카운트를 놓친다("빠를수록 적게" 역전).
+// 해결: 최근 WINDOW_MS 구간의 min~max 중간값을 '실시간 기준선(thr)'으로 삼고,
+//   신호가 기준선을 상향 교차할 때마다 1스텝(진동 1사이클 = 1보/1바운스)으로 센다.
+//   강도가 세든 약하든 각 사이클을 잡는다. 방향 무관: dyn = |가속도 크기| - 중력.
 import { SPRINT, GRAVITY } from '../data/sprintConfig';
 
-export function createSprintDetector({ threshold, minIntervalMs }) {
+const WINDOW_MS = 400;
+
+export function createSprintDetector({ minAmp, minIntervalMs }) {
   let count = 0;
-  let above = false;
-  let localMax = 0;
   let lastPeakTs = -Infinity;
+  let prevAbove = false;
+  let ema = 0;
+  let emaInit = false;
+  const win = [];        // { ts, v } — 최근 구간
   const peakTimes = [];
   const peakAmps = [];
   let samples = 0;
@@ -19,19 +24,27 @@ export function createSprintDetector({ threshold, minIntervalMs }) {
     addSample(x, y, z, ts) {
       samples++;
       const dyn = Math.sqrt(x * x + y * y + z * z) - GRAVITY; // 방향 무관 동적 가속
-      if (dyn >= threshold) {
-        if (!above) { above = true; localMax = dyn; }
-        else if (dyn > localMax) localMax = dyn;
-      } else if (above) {
-        above = false;
-        if (ts - lastPeakTs >= minIntervalMs) {
-          count++;
-          lastPeakTs = ts;
-          peakTimes.push(ts);
-          peakAmps.push(localMax);
-        }
-        localMax = 0;
+      // 경량 스무딩(노이즈 억제)
+      ema = emaInit ? ema * 0.5 + dyn * 0.5 : dyn;
+      emaInit = true;
+      const v = ema;
+
+      win.push({ ts, v });
+      while (win.length && ts - win[0].ts > WINDOW_MS) win.shift();
+      let mn = Infinity, mx = -Infinity;
+      for (const s of win) { if (s.v < mn) mn = s.v; if (s.v > mx) mx = s.v; }
+      const amp = mx - mn;              // 최근 구간 진폭(peak-to-peak)
+      const thr = (mx + mn) / 2;        // 실시간 적응 기준선
+      const above = v > thr;
+
+      // 상향 교차 + 충분한 진폭 + 최소 간격 → 1스텝
+      if (above && !prevAbove && amp >= minAmp && (ts - lastPeakTs) >= minIntervalMs) {
+        count++;
+        lastPeakTs = ts;
+        peakTimes.push(ts);
+        peakAmps.push(amp);
       }
+      prevAbove = above;
     },
     get count() { return count; },
     lastPeakAt() { return lastPeakTs; },
@@ -49,12 +62,11 @@ export function createSprintDetector({ threshold, minIntervalMs }) {
   };
 }
 
-// 웹 대체 검증 — 걸음센서(CMPedometer/StepCounter) 접근 불가로,
-// (1) 리듬 규칙성(cv, 완화된 상한) (2) 최소 횟수 로 신뢰도 산출.
-// verified=false여도 EP는 정상 지급(기록만 남김) — 스펙의 sprint_verified 취지.
+// 웹 대체 검증 — 리듬 규칙성(cv, 완화 상한) + 최소 횟수.
+// verified=false여도 EP는 정상 지급(기록만 남김).
 export function verifySprint({ count, cv }) {
-  const rhythmOk = cv <= SPRINT.RHYTHM_CV_MAX;      // 규칙적 리듬(달리기) vs 불규칙(흔들기)
-  const countOk = count >= SPRINT.MIN_VALID_COUNT;  // 최소 횟수
+  const rhythmOk = cv <= SPRINT.RHYTHM_CV_MAX;
+  const countOk = count >= SPRINT.MIN_VALID_COUNT;
   const verified = rhythmOk && countOk;
   const confidence = (rhythmOk ? 0.6 : 0) + (countOk ? 0.4 : 0);
   return { verified, confidence, rhythmOk, countOk };

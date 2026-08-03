@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useLang } from '../../i18n/LangContext';
 import { useAuth } from '../../context/AuthContext';
 import { useDeviceMotion } from '../../hooks/useDeviceMotion';
-import { useSprintCalibration, getCalibratedThreshold, needsCalibration } from '../../hooks/useSprintCalibration';
+import { useSprintCalibration, getCalibratedMinAmp, needsCalibration } from '../../hooks/useSprintCalibration';
 import { createSprintDetector, verifySprint } from '../../lib/sprintDetector';
 import { saveSprint, processLowIntensityAlternative } from '../../lib/sprintStore';
 import { SPRINT, isIntroPeriod, intensityPercentile } from '../../data/sprintConfig';
@@ -74,8 +74,8 @@ export default function SprintDetect() {
   // ── 1분 측정 ──
   useEffect(() => {
     if (phase !== 'measuring') return;
-    const threshold = getCalibratedThreshold();
-    const det = createSprintDetector({ threshold, minIntervalMs: SPRINT.MIN_PEAK_INTERVAL_MS });
+    const minAmp = getCalibratedMinAmp();
+    const det = createSprintDetector({ minAmp, minIntervalMs: SPRINT.MIN_PEAK_INTERVAL_MS });
     detectorRef.current = det;
     setLiveCount(0); setRemainSec(SPRINT.MEASURE_MS / 1000); setLowSignal(false);
     const startTs = performance.now();
