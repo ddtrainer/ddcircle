@@ -7,7 +7,7 @@ export const SPRINT = {
   CALIB_CAPTURE_MIN_AMP: 2,    // 캘리브레이션 캡처용 낮은 floor
   MIN_PEAK_INTERVAL_MS: 160,   // 중복 카운트 방지 최소 스텝 간격(최대 ~375/분, 전력질주 대응)
   MEASURE_MS: 60000,           // 1분 측정
-  COUNTDOWN_SEC: 3,            // 측정 시작 전 카운트다운
+  COUNTDOWN_SEC: 5,            // 측정 시작 전 카운트다운 (5→1)
   CALIB_MS: 6000,             // 캘리브레이션(3번 뛰기) 캡처 시간
   INTRO_DAYS: 3,              // 첫 N일간 강도 선택 화면 노출(4일차부터 전력질주 기본)
   LOW_SIGNAL_MS: 8000,       // 이 시간 동안 스텝 없으면 "더 세게" 안내
