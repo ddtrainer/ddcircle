@@ -225,7 +225,7 @@ export default function SprintDetect() {
           <div className={styles.badge}>{L('전력질주 완료', 'Sprint complete')}</div>
           <div className={styles.resultCount}>{result.count}<span>{L('회', 'reps')}</span></div>
           <div className={styles.resultIntensity}>
-            {L('강도', 'Intensity')} · {L('상위', 'Top')} {intensityPercentile(result.avgAmp)}%
+            {L('강도', 'Intensity')} · {L('상위', 'Top')} {intensityPercentile(result.avgAmp, result.count)}%
           </div>
           <button className={styles.primary} onClick={finalize}>
             {L('완료', 'Done')}

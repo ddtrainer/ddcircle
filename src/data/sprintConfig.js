@@ -5,7 +5,7 @@ export const SPRINT = {
   // 적응형 계수: 진폭(peak-to-peak)이 minAmp 이상일 때만 유효 사이클로 인정(노이즈 floor).
   DEFAULT_MIN_AMP: 3,          // m/s² — 유효 진폭 최소치(정지 잡음 제거)
   CALIB_CAPTURE_MIN_AMP: 2,    // 캘리브레이션 캡처용 낮은 floor
-  MIN_PEAK_INTERVAL_MS: 200,   // 중복 카운트 방지 최소 스텝 간격(최대 ~300/분)
+  MIN_PEAK_INTERVAL_MS: 160,   // 중복 카운트 방지 최소 스텝 간격(최대 ~375/분, 전력질주 대응)
   MEASURE_MS: 60000,           // 1분 측정
   COUNTDOWN_SEC: 3,            // 측정 시작 전 카운트다운
   CALIB_MS: 6000,             // 캘리브레이션(3번 뛰기) 캡처 시간
@@ -22,13 +22,16 @@ export const SPRINT_KEYS = {
   firstUse:  'ddcircle.sprint.firstUseDate', // 첫 사용일(YYYY-MM-DD)
 };
 
-// 평균 진폭(peak-to-peak) → 강도 퍼센타일(상위 %). 러프 기준(기기 편차 있어 근사).
-export function intensityPercentile(avgAmp) {
-  if (avgAmp >= 18) return 10;
-  if (avgAmp >= 14) return 20;
-  if (avgAmp >= 11) return 35;
-  if (avgAmp >= 8) return 50;
-  if (avgAmp >= 6) return 70;
+// 강도 퍼센타일(상위 %) = "진폭 × 케이던스(초당 스텝)".
+// 힘(진폭)과 빠르기(케이던스)를 함께 반영 → 전력질주(둘 다 높음)가 최상위,
+// 이동성 러닝(진폭만 큼)은 그 아래. 러프 기준(기기 편차 있어 근사, 실측 후 보정).
+export function intensityPercentile(avgAmp, count = 0) {
+  const vigor = avgAmp * (count / 60); // 초당 스텝으로 가중
+  if (vigor >= 50) return 10;
+  if (vigor >= 40) return 20;
+  if (vigor >= 25) return 35;
+  if (vigor >= 15) return 50;
+  if (vigor >= 8) return 70;
   return 90;
 }
 

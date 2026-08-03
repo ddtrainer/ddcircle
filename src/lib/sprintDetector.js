@@ -7,7 +7,7 @@
 //   강도가 세든 약하든 각 사이클을 잡는다. 방향 무관: dyn = |가속도 크기| - 중력.
 import { SPRINT, GRAVITY } from '../data/sprintConfig';
 
-const WINDOW_MS = 400;
+const WINDOW_MS = 300; // 짧게 → 빠른 케이던스에 기준선이 빠르게 반응(전력질주 촘촘히 감지)
 
 export function createSprintDetector({ minAmp, minIntervalMs }) {
   let count = 0;
@@ -24,8 +24,8 @@ export function createSprintDetector({ minAmp, minIntervalMs }) {
     addSample(x, y, z, ts) {
       samples++;
       const dyn = Math.sqrt(x * x + y * y + z * z) - GRAVITY; // 방향 무관 동적 가속
-      // 경량 스무딩(노이즈 억제)
-      ema = emaInit ? ema * 0.5 + dyn * 0.5 : dyn;
+      // 경량 스무딩(노이즈 억제) — 가볍게(0.25) 두어 빠른 피크가 뭉개지지 않게
+      ema = emaInit ? ema * 0.25 + dyn * 0.75 : dyn;
       emaInit = true;
       const v = ema;
 
