@@ -227,12 +227,6 @@ export default function SprintDetect() {
           <div className={styles.resultIntensity}>
             {L('강도', 'Intensity')} · {L('상위', 'Top')} {intensityPercentile(result.avgAmp)}%
           </div>
-          {!result.verified && (
-            <p className={styles.warn}>
-              {L('움직임이 불규칙해 신뢰도가 낮아요 (기록은 정상 반영됩니다).',
-                 'Motion looked irregular — low confidence (still counted).')}
-            </p>
-          )}
           <button className={styles.primary} onClick={finalize}>
             {L('완료', 'Done')}
           </button>
