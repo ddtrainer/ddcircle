@@ -7,7 +7,7 @@ import { useDeviceMotion } from '../../hooks/useDeviceMotion';
 import { getCalibratedMinAmp } from '../../hooks/useSprintCalibration';
 import { createSprintDetector } from '../../lib/sprintDetector';
 import { saveSprint } from '../../lib/sprintStore';
-import { SPRINT, intensityPercentile, intensityToEp } from '../../data/sprintConfig';
+import { SPRINT, intensityPercentile } from '../../data/sprintConfig';
 import { getDashMode } from '../../data/dashModes';
 import { playDashStart, playDashEnd, warmDashAudio } from '../../hooks/useDashSound';
 import styles from './SprintDetect.module.css';
@@ -34,12 +34,10 @@ export default function SprintDetect() {
 
   useEffect(() => () => motionStop(), [motionStop]);
 
-  // 완료 → dashFully + 강도비례 기준 EP 저장 후 (선택)셀카 화면으로.
-  const goProof = (baseEp, res) => {
-    try {
-      sessionStorage.setItem('ddcircle.session.dashFully', '1');
-      sessionStorage.setItem('ddcircle.session.dashBaseEp', String(baseEp));
-    } catch { /* ignore */ }
+  // 완료 → dashFully 저장 후 (선택)셀카 화면으로.
+  // v2.2: Dash EP는 종목 배율(completeSession)로 계산 — 강도는 화면 표시용일 뿐 EP엔 무관.
+  const goProof = (res) => {
+    try { sessionStorage.setItem('ddcircle.session.dashFully', '1'); } catch { /* ignore */ }
     if (res) {
       saveSprint(user?.id, {
         sprint_count: res.count,
@@ -55,7 +53,7 @@ export default function SprintDetect() {
   const handleStart = async () => {
     warmDashAudio();
     const res = await requestPermission();
-    if (res !== 'granted') { goProof(7, null); return; } // 센서 불가 → 걷기 기준 EP + 셀카
+    if (res !== 'granted') { goProof(null); return; } // 센서 불가 → 측정 없이 완료(종목 배율로 EP)
     setPhase('countdown');
   };
 
@@ -95,10 +93,7 @@ export default function SprintDetect() {
     return () => { clearInterval(poll); clearTimeout(done); motionStop(); };
   }, [phase, motionStart, motionStop]);
 
-  const finalize = () => {
-    const pct = result ? intensityPercentile(result.avgAmp, result.count) : 90;
-    goProof(intensityToEp(pct), result);
-  };
+  const finalize = () => goProof(result);
 
   return (
     <div className={styles.screen}>

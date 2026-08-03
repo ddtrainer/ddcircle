@@ -1,7 +1,8 @@
 import { useLevel } from '../context/LevelContext';
 import { useApp } from '../context/AppContext';
 import { useLang } from '../i18n/LangContext';
-import { DEEP_LEVELS, DASH_LEVELS, getLevelDef, checkLevelUp, MAX_LEVEL, graceDaysFor } from '../lib/ddLevel';
+import { DEEP_LEVELS, getLevelDef, checkLevelUp, MAX_LEVEL, graceDaysFor } from '../lib/ddLevel';
+import { DASH_MODES, DASH_MODE_MULTIPLIER } from '../data/dashModes';
 import styles from './DdLevelCard.module.css';
 
 // 두 'YYYY-MM-DD' 날짜 사이의 달력 일수 차 (AppContext의 daysBetween과 동일 규칙).
@@ -15,7 +16,7 @@ function daysBetween(fromStr, toStr) {
 // 처음 보는 사용자도 한눈에 이해하도록: 한 줄 설명 + 트랙별 색상(Deep=파랑/Dash=주황) + '지금' 위치 + 진행 막대.
 // 가이드 진입은 세션(DeepSession/DashSession) 내에서만 노출해 중복을 피한다.
 export default function DdLevelCard() {
-  const { deepLevel, dashLevel } = useLevel();
+  const { deepLevel } = useLevel();
   const { userEp } = useApp();
   const { lang } = useLang();
   const streak = userEp?.streak ?? 0;
@@ -52,9 +53,9 @@ export default function DdLevelCard() {
     graceLabel = `${grace}일까지 쉬어도 연속 유지`;
   }
 
+  // v2.2: Deep만 레벨 트랙. Dash는 레벨 폐지 → 종목·배율 안내로 별도 표시.
   const tracks = [
     { key: 'deep', label: lang === 'ko' ? '숨-Deep' : 'Soom-Deep', color: 'var(--cool)', soft: 'var(--cool-soft)', levels: DEEP_LEVELS, current: deepLevel },
-    { key: 'dash', label: lang === 'ko' ? '핏-Dash' : 'Fit-Dash', color: 'var(--warm)', soft: 'var(--warm-soft)', levels: DASH_LEVELS, current: dashLevel },
   ];
 
   return (
@@ -143,6 +144,29 @@ export default function DdLevelCard() {
           </div>
         );
       })}
+
+      {/* Dash — 레벨 폐지, 종목 선택제. 종목별 EP 배율 안내(읽기 전용). */}
+      <div className={styles.track} style={{ '--tc': 'var(--warm)', '--tc-soft': 'var(--warm-soft)' }}>
+        <div className={styles.trackHead}>
+          <div className={styles.trackTitle}>
+            <span className={styles.trackLabel}>{lang === 'ko' ? '핏-Dash' : 'Fit-Dash'}</span>
+          </div>
+          <span className={styles.trackNow}>
+            {lang === 'ko' ? '종목 선택제 · EP 배율' : 'Pick a mode · EP mult'}
+          </span>
+        </div>
+        <div className={styles.steps}>
+          {DASH_MODES.map((m) => (
+            <div key={m.key} className={styles.stepWrap}>
+              <div className={`${styles.step} ${styles.unlocked}`}>
+                <span className={styles.stepEmoji}>{m.emoji}</span>
+                <span className={styles.stepName}>{lang === 'ko' ? m.labelKo : m.labelEn}</span>
+                <span className={styles.stepMul}>×{DASH_MODE_MULTIPLIER[m.key]}</span>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
     </div>
   );
 }

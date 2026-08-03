@@ -104,14 +104,8 @@ export function LevelProvider({ children }) {
     }
   }, [streak, totalEp, deepLevel, setDeepLevel, enqueueLevelUp]);
 
-  useEffect(() => {
-    const cur = clampLevel(dashLevel);
-    const target = Math.max(cur, highestUnlockedLevel('dash', { streak, totalEp }));
-    if (target > cur) {
-      setDashLevel(target);
-      enqueueLevelUp('dash', target);
-    }
-  }, [streak, totalEp, dashLevel, setDashLevel, enqueueLevelUp]);
+  // v2.2: Dash 레벨 체계 폐지 → Dash 자동 승급 없음. (dashLevel 상태·저장값은 남기되 미사용)
+  // Dash는 "오늘 완료 여부"만 스트릭에 반영되고, EP는 종목 배율로 계산된다.
 
   // 가이드 열람 기록 (로그인 시에만 원격 저장 — 비로그인은 no-op)
   const recordGuideView = useCallback((track, level) => {

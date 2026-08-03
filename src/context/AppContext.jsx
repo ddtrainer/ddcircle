@@ -6,6 +6,7 @@ import { recordStakeDeclared, resolveStakeWon, resolveStakeForfeited, cancelStak
 import { findChallenge } from '../data/challenges';
 import { calculateEarnedEp } from '../utils/ep';
 import { graceDaysFor } from '../lib/ddLevel';
+import { dashModeMultiplier } from '../data/dashModes';
 import { DEFAULT_CUSTOM_BREATH, DEFAULT_NATURAL_BREATH, DEFAULT_WIM_HOF_ROUNDS, DEFAULT_WIM_HOF_CYCLES, DEFAULT_WIM_HOF_RETENTION, DEFAULT_WIM_HOF_RECOVERY, DEFAULT_WIM_HOF_FINISH } from '../data/breathPatterns';
 import { evaluateChallenges } from '../data/challenges';
 
@@ -186,18 +187,19 @@ export function AppProvider({ children }) {
   }, [proofUrl]);
 
   // 3분 플로우 완료 시 EP 보상 + 통계 갱신 + 챌린지 보너스 처리
-  const completeSession = useCallback(({ shared, deepMultiplier = 1, dashMultiplier = 1 } = {}) => {
+  const completeSession = useCallback(({ shared, deepMultiplier = 1 } = {}) => {
     const hasProof = !!proofBlobRef.current;
 
     // Dash/Deep 완주 여부 — DashSession/DeepSession이 sessionStorage에 기록
     let dashFully = false, deepFully = false;
-    let dashBaseEp = 10; // 자동측정 강도 비례 Dash 기준 EP (없으면 기존 고정 10)
     try {
       dashFully = sessionStorage.getItem('ddcircle.session.dashFully') === '1';
       deepFully = sessionStorage.getItem('ddcircle.session.deepFully') === '1';
-      const be = parseInt(sessionStorage.getItem('ddcircle.session.dashBaseEp') || '', 10);
-      if (Number.isFinite(be) && be > 0) dashBaseEp = be;
     } catch { /* defaults */ }
+
+    // v2.2: Dash EP = 10(고정) × 종목 배율 × 스트릭. 레벨 배율·강도 baseEp 폐지.
+    // 종목은 EP 양에만 영향, 스트릭 인정엔 무관(종목 무관하게 완료면 +1).
+    const dashMultiplier = dashModeMultiplier(selectedExercise);
 
     // 오늘 세션 카운트 (날짜 바뀌면 0부터)
     const today = new Date();
@@ -230,7 +232,7 @@ export function AppProvider({ children }) {
       dashFully, deepFully, hasProof, shared,
       streak: newStreak,
       todaySessionCount: todayCountForCap,
-      deepMultiplier, dashMultiplier, dashBaseEp,
+      deepMultiplier, dashMultiplier, // dashBaseEp는 기본 10 사용
     });
 
     // 챌린지 평가 — 달성 시 보증+보너스 환급, 실패 시 보증 소각
@@ -301,7 +303,6 @@ export function AppProvider({ children }) {
     try {
       sessionStorage.removeItem('ddcircle.session.dashFully');
       sessionStorage.removeItem('ddcircle.session.deepFully');
-      sessionStorage.removeItem('ddcircle.session.dashBaseEp');
     } catch { /* ignore */ }
 
     // 인증된 유저는 Supabase에 기록. save 프라미스를 반환해서 호출자가

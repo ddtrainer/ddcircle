@@ -15,7 +15,10 @@ export function toRoman(n) {
 }
 
 // profile: { nickname, coach?, pioneer?, master_level? }
-// levels:  { deepLevel, dashLevel } — 현재 사용자의 DD 레벨 (선택)
+// levels:  { deepLevel, streak } — Deep 레벨 + 통합 스트릭 (선택)
+// v2.2: Pioneer/🌸 조건 = Deep Lv.4 + Dash 스트릭 21일. (Dash 레벨 폐지)
+//   Dash는 항상 흐름에 포함되므로 통합 스트릭을 Dash 스트릭으로 사용.
+const PIONEER_STREAK = 21;
 export function renderNickname(profile, levels = null) {
   const nickname = profile?.nickname || '';
   if (!nickname) return '';
@@ -25,7 +28,7 @@ export function renderNickname(profile, levels = null) {
   if (profile?.master_level >= 1) {
     return `${nickname} 🌲 Master ${toRoman(profile.master_level)}`;
   }
-  if (levels && levels.deepLevel >= MAX_LEVEL && levels.dashLevel >= MAX_LEVEL) {
+  if (levels && levels.deepLevel >= MAX_LEVEL && (levels.streak || 0) >= PIONEER_STREAK) {
     return `${nickname} 🌸`;
   }
   return nickname;

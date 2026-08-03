@@ -3,13 +3,15 @@ import { useNavigate } from 'react-router-dom';
 import { useLang } from '../../i18n/LangContext';
 import { useAuth } from '../../context/AuthContext';
 import { useLevel } from '../../context/LevelContext';
+import { useApp } from '../../context/AppContext';
 import { renderNickname } from '../../lib/nickname';
 import styles from './Header.module.css';
 
 export default function Header() {
   const { lang, setLang } = useLang();
   const { user, profile, signOut } = useAuth();
-  const { deepLevel, dashLevel } = useLevel();
+  const { deepLevel } = useLevel();
+  const { userEp } = useApp();
   const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef(null);
@@ -102,7 +104,7 @@ export default function Header() {
                 <div className={styles.menu} role="menu">
                   {profile?.nickname && (
                     <div className={styles.menuHeader}>
-                      {renderNickname(profile, { deepLevel, dashLevel })}
+                      {renderNickname(profile, { deepLevel, streak: userEp?.streak ?? 0 })}
                     </div>
                   )}
                   <button className={styles.menuItem} onClick={handleEdit} role="menuitem">

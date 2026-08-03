@@ -27,3 +27,16 @@ export const DASH_MODES = [
 export function getDashMode(key) {
   return DASH_MODES.find((m) => m.key === key) || DASH_MODES[0];
 }
+
+// Dash EP 종목별 배율 (v2.2) — Dash EP = 10(고정) × 배율 × 스트릭 부스터.
+// 레벨(Lv.1~4) 배율 폐지. 종목은 EP 양에만 영향(스트릭엔 영향 없음).
+export const DASH_MODE_MULTIPLIER = {
+  walk: 1.0,     // 걷기
+  slowrun: 1.5,  // 슬로우 러닝(Zone 2)
+  sprint: 2.0,   // 전력질주
+  free: 1.5,     // 자유 종목(혼합)
+};
+
+export function dashModeMultiplier(key) {
+  return DASH_MODE_MULTIPLIER[key] ?? 1.0;
+}

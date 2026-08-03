@@ -25,7 +25,7 @@ export default function Complete() {
   const { t, lang } = useLang();
   const { proofUrl, getProofBlob, completeSession, addUserPost, selectedExercise, lastChallengeBonus, consumeLastChallengeBonus, userEp, todaySessions } = useApp();
   const { user, profile } = useAuth();
-  const { deepMultiplier, dashMultiplier } = useLevel();
+  const { deepMultiplier } = useLevel(); // Dash 배율은 종목 기반(completeSession 내부 계산)
   const { show: showToast } = useToast();
   const navigate = useNavigate();
   const [sharing, setSharing] = useState(false);
@@ -60,7 +60,7 @@ export default function Complete() {
   }, [empathyMsg]);
 
   const finish = (shared) => {
-    const { earned, save, capReached, dashFully, deepFully } = completeSession({ shared, deepMultiplier, dashMultiplier });
+    const { earned, save, capReached, dashFully, deepFully } = completeSession({ shared, deepMultiplier });
     if (capReached) {
       showToast('🌙', t('epCapToast'));  // "오늘은 EP 적립 종료 (2회 완료)"
     } else if (!dashFully && !deepFully) {
