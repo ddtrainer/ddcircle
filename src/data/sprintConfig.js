@@ -35,6 +35,16 @@ export function intensityPercentile(avgAmp, count = 0) {
   return 90;
 }
 
+// 측정 강도(퍼센타일) → Dash 기준 EP. 여기에 레벨·스트릭 배율이 추가로 곱해진다.
+//   상위 ≤20% (전력질주급) → 15
+//   상위 ≤50% (슬로우런급) → 10
+//   그 외    (걷기급)      → 7
+export function intensityToEp(percentile) {
+  if (percentile <= 20) return 15;
+  if (percentile <= 50) return 10;
+  return 7;
+}
+
 // 'YYYY-MM-DD'
 export function todayKey(d = new Date()) {
   const y = d.getFullYear();

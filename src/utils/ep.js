@@ -44,12 +44,14 @@ export function calculateEarnedEp({
   // DD 레벨 배율 — 트랙별 완주 점수에만 곱한다. 미지정 시 1.0 (기존 동작 유지).
   deepMultiplier = 1,
   dashMultiplier = 1,
+  // Dash 기준 EP — 자동측정 강도 비례(걷기7/슬로우런10/전력질주15). 미지정 시 기존 고정 10.
+  dashBaseEp = 10,
 }) {
   // 하루 2회 캡 — 3회차부터 0 EP
   if (todaySessionCount >= DAILY_EP_CAP_SESSIONS) return 0;
 
   let ep = 0;
-  if (dashFully) ep += 10 * dashMultiplier;
+  if (dashFully) ep += dashBaseEp * dashMultiplier;
   if (deepFully) ep += 15 * deepMultiplier;
   if (dashFully && deepFully) ep += 5;  // Full Set 보너스 (배율 미적용)
   if (hasProof) ep += 5;

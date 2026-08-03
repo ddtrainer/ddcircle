@@ -65,16 +65,9 @@ export default function DeepSession() {
     const fully = !skipClickedRef.current;
     try { sessionStorage.setItem('ddcircle.session.deepFully', fully ? '1' : '0'); } catch {}
     track(Events.DEEP_COMPLETED, { patternId: breathPatternId, fully });
-    // Deep 종료 후 분기:
-    //   - 선호 운동 저장됨 → Picker 스킵하고 바로 Dash 카운트다운 (재방문 사용자)
-    //   - 선호 운동 없음 → Picker 노출 (첫 사용자 또는 명시적 변경 진입)
+    // Deep 종료 후 → 항상 Dash 3종 선택 화면(/picker). 컨디션·환경 따라 매번 선택.
     setTimeout(() => {
-      if (preferredExercise) {
-        setSelectedExercise(preferredExercise);
-        navigate('/countdown/dash', { replace: true });
-      } else {
-        navigate('/picker', { replace: true });
-      }
+      navigate('/picker', { replace: true });
     }, 600);
   };
 

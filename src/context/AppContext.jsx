@@ -191,9 +191,12 @@ export function AppProvider({ children }) {
 
     // Dash/Deep 완주 여부 — DashSession/DeepSession이 sessionStorage에 기록
     let dashFully = false, deepFully = false;
+    let dashBaseEp = 10; // 자동측정 강도 비례 Dash 기준 EP (없으면 기존 고정 10)
     try {
       dashFully = sessionStorage.getItem('ddcircle.session.dashFully') === '1';
       deepFully = sessionStorage.getItem('ddcircle.session.deepFully') === '1';
+      const be = parseInt(sessionStorage.getItem('ddcircle.session.dashBaseEp') || '', 10);
+      if (Number.isFinite(be) && be > 0) dashBaseEp = be;
     } catch { /* defaults */ }
 
     // 오늘 세션 카운트 (날짜 바뀌면 0부터)
@@ -227,7 +230,7 @@ export function AppProvider({ children }) {
       dashFully, deepFully, hasProof, shared,
       streak: newStreak,
       todaySessionCount: todayCountForCap,
-      deepMultiplier, dashMultiplier,
+      deepMultiplier, dashMultiplier, dashBaseEp,
     });
 
     // 챌린지 평가 — 달성 시 보증+보너스 환급, 실패 시 보증 소각
@@ -298,6 +301,7 @@ export function AppProvider({ children }) {
     try {
       sessionStorage.removeItem('ddcircle.session.dashFully');
       sessionStorage.removeItem('ddcircle.session.deepFully');
+      sessionStorage.removeItem('ddcircle.session.dashBaseEp');
     } catch { /* ignore */ }
 
     // 인증된 유저는 Supabase에 기록. save 프라미스를 반환해서 호출자가
