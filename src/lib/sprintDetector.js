@@ -1,21 +1,20 @@
-// 전력질주 스텝 계수 — 적응형(self-adjusting) 피크 계수. (React 무관, 순수 로직)
+// 전력질주 스텝 계수 — 로컬 피크(각 착지) 직접 감지. (React 무관, 순수 로직)
 //
-// 배경: '고정 임계값 상향돌파' 방식은 격한 연속 운동에서 신호가 임계값 위에 머물러
-//   내려오는 순간이 없어 카운트를 놓친다("빠를수록 적게" 역전).
-// 해결: 최근 WINDOW_MS 구간의 min~max 중간값을 '실시간 기준선(thr)'으로 삼고,
-//   신호가 기준선을 상향 교차할 때마다 1스텝(진동 1사이클 = 1보/1바운스)으로 센다.
-//   강도가 세든 약하든 각 사이클을 잡는다. 방향 무관: dyn = |가속도 크기| - 중력.
+// 방식: 착지마다 생기는 '국소 최대점(local maximum)'을 검출하고,
+//   직전 골짜기 대비 돌출(prominence = peak - valley)이 minAmp 이상이며
+//   불응기(minIntervalMs)를 지났을 때만 1스텝으로 센다.
+//   → 케이던스(느림/빠름)와 무관하게 각 스텝을 잡는다. 고정 윈도우의 양극단 누락 해결.
+//   방향 무관: dyn = |가속도 크기| - 중력. 경량 스무딩 + 불응기로 착지당 1회.
 import { SPRINT, GRAVITY } from '../data/sprintConfig';
-
-const WINDOW_MS = 300; // 짧게 → 빠른 케이던스에 기준선이 빠르게 반응(전력질주 촘촘히 감지)
 
 export function createSprintDetector({ minAmp, minIntervalMs }) {
   let count = 0;
   let lastPeakTs = -Infinity;
-  let prevAbove = false;
   let ema = 0;
   let emaInit = false;
-  const win = [];        // { ts, v } — 최근 구간
+  let prevV = -Infinity;
+  let rising = false;
+  let valley = Infinity;   // 마지막 카운트 이후 최소값(골짜기)
   const peakTimes = [];
   const peakAmps = [];
   let samples = 0;
@@ -24,27 +23,28 @@ export function createSprintDetector({ minAmp, minIntervalMs }) {
     addSample(x, y, z, ts) {
       samples++;
       const dyn = Math.sqrt(x * x + y * y + z * z) - GRAVITY; // 방향 무관 동적 가속
-      // 경량 스무딩(노이즈 억제) — 가볍게(0.25) 두어 빠른 피크가 뭉개지지 않게
-      ema = emaInit ? ema * 0.25 + dyn * 0.75 : dyn;
+      // 경량 스무딩(마이크로 지터 제거, 피크는 보존)
+      ema = emaInit ? ema * 0.4 + dyn * 0.6 : dyn;
       emaInit = true;
       const v = ema;
 
-      win.push({ ts, v });
-      while (win.length && ts - win[0].ts > WINDOW_MS) win.shift();
-      let mn = Infinity, mx = -Infinity;
-      for (const s of win) { if (s.v < mn) mn = s.v; if (s.v > mx) mx = s.v; }
-      const amp = mx - mn;              // 최근 구간 진폭(peak-to-peak)
-      const thr = (mx + mn) / 2;        // 실시간 적응 기준선
-      const above = v > thr;
+      if (v < valley) valley = v;      // 골짜기 추적
 
-      // 상향 교차 + 충분한 진폭 + 최소 간격 → 1스텝
-      if (above && !prevAbove && amp >= minAmp && (ts - lastPeakTs) >= minIntervalMs) {
-        count++;
-        lastPeakTs = ts;
-        peakTimes.push(ts);
-        peakAmps.push(amp);
+      if (v > prevV) {
+        rising = true;
+      } else if (v < prevV && rising) {
+        // 방금 국소 최대점(prevV)을 지남
+        rising = false;
+        const prom = prevV - valley;   // 골짜기 대비 돌출
+        if (prom >= minAmp && (ts - lastPeakTs) >= minIntervalMs) {
+          count++;
+          lastPeakTs = ts;
+          peakTimes.push(ts);
+          peakAmps.push(prom);
+          valley = v;                  // 다음 스텝용 골짜기 리셋
+        }
       }
-      prevAbove = above;
+      prevV = v;
     },
     get count() { return count; },
     lastPeakAt() { return lastPeakTs; },

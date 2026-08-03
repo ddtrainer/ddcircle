@@ -43,7 +43,8 @@ export function useSprintCalibration({ start, stop }) {
         if (peakAmps.length >= 2) {
           const sorted = [...peakAmps].sort((a, b) => a - b);
           const median = sorted[Math.floor(sorted.length / 2)];
-          amp = Math.min(5, Math.max(2.5, median * 0.3));
+          // minAmp는 '노이즈 floor'라 낮게 유지 → 걷기 등 약한 스텝도 놓치지 않음.
+          amp = Math.min(4, Math.max(2.5, median * 0.15));
         }
         try { localStorage.setItem(SPRINT_KEYS.threshold, String(amp)); } catch { /* ignore */ }
         setMinAmp(amp);

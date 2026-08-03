@@ -17,8 +17,8 @@ export const SPRINT = {
 };
 
 export const SPRINT_KEYS = {
-  // v3: 감지 방식이 적응형(진폭 floor) 으로 바뀜 → 기존 임계값 의미 폐기, 재보정 유도.
-  threshold: 'ddcircle.sprint.minamp3', // 개인 캘리브레이션 진폭 floor
+  // v4: 감지가 로컬 피크(돌출 prominence) 로 바뀜 → floor 의미 변경, 재보정 유도.
+  threshold: 'ddcircle.sprint.minamp4', // 개인 캘리브레이션 돌출 floor
   firstUse:  'ddcircle.sprint.firstUseDate', // 첫 사용일(YYYY-MM-DD)
 };
 
