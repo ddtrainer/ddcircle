@@ -17,6 +17,11 @@ export const DASH_MODES = [
     labelKo: '전력질주', labelEn: 'Sprint',
     descKo: '제자리에서 최대 스피드', descEn: 'Max speed in place',
   },
+  {
+    key: 'free', emoji: '🔀',
+    labelKo: '자유 종목', labelEn: 'Free Mix',
+    descKo: '걷기·러닝·전력질주 믹스', descEn: 'Mix walk · run · sprint',
+  },
 ];
 
 export function getDashMode(key) {
