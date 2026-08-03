@@ -26,19 +26,17 @@ export const DEEP_LEVELS = [
 // Dash 레벨 — 모두 1분 고정. 개발스펙 v2.0 전체 구성표 기준.
 //   options: 레벨별 운동 선택지. key=null 은 애니메이션 에셋이 아직 없는 종목(빈 슬롯).
 //   exerciseKeys: 실제 재생 가능한(에셋 보유) 키만. 기본 선택값 계산 등에 사용.
+// Dash는 3종(걷기·슬로우런·전력질주) 자동측정으로 통일. 레벨은 EP 배율(성장) 지표로만 유지.
+// options/exerciseKeys는 하위호환용 잔재(현재 미사용) — 실제 선택은 data/dashModes.js.
 export const DASH_LEVELS = [
-  { level: 1, emoji: '①', name: '입문',  method: '걷기 / 러닝',
-    options: [{ key: 'jog', label: '걷기' }, { key: 'running', label: '러닝' }],
-    exerciseKeys: ['jog', 'running'], multiplier: 1.0, unlock: UNLOCK[1] },
-  { level: 2, emoji: '②', name: '기본',  method: '스쿼트 / 팔굽혀펴기',
-    options: [{ key: 'squat', label: '스쿼트' }, { key: 'pushup', label: '팔굽혀펴기' }],
-    exerciseKeys: ['squat', 'pushup'], multiplier: 1.5, unlock: UNLOCK[2] },
-  { level: 3, emoji: '③', name: '숙련',  method: '버피 / 점핑잭',
-    options: [{ key: 'burpee', label: '버피' }, { key: 'jumping-jack', label: '점핑잭' }],
-    exerciseKeys: ['burpee', 'jumping-jack'], multiplier: 2.0, unlock: UNLOCK[3] },
-  { level: 4, emoji: '④', name: '전문',  method: 'HIIT 미니',
-    options: [{ key: 'hiit', label: 'HIIT 미니' }],
-    exerciseKeys: ['hiit'], multiplier: 3.0, unlock: UNLOCK[4], safetyRequired: true },
+  { level: 1, emoji: '①', name: '입문',  method: '걷기·슬로우런·전력질주',
+    options: [], exerciseKeys: [], multiplier: 1.0, unlock: UNLOCK[1] },
+  { level: 2, emoji: '②', name: '기본',  method: '걷기·슬로우런·전력질주',
+    options: [], exerciseKeys: [], multiplier: 1.5, unlock: UNLOCK[2] },
+  { level: 3, emoji: '③', name: '숙련',  method: '걷기·슬로우런·전력질주',
+    options: [], exerciseKeys: [], multiplier: 2.0, unlock: UNLOCK[3] },
+  { level: 4, emoji: '④', name: '전문',  method: '걷기·슬로우런·전력질주',
+    options: [], exerciseKeys: [], multiplier: 3.0, unlock: UNLOCK[4], safetyRequired: true },
 ];
 
 export const MAX_LEVEL = 4;
