@@ -33,6 +33,10 @@ function playNote(ctx, hz, startOffset, durationSec, peakGain = 0.12) {
   osc.stop(t0 + durationSec + 0.05);
 }
 
+// 오디오 컨텍스트 예열 — 사용자 제스처(버튼 탭) 안에서 호출해 두면
+// 이후 타이머로 재생되는 playDashStart/End가 iOS에서도 묵음 거부되지 않음.
+export function warmDashAudio() { getCtx(); }
+
 // 시작 효과음: 경쾌한 상행 아르페지오 (C5 → E5 → G5)
 export function playDashStart() {
   const ctx = getCtx();

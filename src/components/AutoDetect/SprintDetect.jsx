@@ -6,6 +6,7 @@ import { useDeviceMotion } from '../../hooks/useDeviceMotion';
 import { useSprintCalibration, getCalibratedMinAmp, needsCalibration } from '../../hooks/useSprintCalibration';
 import { createSprintDetector, verifySprint } from '../../lib/sprintDetector';
 import { saveSprint, processLowIntensityAlternative } from '../../lib/sprintStore';
+import { playDashStart, playDashEnd, warmDashAudio } from '../../hooks/useDashSound';
 import { SPRINT, isIntroPeriod, intensityPercentile } from '../../data/sprintConfig';
 import styles from './SprintDetect.module.css';
 
@@ -79,6 +80,7 @@ export default function SprintDetect() {
     detectorRef.current = det;
     setLiveCount(0); setRemainSec(SPRINT.MEASURE_MS / 1000); setLowSignal(false);
     const startTs = performance.now();
+    playDashStart(); // 🔊 1분 측정 시작 신호음
     motionStart((x, y, z, ts) => det.addSample(x, y, z, ts));
     const poll = setInterval(() => {
       setLiveCount(det.count);
@@ -90,6 +92,7 @@ export default function SprintDetect() {
     const done = setTimeout(() => {
       clearInterval(poll);
       motionStop();
+      playDashEnd(); // 🔊 1분 종료 신호음
       const r = det.getResult();
       setResult({ ...r, ...verifySprint(r) });
       setPhase('result');
@@ -184,7 +187,7 @@ export default function SprintDetect() {
             {L('무리하지 말고 본인 컨디션에 맞게 움직여주세요.',
                'Please move at your own pace — don’t overdo it.')}
           </p>
-          <button className={styles.primary} onClick={() => setPhase('countdown')}>
+          <button className={styles.primary} onClick={() => { warmDashAudio(); setPhase('countdown'); }}>
             {L('측정 시작', 'Begin')}
           </button>
           {lowIntensityBtn}
