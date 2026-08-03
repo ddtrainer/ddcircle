@@ -5,7 +5,7 @@ export const DASH_MODES = [
   {
     key: 'walk', emoji: '🚶',
     labelKo: '걷기', labelEn: 'Walk',
-    descKo: '가볍게 · 제자리든 이동이든', descEn: 'Easy · in place or moving',
+    descKo: '가볍게 제자리 또는 이동', descEn: 'Easy · in place or moving',
   },
   {
     key: 'slowrun', emoji: '🏃',
@@ -15,12 +15,12 @@ export const DASH_MODES = [
   {
     key: 'sprint', emoji: '⚡',
     labelKo: '전력질주', labelEn: 'Sprint',
-    descKo: '제자리에서 최대 스피드', descEn: 'Max speed in place',
+    descKo: '최대 스피드', descEn: 'Max speed',
   },
   {
     key: 'free', emoji: '🔀',
     labelKo: '자유 종목', labelEn: 'Free Mix',
-    descKo: '걷기·러닝·전력질주 믹스', descEn: 'Mix walk · run · sprint',
+    descKo: '걷기·러닝·전력질주 혼합', descEn: 'Mix walk · run · sprint',
   },
 ];
 
