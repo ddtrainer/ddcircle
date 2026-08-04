@@ -218,6 +218,27 @@
   box-shadow: 0 0 26px rgba(232,158,43,0.2);
 }
 
+/* 과호흡(power) — 빠른 펌핑(1초 들숨/날숨) 전용.
+   색·글로우 전환을 움직임과 동일한 1초로 동기화(--power-dur)해 밀림 없이 부드럽게,
+   들숨/날숨 색·글로우 대비를 완만하게(파랑↔청록 블렌드) 낮춰 깜빡임을 줄인다. */
+.orbOuter.power.inhale,
+.orbOuter.power.exhale {
+  transition:
+    transform var(--power-dur, 1s) ease-in-out,
+    background var(--power-dur, 1s) ease-in-out,
+    box-shadow var(--power-dur, 1s) ease-in-out;
+}
+
+.orbOuter.power.inhale {
+  background: radial-gradient(circle, rgba(30,155,216,0.5), rgba(43,164,143,0.16));
+  box-shadow: 0 0 72px 6px rgba(30,155,216,0.32);
+}
+
+.orbOuter.power.exhale {
+  background: radial-gradient(circle, rgba(43,164,143,0.44), rgba(30,155,216,0.14));
+  box-shadow: 0 0 46px 3px rgba(43,164,143,0.24);
+}
+
 .orbInner {
   width: 70px;
   height: 70px;

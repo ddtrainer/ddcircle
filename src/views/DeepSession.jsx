@@ -140,6 +140,9 @@ export default function DeepSession() {
   // 윔호프: 현재 step의 들숨/날숨 길이로 orb transition 동적 설정
   const orbInhaleDur = isWim ? (phase === 'inhale' ? wimEngine.duration : pattern.durations.inhale) : pattern.durations.inhale;
   const orbExhaleDur = isWim ? (phase === 'exhale' ? wimEngine.duration : pattern.durations.exhale) : pattern.durations.exhale;
+  // 과호흡 구간 — 빠른 펌핑(현재 step 길이 = 1초)에 색/움직임 전환을 동기화해 부드럽게
+  const isPower = isWim && wimStage === 'power';
+  const orbPowerDur = isPower ? wimEngine.duration : 1;
 
   // 가이드 메시지 — 윔호프는 stage+phase 기반
   let guideKey;
@@ -212,10 +215,11 @@ export default function DeepSession() {
       <div className={styles.breathZone}>
         <div
           ref={orbRef}
-          className={`${styles.orbOuter} ${animationReady && soundReady ? styles[phase] : ''}`}
+          className={`${styles.orbOuter} ${animationReady && soundReady ? styles[phase] : ''} ${isPower ? styles.power : ''}`}
           style={{
             '--inhale-dur': `${orbInhaleDur}s`,
             '--exhale-dur': `${orbExhaleDur}s`,
+            '--power-dur': `${orbPowerDur}s`,
           }}
         >
           <div className={styles.orbInner}>{displayNum}</div>
