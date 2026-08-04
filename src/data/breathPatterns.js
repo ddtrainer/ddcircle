@@ -86,7 +86,7 @@ export const DEFAULT_WIM_HOF_CYCLES = 1;
 // 윔호프 호흡 스크립트 생성
 // 구조 고정: 과호흡(power) → 숨 참기(retention) → 회복 호흡(recovery: 들숨+참기) → 마무리 날숨(finish)
 // 각 step: { phase, duration, stage, round?, totalRounds? }
-//   phase: 'inhale' | 'exhale' | 'hold' (orb/사운드/카운터 표시용)
+//   phase: 'inhale'(팽창) | 'exhale'(수축) | 'hold'(팽창 유지) | 'postHold'(수축 유지) — orb 크기 결정
 //   stage: 'power' | 'retention' | 'recovery' | 'finish'
 export function buildWimHofScript(
   rounds = DEFAULT_WIM_HOF_ROUNDS,
@@ -102,7 +102,8 @@ export function buildWimHofScript(
       steps.push({ phase: 'inhale', duration: 1, stage: 'power', round: i, totalRounds: rounds, ...meta });
       steps.push({ phase: 'exhale', duration: 1, stage: 'power', round: i, totalRounds: rounds, ...meta });
     }
-    steps.push({ phase: 'hold', duration: retention, stage: 'retention', ...meta });
+    // 숨 참기 = 과호흡 마지막 날숨 후 멈춤(빈 폐) → orb는 최소 수축 유지(postHold)
+    steps.push({ phase: 'postHold', duration: retention, stage: 'retention', ...meta });
     steps.push({ phase: 'inhale', duration: WIM_HOF_RECOVERY_INHALE, stage: 'recovery', ...meta });
     steps.push({ phase: 'hold', duration: recoveryHold, stage: 'recovery', ...meta });
     steps.push({ phase: 'exhale', duration: finishExhale, stage: 'finish', ...meta });
