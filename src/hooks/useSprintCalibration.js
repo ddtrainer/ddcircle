@@ -34,6 +34,7 @@ export function useSprintCalibration({ start, stop }) {
       const det = createSprintDetector({
         minAmp: SPRINT.CALIB_CAPTURE_MIN_AMP,
         minIntervalMs: SPRINT.MIN_PEAK_INTERVAL_MS,
+        rhythmGate: false, // 캘리브레이션은 모든 피크 진폭을 수집해야 하므로 게이트 끔
       });
       start((x, y, z, ts) => det.addSample(x, y, z, ts));
       setTimeout(() => {
@@ -43,8 +44,8 @@ export function useSprintCalibration({ start, stop }) {
         if (peakAmps.length >= 2) {
           const sorted = [...peakAmps].sort((a, b) => a - b);
           const median = sorted[Math.floor(sorted.length / 2)];
-          // minAmp는 '노이즈 floor'라 낮게 유지 → 걷기 등 약한 스텝도 놓치지 않음.
-          amp = Math.min(4, Math.max(2.5, median * 0.15));
+          // minAmp는 '노이즈 floor' — 앉아서 가벼운 흔들기를 거르되 걷기 스텝은 잡히도록.
+          amp = Math.min(5, Math.max(3, median * 0.15));
         }
         try { localStorage.setItem(SPRINT_KEYS.threshold, String(amp)); } catch { /* ignore */ }
         setMinAmp(amp);

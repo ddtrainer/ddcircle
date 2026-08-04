@@ -3,9 +3,14 @@ export const GRAVITY = 9.81; // 중력 크기(m/s²) — magnitude에서 빼서 
 
 export const SPRINT = {
   // 적응형 계수: 진폭(peak-to-peak)이 minAmp 이상일 때만 유효 사이클로 인정(노이즈 floor).
-  DEFAULT_MIN_AMP: 3,          // m/s² — 유효 진폭 최소치(정지 잡음 제거)
+  DEFAULT_MIN_AMP: 4,          // m/s² — 유효 진폭 최소치 상향(앉아서 가벼운 폰 흔들기 무시)
   CALIB_CAPTURE_MIN_AMP: 2,    // 캘리브레이션 캡처용 낮은 floor
   MIN_PEAK_INTERVAL_MS: 160,   // 중복 카운트 방지 최소 스텝 간격(최대 ~375/분, 전력질주 대응)
+  // 리듬 게이트 — 실제 러닝/걷기는 일정 리듬으로 '연속'되지만 앉아서 흔들기는
+  // 불규칙하거나 몇 번에 그친다. 일정 간격(≤RHYTHM_MAX_GAP)으로 WARMUP회 이어질 때만
+  // 카운트 시작(예열 스텝은 소급 인정), 리듬 끊기면 스트릭 리셋.
+  RHYTHM_MAX_GAP_MS: 1800,     // 이 간격을 넘어서면 리듬 끊김(느린 걷기까지 허용, ~33스텝/분)
+  RHYTHM_WARMUP: 4,            // 연속 리듬 N회 후 카운트 시작
   MEASURE_MS: 60000,           // 1분 측정
   COUNTDOWN_SEC: 5,            // 측정 시작 전 카운트다운 (5→1)
   CALIB_MS: 6000,             // 캘리브레이션(3번 뛰기) 캡처 시간

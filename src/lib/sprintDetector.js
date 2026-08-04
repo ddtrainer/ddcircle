@@ -7,14 +7,25 @@
 //   방향 무관: dyn = |가속도 크기| - 중력. 경량 스무딩 + 불응기로 착지당 1회.
 import { SPRINT, GRAVITY } from '../data/sprintConfig';
 
-export function createSprintDetector({ minAmp, minIntervalMs }) {
+// rhythmGate: true면 일정 리듬으로 WARMUP회 연속될 때만 카운트(앉아서 흔들기 등 무시).
+//   캘리브레이션은 모든 피크 진폭이 필요하므로 rhythmGate:false로 호출한다.
+export function createSprintDetector({
+  minAmp,
+  minIntervalMs,
+  rhythmGate = true,
+  rhythmMaxGap = SPRINT.RHYTHM_MAX_GAP_MS,
+  warmup = SPRINT.RHYTHM_WARMUP,
+}) {
   let count = 0;
   let lastPeakTs = -Infinity;
   let ema = 0;
   let emaInit = false;
   let prevV = -Infinity;
   let rising = false;
-  let valley = Infinity;   // 마지막 카운트 이후 최소값(골짜기)
+  let valley = Infinity;   // 마지막 피크 이후 최소값(골짜기)
+  let streak = 0;          // 리듬으로 연속된 피크 수(리듬 게이트)
+  const pendingTimes = []; // 예열 중(미확정) 피크 버퍼 — WARMUP 충족 시 소급 카운트
+  const pendingAmps = [];
   const peakTimes = [];
   const peakAmps = [];
   let samples = 0;
@@ -37,10 +48,34 @@ export function createSprintDetector({ minAmp, minIntervalMs }) {
         rising = false;
         const prom = prevV - valley;   // 골짜기 대비 돌출
         if (prom >= minAmp && (ts - lastPeakTs) >= minIntervalMs) {
-          count++;
+          if (!rhythmGate) {
+            count++;
+            peakTimes.push(ts);
+            peakAmps.push(prom);
+          } else {
+            // 직전 피크와의 간격이 리듬 범위 안이면 스트릭 연장, 아니면 새 스트릭
+            const gap = ts - lastPeakTs;
+            if (Number.isFinite(gap) && gap <= rhythmMaxGap) {
+              streak++;
+            } else {
+              streak = 1;
+              pendingTimes.length = 0;   // 리듬 끊김 → 미확정 피크 폐기
+              pendingAmps.length = 0;
+            }
+            pendingTimes.push(ts);
+            pendingAmps.push(prom);
+            if (streak >= warmup) {
+              // 예열 충족 — 버퍼의 피크를 소급 카운트(실제 운동 초반 스텝 보존)
+              for (let i = 0; i < pendingTimes.length; i++) {
+                count++;
+                peakTimes.push(pendingTimes[i]);
+                peakAmps.push(pendingAmps[i]);
+              }
+              pendingTimes.length = 0;
+              pendingAmps.length = 0;
+            }
+          }
           lastPeakTs = ts;
-          peakTimes.push(ts);
-          peakAmps.push(prom);
           valley = v;                  // 다음 스텝용 골짜기 리셋
         }
       }
