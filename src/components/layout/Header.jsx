@@ -44,8 +44,15 @@ export default function Header() {
   return (
     <header className={styles.header}>
       <div className={styles.inner}>
-        <div className={styles.logoWrap} aria-label="숨-핏 By DDCircle">
-          {/* 숨-핏 워드마크 — 무지개 그라데이션(브랜드 컬러) + 한 줄 태그라인, 아래 By DDCircle */}
+        <div
+          className={styles.logoWrap}
+          role="button"
+          tabIndex={0}
+          aria-label={lang === 'ko' ? '숨-핏 홈으로' : 'Soom-Fit home'}
+          onClick={() => navigate('/')}
+          onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); navigate('/'); } }}
+        >
+          {/* 숨-핏 워드마크 — 무지개 그라데이션(브랜드 컬러) + 한 줄 태그라인, 아래 By DDCircle. 탭하면 홈으로 */}
           <div className={styles.brandTop}>
             <span className={styles.brandMark}>{lang === 'ko' ? '숨-핏' : 'Soom-Fit'}</span>
             <span className={styles.brandTag}>{lang === 'ko' ? '숨 쉬고 운동해' : 'Breathe & Move'}</span>
