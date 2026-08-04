@@ -8,8 +8,9 @@ import { getCalibratedMinAmp } from '../../hooks/useSprintCalibration';
 import { createSprintDetector } from '../../lib/sprintDetector';
 import { saveSprint } from '../../lib/sprintStore';
 import { SPRINT, intensityPercentile } from '../../data/sprintConfig';
-import { getDashMode } from '../../data/dashModes';
+import { getDashMode, DASH_MODES } from '../../data/dashModes';
 import { playDashStart, playDashEnd, warmDashAudio } from '../../hooks/useDashSound';
+import DigitalTimer from '../DigitalTimer';
 import styles from './SprintDetect.module.css';
 
 // Dash 자동측정 — 심플 흐름: intro(시작) → 카운트다운 5~1 → 1분 측정 → 결과 → (선택)셀카 → 완료.
@@ -17,7 +18,7 @@ export default function SprintDetect() {
   const navigate = useNavigate();
   const { lang } = useLang();
   const { user } = useAuth();
-  const { selectedExercise } = useApp();
+  const { selectedExercise, setSelectedExercise, setPreferredExercise } = useApp();
   const mode = getDashMode(selectedExercise);
   const L = (ko, en) => (lang === 'ko' ? ko : en);
   const modeLabel = L(mode.labelKo, mode.labelEn);
@@ -51,6 +52,10 @@ export default function SprintDetect() {
 
   // '시작' — 권한 요청(제스처 콜스택) 후 바로 카운트다운.
   const handleStart = async () => {
+    // 이 종목으로 실제 시작을 확정 → 다음 접속 때 "마지막 선택"으로 재사용.
+    // mode.key는 유효 DASH 키(무효값은 getDashMode가 walk로 보정)라 EP/기록도 안전.
+    setSelectedExercise(mode.key);
+    setPreferredExercise(mode.key);
     warmDashAudio();
     const res = await requestPermission();
     if (res !== 'granted') { goProof(null); return; } // 센서 불가 → 측정 없이 완료(종목 배율로 EP)
@@ -130,9 +135,17 @@ export default function SprintDetect() {
       {phase === 'measuring' && (
         <div className={styles.panel}>
           <div className={styles.badge}>{mode.emoji} {modeLabel}</div>
-          <div className={styles.liveCount}>{liveCount}</div>
-          <div className={styles.liveLabel}>{L('회', 'reps')}</div>
-          <div className={styles.remain}>{L('남은 시간', 'Time left')} {remainSec}s</div>
+          {/* 큰 디지털 타이머 — 화면의 주인공. 잠깐 시선만 줘도 남은 시간 파악 */}
+          <DigitalTimer
+            seconds={remainSec}
+            label={L('남은 시간', 'Time left')}
+            urgent={remainSec <= 10}
+          />
+          {/* 실시간 횟수는 보조 지표로 아래에 */}
+          <div className={styles.repsRow}>
+            <span className={styles.repsNum}>{liveCount}</span>
+            <span className={styles.repsUnit}>{L('회', 'reps')}</span>
+          </div>
           {lowSignal && (
             <p className={styles.warn}>
               {L('폰을 좀 더 세게 흔들며 움직여보세요!', 'Move a bit harder!')}

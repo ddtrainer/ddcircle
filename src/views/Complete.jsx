@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import { useLang } from '../i18n/LangContext';
 import { useApp } from '../context/AppContext';
 import { useAuth } from '../context/AuthContext';
-import { useLevel } from '../context/LevelContext';
 import { useToast } from '../components/Toast';
 import ProgressDots from '../components/ProgressDots';
 import { EXERCISES } from '../data/exercises';
@@ -25,7 +24,6 @@ export default function Complete() {
   const { t, lang } = useLang();
   const { proofUrl, getProofBlob, completeSession, addUserPost, selectedExercise, lastChallengeBonus, consumeLastChallengeBonus, userEp, todaySessions } = useApp();
   const { user, profile } = useAuth();
-  const { deepMultiplier } = useLevel(); // Dash 배율은 종목 기반(completeSession 내부 계산)
   const { show: showToast } = useToast();
   const navigate = useNavigate();
   const [sharing, setSharing] = useState(false);
@@ -60,7 +58,7 @@ export default function Complete() {
   }, [empathyMsg]);
 
   const finish = (shared) => {
-    const { earned, save, capReached, dashFully, deepFully } = completeSession({ shared, deepMultiplier });
+    const { earned, save, capReached, dashFully, deepFully } = completeSession({ shared });
     if (capReached) {
       showToast('🌙', t('epCapToast'));  // "오늘은 EP 적립 종료 (2회 완료)"
     } else if (!dashFully && !deepFully) {

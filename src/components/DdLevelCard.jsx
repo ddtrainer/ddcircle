@@ -1,7 +1,7 @@
-import { useLevel } from '../context/LevelContext';
 import { useApp } from '../context/AppContext';
 import { useLang } from '../i18n/LangContext';
-import { DEEP_LEVELS, getLevelDef, checkLevelUp, MAX_LEVEL, graceDaysFor } from '../lib/ddLevel';
+import { graceDaysFor } from '../lib/ddLevel';
+import { BREATH_MODES, BREATH_MODE_MULTIPLIER } from '../data/breathPatterns';
 import { DASH_MODES, DASH_MODE_MULTIPLIER } from '../data/dashModes';
 import styles from './DdLevelCard.module.css';
 
@@ -12,15 +12,13 @@ function daysBetween(fromStr, toStr) {
   return Math.round((Date.UTC(ty, tm - 1, td) - Date.UTC(fy, fm - 1, fd)) / 86400000);
 }
 
-// 홈 화면 DD 레벨 대시보드 — Deep/Dash 전체 레벨 로드맵과 현재 위치, 다음 레벨 진행률을 표시한다 (읽기 전용).
-// 처음 보는 사용자도 한눈에 이해하도록: 한 줄 설명 + 트랙별 색상(Deep=파랑/Dash=주황) + '지금' 위치 + 진행 막대.
+// 홈 화면 성장 카드 — v2.3: Deep/Dash 모두 레벨 폐지, 자유선택제.
+// 실력 = 누적 스트릭/EP(상단), 종목 = 오늘의 선택(트랙별 종목·EP 배율 안내).
 // 가이드 진입은 세션(DeepSession/DashSession) 내에서만 노출해 중복을 피한다.
 export default function DdLevelCard() {
-  const { deepLevel } = useLevel();
   const { userEp } = useApp();
-  const { lang } = useLang();
+  const { t, lang } = useLang();
   const streak = userEp?.streak ?? 0;
-  const totalEp = userEp?.total ?? 0;
   const streakDate = userEp?.streakDate ?? null;
 
   // 유예일(grace) 안내 — 사용자가 "며칠까지 쉬어도 연속이 유지되는지" 알 수 있게 표시.
@@ -53,97 +51,39 @@ export default function DdLevelCard() {
     graceLabel = `${grace}일까지 쉬어도 연속 유지`;
   }
 
-  // v2.2: Deep만 레벨 트랙. Dash는 레벨 폐지 → 종목·배율 안내로 별도 표시.
-  const tracks = [
-    { key: 'deep', label: lang === 'ko' ? '숨-Deep' : 'Soom-Deep', color: 'var(--cool)', soft: 'var(--cool-soft)', levels: DEEP_LEVELS, current: deepLevel },
-  ];
-
   return (
     <div className={styles.card}>
       <div className={styles.header}>
-        <span className={styles.tag}>나의 성장 단계</span>
-        <p className={styles.intro}>매일 호흡과 운동이 쌓여 한 단계씩 자라요.</p>
+        <span className={styles.tag}>나의 성장</span>
+        <p className={styles.intro}>매일 호흡과 운동이 쌓여 연속이 자라요. 종목은 오늘의 컨디션대로 자유롭게.</p>
         <div className={`${styles.streakRow} ${styles[`grace_${graceState}`] || ''}`}>
           <span className={styles.streakFlame}>🔥 {streak}일 연속</span>
           <span className={styles.graceHint}>{graceLabel}</span>
         </div>
       </div>
 
-      {tracks.map(({ key, label, color, soft, levels, current }) => {
-        const def = getLevelDef(key, current);
-        const { canLevelUp, next } = checkLevelUp(key, current, { streak, totalEp });
-        const isMax = current >= MAX_LEVEL;
-
-        // 다음 레벨까지 진행률 — 연속일·EP 두 조건의 평균(0~100%).
-        let pct = 100;
-        if (!isMax && next) {
-          const sPct = next.unlock.streak ? Math.min(streak / next.unlock.streak, 1) : 1;
-          const ePct = next.unlock.ep ? Math.min(totalEp / next.unlock.ep, 1) : 1;
-          pct = Math.round(((sPct + ePct) / 2) * 100);
-        }
-
-        return (
-          <div key={key} className={styles.track} style={{ '--tc': color, '--tc-soft': soft }}>
-            <div className={styles.trackHead}>
-              <div className={styles.trackTitle}>
-                <span className={styles.trackLabel}>{label}</span>
-              </div>
-              <span className={styles.trackNow}>
-                <b>Lv.{current} {def.name}</b> · {def.method}
-              </span>
-            </div>
-
-            <div className={styles.steps}>
-              {levels.map((lv, i) => {
-                const state =
-                  lv.level === current ? 'current'
-                  : lv.level < current ? 'done'
-                  : (streak >= lv.unlock.streak && totalEp >= lv.unlock.ep) ? 'unlocked'
-                  : 'locked';
-                return (
-                  <div key={lv.level} className={styles.stepWrap}>
-                    {i > 0 && (
-                      <span className={`${styles.connector} ${lv.level <= current ? styles.connectorDone : ''}`} />
-                    )}
-                    <div className={`${styles.step} ${styles[state]}`}>
-                      {state === 'current' && <span className={styles.nowPill}>지금</span>}
-                      <span className={styles.stepEmoji}>
-                        {state === 'locked' ? '🔒' : lv.emoji}
-                      </span>
-                      <span className={styles.stepName}>{lv.name}</span>
-                      <span className={styles.stepMul}>EP ×{lv.multiplier}</span>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-
-            {isMax ? (
-              <div className={styles.maxText}>🎉 최고 단계 달성! EP ×{def.multiplier} 보너스 적용 중</div>
-            ) : (
-              <div className={styles.progress}>
-                <div className={styles.progressTop}>
-                  <span className={styles.progressLabel}>
-                    다음 {next.emoji} {next.name} (Lv.{next.level})까지
-                  </span>
-                  {canLevelUp && <span className={styles.readyBadge}>레벨업 가능!</span>}
-                </div>
-                <div className={styles.bar}>
-                  <span className={styles.barFill} style={{ width: `${pct}%` }} />
-                </div>
-                <div className={styles.reqs}>
-                  <span className={`${styles.req} ${streak >= next.unlock.streak ? styles.met : ''}`}>
-                    {streak >= next.unlock.streak ? '✓ ' : ''}연속 {Math.min(streak, next.unlock.streak)}/{next.unlock.streak}일
-                  </span>
-                  <span className={`${styles.req} ${totalEp >= next.unlock.ep ? styles.met : ''}`}>
-                    {totalEp >= next.unlock.ep ? '✓ ' : ''}EP {Math.min(totalEp, next.unlock.ep)}/{next.unlock.ep}
-                  </span>
-                </div>
-              </div>
-            )}
+      {/* Deep — 레벨 폐지, 호흡 종목 선택제. 종목별 EP 배율 안내(읽기 전용). */}
+      <div className={styles.track} style={{ '--tc': 'var(--cool)', '--tc-soft': 'var(--cool-soft)' }}>
+        <div className={styles.trackHead}>
+          <div className={styles.trackTitle}>
+            <span className={styles.trackLabel}>{lang === 'ko' ? '숨-Deep' : 'Soom-Deep'}</span>
           </div>
-        );
-      })}
+          <span className={styles.trackNow}>
+            {lang === 'ko' ? '호흡 선택제 · EP 배율' : 'Pick a breath · EP mult'}
+          </span>
+        </div>
+        <div className={styles.steps}>
+          {BREATH_MODES.map((m) => (
+            <div key={m.id} className={styles.stepWrap}>
+              <div className={`${styles.step} ${styles.unlocked}`}>
+                <span className={styles.stepEmoji}>{m.emoji}</span>
+                <span className={styles.stepName}>{t(m.labelKey)}</span>
+                <span className={styles.stepMul}>×{BREATH_MODE_MULTIPLIER[m.id]}</span>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
 
       {/* Dash — 레벨 폐지, 종목 선택제. 종목별 EP 배율 안내(읽기 전용). */}
       <div className={styles.track} style={{ '--tc': 'var(--warm)', '--tc-soft': 'var(--warm-soft)' }}>

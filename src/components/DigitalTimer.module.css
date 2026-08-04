@@ -1,0 +1,40 @@
+.wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+.label {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+}
+
+.time {
+  font-size: 104px;
+  line-height: 1;
+  font-weight: 800;
+  color: var(--warm, #e8863b);
+  /* 숫자 폭이 흔들리지 않게 — 카운트다운 중 좌우 떨림 방지 */
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: 'tnum' 1;
+  letter-spacing: 1px;
+}
+
+/* 마지막 10초 — 시선을 끌도록 강조 */
+.urgent {
+  color: #e0453b;
+  animation: pulse 1s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.06); }
+}
+
+@media (max-width: 380px) {
+  .time { font-size: 84px; }
+}

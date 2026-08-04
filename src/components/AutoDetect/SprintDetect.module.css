@@ -138,6 +138,25 @@
   color: var(--text-muted);
   margin-top: 8px;
 }
+/* 측정 중 실시간 횟수 — 큰 타이머 아래 보조 지표 */
+.repsRow {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  margin-top: 14px;
+}
+.repsNum {
+  font-size: 40px;
+  font-weight: 800;
+  line-height: 1;
+  color: var(--warm);
+  font-variant-numeric: tabular-nums;
+}
+.repsUnit {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text-soft);
+}
 .warn {
   margin: 4px 0 0;
   font-size: 14px;

@@ -5,6 +5,30 @@ export const BREATH_PRESETS = [
   { id: '4444', label: '4-4-4-4 멘탈호흡', durations: { inhale: 4, hold: 4, exhale: 4, postHold: 4 }, cycles: 6 },
 ];
 
+// Deep 호흡 4종 — 레벨 잠금 없이 자유 선택(v2.3). labelKey는 i18n(효과 이름).
+//   safety=true(윔호프)는 최초 1회 안전 동의 필요.
+export const BREATH_MODES = [
+  { id: '48',   emoji: '🍃', labelKey: 'breath48',    descKo: '편안한 기본 호흡',        descEn: 'Easy natural breathing', settings: 'natural' },
+  { id: '478',  emoji: '🌙', labelKey: 'breath478',   descKo: '긴장 완화 · 수면',        descEn: 'Calm & sleep',           settings: null },
+  { id: '4444', emoji: '🎯', labelKey: 'breath4444',  descKo: '집중 · 평정심',           descEn: 'Focus & calm',           settings: null },
+  { id: 'custom', emoji: '🔥', labelKey: 'breathCustom', descKo: '활력 · 면역 (안전 필독)', descEn: 'Energy & immunity (safety)', settings: 'wimhof', safety: true },
+];
+
+// Deep EP 호흡별 배율 (v2.3) — Deep EP = 15(고정) × 배율 × 스트릭. 레벨 배율 폐지.
+export const BREATH_MODE_MULTIPLIER = { '48': 1.0, '478': 1.5, '4444': 1.5, custom: 2.0 };
+export function breathModeMultiplier(id) {
+  return BREATH_MODE_MULTIPLIER[id] ?? 1.0;
+}
+
+// 윔호프 안전 동의 플래그 (최초 1회) — localStorage.
+const WIMHOF_ACK_KEY = 'ddcircle.wimhof.safetyAck';
+export function wimHofSafetyAcked() {
+  try { return localStorage.getItem(WIMHOF_ACK_KEY) === '1'; } catch { return false; }
+}
+export function ackWimHofSafety() {
+  try { localStorage.setItem(WIMHOF_ACK_KEY, '1'); } catch { /* ignore */ }
+}
+
 export const DEFAULT_CUSTOM_BREATH = {
   inhale: 4,
   hold: 0,

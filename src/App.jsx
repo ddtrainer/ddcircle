@@ -23,6 +23,7 @@ initAnalytics();
 initKakao();
 import Home from './views/Home';
 import Grow from './views/Grow';
+import BreathPicker from './views/BreathPicker';
 import ExercisePicker from './views/ExercisePicker';
 import Countdown from './views/Countdown';
 import DashSession from './views/DashSession';
@@ -56,7 +57,7 @@ function ViewFallback() {
 }
 
 // 카운트다운/세션/Proof/로그인 화면에서는 BottomNav 숨김
-const FULLSCREEN_PATHS = ['/countdown', '/dash', '/deep', '/proof', '/login', '/auth', '/profile-setup', '/book', '/sprint'];
+const FULLSCREEN_PATHS = ['/countdown', '/dash', '/deep', '/proof', '/login', '/auth', '/profile-setup', '/book', '/sprint', '/breath-picker'];
 
 function ConditionalBottomNav() {
   const { pathname } = useLocation();
@@ -176,6 +177,7 @@ export default function App() {
                   <Routes>
                     <Route path="/" element={<Home />} />
                     <Route path="/grow" element={<Grow />} />
+                    <Route path="/breath-picker" element={<BreathPicker />} />
                     <Route path="/wall" element={<Wall />} />
                     <Route path="/record" element={<Record />} />
                     <Route path="/book/:chapterKey" element={<Book />} />

@@ -7,6 +7,7 @@ import { findChallenge } from '../data/challenges';
 import { calculateEarnedEp } from '../utils/ep';
 import { graceDaysFor } from '../lib/ddLevel';
 import { dashModeMultiplier } from '../data/dashModes';
+import { breathModeMultiplier } from '../data/breathPatterns';
 import { DEFAULT_CUSTOM_BREATH, DEFAULT_NATURAL_BREATH, DEFAULT_WIM_HOF_ROUNDS, DEFAULT_WIM_HOF_CYCLES, DEFAULT_WIM_HOF_RETENTION, DEFAULT_WIM_HOF_RECOVERY, DEFAULT_WIM_HOF_FINISH } from '../data/breathPatterns';
 import { evaluateChallenges } from '../data/challenges';
 
@@ -187,7 +188,7 @@ export function AppProvider({ children }) {
   }, [proofUrl]);
 
   // 3분 플로우 완료 시 EP 보상 + 통계 갱신 + 챌린지 보너스 처리
-  const completeSession = useCallback(({ shared, deepMultiplier = 1 } = {}) => {
+  const completeSession = useCallback(({ shared } = {}) => {
     const hasProof = !!proofBlobRef.current;
 
     // Dash/Deep 완주 여부 — DashSession/DeepSession이 sessionStorage에 기록
@@ -200,6 +201,10 @@ export function AppProvider({ children }) {
     // v2.2: Dash EP = 10(고정) × 종목 배율 × 스트릭. 레벨 배율·강도 baseEp 폐지.
     // 종목은 EP 양에만 영향, 스트릭 인정엔 무관(종목 무관하게 완료면 +1).
     const dashMultiplier = dashModeMultiplier(selectedExercise);
+
+    // v2.3: Deep EP = 15(고정) × 호흡 종목 배율 × 스트릭. 레벨 배율 폐지.
+    // 호흡 종목은 EP 양에만 영향, 스트릭 인정엔 무관(종목 무관하게 완료면 +1).
+    const deepMultiplier = breathModeMultiplier(breathPatternId);
 
     // 오늘 세션 카운트 (날짜 바뀌면 0부터)
     const today = new Date();

@@ -9,11 +9,12 @@ import SetTimingModal from '../components/modals/SetTimingModal';
 import LoginPromptModal from '../components/modals/LoginPromptModal';
 import YesterdayPageCard from '../components/assets/YesterdayPageCard';
 import { unlockAudio } from '../utils/audioUnlock';
+import { BREATH_MODES } from '../data/breathPatterns';
 import styles from './Home.module.css';
 
 export default function Home() {
   const { t } = useLang();
-  const { setTiming, todayDone, todayCount, userEp } = useApp();
+  const { setTiming, todayDone, todayCount, userEp, breathPatternId } = useApp();
   const { user } = useAuth();
   const navigate = useNavigate();
   const next = useNextSetTiming(setTiming, todayDone);
@@ -55,20 +56,26 @@ export default function Home() {
 
   // 진입 탭 시점에 오디오 unlock — iOS Safari가 이후 자동 재생되는 종소리/배경음을
   // 묵음으로 거부하지 않도록 silent buffer를 사용자 제스처 안에서 한 번 재생.
-  // 신규 흐름: Home → /countdown/deep → Deep 2분 → /picker → /countdown/dash → ...
-  // (Picker는 Deep 끝난 뒤 등장해 "이어서 할 운동" 의미가 분명해짐)
-  const goPicker = () => { unlockAudio(); navigate('/countdown/deep'); };
+  //
+  // 개선1(빠른 재시작): 마지막에 고른 호흡(breathPatternId, localStorage 유지)으로 바로 시작.
+  //   · 바로 시작 → 선택 화면 건너뛰고 카운트다운으로 직행
+  //   · 다른 호흡 선택 → 기존 자유선택 Picker(/breath-picker)
+  const goStartDeep = () => { unlockAudio(); navigate('/countdown/deep'); };
+  const goPicker = () => { unlockAudio(); navigate('/breath-picker'); };
 
-  // 셋 타이밍 카드 클릭: live면 picker로, 아니면 모달
+  // 마지막 선택 호흡 정보(리쥼 카드 표시용). 기본값 '478'도 안전한 신경 안정 호흡.
+  const currentBreath = BREATH_MODES.find((m) => m.id === breathPatternId) || BREATH_MODES[0];
+
+  // 셋 타이밍 카드 클릭: live면 바로 시작, 아니면 모달
   const handleSetCardClick = () => {
-    if (next.mode === 'live') goPicker();
+    if (next.mode === 'live') goStartDeep();
     else setSetTimingOpen(true);
   };
 
-  // 셋 카드 CTA 버튼: live면 시작, 아니면 모달
+  // 셋 카드 CTA 버튼: live면 바로 시작, 아니면 모달
   const handleSetCta = (e) => {
     e.stopPropagation();
-    if (next.mode === 'live') goPicker();
+    if (next.mode === 'live') goStartDeep();
     else setSetTimingOpen(true);
   };
 
@@ -83,8 +90,8 @@ export default function Home() {
         <div className={styles.heroSub}>DEEP RELAXATION, DASH EXERCISE.</div>
       </div>
 
-      {/* 호흡 원 */}
-      <div className={styles.breathZone} onClick={goPicker}>
+      {/* 호흡 원 — 탭하면 마지막 호흡으로 바로 시작 */}
+      <div className={styles.breathZone} onClick={goStartDeep}>
         <div className={styles.breathCircle}>
           <div className={styles.breathRing}></div>
           <div className={`${styles.breathRing} ${styles.r2}`}></div>
@@ -98,6 +105,25 @@ export default function Home() {
             <div className={styles.time}>{t('nowStart')}</div>
             <div className={styles.cta}>{t('tapToStart')}</div>
           </div>
+        </div>
+      </div>
+
+      {/* 개선1: 마지막 호흡 리쥼 카드 — "오늘도 이걸로?" + 바로 시작 + 다른 호흡 선택 */}
+      <div className={styles.resumeCard}>
+        <div className={styles.resumeInfo}>
+          <span className={styles.resumeEmoji}>{currentBreath.emoji}</span>
+          <div className={styles.resumeText}>
+            <div className={styles.resumeQ}>{t('resumeAskBreath')}</div>
+            <div className={styles.resumeMode}>{t(currentBreath.labelKey)}</div>
+          </div>
+        </div>
+        <div className={styles.resumeActions}>
+          <button className={styles.resumeStart} onClick={goStartDeep}>
+            {t('resumeStart')}
+          </button>
+          <button className={styles.resumeChange} onClick={goPicker}>
+            {t('resumeChangeBreath')}
+          </button>
         </div>
       </div>
 

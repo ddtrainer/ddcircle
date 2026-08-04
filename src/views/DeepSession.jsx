@@ -2,44 +2,23 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useLang } from '../i18n/LangContext';
 import { useApp } from '../context/AppContext';
-import { useLevel } from '../context/LevelContext';
 import { useBreathCycle } from '../hooks/useBreathCycle';
 import { useWimHofCycle } from '../hooks/useWimHofCycle';
 import { useBreathSound, playBellIn, playBellOut, playHoldChime } from '../hooks/useBreathSound';
-import { BREATH_PRESETS, resolveBreathPattern, buildWimHofScript } from '../data/breathPatterns';
-import { getLevelDef, DEEP_LEVELS } from '../lib/ddLevel';
+import { resolveBreathPattern, buildWimHofScript } from '../data/breathPatterns';
+import { DASH_MODES } from '../data/dashModes';
 import ProgressDots from '../components/ProgressDots';
 import WindIcon from '../components/WindIcon';
-import BreathSettingsModal from '../components/modals/BreathSettingsModal';
-import { useToast } from '../components/Toast';
 import { track, Events } from '../utils/analytics';
 import styles from './DeepSession.module.css';
-
-// breathId → 해당 호흡이 열리는 DD 레벨. 현재 레벨 이하만 선택 가능, 그 위는 잠금.
-const BREATH_REQUIRED_LEVEL = Object.fromEntries(
-  DEEP_LEVELS.map((l) => [l.breathId, l.level])
-);
 
 export default function DeepSession() {
   const { t } = useLang();
   const navigate = useNavigate();
-  const { breathPatternId, setBreathPatternId, customBreath, naturalBreath, wimHofRounds, wimHofCycles, wimHofRetention, wimHofRecovery, wimHofFinish, preferredExercise, setSelectedExercise } = useApp();
+  const { breathPatternId, customBreath, naturalBreath, wimHofRounds, wimHofCycles, wimHofRetention, wimHofRecovery, wimHofFinish, preferredExercise, setSelectedExercise } = useApp();
   const isWim = breathPatternId === 'custom';
-  const { deepLevel } = useLevel();
-  const deepDef = getLevelDef('deep', deepLevel);
-  const toast = useToast();
 
-  // 현재 레벨보다 높은 단계의 호흡인지 (잠금 여부)
-  const isLocked = (id) => (BREATH_REQUIRED_LEVEL[id] ?? 1) > deepLevel;
-
-  // 저장된 선택이 현재 레벨에서 잠긴 호흡이면 현재 레벨 기본 호흡으로 보정
-  // (잠긴 패턴이 실제로 재생되는 것을 방지)
-  useEffect(() => {
-    if (isLocked(breathPatternId)) {
-      setBreathPatternId(deepDef.breathId);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [deepLevel, breathPatternId]);
+  // v2.3: Deep 호흡 잠금 폐지 — 선택은 BreathPicker(자유선택)에서. DeepSession은 선택된 호흡을 재생만.
   const [soundOn, setSoundOn] = useState(true);
   const [soundReady, setSoundReady] = useState(false);
   const [animationReady, setAnimationReady] = useState(false);
@@ -49,8 +28,6 @@ export default function DeepSession() {
     const id = setTimeout(() => setSoundReady(true), 1500);
     return () => clearTimeout(id);
   }, [breathPatternId]);
-  const [settingsOpen, setSettingsOpen] = useState(false);
-  const [settingsMode, setSettingsMode] = useState('custom');
 
   // 현재 적용된 호흡 설정
   const pattern = useMemo(
@@ -65,9 +42,14 @@ export default function DeepSession() {
     const fully = !skipClickedRef.current;
     try { sessionStorage.setItem('ddcircle.session.deepFully', fully ? '1' : '0'); } catch {}
     track(Events.DEEP_COMPLETED, { patternId: breathPatternId, fully });
-    // Deep 종료 후 → 항상 Dash 3종 선택 화면(/picker). 컨디션·환경 따라 매번 선택.
+    // Deep 종료 후 → Dash. 마지막에 고른 종목(preferredExercise)이 유효하면 선택 화면을
+    // 건너뛰고 SprintDetect intro로 직행(그 화면이 "이 종목으로 시작 / 다른 종목 선택"을 겸함).
+    // 아직 한 번도 고른 적 없는(기본 'jog') 첫 사용자는 기존대로 /picker로.
+    const hasRemembered = DASH_MODES.some((m) => m.key === preferredExercise);
+    const nextPath = hasRemembered ? '/sprint' : '/picker';
+    if (hasRemembered) setSelectedExercise(preferredExercise);
     setTimeout(() => {
-      navigate('/picker', { replace: true });
+      navigate(nextPath, { replace: true });
     }, 600);
   };
 
@@ -115,7 +97,7 @@ export default function DeepSession() {
     if (!el) return;
     if (!soundReady) {
       el.style.transition = 'none';
-      el.style.transform = 'scale(0.4)';
+      el.style.transform = 'scale(0.3)';
     } else {
       el.style.transition = '';
       el.style.transform = '';
@@ -154,9 +136,6 @@ export default function DeepSession() {
     else if (wimStage === 'finish') playBellOut();
   }, [isWim, soundEnabled, wimStage, wimEngine.cycle]);
 
-  const minutes = Math.floor(totalLeft / 60);
-  const seconds = totalLeft % 60;
-  const totalText = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
 
   // 윔호프: 현재 step의 들숨/날숨 길이로 orb transition 동적 설정
   const orbInhaleDur = isWim ? (phase === 'inhale' ? wimEngine.duration : pattern.durations.inhale) : pattern.durations.inhale;
@@ -180,28 +159,6 @@ export default function DeepSession() {
 
   const displayNum = displaySecond > 0 ? displaySecond : '';
 
-  // 패턴 선택 핸들러
-  const selectPattern = (id) => {
-    if (isLocked(id)) {
-      const reqLevel = BREATH_REQUIRED_LEVEL[id] ?? 1;
-      toast.show('🔒', t('breathLockedNotice').replace('{lv}', reqLevel));
-      return;
-    }
-    if (id === 'custom') {
-      // 윔호프 호흡 — 선택과 동시에 횟수 조절 모달 열기
-      setBreathPatternId('custom');
-      setSettingsMode('wimhof');
-      setSettingsOpen(true);
-    } else if (id === '48') {
-      // 자연 호흡 — 선택과 동시에 조절 모달 열기 (기존 자율 호흡 UI 재사용)
-      setBreathPatternId('48');
-      setSettingsMode('natural');
-      setSettingsOpen(true);
-    } else {
-      setBreathPatternId(id);
-    }
-  };
-
   // hold/postHold가 0이면 칩 숨김
   const showHold = pattern.durations.hold > 0;
   const showPostHold = (pattern.durations.postHold || 0) > 0;
@@ -215,44 +172,7 @@ export default function DeepSession() {
         <span dangerouslySetInnerHTML={{ __html: t('deepSessionTitle') }} />
       </div>
 
-      {/* 호흡 패턴 선택 */}
-      <div className={styles.patternPicker}>
-        {BREATH_PRESETS.map((p) => {
-          const locked = isLocked(p.id);
-          return (
-            <button
-              key={p.id}
-              className={`${styles.patternBtn} ${breathPatternId === p.id ? styles.patternActive : ''} ${deepDef.breathId === p.id ? styles.levelMatch : ''} ${locked ? styles.locked : ''}`}
-              onClick={() => selectPattern(p.id)}
-              aria-disabled={locked}
-            >
-              {locked && <span className={styles.lockEmoji}>🔒</span>}
-              {!locked && deepDef.breathId === p.id && <span className={styles.levelMatchEmoji}>{deepDef.emoji}</span>}
-              {!locked && p.id === '48' && '⚙ '}
-              {t('breath' + p.id)}
-              {!locked && p.id === '48' && breathPatternId === '48' && (
-                <span className={styles.patternMeta}>
-                  {' '}{naturalBreath.inhale}-{naturalBreath.exhale}
-                </span>
-              )}
-            </button>
-          );
-        })}
-        {(() => {
-          const locked = isLocked('custom');
-          return (
-            <button
-              className={`${styles.patternBtn} ${breathPatternId === 'custom' ? styles.patternActive : ''} ${deepDef.breathId === 'custom' ? styles.levelMatch : ''} ${locked ? styles.locked : ''}`}
-              onClick={() => selectPattern('custom')}
-              aria-disabled={locked}
-            >
-              {locked ? <span className={styles.lockEmoji}>🔒</span>
-                : deepDef.breathId === 'custom' && <span className={styles.levelMatchEmoji}>{deepDef.emoji}</span>}
-              {!locked && '⚙ '}{t('breathCustom')}
-            </button>
-          );
-        })()}
-      </div>
+      {/* v2.3: 호흡 선택은 BreathPicker(앞 화면)로 이전 — 여기선 선택된 호흡을 바로 재생 */}
 
       {/* 단계 인디케이터 (숫자 표시) */}
       {isWim ? (
@@ -288,7 +208,7 @@ export default function DeepSession() {
         </div>
       )}
 
-      {/* 호흡 orb */}
+      {/* 호흡 orb — 호흡 사이클(수축/팽창)에 시선이 집중되도록 orb만 남김 */}
       <div className={styles.breathZone}>
         <div
           ref={orbRef}
@@ -331,9 +251,6 @@ export default function DeepSession() {
             <span>{t('cycleOf').replace(/\d+/, pattern.cycles)}</span>
           </div>
         )}
-        <div className={styles.totalTime}>
-          <span>{t('timeLeftLabel')}</span> <span>{totalText}</span>
-        </div>
       </div>
 
       <div className={styles.controls}>
@@ -351,8 +268,6 @@ export default function DeepSession() {
           {t('skip')}
         </button>
       </div>
-
-      <BreathSettingsModal open={settingsOpen} mode={settingsMode} onClose={() => setSettingsOpen(false)} />
     </div>
   );
 }

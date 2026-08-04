@@ -165,8 +165,9 @@
 
 /* 호흡 orb */
 .breathZone {
-  width: 280px;
-  height: 280px;
+  width: 300px;
+  height: 300px;
+  max-width: 92vw;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -174,46 +175,47 @@
 }
 
 .orbOuter {
-  width: 180px;
-  height: 180px;
+  width: 170px;
+  height: 170px;
   border-radius: 50%;
   background: radial-gradient(circle, rgba(30,155,216,0.4), rgba(43,164,143,0.1));
   display: flex;
   align-items: center;
   justify-content: center;
-  transform: scale(0.4);
+  /* 수축 바닥을 더 낮춰 사이클 진폭을 뚜렷하게 (0.30 ↔ 1.62) */
+  transform: scale(0.3);
   /* 자연스러운 호흡 곡선 — 시작과 끝이 천천히 */
-  transition: transform 4s cubic-bezier(0.45, 0.05, 0.55, 0.95), background 1.2s ease;
+  transition: transform 4s cubic-bezier(0.45, 0.05, 0.55, 0.95), background 1.2s ease, box-shadow 1.2s ease;
   filter: blur(0.5px);
   box-shadow: 0 0 40px rgba(30,155,216,0.2);
 }
 
 .orbOuter.inhale {
-  transform: scale(1.5);
-  transition: transform var(--inhale-dur, 4s) cubic-bezier(0.45, 0.05, 0.55, 0.95), background 1.2s ease;
-  background: radial-gradient(circle, rgba(30,155,216,0.6), rgba(30,155,216,0.1));
-  box-shadow: 0 0 60px rgba(30,155,216,0.35);
+  transform: scale(1.62);
+  transition: transform var(--inhale-dur, 4s) cubic-bezier(0.45, 0.05, 0.55, 0.95), background 1.2s ease, box-shadow 1.2s ease;
+  background: radial-gradient(circle, rgba(30,155,216,0.72), rgba(30,155,216,0.12));
+  box-shadow: 0 0 90px 10px rgba(30,155,216,0.45);
 }
 
 .orbOuter.hold {
-  transform: scale(1.5);
-  transition: transform 0.4s ease, background 1.2s ease;
-  background: radial-gradient(circle, rgba(232,158,43,0.55), rgba(232,158,43,0.1));
-  box-shadow: 0 0 70px rgba(232,158,43,0.4);
+  transform: scale(1.62);
+  transition: transform 0.4s ease, background 1.2s ease, box-shadow 1.2s ease;
+  background: radial-gradient(circle, rgba(232,158,43,0.68), rgba(232,158,43,0.12));
+  box-shadow: 0 0 100px 12px rgba(232,158,43,0.5);
 }
 
 .orbOuter.exhale {
-  transform: scale(0.4);
-  transition: transform var(--exhale-dur, 8s) cubic-bezier(0.45, 0.05, 0.55, 0.95), background 1.2s ease;
-  background: radial-gradient(circle, rgba(43,164,143,0.55), rgba(43,164,143,0.1));
-  box-shadow: 0 0 30px rgba(43,164,143,0.2);
+  transform: scale(0.3);
+  transition: transform var(--exhale-dur, 8s) cubic-bezier(0.45, 0.05, 0.55, 0.95), background 1.2s ease, box-shadow 1.2s ease;
+  background: radial-gradient(circle, rgba(43,164,143,0.65), rgba(43,164,143,0.1));
+  box-shadow: 0 0 26px rgba(43,164,143,0.22);
 }
 
 .orbOuter.postHold {
-  transform: scale(0.4);
-  transition: transform 0.3s ease, background 1.2s ease;
-  background: radial-gradient(circle, rgba(232,158,43,0.45), rgba(232,158,43,0.08));
-  box-shadow: 0 0 30px rgba(232,158,43,0.2);
+  transform: scale(0.3);
+  transition: transform 0.3s ease, background 1.2s ease, box-shadow 1.2s ease;
+  background: radial-gradient(circle, rgba(232,158,43,0.5), rgba(232,158,43,0.08));
+  box-shadow: 0 0 26px rgba(232,158,43,0.2);
 }
 
 .orbInner {

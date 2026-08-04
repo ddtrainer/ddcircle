@@ -90,22 +90,10 @@ export function LevelProvider({ children }) {
     );
   }, []);
 
-  // 자동 승급 — 연속일·누적EP가 다음 레벨 잠금 해제 조건을 충족하면 레벨을 올린다.
-  // 절대 강등되지 않음(Math.max): 스트릭이 끊겨도 한 번 도달한 레벨은 유지된다.
-  // 이 효과가 "입문 요건을 다 채웠는데 입문에 머무르는" 버그의 실제 수정점이다.
-  // (기존엔 checkLevelUp으로 '레벨업 가능!' 뱃지만 띄우고 실제 승급은 누구도 호출하지 않았음.)
-  // 승급이 일어나면 축하 모달 큐에 넣는다.
-  useEffect(() => {
-    const cur = clampLevel(deepLevel);
-    const target = Math.max(cur, highestUnlockedLevel('deep', { streak, totalEp }));
-    if (target > cur) {
-      setDeepLevel(target);
-      enqueueLevelUp('deep', target);
-    }
-  }, [streak, totalEp, deepLevel, setDeepLevel, enqueueLevelUp]);
-
-  // v2.2: Dash 레벨 체계 폐지 → Dash 자동 승급 없음. (dashLevel 상태·저장값은 남기되 미사용)
-  // Dash는 "오늘 완료 여부"만 스트릭에 반영되고, EP는 종목 배율로 계산된다.
+  // v2.3: Deep 레벨 체계 폐지 → Deep 자동 승급 없음. (deepLevel 상태·저장값은 남기되 미사용)
+  // Deep은 "오늘 완료 여부"만 스트릭에 반영되고, EP는 호흡 종목 배율로 계산된다.
+  // v2.2: Dash 레벨 체계 폐지 → Dash 자동 승급 없음.
+  // 두 트랙 모두 자유선택제. 실력=스트릭/EP, 종목=오늘의 선택.
 
   // 가이드 열람 기록 (로그인 시에만 원격 저장 — 비로그인은 no-op)
   const recordGuideView = useCallback((track, level) => {

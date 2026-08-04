@@ -135,8 +135,91 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  margin: 20px 0 28px;
+  margin: 20px 0 16px;
   height: 280px;
+  cursor: pointer;
+}
+
+/* 개선1: 마지막 호흡 리쥼 카드 */
+.resumeCard {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 16px;
+  margin: 0 0 24px;
+  box-shadow: var(--shadow-sm);
+}
+
+.resumeInfo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.resumeEmoji {
+  font-size: 34px;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.resumeText {
+  text-align: left;
+  min-width: 0;
+}
+
+.resumeQ {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.resumeMode {
+  font-size: 19px;
+  font-weight: 800;
+  color: var(--cool, #1e9bd8);
+  margin-top: 2px;
+}
+
+/* 바로 시작(주) + 다른 호흡 선택(부) — 둘 다 큼직하게, 실수로 못 지나칠 존재감 */
+.resumeActions {
+  display: grid;
+  grid-template-columns: 1.3fr 1fr;
+  gap: 10px;
+}
+
+.resumeStart,
+.resumeChange {
+  padding: 13px 12px;
+  border-radius: 12px;
+  font-size: 15px;
+  font-weight: 800;
+  font-family: inherit;
+  cursor: pointer;
+  transition: transform 0.12s ease, box-shadow 0.12s ease, background 0.12s ease;
+}
+
+.resumeStart {
+  border: none;
+  color: #fff;
+  background: linear-gradient(135deg, var(--cool, #1e9bd8), var(--calm, #2ba48f));
+  box-shadow: 0 4px 14px rgba(30, 155, 216, 0.28);
+}
+
+.resumeStart:active {
+  transform: scale(0.97);
+}
+
+/* "다른 호흡 선택"은 작은 텍스트 링크가 아니라 또렷한 아웃라인 버튼으로 */
+.resumeChange {
+  background: var(--surface2, #fdf9f0);
+  color: var(--cool, #1e9bd8);
+  border: 2px solid var(--cool, #1e9bd8);
+}
+
+.resumeChange:active {
+  transform: scale(0.97);
+  background: rgba(30, 155, 216, 0.08);
 }
 
 .breathCircle {
