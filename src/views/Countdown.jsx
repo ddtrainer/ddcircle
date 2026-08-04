@@ -4,11 +4,15 @@ import { useLang } from '../i18n/LangContext';
 import { useApp } from '../context/AppContext';
 import { useLevel } from '../context/LevelContext';
 import { getLevelDef } from '../lib/ddLevel';
+import { BREATH_MODES, BREATH_MODE_MULTIPLIER } from '../data/breathPatterns';
 import GuideModal from '../components/modals/GuideModal';
 import WindIcon from '../components/WindIcon';
 import FireIcon from '../components/FireIcon';
 import { deviceMotionSupported } from '../hooks/useDeviceMotion';
 import styles from './Countdown.module.css';
+
+// 호흡 종목 ↔ 가이드(DEEP_GUIDE) 매핑: 자연1 / 신경안정2 / 멘탈강화3 / 면역력4
+const MODE_GUIDE_LEVEL = { '48': 1, '478': 2, '4444': 3, custom: 4 };
 
 // 5 → 4 → 3 → 2 → 1 → GO! 카운트다운
 // /countdown/dash 또는 /countdown/deep
@@ -17,11 +21,19 @@ export default function Countdown() {
   const { t } = useLang();
   const navigate = useNavigate();
   const { target = 'dash' } = useParams();
-  const { selectedExercise, setSelectedExercise, setPreferredExercise } = useApp();
+  const { selectedExercise, setSelectedExercise, setPreferredExercise, breathPatternId } = useApp();
   const { dashLevel, deepLevel } = useLevel();
   const dashDef = getLevelDef('dash', dashLevel);
-  const deepDef = getLevelDef('deep', deepLevel);
   const dashOptions = dashDef.options || [];
+
+  // Deep 가이드는 폐지된 레벨이 아니라 '선택한 호흡'을 따른다 (v2.3 자유선택제).
+  const breathMode = BREATH_MODES.find((m) => m.id === breathPatternId) || BREATH_MODES[0];
+  const deepGuideLevel = MODE_GUIDE_LEVEL[breathMode.id];
+  const deepGuideMode = {
+    emoji: breathMode.emoji,
+    label: t(breathMode.labelKey),
+    multiplier: BREATH_MODE_MULTIPLIER[breathMode.id],
+  };
   const [guideOpen, setGuideOpen] = useState(false);
   const [count, setCount] = useState(5);
   const [showGo, setShowGo] = useState(false);
@@ -91,10 +103,10 @@ export default function Countdown() {
         {t(isDash ? 'countdownDashHint' : 'countdownDeepHint')}
       </div>
 
-      {/* Deep 준비 단계에서만 — 레벨 배지 + 가이드 진입 (실행 화면은 호흡에만 집중) */}
+      {/* Deep 준비 단계에서만 — 선택한 호흡 배지 + 가이드 진입 (실행 화면은 호흡에만 집중) */}
       {!isDash && (
         <button className={styles.levelChip} onClick={() => setGuideOpen(true)}>
-          {deepDef.emoji} Lv.{deepLevel} {deepDef.name} · ×{deepDef.multiplier} EP · 가이드
+          {deepGuideMode.emoji} {deepGuideMode.label} · ×{deepGuideMode.multiplier} EP · 가이드
         </button>
       )}
 
@@ -184,7 +196,8 @@ export default function Countdown() {
         open={guideOpen}
         onClose={() => setGuideOpen(false)}
         track={isDash ? 'dash' : 'deep'}
-        level={isDash ? dashLevel : deepLevel}
+        level={isDash ? dashLevel : deepGuideLevel}
+        mode={isDash ? null : deepGuideMode}
       />
     </div>
   );
