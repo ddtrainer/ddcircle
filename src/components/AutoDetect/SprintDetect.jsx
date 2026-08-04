@@ -107,8 +107,8 @@ export default function SprintDetect() {
           <div className={styles.badge}>{mode.emoji} DASH</div>
           <h1 className={styles.title}>{modeLabel}</h1>
           <p className={styles.desc}>
-            {L('폰을 손에 꽉 쥐고 1분간 움직이면, 폰이 횟수와 강도를 자동으로 측정해요.',
-               'Hold the phone firmly and move for 1 minute — reps & intensity are measured automatically.')}
+            {L('폰을 손에 꽉 쥐고 1분간 움직이면, 폰이 펄스와 강도를 자동으로 측정해요.',
+               'Hold the phone firmly and move for 1 minute — pulses & intensity are measured automatically.')}
           </p>
           <p className={styles.safety}>
             {L('무리하지 말고 본인 컨디션에 맞게 움직여주세요.',
@@ -144,7 +144,7 @@ export default function SprintDetect() {
           {/* 실시간 횟수는 보조 지표로 아래에 */}
           <div className={styles.repsRow}>
             <span className={styles.repsNum}>{liveCount}</span>
-            <span className={styles.repsUnit}>{L('회', 'reps')}</span>
+            <span className={styles.repsUnit}>{L('펄스', 'pulses')}</span>
           </div>
           {lowSignal && (
             <p className={styles.warn}>
@@ -157,7 +157,7 @@ export default function SprintDetect() {
       {phase === 'result' && result && (
         <div className={styles.panel}>
           <div className={styles.badge}>{mode.emoji} {modeLabel} {L('완료', 'done')}</div>
-          <div className={styles.resultCount}>{result.count}<span>{L('회', 'reps')}</span></div>
+          <div className={styles.resultCount}>{result.count}<span>{L('펄스', 'pulses')}</span></div>
           <div className={styles.resultIntensity}>
             {L('강도', 'Intensity')} · {L('상위', 'Top')} {intensityPercentile(result.avgAmp, result.count)}%
           </div>
