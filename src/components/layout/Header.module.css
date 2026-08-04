@@ -143,6 +143,28 @@
   transform: scale(0.95);
 }
 
+/* 통합 설정 진입 (비로그인) — 아바타와 동일 사이즈의 원형 ⚙️ */
+.settingsBtn {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  font-size: 17px;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--shadow-sm);
+  padding: 0;
+  transition: transform 0.1s;
+}
+
+.settingsBtn:active {
+  transform: scale(0.95);
+}
+
 .menu {
   position: absolute;
   top: calc(100% + 8px);
