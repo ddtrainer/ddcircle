@@ -3,7 +3,7 @@
 
 export const translations = {
   ko: {
-    heroQuote: '하루 <span class="one">3분</span><span class="em">, 깊게 숨 쉬고 운동</span>하며<br>당신의 에너지 기운을 나누세요~',
+    heroQuote: '하루 <span class="one">3분</span><span class="em">, 깊게 숨 쉬고 운동</span>하며<br>당신의 에너지 기운을 나누세요',
     nowStart: '지금 바로',
     tapToStart: '탭하여 시작',
     peopleSuffix: '명',
@@ -86,7 +86,7 @@ export const translations = {
     profileEditSaved: '프로필이 저장됐어요',
     startBtn: '오늘의 3분 DD 시작하기 →',
     browseLink: '먼저 응원나라 둘러보기 →',
-    philosophyText: '<span style="color:var(--text-muted);font-weight:400;font-style:normal">수백만 년, 인류가 이어온 </span><span style="color:var(--text);font-weight:700;font-style:normal">본능</span><span style="color:var(--text-muted);font-weight:400;font-style:normal"> —</span><br><span style="color:var(--text-muted);font-weight:400;font-style:normal">깊게 </span><span style="color:var(--text);font-weight:700;font-style:normal">숨 쉬고</span><span style="color:var(--text-muted);font-weight:400;font-style:normal">, 몸을 </span><span style="color:var(--text);font-weight:700;font-style:normal">움직이는 것</span><br><br><span style="color:var(--text);font-weight:700;font-style:normal;font-size:17px">나를 돌보는 단 3분,</span><br><span style="color:#b8860b;font-weight:700;font-style:normal;font-size:18px">AI 시대, 생명 활동이 자산이 된다.</span>',
+    philosophyText: '<span style="color:#2ba48f;font-weight:400;font-style:normal">수백만 년, 인류가 이어온 </span><span style="color:#2ba48f;font-weight:700;font-style:normal">본능</span><span style="color:#2ba48f;font-weight:400;font-style:normal"> —</span><br><span style="color:#2ba48f;font-weight:400;font-style:normal">깊게 </span><span style="color:#2ba48f;font-weight:700;font-style:normal">숨 쉬고</span><span style="color:#2ba48f;font-weight:400;font-style:normal">, 몸을 </span><span style="color:#2ba48f;font-weight:700;font-style:normal">움직이는 것</span><br><br><span style="color:#1e9bd8;font-weight:700;font-style:normal;font-size:17px">나를 돌보는 단 3분</span><br><span style="color:#1e9bd8;font-weight:700;font-style:normal;font-size:18px">생명 활동이 자산이 됩니다</span>',
     pickerTitle: '🔥 이어서 할 운동을 골라주세요',
     pickerSub: '깊은 호흡을 마쳤어요.<br>이제 이 동작으로 1분 움직여요.',
     preferLabel: '오늘 운동:',
