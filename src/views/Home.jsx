@@ -4,8 +4,6 @@ import { useNavigate } from 'react-router-dom';
 import { useLang } from '../i18n/LangContext';
 import { useApp } from '../context/AppContext';
 import { useAuth } from '../context/AuthContext';
-import { useNextSetTiming } from '../hooks/useNextSetTiming';
-import SetTimingModal from '../components/modals/SetTimingModal';
 import LoginPromptModal from '../components/modals/LoginPromptModal';
 import YesterdayPageCard from '../components/assets/YesterdayPageCard';
 import { unlockAudio } from '../utils/audioUnlock';
@@ -14,11 +12,9 @@ import styles from './Home.module.css';
 
 export default function Home() {
   const { t } = useLang();
-  const { setTiming, todayDone, todayCount, userEp, breathPatternId } = useApp();
+  const { todayCount, userEp, breathPatternId } = useApp();
   const { user } = useAuth();
   const navigate = useNavigate();
-  const next = useNextSetTiming(setTiming, todayDone);
-  const [setTimingOpen, setSetTimingOpen] = useState(false);
   const [loginPrompt, setLoginPrompt] = useState({ open: false, reason: 'second', data: null });
 
   // 소프트 게이트: 비로그인 사용자에게 의미 있는 순간에 로그인 유도.
@@ -65,19 +61,6 @@ export default function Home() {
 
   // 마지막 선택 호흡 정보(리쥼 카드 표시용). 기본값 '478'도 안전한 신경 안정 호흡.
   const currentBreath = BREATH_MODES.find((m) => m.id === breathPatternId) || BREATH_MODES[0];
-
-  // 셋 타이밍 카드 클릭: live면 바로 시작, 아니면 모달
-  const handleSetCardClick = () => {
-    if (next.mode === 'live') goStartDeep();
-    else setSetTimingOpen(true);
-  };
-
-  // 셋 카드 CTA 버튼: live면 바로 시작, 아니면 모달
-  const handleSetCta = (e) => {
-    e.stopPropagation();
-    if (next.mode === 'live') goStartDeep();
-    else setSetTimingOpen(true);
-  };
 
   return (
     <div className={styles.home}>
@@ -140,46 +123,10 @@ export default function Home() {
       {/* 어제(또는 최근)의 페이지 미니 카드 — 재방문 + 책장 발견 */}
       <YesterdayPageCard />
 
-      {/* 다음 DD 타이밍(셋 타이밍) 카드 — 예약/리마인더 성격이라 하단으로 배치.
-          시작 동선은 상단 호흡 서클이 단독으로 맡는다. */}
-      <div
-        className={`${styles.setTimingCard} ${next.mode === 'live' ? styles.active : ''}`}
-        onClick={handleSetCardClick}
-      >
-        <div className={styles.setInfo}>
-          <div className={styles.setLabel}>
-            {next.mode === 'live' && <span className={styles.liveDot}></span>}
-            {next.label}
-          </div>
-          <div className={styles.setTime}>
-            {next.mode === 'off' && next.timeText}
-            {next.mode === 'live' && (
-              <>
-                {next.icon} {next.slotName} · <span className={styles.accent}>{next.accentText}</span>
-              </>
-            )}
-            {next.mode === 'next' && (
-              <>
-                {next.icon} <span className={styles.accent}>{next.accentTime}</span> · {next.remainText}
-              </>
-            )}
-          </div>
-        </div>
-        <button
-          className={`${styles.setCta} ${next.mode === 'live' ? '' : styles.dim}`}
-          onClick={handleSetCta}
-        >
-          {next.ctaLabel}
-        </button>
-      </div>
-
       {/* 철학 인용 */}
       <div className={styles.philosophy}>
         <p dangerouslySetInnerHTML={{ __html: t('philosophyText') }} />
       </div>
-
-      {/* 셋 타이밍 모달 */}
-      <SetTimingModal open={setTimingOpen} onClose={() => setSetTimingOpen(false)} />
 
       <LoginPromptModal
         open={loginPrompt.open}
