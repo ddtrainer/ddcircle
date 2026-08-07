@@ -222,7 +222,89 @@ export const DASH_GUIDE = {
   },
 };
 
-export function getGuide(track, level) {
+// 영문 가이드 — 한국어판과 같은 구조. 번역이 없는 항목은 getGuide에서 한국어로 폴백한다.
+export const DEEP_GUIDE_EN = {
+  1: {
+    title: '① Beginner · Natural Breathing',
+    intro: 'The safest, most universal practice for beginners. Simply bringing attention to your breath settles the mind. Letting the exhale run longer than the inhale helps.',
+    method: [
+      'Sit or lie down comfortably with your back straight.',
+      'Keep your mouth closed and breathe through your nose only.',
+      'Let the inhale and exhale flow as naturally as they normally do.',
+      'Rest your attention on the breath; when thoughts wander, come back to it.',
+      'Continue for 2 minutes.',
+    ],
+    effect: [
+      'Settles the autonomic nervous system for immediate calm',
+      'Activates the parasympathetic system → lowers the stress hormone cortisol',
+      'The safest way for a beginner to learn breath awareness',
+      'A basic recovery tool you can reach for anywhere, anytime',
+    ],
+  },
+  2: {
+    title: '② Basic · Calm Nerves Breath (4-7-8)',
+    intro: 'A "natural tranquilliser for the nervous system", developed by Dr. Andrew Weil. Clinically supported for easing insomnia and anxiety.',
+    method: [
+      'Rest the tip of your tongue lightly behind your upper front teeth.',
+      'Empty your lungs completely through your mouth with a "whoosh" sound.',
+      'Close your mouth and inhale through your nose for 4 seconds.',
+      'Hold your breath for 7 seconds.',
+      'Exhale through your mouth for 8 seconds with a "whoosh".',
+      'Repeat the cycle 4–6 times (about 2 minutes).',
+    ],
+    effect: [
+      'Eases insomnia — helps you fall asleep faster when done before bed',
+      'Clinically supported for calming anxiety and panic attacks',
+      'The 7-second hold balances oxygen and CO₂ to steady the nerves',
+      'Works quickly to release tension before a talk or an exam',
+    ],
+  },
+  3: {
+    title: '③ Advanced · Mental Strength Breath (Box Breathing)',
+    intro: 'The technique US Navy SEALs use under extreme pressure. It raises focus and composure at the same time.',
+    method: [
+      'Straighten your back and let your shoulders drop.',
+      'Inhale through your nose for 4 seconds, letting your belly expand.',
+      'Hold your breath for 4 seconds.',
+      'Exhale through your nose or mouth for 4 seconds.',
+      'Hold again for 4 seconds.',
+      'Repeat these four steps for 2 minutes, as if tracing a square.',
+    ],
+    effect: [
+      'Builds the ability to stay composed under extreme stress',
+      'Raises focus and calm together',
+      'Effective for settling yourself before a talk, an exam, or a big decision',
+      'Steadies blood pressure and optimises oxygen supply to the brain',
+    ],
+  },
+  4: {
+    title: '④ Expert · Immunity Breath (Wim Hof)',
+    intro: 'A method developed by the Dutch "Iceman", Wim Hof. An advanced practice for strengthening immunity and self-regulating stress.',
+    method: [
+      'Sit or lie down comfortably.',
+      'Power breathing: inhale deeply and let the exhale fall away — 30 times (about 1 minute).',
+      'After the final exhale, hold your breath as long as is comfortable (30 seconds–1 minute).',
+      'Recovery breath: inhale fully, hold for 15 seconds, then release.',
+      'Finish after one cycle (about 2 minutes).',
+    ],
+    effect: [
+      'Strengthens the immune response — supported by published research',
+      'Improves self-regulation of the stress hormone adrenaline',
+      'Dampens inflammation and lifts energy levels sharply',
+      'Increases tolerance to cold and pain',
+      'Builds mental and physical resilience to its highest level',
+    ],
+    safetyNotice: 'Always practise sitting or lying down. Dizziness can occur, so never do this in water, while driving, or while standing.',
+  },
+};
+
+// lang이 'en'이면 영문판을 덮어씌운다. 번역이 없는 항목·트랙은 한국어 원문 그대로 노출
+// (빈 화면이 되는 것보다 낫다).
+export function getGuide(track, level, lang = 'ko') {
   const map = track === 'deep' ? DEEP_GUIDE : DASH_GUIDE;
-  return map[level] || map[1];
+  const base = map[level] || map[1];
+  if (lang !== 'en') return base;
+  const enMap = track === 'deep' ? DEEP_GUIDE_EN : null;
+  const en = enMap && (enMap[level] || enMap[1]);
+  return en ? { ...base, ...en } : base;
 }
