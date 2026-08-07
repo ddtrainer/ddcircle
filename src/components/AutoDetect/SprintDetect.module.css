@@ -178,6 +178,17 @@
   font-size: 24px;
   margin-left: 6px;
 }
+/* 실패(움직임 부족) — 축하 색이 아닌 무채색으로 */
+.resultCountFail {
+  font-size: 80px;
+  font-weight: 800;
+  color: var(--text-muted);
+  line-height: 1;
+}
+.resultCountFail span {
+  font-size: 24px;
+  margin-left: 6px;
+}
 .resultIntensity {
   font-size: 16px;
   font-weight: 700;

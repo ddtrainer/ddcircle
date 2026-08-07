@@ -100,6 +100,16 @@ export default function SprintDetect() {
 
   const finalize = () => goProof(result);
 
+  // 움직임이 너무 적으면(펄스 < 최소 유효치) 완료로 인정하지 않고 재측정.
+  // 측정 로직(피크 감지)은 그대로, 결과 게이트만 추가.
+  const passed = !!result && result.count >= SPRINT.MIN_VALID_COUNT;
+  const retry = () => {
+    setResult(null);
+    setLiveCount(0);
+    setLowSignal(false);
+    setPhase('countdown');
+  };
+
   return (
     <div className={styles.screen}>
       {phase === 'intro' && (
@@ -154,7 +164,7 @@ export default function SprintDetect() {
         </div>
       )}
 
-      {phase === 'result' && result && (
+      {phase === 'result' && result && passed && (
         <div className={styles.panel}>
           <div className={styles.badge}>{mode.emoji} {modeLabel} {L('완료', 'done')}</div>
           <div className={styles.resultCount}>{result.count}<span>{L('펄스', 'pulses')}</span></div>
@@ -162,6 +172,22 @@ export default function SprintDetect() {
             {L('강도', 'Intensity')} · {L('상위', 'Top')} {intensityPercentile(result.avgAmp, result.count)}%
           </div>
           <button className={styles.primary} onClick={finalize}>{L('완료', 'Done')}</button>
+        </div>
+      )}
+
+      {/* 움직임이 너무 적음 — 완료 불가, 재측정 유도(다음 응원 화면으로 넘어가지 않음) */}
+      {phase === 'result' && result && !passed && (
+        <div className={styles.panel}>
+          <div className={styles.badge}>{mode.emoji} {modeLabel}</div>
+          <div className={styles.resultCountFail}>{result.count}<span>{L('펄스', 'pulses')}</span></div>
+          <p className={styles.warn}>
+            {L(`움직임이 거의 감지되지 않았어요. 폰을 손에 꽉 쥐고 1분간 움직여야 완료돼요. (최소 ${SPRINT.MIN_VALID_COUNT} 펄스)`,
+               `Almost no movement detected. Hold the phone firmly and move for a full minute to complete. (min ${SPRINT.MIN_VALID_COUNT} pulses)`)}
+          </p>
+          <button className={styles.primary} onClick={retry}>{L('다시 측정', 'Measure again')}</button>
+          <button className={styles.exit} onClick={() => navigate('/picker', { replace: true })}>
+            {L('← 종목 다시 선택', '← Pick another')}
+          </button>
         </div>
       )}
     </div>
