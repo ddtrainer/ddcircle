@@ -7,6 +7,7 @@ import { useApp } from '../../context/AppContext';
 import { renderNickname } from '../../lib/nickname';
 import Modal from './Modal';
 import SetTimingModal from './SetTimingModal';
+import PiTipModal from './PiTipModal';
 import styles from './SettingsModal.module.css';
 
 // 통합 설정 허브 — 언어(인라인) + 프로필·숨핏 타이밍·계정으로 연결.
@@ -18,6 +19,7 @@ export default function SettingsModal({ open, onClose }) {
   const { userEp } = useApp();
   const navigate = useNavigate();
   const [timingOpen, setTimingOpen] = useState(false);
+  const [tipOpen, setTipOpen] = useState(false);
 
   const L = (ko, en) => (lang === 'ko' ? ko : en);
 
@@ -95,6 +97,16 @@ export default function SettingsModal({ open, onClose }) {
           <span className={styles.chevron}>›</span>
         </button>
 
+        {/* Pi 후원(팁) */}
+        <button className={styles.row} onClick={() => setTipOpen(true)}>
+          <span className={styles.rowIcon}>💜</span>
+          <span className={styles.rowMain}>
+            <span className={styles.rowTitle}>{L('Pi로 후원하기', 'Support with Pi')}</span>
+            <span className={styles.rowSub}>{L('원하는 만큼 Pi로 응원', 'Send any amount in Pi')}</span>
+          </span>
+          <span className={styles.chevron}>›</span>
+        </button>
+
         {/* 계정 */}
         {user ? (
           <button className={`${styles.row} ${styles.danger}`} onClick={logout}>
@@ -115,6 +127,8 @@ export default function SettingsModal({ open, onClose }) {
 
       {/* 숨핏 타이밍은 기존 모달 그대로 재사용 (설정 위에 겹쳐 열림) */}
       <SetTimingModal open={timingOpen} onClose={() => setTimingOpen(false)} />
+      {/* Pi 후원(팁) 모달 */}
+      <PiTipModal open={tipOpen} onClose={() => setTipOpen(false)} />
     </>
   );
 }

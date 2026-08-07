@@ -51,15 +51,24 @@ export function initPi() {
   return initPromise;
 }
 
-// 결제 미사용 — Pi.authenticate 필수 콜백. 미완료 결제가 있으면 로그만 남긴다.
-function onIncompletePaymentFound(payment) {
-  console.warn('[pi] incomplete payment found:', payment && payment.identifier);
+// Pi.authenticate 필수 콜백 — 인증 시점에 미완료 결제가 발견되면 절대 무시하지 않고
+// 서버(/api/payments/complete)로 완료 처리한다.
+export function onIncompletePaymentFound(payment) {
+  const paymentId = payment && payment.identifier;
+  const txid = payment && payment.transaction && payment.transaction.txid;
+  if (!paymentId) return;
+  fetch('/api/payments/complete', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    credentials: 'include',
+    body: JSON.stringify({ paymentId, txid }),
+  }).catch((e) => console.error('[pi] incomplete payment complete failed', e));
 }
 
-// username 스코프로 인증. 반환: { accessToken, user: { uid, username } }
+// username + payments 스코프로 인증(결제를 위해 payments 확장). 반환: { accessToken, user }
 export async function authenticateWithPi() {
   const Pi = await initPi();               // init을 완전히 await 한 뒤에만 authenticate
-  const scopes = ['username'];
+  const scopes = ['username', 'payments'];
   return Pi.authenticate(scopes, onIncompletePaymentFound);
 }
 

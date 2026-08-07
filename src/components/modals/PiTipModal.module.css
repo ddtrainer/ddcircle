@@ -1,0 +1,97 @@
+.title {
+  font-family: 'Noto Serif KR', 'Playfair Display', serif;
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 6px;
+  padding-right: 24px;
+}
+
+.sub {
+  font-size: 14px;
+  color: var(--text-muted);
+  line-height: 1.5;
+  margin-bottom: 16px;
+}
+
+.presets {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.preset {
+  padding: 14px 8px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: var(--surface2, #fdf9f0);
+  color: var(--text);
+  font-size: 16px;
+  font-weight: 800;
+  font-family: inherit;
+  cursor: pointer;
+  transition: all 0.12s ease;
+}
+
+.presetActive {
+  border-color: #7b3ff2;
+  color: #fff;
+  background: linear-gradient(135deg, #7b3ff2, #b06ab3);
+}
+
+.customRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 18px;
+}
+
+.customLabel {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+.customInput {
+  flex: 1;
+  min-width: 0;
+  padding: 11px 12px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+  font-size: 15px;
+  font-family: inherit;
+}
+
+.pi {
+  font-size: 16px;
+  font-weight: 800;
+  color: var(--text-muted);
+}
+
+.sendBtn {
+  width: 100%;
+  padding: 14px;
+  border-radius: 14px;
+  border: none;
+  color: #fff;
+  font-size: 16px;
+  font-weight: 800;
+  font-family: inherit;
+  cursor: pointer;
+  background: linear-gradient(135deg, #7b3ff2, #b06ab3);
+  box-shadow: 0 4px 14px rgba(123, 63, 242, 0.28);
+  transition: transform 0.12s ease, opacity 0.12s ease;
+}
+
+.sendBtn:disabled {
+  opacity: 0.55;
+  cursor: default;
+}
+
+.sendBtn:not(:disabled):active {
+  transform: scale(0.98);
+}
