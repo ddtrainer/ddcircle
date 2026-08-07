@@ -95,15 +95,14 @@
    글자 크기를 줄여 넘치지 않게 한다. */
 .heroQuote {
   font-family: 'Gowun Dodum', 'Inter', sans-serif;
-  font-size: clamp(13px, 4.8vw, 19px);
-  line-height: 1.9;
+  font-size: clamp(14px, 5vw, 20px);
+  line-height: 1.8;
   color: var(--text);
-  margin-bottom: 8px;
+  margin-bottom: 0;
   white-space: nowrap;
   font-weight: 400;
 }
 
-/* 영문은 문장을 3줄로 나눠 각 줄이 짧아졌으므로 한글과 비슷한 크기로 키운다 */
 :global(body[data-lang="en"]) .heroQuote {
   font-size: clamp(14px, 5vw, 20px);
   line-height: 1.75;
@@ -114,22 +113,17 @@
   font-weight: 700;
 }
 
-/* 핵심 구절 강조 — 굵고 크게(다크) 처리해 한눈에 들어오게 */
-.heroQuote :global(.em) {
-  font-weight: 800;
-  font-size: 1.12em;
-  color: var(--text);
-}
-
+/* 히어로 최상단 태그라인 — 앱의 정체성을 먼저 각인시키는 자리라 진하게 강조.
+   항상 한 줄 유지: 좁은 화면에선 글자 크기·자간을 줄여 넘침 방지 */
 .heroSub {
-  /* 항상 한 줄 유지 — 좁은 화면에선 글자 크기·자간을 줄여 넘침 방지 */
   white-space: nowrap;
-  font-size: clamp(10px, 3.1vw, 13px);
-  color: var(--text-secondary, #888);
-  letter-spacing: 2px;
+  font-size: clamp(11px, 3.7vw, 16px);
+  color: var(--text);
+  letter-spacing: 1.6px;
   text-transform: uppercase;
   font-family: 'Inter', sans-serif;
-  font-weight: 700;
+  font-weight: 800;
+  margin-bottom: 10px;
 }
 
 /* 호흡 원 */
