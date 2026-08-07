@@ -18,6 +18,7 @@ import Celebration from '../components/Celebration';
 import { isInAppBrowser } from '../utils/inAppBrowser';
 import OpenExternalModal from '../components/modals/OpenExternalModal';
 import LoginPromptModal from '../components/modals/LoginPromptModal';
+import PiTipModal from '../components/modals/PiTipModal';
 import styles from './Complete.module.css';
 
 export default function Complete() {
@@ -30,6 +31,7 @@ export default function Complete() {
   const [storySharing, setStorySharing] = useState(false);
   const [externalModalOpen, setExternalModalOpen] = useState(false);
   const [loginPromptOpen, setLoginPromptOpen] = useState(false);
+  const [tipOpen, setTipOpen] = useState(false);
   const [milestone, setMilestone] = useState(null);
   // 풀세트 완료(호흡+운동 둘 다 완주) 축하 폭죽 — 진입 시 1회.
   // completeSession()이 플래그를 비우기 전(= finish 호출 전)이라 mount 시점에 읽을 수 있다.
@@ -309,6 +311,19 @@ export default function Complete() {
         {t('skipShareBtn')}
       </button>
 
+      {/* 은은한 Pi 후원 — 방금 완주한 좋은 순간에 선택적으로 (강매 X) */}
+      <button
+        type="button"
+        onClick={() => setTipOpen(true)}
+        style={{
+          display: 'block', margin: '10px auto 0', padding: '6px 10px',
+          background: 'none', border: 'none', cursor: 'pointer',
+          fontFamily: 'inherit', fontSize: 13, fontWeight: 700, color: '#7b3ff2',
+        }}
+      >
+        💜 {lang === 'en' ? 'Support DDCircle with Pi' : 'Pi로 DDCircle 응원하기'}
+      </button>
+
       {/* 책장 진입 — 방금 쓴 페이지를 즉시 확인 */}
       {user && (
         <button
@@ -341,6 +356,8 @@ export default function Complete() {
         milestone={milestone}
         onClose={handleMilestoneClose}
       />
+
+      <PiTipModal open={tipOpen} onClose={() => setTipOpen(false)} />
 
       {celebrate && (
         <Celebration
