@@ -114,6 +114,19 @@ export default function SprintDetect() {
 
   const finalize = () => goProof(result);
 
+  // iframe 탈출 — 사용자 탭(제스처) 안에서만 최상위 이동이 허용된다.
+  // (로드 시점 자동 탈출은 브라우저가 anti-framebusting으로 차단함)
+  // 실패 시 새 창으로 폴백.
+  const openTopLevel = () => {
+    const sep = window.location.search ? '&' : '?';
+    const url = window.location.href + sep + 'fb=1';
+    try {
+      window.top.location = url;
+    } catch {
+      window.open(url, '_blank', 'noopener');
+    }
+  };
+
   // 움직임이 너무 적으면(펄스 < 최소 유효치) 완료로 인정하지 않고 재측정.
   // 측정 로직(피크 감지)은 그대로, 결과 게이트만 추가.
   const passed = !!result && result.count >= SPRINT.MIN_VALID_COUNT;
@@ -138,7 +151,27 @@ export default function SprintDetect() {
             {L('무리하지 말고 본인 컨디션에 맞게 움직여주세요.',
                'Move at your own pace — don’t overdo it.')}
           </p>
-          <button className={styles.primary} onClick={handleStart}>{L('시작', 'Start')}</button>
+
+          {/* iframe(Pi Browser 등) 안에서는 동작센서가 차단됨 — 시작 전에 미리 안내.
+              1분 낭비 없이 탭 한 번으로 최상위에서 다시 열도록. */}
+          {inIframe && (
+            <>
+              <p className={styles.warn}>
+                {L('지금 화면에서는 동작 센서가 차단돼 펄스가 측정되지 않아요. 전체화면으로 열면 정상 측정됩니다.',
+                   'Motion sensors are blocked in this view, so pulses can’t be measured. Open full screen to fix it.')}
+              </p>
+              <button className={styles.primary} onClick={openTopLevel}>
+                {L('전체화면으로 열기', 'Open full screen')}
+              </button>
+            </>
+          )}
+
+          <button
+            className={inIframe ? styles.lowBtn : styles.primary}
+            onClick={handleStart}
+          >
+            {inIframe ? L('그래도 시작', 'Start anyway') : L('시작', 'Start')}
+          </button>
           <button className={styles.exit} onClick={() => navigate('/picker', { replace: true })}>
             {L('← 종목 다시 선택', '← Pick another')}
           </button>
@@ -178,6 +211,12 @@ export default function SprintDetect() {
                       'No motion-sensor signal. Sensor access seems blocked in this browser.')
                   : L('폰을 좀 더 세게 흔들며 움직여보세요!', 'Move a bit harder!')}
               </p>
+              {/* 센서가 막힌 원인이 iframe이면 — 탭 한 번으로 전체화면(최상위)에서 다시 열기 */}
+              {noSensor && inIframe && (
+                <button className={styles.primary} onClick={openTopLevel}>
+                  {L('전체화면으로 열어 센서 켜기', 'Open full screen to enable sensor')}
+                </button>
+              )}
               {/* 원인 진단 한 줄 — 스크린샷 1장으로 파악: raw=0이면 센서 차단, raw>0인데 cnt=0이면 데이터 이상 */}
               <p className={styles.diag}>
                 DM:{hasDM ? 'Y' : 'N'} · perm:{permission} · reqPerm:{needsPerm ? 'Y' : 'N'} · iframe:{inIframe ? 'Y' : 'N'} · raw:{rawSamples} · cnt:{liveCount}
