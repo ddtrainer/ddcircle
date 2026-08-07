@@ -19,6 +19,9 @@ import styles from './SprintDetect.module.css';
 const SENSOR_ALIVE_MIN_EARLY = 10;  // 측정 2.5초 시점
 const SENSOR_ALIVE_MIN_TOTAL = 60;  // 1분 측정 전체
 
+// DDCircle 고유 단위 — 일반 '펄스(pulse)'로 오해되지 않도록 브랜드 용어를 쓴다.
+const DPULSE = 'DPulses';
+
 // Dash 자동측정 — 심플 흐름: intro(시작) → 카운트다운 5~1 → 1분 측정 → 결과 → (선택)셀카 → 완료.
 export default function SprintDetect() {
   const navigate = useNavigate();
@@ -39,8 +42,7 @@ export default function SprintDetect() {
   const [noSensor, setNoSensor] = useState(false); // 측정 중 원시 센서 이벤트가 0 → 센서 접근 차단 추정
   const [sensorBlocked, setSensorBlocked] = useState(false); // 측정 종료 시점 확정 판정
   const [result, setResult] = useState(null);
-  const [useCamera, setUseCamera] = useState(false); // 카메라 대체 측정(사용자가 선택했을 때만)
-  const [camError, setCamError] = useState('');
+  const [useCamera, setUseCamera] = useState(false); // 동작센서가 막힌 환경에서 카메라로 대체 측정
   const detectorRef = useRef(null);
   const rawSamplesRef = useRef(0);
   const camStopRef = useRef(null);
@@ -66,28 +68,30 @@ export default function SprintDetect() {
     navigate('/proof', { replace: true });
   };
 
-  // '시작' — 권한 요청(제스처 콜스택) 후 바로 카운트다운.
-  // camera=true면 동작센서 대신 카메라로 측정(사용자가 명시적으로 선택한 경우).
-  const handleStart = async (camera = false) => {
+  // '시작' 하나로 끝 — 환경에 맞는 측정 수단을 알아서 고른다.
+  //   · 동작센서가 막힌 환경(Pi Browser의 iframe) → 카메라로 대체 측정
+  //   · 그 외 → 기존 동작센서
+  // 어느 쪽이든 실패하면 막지 않고 시간 기반으로 완료시킨다.
+  const handleStart = async () => {
     // 이 종목으로 실제 시작을 확정 → 다음 접속 때 "마지막 선택"으로 재사용.
     // mode.key는 유효 DASH 키(무효값은 getDashMode가 walk로 보정)라 EP/기록도 안전.
     setSelectedExercise(mode.key);
     setPreferredExercise(mode.key);
     warmDashAudio();
-    setCamError('');
-    if (camera) {
-      // 카메라 권한은 제스처 콜스택 안에서 미리 확인 — 거부 시 측정에 들어가지 않는다.
+
+    if (inIframe) {
+      // 카메라 권한은 제스처 콜스택 안에서 요청해야 팝업이 뜬다.
       try {
         const s = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
         s.getTracks().forEach((t) => t.stop()); // 권한 확인용 — 실제 스트림은 측정 시작 시 다시 연다
+        setUseCamera(true);
       } catch {
-        setCamError('denied');
-        return;
+        setUseCamera(false); // 거부/불가 → 측정 없이 1분 운동으로 완료
       }
-      setUseCamera(true);
       setPhase('countdown');
       return;
     }
+
     setUseCamera(false);
     const res = await requestPermission();
     if (res !== 'granted') { goProof(null); return; } // 센서 불가 → 측정 없이 완료(종목 배율로 EP)
@@ -129,7 +133,7 @@ export default function SprintDetect() {
           if (cancelled) stop();          // 이미 끝났으면 즉시 해제(카메라 켜진 채 방치 방지)
           else camStopRef.current = stop;
         })
-        .catch(() => setCamError('start_failed'));
+        .catch(() => { /* 스트림 열기 실패 → 이벤트 0 → 시간 기반 완료로 이어짐 */ });
     } else {
       motionStart((x, y, z, ts) => { rawSamplesRef.current += 1; det.addSample(x, y, z, ts); });
     }
@@ -183,43 +187,24 @@ export default function SprintDetect() {
           <div className={styles.badge}>{mode.emoji} DASH</div>
           <h1 className={styles.title}>{modeLabel}</h1>
           <p className={styles.desc}>
-            {L('폰을 손에 꽉 쥐고 1분간 움직이면, 폰이 펄스와 강도를 자동으로 측정해요.',
-               'Hold the phone firmly and move for 1 minute — pulses & intensity are measured automatically.')}
+            {L(`폰을 손에 꽉 쥐고 1분간 움직이면, 폰이 ${DPULSE}와 강도를 자동으로 측정해요.`,
+               `Hold the phone firmly and move for 1 minute — ${DPULSE} & intensity are measured automatically.`)}
           </p>
           <p className={styles.safety}>
             {L('무리하지 말고 본인 컨디션에 맞게 움직여주세요.',
                'Move at your own pace — don’t overdo it.')}
           </p>
 
-          {/* iframe(Pi Browser) 안에서는 동작센서가 차단됨 — 기본은 시간 기반 완료,
-              원하면 카메라로 펄스를 재는 대체 수단을 선택할 수 있게 한다(opt-in).
-              전체화면 탈출은 Pi 로그인이 끊기므로 권하지 않는다. */}
+          {/* iframe(Pi Browser) 안에서는 동작센서가 차단됨 → 카메라 흔들림으로 대체 측정.
+              선택지를 주지 않고 '시작' 하나로 진행하되, 카메라를 왜 쓰는지 미리 알린다. */}
           {inIframe && (
             <p className={styles.safety}>
-              {L('ℹ️ 이 환경에서는 동작 센서가 막혀 있어요. 그냥 시작하면 1분 운동으로 완료되고, 펄스까지 재고 싶다면 카메라로 측정할 수 있어요.',
-                 'ℹ️ Motion sensors are blocked here. Just start to complete on time, or use the camera if you also want pulses.')}
-            </p>
-          )}
-          {camError && (
-            <p className={styles.warn}>
-              {L('카메라를 사용할 수 없어요. 그냥 시작하면 1분 운동으로 완료됩니다.',
-                 'Camera unavailable. Just start — it completes on time.')}
+              {L(`📷 시작을 누르면 카메라 사용을 물어봐요. 이 환경에서는 카메라 흔들림으로 ${DPULSE}를 측정합니다. 영상은 기기 안에서만 비교하고 즉시 버려요(저장·전송 없음).`,
+                 `📷 Start will ask for camera access. Here we measure ${DPULSE} from camera shake. Frames are compared on-device and discarded immediately — never stored or uploaded.`)}
             </p>
           )}
 
-          <button className={styles.primary} onClick={() => handleStart(false)}>{L('시작', 'Start')}</button>
-
-          {inIframe && (
-            <>
-              <button className={styles.lowBtn} onClick={() => handleStart(true)}>
-                {L('📷 카메라로 펄스 측정 (베타)', '📷 Measure pulses with camera (beta)')}
-              </button>
-              <p className={styles.privacy}>
-                {L('카메라 영상은 기기 안에서 움직임 비교에만 쓰고 즉시 버려요. 저장·전송하지 않습니다.',
-                   'Camera frames are compared on-device only and discarded immediately — never stored or uploaded.')}
-              </p>
-            </>
-          )}
+          <button className={styles.primary} onClick={handleStart}>{L('시작', 'Start')}</button>
           <button className={styles.exit} onClick={() => navigate('/picker', { replace: true })}>
             {L('← 종목 다시 선택', '← Pick another')}
           </button>
@@ -253,7 +238,7 @@ export default function SprintDetect() {
           {/* 실시간 횟수는 보조 지표로 아래에 */}
           <div className={styles.repsRow}>
             <span className={styles.repsNum}>{liveCount}</span>
-            <span className={styles.repsUnit}>{L('펄스', 'pulses')}</span>
+            <span className={styles.repsUnit}>{DPULSE}</span>
           </div>
           {useCamera && (
             <p className={styles.camBadge}>
@@ -266,8 +251,8 @@ export default function SprintDetect() {
                 ? (useCamera
                     ? L('카메라 신호가 없어요. 렌즈가 가려졌는지 확인해주세요. (시간으로는 완료돼요)',
                         'No camera signal — check the lens isn’t covered. (It still completes on time.)')
-                    : L('이 환경에서는 펄스 측정이 안 돼요. 시간으로 완료되니 그대로 움직여주세요!',
-                        'Pulses can’t be measured here — keep moving, it completes on time.'))
+                    : L(`이 환경에서는 ${DPULSE} 측정이 안 돼요. 시간으로 완료되니 그대로 움직여주세요!`,
+                        `${DPULSE} can’t be measured here — keep moving, it completes on time.`))
                 : L('폰을 좀 더 세게 흔들며 움직여보세요!', 'Move a bit harder!')}
             </p>
           )}
@@ -277,7 +262,7 @@ export default function SprintDetect() {
       {phase === 'result' && result && passed && (
         <div className={styles.panel}>
           <div className={styles.badge}>{mode.emoji} {modeLabel} {L('완료', 'done')}</div>
-          <div className={styles.resultCount}>{result.count}<span>{L('펄스', 'pulses')}</span></div>
+          <div className={styles.resultCount}>{result.count}<span>{DPULSE}</span></div>
           <div className={styles.resultIntensity}>
             {L('강도', 'Intensity')} · {L('상위', 'Top')} {intensityPercentile(result.avgAmp, result.count)}%
           </div>
@@ -292,8 +277,8 @@ export default function SprintDetect() {
           <div className={styles.badge}>{mode.emoji} {modeLabel} {L('완료', 'done')}</div>
           <div className={styles.resultTime}>1:00</div>
           <p className={styles.desc}>
-            {L('이 환경에서는 동작 센서를 쓸 수 없어 펄스는 기록되지 않았어요. 1분 운동은 완료로 인정됩니다.',
-               'Motion sensors aren’t available here, so pulses weren’t recorded. Your 1-minute session still counts.')}
+            {L(`이 환경에서는 움직임을 측정할 수 없어 ${DPULSE}는 기록되지 않았어요. 1분 운동은 완료로 인정됩니다.`,
+               `Movement couldn’t be measured here, so ${DPULSE} weren’t recorded. Your 1-minute session still counts.`)}
           </p>
           <button className={styles.primary} onClick={() => goProof(null)}>{L('완료', 'Done')}</button>
         </div>
@@ -303,10 +288,10 @@ export default function SprintDetect() {
       {phase === 'result' && result && !passed && !sensorBlocked && (
         <div className={styles.panel}>
           <div className={styles.badge}>{mode.emoji} {modeLabel}</div>
-          <div className={styles.resultCountFail}>{result.count}<span>{L('펄스', 'pulses')}</span></div>
+          <div className={styles.resultCountFail}>{result.count}<span>{DPULSE}</span></div>
           <p className={styles.warn}>
-            {L(`움직임이 거의 감지되지 않았어요. 폰을 손에 꽉 쥐고 1분간 움직여야 완료돼요. (최소 ${SPRINT.MIN_VALID_COUNT} 펄스)`,
-               `Almost no movement detected. Hold the phone firmly and move for a full minute to complete. (min ${SPRINT.MIN_VALID_COUNT} pulses)`)}
+            {L(`움직임이 거의 감지되지 않았어요. 폰을 손에 꽉 쥐고 1분간 움직여야 완료돼요. (최소 ${SPRINT.MIN_VALID_COUNT} ${DPULSE})`,
+               `Almost no movement detected. Hold the phone firmly and move for a full minute to complete. (min ${SPRINT.MIN_VALID_COUNT} ${DPULSE})`)}
           </p>
           <button className={styles.primary} onClick={retry}>{L('다시 측정', 'Measure again')}</button>
           <button className={styles.exit} onClick={() => navigate('/picker', { replace: true })}>
