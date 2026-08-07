@@ -4,10 +4,12 @@
 
 const PI_SDK_URL = 'https://sdk.minepi.com/pi-sdk.js';
 
-// 샌드박스(Testnet) 여부 — 환경변수 우선, 없으면 개발모드에서만 true.
+// 샌드박스(Testnet) 여부 — 환경변수 우선, 없으면 기본 true.
+// App Studio/Pi Desktop 검증은 Testnet(sandbox) 흐름이라 기본 true여야 로그인이 성립한다.
+// Mainnet 배포 시엔 VITE_PI_SANDBOX=false 로 지정.
 const SANDBOX = import.meta.env.VITE_PI_SANDBOX != null
   ? String(import.meta.env.VITE_PI_SANDBOX) === 'true'
-  : !!import.meta.env.DEV;
+  : true;
 
 let sdkPromise = null;
 let initPromise = null;
@@ -55,7 +57,7 @@ function onIncompletePaymentFound(payment) {
 
 // username 스코프로 인증. 반환: { accessToken, user: { uid, username } }
 // Pi Browser 밖에선 authenticate가 응답하지 않으므로 타임아웃으로 우아하게 종료.
-const AUTH_TIMEOUT_MS = 15000;
+const AUTH_TIMEOUT_MS = 120000;
 export async function authenticateWithPi() {
   const Pi = await initPi();               // init을 완전히 await 한 뒤에만 authenticate
   const scopes = ['username'];
