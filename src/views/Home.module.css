@@ -117,13 +117,20 @@
    항상 한 줄 유지: 좁은 화면에선 글자 크기·자간을 줄여 넘침 방지 */
 .heroSub {
   white-space: nowrap;
-  font-size: clamp(11px, 3.7vw, 16px);
-  color: var(--text);
-  letter-spacing: 1.6px;
+  /* 자간이 폭의 상당 부분을 먹으므로 자간을 줄이고 그만큼 글자를 키운다
+     → 폰에서 잘리지 않으면서 오히려 더 크고 진하게 보인다 */
+  font-size: clamp(12px, 4.15vw, 18px);
+  letter-spacing: 0.2px;
   text-transform: uppercase;
   font-family: 'Inter', sans-serif;
-  font-weight: 800;
+  font-weight: 900;
   margin-bottom: 10px;
+  /* DEEP(쿨) → DASH(웜) 두 축을 색으로 표현 — 헤더 그라데이션과 구분되는 색조.
+     크림 배경에서 흐려지지 않도록 중간 노랑을 빼고 채도·명도가 낮은 색만 사용 */
+  background: linear-gradient(90deg, #1478c4 0%, #159c92 40%, #e08420 70%, #e0522a 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
 /* 호흡 원 */
