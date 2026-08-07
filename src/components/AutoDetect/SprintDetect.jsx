@@ -13,6 +13,11 @@ import { playDashStart, playDashEnd, warmDashAudio } from '../../hooks/useDashSo
 import DigitalTimer from '../DigitalTimer';
 import styles from './SprintDetect.module.css';
 
+// 센서가 '살아있다'고 볼 최소 원시 이벤트 수. 정상 가속도계는 ~60Hz라 1분에 수천 개가 들어온다.
+// 이보다 적으면 신호가 없는 것(차단된 환경)으로 보고, 사용자를 실패 처리하지 않는다.
+const SENSOR_ALIVE_MIN_EARLY = 10;  // 측정 2.5초 시점
+const SENSOR_ALIVE_MIN_TOTAL = 60;  // 1분 측정 전체
+
 // Dash 자동측정 — 심플 흐름: intro(시작) → 카운트다운 5~1 → 1분 측정 → 결과 → (선택)셀카 → 완료.
 export default function SprintDetect() {
   const navigate = useNavigate();
@@ -23,7 +28,7 @@ export default function SprintDetect() {
   const L = (ko, en) => (lang === 'ko' ? ko : en);
   const modeLabel = L(mode.labelKo, mode.labelEn);
 
-  const { permission, requestPermission, start: motionStart, stop: motionStop } = useDeviceMotion();
+  const { requestPermission, start: motionStart, stop: motionStop } = useDeviceMotion();
 
   const [phase, setPhase] = useState('intro'); // intro|countdown|measuring|result
   const [countdown, setCountdown] = useState(SPRINT.COUNTDOWN_SEC);
@@ -31,15 +36,14 @@ export default function SprintDetect() {
   const [remainSec, setRemainSec] = useState(SPRINT.MEASURE_MS / 1000);
   const [lowSignal, setLowSignal] = useState(false);
   const [noSensor, setNoSensor] = useState(false); // 측정 중 원시 센서 이벤트가 0 → 센서 접근 차단 추정
-  const [rawSamples, setRawSamples] = useState(0);  // 원시 devicemotion 이벤트 수(진단용)
+  const [sensorBlocked, setSensorBlocked] = useState(false); // 측정 종료 시점 확정 판정
   const [result, setResult] = useState(null);
   const detectorRef = useRef(null);
   const rawSamplesRef = useRef(0);
 
-  // 환경 진단 — Pi Browser 등에서 센서가 왜 막히는지 한 줄로 파악(스크린샷 1장으로 원인 확인).
+  // Pi Browser는 앱을 cross-origin iframe으로 감싸며, 그 안에서는 동작센서가 차단된다.
+  // (최상위로 탈출하면 센서는 살지만 Pi SDK 컨텍스트를 잃어 로그인/결제가 끊김 → 탈출하지 않음)
   const inIframe = (() => { try { return window.top !== window.self; } catch { return true; } })();
-  const hasDM = typeof window !== 'undefined' && typeof window.DeviceMotionEvent !== 'undefined';
-  const needsPerm = hasDM && typeof DeviceMotionEvent.requestPermission === 'function';
 
   useEffect(() => () => motionStop(), [motionStop]);
 
@@ -88,24 +92,27 @@ export default function SprintDetect() {
     const det = createSprintDetector({ minAmp, minIntervalMs: SPRINT.MIN_PEAK_INTERVAL_MS });
     detectorRef.current = det;
     setLiveCount(0); setRemainSec(SPRINT.MEASURE_MS / 1000); setLowSignal(false);
-    setNoSensor(false); setRawSamples(0); rawSamplesRef.current = 0;
+    setNoSensor(false); rawSamplesRef.current = 0;
     const startTs = performance.now();
     playDashStart(); // 🔊 시작음
     // 원시 이벤트 카운트는 감지 알고리즘과 무관 — det.addSample 입력/로직은 그대로.
     motionStart((x, y, z, ts) => { rawSamplesRef.current += 1; det.addSample(x, y, z, ts); });
     const poll = setInterval(() => {
       setLiveCount(det.count);
-      setRawSamples(rawSamplesRef.current);
       const el = performance.now() - startTs;
       setRemainSec(Math.max(0, Math.ceil((SPRINT.MEASURE_MS - el) / 1000)));
-      // 센서 신호 자체가 안 들어오면(원시 이벤트 0) '더 세게'가 아니라 '센서 차단'으로 안내.
-      if (el > 2500 && rawSamplesRef.current === 0) setNoSensor(true);
-      else if (rawSamplesRef.current > 0) setNoSensor(false);
+      // 센서 신호 자체가 안 들어오면 '더 세게'가 아니라 '센서 차단'으로 안내.
+      // 정상 가속도계는 ~60Hz(2.5초에 100+개)라, 한 자릿수면 사실상 신호 없음.
+      if (el > 2500 && rawSamplesRef.current < SENSOR_ALIVE_MIN_EARLY) setNoSensor(true);
+      else if (rawSamplesRef.current >= SENSOR_ALIVE_MIN_EARLY) setNoSensor(false);
       if (el > SPRINT.LOW_SIGNAL_MS && det.count < 3) setLowSignal(true);
       else if (det.count >= 3) setLowSignal(false);
     }, 150);
     const done = setTimeout(() => {
       clearInterval(poll); motionStop(); playDashEnd(); // 🔊 종료음
+      // 원시 센서 이벤트가 사실상 없었다면 '측정 불가 환경'(Pi Browser의 iframe 등).
+      // 사용자가 안 움직인 게 아니므로 실패 처리하지 않고 시간 기반 완료로 인정한다.
+      setSensorBlocked(rawSamplesRef.current < SENSOR_ALIVE_MIN_TOTAL);
       setResult(det.getResult());
       setPhase('result');
     }, SPRINT.MEASURE_MS);
@@ -114,26 +121,17 @@ export default function SprintDetect() {
 
   const finalize = () => goProof(result);
 
-  // iframe 탈출 — 사용자 탭(제스처) 안에서만 최상위 이동이 허용된다.
-  // (로드 시점 자동 탈출은 브라우저가 anti-framebusting으로 차단함)
-  // 실패 시 새 창으로 폴백.
-  const openTopLevel = () => {
-    const sep = window.location.search ? '&' : '?';
-    const url = window.location.href + sep + 'fb=1';
-    try {
-      window.top.location = url;
-    } catch {
-      window.open(url, '_blank', 'noopener');
-    }
-  };
 
   // 움직임이 너무 적으면(펄스 < 최소 유효치) 완료로 인정하지 않고 재측정.
+  // 단, 센서가 아예 차단된 환경(펄스를 측정할 방법이 없음)은 사용자 잘못이 아니므로
+  // 이 게이트를 적용하지 않는다 — 시간 기반으로 완료 인정.
   // 측정 로직(피크 감지)은 그대로, 결과 게이트만 추가.
-  const passed = !!result && result.count >= SPRINT.MIN_VALID_COUNT;
+  const passed = !!result && !sensorBlocked && result.count >= SPRINT.MIN_VALID_COUNT;
   const retry = () => {
     setResult(null);
     setLiveCount(0);
     setLowSignal(false);
+    setSensorBlocked(false);
     setPhase('countdown');
   };
 
@@ -152,26 +150,16 @@ export default function SprintDetect() {
                'Move at your own pace — don’t overdo it.')}
           </p>
 
-          {/* iframe(Pi Browser 등) 안에서는 동작센서가 차단됨 — 시작 전에 미리 안내.
-              1분 낭비 없이 탭 한 번으로 최상위에서 다시 열도록. */}
+          {/* iframe(Pi Browser) 안에서는 동작센서가 차단됨 — 펄스 없이 시간으로 완료된다고 미리 안내.
+              전체화면 탈출은 Pi 로그인이 끊기므로 권하지 않는다. */}
           {inIframe && (
-            <>
-              <p className={styles.warn}>
-                {L('지금 화면에서는 동작 센서가 차단돼 펄스가 측정되지 않아요. 전체화면으로 열면 정상 측정됩니다.',
-                   'Motion sensors are blocked in this view, so pulses can’t be measured. Open full screen to fix it.')}
-              </p>
-              <button className={styles.primary} onClick={openTopLevel}>
-                {L('전체화면으로 열기', 'Open full screen')}
-              </button>
-            </>
+            <p className={styles.safety}>
+              {L('ℹ️ 이 환경에서는 펄스 측정 없이 1분 운동으로 완료돼요.',
+                 'ℹ️ Here the session completes on time — pulses aren’t measured.')}
+            </p>
           )}
 
-          <button
-            className={inIframe ? styles.lowBtn : styles.primary}
-            onClick={handleStart}
-          >
-            {inIframe ? L('그래도 시작', 'Start anyway') : L('시작', 'Start')}
-          </button>
+          <button className={styles.primary} onClick={handleStart}>{L('시작', 'Start')}</button>
           <button className={styles.exit} onClick={() => navigate('/picker', { replace: true })}>
             {L('← 종목 다시 선택', '← Pick another')}
           </button>
@@ -204,27 +192,12 @@ export default function SprintDetect() {
             <span className={styles.repsUnit}>{L('펄스', 'pulses')}</span>
           </div>
           {(noSensor || lowSignal) && (
-            <>
-              <p className={styles.warn}>
-                {noSensor
-                  ? L('동작 센서 신호가 잡히지 않아요. 이 브라우저에서 센서 접근이 제한된 것 같아요.',
-                      'No motion-sensor signal. Sensor access seems blocked in this browser.')
-                  : L('폰을 좀 더 세게 흔들며 움직여보세요!', 'Move a bit harder!')}
-              </p>
-              {/* 센서가 막힌 원인이 iframe이면 — 탭 한 번으로 전체화면(최상위)에서 다시 열기 */}
-              {noSensor && inIframe && (
-                <button className={styles.primary} onClick={openTopLevel}>
-                  {L('전체화면으로 열어 센서 켜기', 'Open full screen to enable sensor')}
-                </button>
-              )}
-              {/* 센서가 아예 안 잡히는 예외 상황에서만 진단 노출 — 단순히 천천히 움직이는
-                  사용자에게는 보이지 않게. (raw=0 센서 차단 / raw>0인데 cnt=0 데이터 이상) */}
-              {noSensor && (
-                <p className={styles.diag}>
-                  DM:{hasDM ? 'Y' : 'N'} · perm:{permission} · reqPerm:{needsPerm ? 'Y' : 'N'} · iframe:{inIframe ? 'Y' : 'N'} · raw:{rawSamples} · cnt:{liveCount}
-                </p>
-              )}
-            </>
+            <p className={styles.warn}>
+              {noSensor
+                ? L('이 환경에서는 펄스 측정이 안 돼요. 시간으로 완료되니 그대로 움직여주세요!',
+                    'Pulses can’t be measured here — keep moving, it completes on time.')
+                : L('폰을 좀 더 세게 흔들며 움직여보세요!', 'Move a bit harder!')}
+            </p>
           )}
         </div>
       )}
@@ -240,8 +213,22 @@ export default function SprintDetect() {
         </div>
       )}
 
+      {/* 센서 차단 환경(Pi Browser 등) — 펄스를 잴 방법이 없으므로 시간 기반으로 완료 인정.
+          사용자 잘못이 아니라서 실패로 막지 않는다. */}
+      {phase === 'result' && result && sensorBlocked && (
+        <div className={styles.panel}>
+          <div className={styles.badge}>{mode.emoji} {modeLabel} {L('완료', 'done')}</div>
+          <div className={styles.resultTime}>1:00</div>
+          <p className={styles.desc}>
+            {L('이 환경에서는 동작 센서를 쓸 수 없어 펄스는 기록되지 않았어요. 1분 운동은 완료로 인정됩니다.',
+               'Motion sensors aren’t available here, so pulses weren’t recorded. Your 1-minute session still counts.')}
+          </p>
+          <button className={styles.primary} onClick={() => goProof(null)}>{L('완료', 'Done')}</button>
+        </div>
+      )}
+
       {/* 움직임이 너무 적음 — 완료 불가, 재측정 유도(다음 응원 화면으로 넘어가지 않음) */}
-      {phase === 'result' && result && !passed && (
+      {phase === 'result' && result && !passed && !sensorBlocked && (
         <div className={styles.panel}>
           <div className={styles.badge}>{mode.emoji} {modeLabel}</div>
           <div className={styles.resultCountFail}>{result.count}<span>{L('펄스', 'pulses')}</span></div>
