@@ -10,7 +10,7 @@ import SetTimingModal from './SetTimingModal';
 import PiTipModal from './PiTipModal';
 import styles from './SettingsModal.module.css';
 
-// 통합 설정 허브 — 언어(인라인) + 프로필·숨핏 타이밍·계정으로 연결.
+// 통합 설정 허브 — 언어(인라인) + 프로필·DD 타이밍·계정으로 연결.
 // 기존에 흩어져 있던 진입점(헤더 KO/EN 토글, 아바타 메뉴, 타이밍 카드)을 여기로 일원화.
 export default function SettingsModal({ open, onClose }) {
   const { lang, setLang } = useLang();
@@ -89,11 +89,11 @@ export default function SettingsModal({ open, onClose }) {
           <span className={styles.chevron}>›</span>
         </button>
 
-        {/* 숨핏 타이밍 */}
+        {/* DD 타이밍 */}
         <button className={styles.row} onClick={() => setTimingOpen(true)}>
           <span className={styles.rowIcon}>⏰</span>
           <span className={styles.rowMain}>
-            <span className={styles.rowTitle}>{L('숨핏 타이밍', 'Set timing')}</span>
+            <span className={styles.rowTitle}>{L('DD 타이밍', 'Set timing')}</span>
             <span className={styles.rowSub}>{L('아침·저녁 알림 시간', 'Morning & evening reminders')}</span>
           </span>
           <span className={styles.chevron}>›</span>
@@ -120,7 +120,7 @@ export default function SettingsModal({ open, onClose }) {
         )}
       </Modal>
 
-      {/* 숨핏 타이밍은 기존 모달 그대로 재사용 (설정 위에 겹쳐 열림) */}
+      {/* DD 타이밍은 기존 모달 그대로 재사용 (설정 위에 겹쳐 열림) */}
       <SetTimingModal open={timingOpen} onClose={() => setTimingOpen(false)} />
       {/* Pi 후원(팁) 모달 */}
       <PiTipModal open={tipOpen} onClose={() => setTipOpen(false)} />

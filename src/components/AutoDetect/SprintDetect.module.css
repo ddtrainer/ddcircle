@@ -94,15 +94,22 @@
   cursor: pointer;
 }
 
+/* 종목 다시 선택 — 눈에 잘 띄는 보조 버튼(외곽선). 작은 링크는 못 찾는 경우가 많았음 */
 .exit {
-  background: none;
-  border: none;
+  width: 100%;
+  padding: 14px;
+  font-size: 16px;
+  font-weight: 800;
   font-family: inherit;
-  font-size: 13px;
-  color: var(--text-muted);
+  color: var(--warm);
+  background: var(--surface);
+  border: 2px solid var(--warm);
+  border-radius: 14px;
   cursor: pointer;
-  margin-top: 2px;
+  margin-top: 4px;
+  transition: transform 0.1s;
 }
+.exit:active { transform: scale(0.98); }
 
 .privacy {
   margin: 2px 0 0;
