@@ -18,6 +18,29 @@ body[data-lang="en"] {
   font-family: 'Inter', sans-serif;
 }
 
+/* 언어별 폰트 — 아랍/태국/벵골/데바나가리/CJK는 웹폰트를 받지 않고 기기 내장 폰트를 쓴다.
+   문자마다 웹폰트를 내려받으면 용량이 수 MB로 불어나고, 해당 문자를 쓰는 기기에는
+   이미 좋은 시스템 폰트가 들어 있다. 앞에 Inter를 두어 숫자·라틴 글자는 통일감 유지. */
+body[data-lang="zh"] { font-family: 'Inter', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Noto Sans SC', sans-serif; }
+body[data-lang="ja"] { font-family: 'Inter', 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic', 'Meiryo', 'Noto Sans JP', sans-serif; }
+body[data-lang="ar"],
+body[data-lang="ur"] { font-family: 'Inter', 'Geeza Pro', 'Noto Naskh Arabic', 'Segoe UI', 'Noto Sans Arabic', sans-serif; }
+body[data-lang="th"] { font-family: 'Inter', 'Thonburi', 'Leelawadee UI', 'Noto Sans Thai', sans-serif; }
+body[data-lang="bn"] { font-family: 'Inter', 'Noto Sans Bengali', 'Nirmala UI', 'Vrinda', sans-serif; }
+body[data-lang="hi"] { font-family: 'Inter', 'Noto Sans Devanagari', 'Nirmala UI', 'Mangal', sans-serif; }
+/* 라틴 문자권(베트남어 성조 포함) — Inter가 모두 커버 */
+body[data-lang="vi"],
+body[data-lang="id"],
+body[data-lang="tr"],
+body[data-lang="es"],
+body[data-lang="pt"],
+body[data-lang="tl"] { font-family: 'Inter', sans-serif; }
+
+/* RTL(아랍어·우르두어) — 방향만 뒤집고, 좌우가 의미를 갖는 요소는 되돌린다.
+   진행 표시나 타이머처럼 '시간의 흐름'을 뜻하는 것은 뒤집으면 오히려 어색하다. */
+html[dir='rtl'] body { direction: rtl; }
+html[dir='rtl'] .ltr-lock { direction: ltr; }
+
 body::before {
   content: '';
   position: fixed;
