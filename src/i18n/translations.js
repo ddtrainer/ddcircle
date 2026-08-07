@@ -457,7 +457,7 @@ export const translations = {
     welcomeBonusToast: '환영합니다 · 첫 발걸음 보너스 +{n} EP',
   },
   en: {
-    heroQuote: 'A daily <span class="one">3 minutes</span><span class="em"> — breathe deeply and move</span>,<br>sharing your energy~',
+    heroQuote: 'A daily <span class="one">3 minutes</span><br><span class="em">breathe deeply and move</span>,<br>sharing your energy~',
     nowStart: 'Right now',
     tapToStart: 'Tap to start',
     resumeAskBreath: 'Start with this breath again?',

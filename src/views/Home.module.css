@@ -103,9 +103,9 @@
   font-weight: 400;
 }
 
-/* 영문은 같은 뜻을 더 긴 글자수로 표현 → 한 줄에 담기게 더 작은 기울기 */
+/* 영문은 문장을 3줄로 나눠 각 줄이 짧아졌으므로 한글과 비슷한 크기로 키운다 */
 :global(body[data-lang="en"]) .heroQuote {
-  font-size: clamp(11px, 3.4vw, 18px);
+  font-size: clamp(14px, 5vw, 20px);
   line-height: 1.75;
 }
 
