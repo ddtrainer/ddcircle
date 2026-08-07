@@ -73,6 +73,8 @@ export async function authenticateWithPi() {
 }
 
 // 백엔드가 access token을 /me 로 검증하고 세션(HttpOnly 쿠키)을 수립.
+// 아울러 Pi 신원에 대응하는 Supabase 계정의 일회용 토큰을 받아 실제 Supabase 세션까지 연결한다.
+// (이게 없으면 응원나라·프로필·책장이 계속 '비로그인'으로 동작한다)
 export async function verifyWithBackend(accessToken) {
   const res = await fetch('/api/auth/pi', {
     method: 'POST',
@@ -84,7 +86,20 @@ export async function verifyWithBackend(accessToken) {
     const msg = await res.text().catch(() => '');
     throw new Error(`backend verify failed (${res.status}) ${msg}`);
   }
-  return res.json(); // { user: { uid, username } }
+  const data = await res.json(); // { user: { uid, username }, supabase?: { tokenHash } }
+
+  // Supabase 세션 수립 — 실패해도 Pi 로그인 자체는 유지(앱은 로컬 저장으로 계속 동작).
+  const tokenHash = data?.supabase?.tokenHash;
+  if (tokenHash) {
+    try {
+      const { supabase } = await import('./supabase');
+      const { error } = await supabase.auth.verifyOtp({ token_hash: tokenHash, type: 'magiclink' });
+      if (error) console.error('[pi-auth] supabase session failed:', error.message);
+    } catch (e) {
+      console.error('[pi-auth] supabase session error:', e);
+    }
+  }
+  return data;
 }
 
 export function piSdkAvailable() {

@@ -2,6 +2,7 @@
 // Pi access token을 https://api.minepi.com/v2/me 로 서버 검증한 뒤에만 세션을 수립한다.
 // 이 흐름에는 Pi Network API 키가 필요하지 않다 (사용자 access token만 사용).
 import { signSession, sessionCookie } from '../_session.js';
+import { linkPiUser } from '../_supabaseAdmin.js';
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
@@ -45,5 +46,15 @@ export default async function handler(req, res) {
     console.error('[pi-auth] session cookie skipped:', e.message);
   }
 
-  return res.status(200).json({ user });
+  // 3) Pi 신원을 Supabase 계정에 연결 — 이게 있어야 응원나라/프로필/책장이 동작한다.
+  //    실패해도 Pi 로그인 자체는 성공으로 둔다(앱은 로컬 저장으로 계속 동작).
+  let supabase = null;
+  try {
+    const linked = await linkPiUser(user);
+    if (linked) supabase = { tokenHash: linked.tokenHash, email: linked.email };
+  } catch (e) {
+    console.error('[pi-auth] supabase link failed:', e.message);
+  }
+
+  return res.status(200).json({ user, supabase });
 }
