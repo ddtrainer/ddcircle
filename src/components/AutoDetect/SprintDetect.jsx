@@ -217,10 +217,13 @@ export default function SprintDetect() {
                   {L('전체화면으로 열어 센서 켜기', 'Open full screen to enable sensor')}
                 </button>
               )}
-              {/* 원인 진단 한 줄 — 스크린샷 1장으로 파악: raw=0이면 센서 차단, raw>0인데 cnt=0이면 데이터 이상 */}
-              <p className={styles.diag}>
-                DM:{hasDM ? 'Y' : 'N'} · perm:{permission} · reqPerm:{needsPerm ? 'Y' : 'N'} · iframe:{inIframe ? 'Y' : 'N'} · raw:{rawSamples} · cnt:{liveCount}
-              </p>
+              {/* 센서가 아예 안 잡히는 예외 상황에서만 진단 노출 — 단순히 천천히 움직이는
+                  사용자에게는 보이지 않게. (raw=0 센서 차단 / raw>0인데 cnt=0 데이터 이상) */}
+              {noSensor && (
+                <p className={styles.diag}>
+                  DM:{hasDM ? 'Y' : 'N'} · perm:{permission} · reqPerm:{needsPerm ? 'Y' : 'N'} · iframe:{inIframe ? 'Y' : 'N'} · raw:{rawSamples} · cnt:{liveCount}
+                </p>
+              )}
             </>
           )}
         </div>
