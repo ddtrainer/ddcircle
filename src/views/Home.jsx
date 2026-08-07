@@ -3,8 +3,6 @@ import { fetchMemberCount } from '../lib/stats';
 import { useNavigate } from 'react-router-dom';
 import { useLang } from '../i18n/LangContext';
 import { useApp } from '../context/AppContext';
-import { useAuth } from '../context/AuthContext';
-import LoginPromptModal from '../components/modals/LoginPromptModal';
 import YesterdayPageCard from '../components/assets/YesterdayPageCard';
 import { unlockAudio } from '../utils/audioUnlock';
 import { BREATH_MODES } from '../data/breathPatterns';
@@ -12,34 +10,9 @@ import styles from './Home.module.css';
 
 export default function Home() {
   const { t } = useLang();
-  const { todayCount, userEp, breathPatternId } = useApp();
-  const { user } = useAuth();
+  const { userEp, breathPatternId } = useApp();
   const navigate = useNavigate();
-  const [loginPrompt, setLoginPrompt] = useState({ open: false, reason: 'second', data: null });
-
-  // 소프트 게이트: 비로그인 사용자에게 의미 있는 순간에 로그인 유도.
-  // 일일 1회 빈도 제한 (localStorage에 dismiss 날짜 저장)
-  useEffect(() => {
-    if (user) return;
-    const todayKey = new Date().toISOString().slice(0, 10);
-    const lastShown = localStorage.getItem('ddcircle.loginPromptShown');
-    if (lastShown === todayKey) return;
-
-    // 우선순위: streak 3+ > 2회차 세션
-    if (userEp.streak >= 3) {
-      const tid = setTimeout(() => {
-        setLoginPrompt({ open: true, reason: 'streak', data: { n: userEp.streak } });
-        localStorage.setItem('ddcircle.loginPromptShown', todayKey);
-      }, 1500);
-      return () => clearTimeout(tid);
-    } else if (todayCount >= 1) {
-      const tid = setTimeout(() => {
-        setLoginPrompt({ open: true, reason: 'second', data: null });
-        localStorage.setItem('ddcircle.loginPromptShown', todayKey);
-      }, 1500);
-      return () => clearTimeout(tid);
-    }
-  }, [user, userEp.streak, todayCount]);
+  // Pi 전용 — 카카오/구글 로그인 유도 제거.
 
   // DDCircle 회원수 — 닉네임 설정한 프로필 수. mount 시 1회 fetch.
   // 가짜 247 대신 진짜 숫자 표시.
@@ -127,13 +100,6 @@ export default function Home() {
       <div className={styles.philosophy}>
         <p dangerouslySetInnerHTML={{ __html: t('philosophyText') }} />
       </div>
-
-      <LoginPromptModal
-        open={loginPrompt.open}
-        reason={loginPrompt.reason}
-        data={loginPrompt.data}
-        onClose={() => setLoginPrompt({ ...loginPrompt, open: false })}
-      />
     </div>
   );
 }

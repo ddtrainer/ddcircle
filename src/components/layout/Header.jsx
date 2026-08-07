@@ -30,15 +30,8 @@ export default function Header() {
         </div>
 
         <div className={styles.right}>
+          {/* Pi Browser 전용 — Pi 로그인만 사용. 카카오/구글 로그인 버튼 제거 */}
           <PiSignInButton />
-          {!user && (
-            <button
-              className={styles.loginBtn}
-              onClick={() => navigate('/login')}
-            >
-              {lang === 'ko' ? '로그인' : 'Sign in'}
-            </button>
-          )}
 
           {/* 통합 설정 진입 — 로그인 시 아바타, 비로그인 시 ⚙️ (언어·프로필·타이밍·계정 일원화) */}
           {user ? (

@@ -24,8 +24,10 @@ export default function SettingsModal({ open, onClose }) {
   const L = (ko, en) => (lang === 'ko' ? ko : en);
 
   const goProfile = () => {
+    // Pi 전용 — 카카오/구글 로그인 진입점 제거. 계정이 있을 때만 편집으로 이동.
+    if (!user) return;
     onClose?.();
-    navigate(user ? '/profile-edit' : '/login');
+    navigate('/profile-edit');
   };
 
   const logout = async () => {
@@ -33,7 +35,7 @@ export default function SettingsModal({ open, onClose }) {
     if (!window.confirm(msg)) return;
     onClose?.();
     await signOut();
-    navigate('/login', { replace: true });
+    navigate('/', { replace: true });
   };
 
   const emoji = profile?.emoji || '🙂';
@@ -107,19 +109,12 @@ export default function SettingsModal({ open, onClose }) {
           <span className={styles.chevron}>›</span>
         </button>
 
-        {/* 계정 */}
-        {user ? (
+        {/* 계정 — Pi 전용. 기존 계정 세션이 있을 때만 로그아웃 노출(카카오/구글 로그인 진입점 제거) */}
+        {user && (
           <button className={`${styles.row} ${styles.danger}`} onClick={logout}>
             <span className={styles.rowIcon}>↩️</span>
             <span className={styles.rowMain}>
               <span className={styles.rowTitle}>{L('로그아웃', 'Sign out')}</span>
-            </span>
-          </button>
-        ) : (
-          <button className={styles.row} onClick={() => { onClose?.(); navigate('/login'); }}>
-            <span className={styles.rowIcon}>🔑</span>
-            <span className={styles.rowMain}>
-              <span className={styles.rowTitle}>{L('로그인', 'Sign in')}</span>
             </span>
           </button>
         )}

@@ -493,12 +493,7 @@ export default function Wall() {
               <div className={styles.inviteCtaIcon}>💙</div>
               <div className={styles.inviteCtaTitle}>{t('wallLoginCtaTitle')}</div>
               <div className={styles.inviteCtaSub}>{t('wallLoginCtaSub')}</div>
-              <button
-                className={styles.inviteCtaBtn}
-                onClick={() => navigate('/login')}
-              >
-                {t('wallLoginCtaBtn')}
-              </button>
+              {/* Pi 전용 — 카카오/구글 로그인 버튼 제거 */}
             </div>
           ) : (
           <>
@@ -587,12 +582,7 @@ export default function Wall() {
               <div className={styles.inviteCtaIcon}>🌍</div>
               <div className={styles.inviteCtaTitle}>{t('wallLoginCtaTitle')}</div>
               <div className={styles.inviteCtaSub}>{t('wallLoginCtaSub')}</div>
-              <button
-                className={styles.inviteCtaBtn}
-                onClick={() => navigate('/login')}
-              >
-                {t('wallLoginCtaBtn')}
-              </button>
+              {/* Pi 전용 — 카카오/구글 로그인 버튼 제거 */}
             </div>
           ) : (
             <>

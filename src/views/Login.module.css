@@ -30,11 +30,11 @@
   line-height: 1.6;
 }
 
-.kakaoBtn {
+.homeBtn {
   width: 100%;
   max-width: 320px;
-  background: #FEE500;
-  color: #181600;
+  background: linear-gradient(135deg, var(--warm), var(--cool));
+  color: #fff;
   border: none;
   border-radius: 12px;
   padding: 14px 20px;
@@ -42,50 +42,11 @@
   font-weight: 700;
   font-family: inherit;
   cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
   box-shadow: var(--shadow-sm);
-  transition: transform 0.1s, box-shadow 0.2s;
+  transition: transform 0.1s;
+  margin-top: 20px;
 }
-
-.kakaoBtn:active {
-  transform: scale(0.98);
-}
-
-.kakaoBtn:disabled {
-  opacity: 0.7;
-  cursor: not-allowed;
-}
-
-.kakaoIcon {
-  font-size: 18px;
-}
-
-.googleBtn {
-  width: 100%;
-  max-width: 320px;
-  background: #ffffff;
-  color: #1f1f1f;
-  border: 1px solid #dadce0;
-  border-radius: 12px;
-  padding: 14px 20px;
-  font-size: 16px;
-  font-weight: 600;
-  font-family: inherit;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  box-shadow: var(--shadow-sm);
-  transition: transform 0.1s, box-shadow 0.2s;
-  margin-top: 10px;
-}
-.googleBtn:active { transform: scale(0.98); }
-.googleBtn:disabled { opacity: 0.7; cursor: not-allowed; }
-.googleIcon { display: block; }
+.homeBtn:active { transform: scale(0.98); }
 
 .notice {
   margin-top: 24px;

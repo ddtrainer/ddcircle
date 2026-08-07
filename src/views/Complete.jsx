@@ -17,7 +17,6 @@ import MilestoneModal from '../components/modals/MilestoneModal';
 import Celebration from '../components/Celebration';
 import { isInAppBrowser } from '../utils/inAppBrowser';
 import OpenExternalModal from '../components/modals/OpenExternalModal';
-import LoginPromptModal from '../components/modals/LoginPromptModal';
 import PiTipModal from '../components/modals/PiTipModal';
 import styles from './Complete.module.css';
 
@@ -30,7 +29,6 @@ export default function Complete() {
   const [sharing, setSharing] = useState(false);
   const [storySharing, setStorySharing] = useState(false);
   const [externalModalOpen, setExternalModalOpen] = useState(false);
-  const [loginPromptOpen, setLoginPromptOpen] = useState(false);
   const [tipOpen, setTipOpen] = useState(false);
   const [milestone, setMilestone] = useState(null);
   // 풀세트 완료(호흡+운동 둘 다 완주) 축하 폭죽 — 진입 시 1회.
@@ -160,11 +158,7 @@ export default function Complete() {
 
   const handleShare = async () => {
     if (sharing) return;
-    // 소프트 게이트: 비로그인이면 로그인 유도. '나중에' 시 로컬 저장으로 진행.
-    if (!user) {
-      setLoginPromptOpen(true);
-      return;
-    }
+    // Pi 전용 — 로그인 유도 없이 바로 공유 진행 (비로그인은 로컬 저장 경로).
     await doShare();
   };
 
@@ -342,13 +336,6 @@ export default function Complete() {
         open={externalModalOpen}
         onClose={() => setExternalModalOpen(false)}
         reason="share"
-      />
-
-      <LoginPromptModal
-        open={loginPromptOpen}
-        reason="share"
-        onClose={() => setLoginPromptOpen(false)}
-        onSkip={async () => { setLoginPromptOpen(false); await doShare(); }}
       />
 
       <MilestoneModal
