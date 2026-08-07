@@ -23,15 +23,23 @@ export default function SprintDetect() {
   const L = (ko, en) => (lang === 'ko' ? ko : en);
   const modeLabel = L(mode.labelKo, mode.labelEn);
 
-  const { requestPermission, start: motionStart, stop: motionStop } = useDeviceMotion();
+  const { permission, requestPermission, start: motionStart, stop: motionStop } = useDeviceMotion();
 
   const [phase, setPhase] = useState('intro'); // intro|countdown|measuring|result
   const [countdown, setCountdown] = useState(SPRINT.COUNTDOWN_SEC);
   const [liveCount, setLiveCount] = useState(0);
   const [remainSec, setRemainSec] = useState(SPRINT.MEASURE_MS / 1000);
   const [lowSignal, setLowSignal] = useState(false);
+  const [noSensor, setNoSensor] = useState(false); // 측정 중 원시 센서 이벤트가 0 → 센서 접근 차단 추정
+  const [rawSamples, setRawSamples] = useState(0);  // 원시 devicemotion 이벤트 수(진단용)
   const [result, setResult] = useState(null);
   const detectorRef = useRef(null);
+  const rawSamplesRef = useRef(0);
+
+  // 환경 진단 — Pi Browser 등에서 센서가 왜 막히는지 한 줄로 파악(스크린샷 1장으로 원인 확인).
+  const inIframe = (() => { try { return window.top !== window.self; } catch { return true; } })();
+  const hasDM = typeof window !== 'undefined' && typeof window.DeviceMotionEvent !== 'undefined';
+  const needsPerm = hasDM && typeof DeviceMotionEvent.requestPermission === 'function';
 
   useEffect(() => () => motionStop(), [motionStop]);
 
@@ -80,13 +88,19 @@ export default function SprintDetect() {
     const det = createSprintDetector({ minAmp, minIntervalMs: SPRINT.MIN_PEAK_INTERVAL_MS });
     detectorRef.current = det;
     setLiveCount(0); setRemainSec(SPRINT.MEASURE_MS / 1000); setLowSignal(false);
+    setNoSensor(false); setRawSamples(0); rawSamplesRef.current = 0;
     const startTs = performance.now();
     playDashStart(); // 🔊 시작음
-    motionStart((x, y, z, ts) => det.addSample(x, y, z, ts));
+    // 원시 이벤트 카운트는 감지 알고리즘과 무관 — det.addSample 입력/로직은 그대로.
+    motionStart((x, y, z, ts) => { rawSamplesRef.current += 1; det.addSample(x, y, z, ts); });
     const poll = setInterval(() => {
       setLiveCount(det.count);
+      setRawSamples(rawSamplesRef.current);
       const el = performance.now() - startTs;
       setRemainSec(Math.max(0, Math.ceil((SPRINT.MEASURE_MS - el) / 1000)));
+      // 센서 신호 자체가 안 들어오면(원시 이벤트 0) '더 세게'가 아니라 '센서 차단'으로 안내.
+      if (el > 2500 && rawSamplesRef.current === 0) setNoSensor(true);
+      else if (rawSamplesRef.current > 0) setNoSensor(false);
       if (el > SPRINT.LOW_SIGNAL_MS && det.count < 3) setLowSignal(true);
       else if (det.count >= 3) setLowSignal(false);
     }, 150);
@@ -156,10 +170,19 @@ export default function SprintDetect() {
             <span className={styles.repsNum}>{liveCount}</span>
             <span className={styles.repsUnit}>{L('펄스', 'pulses')}</span>
           </div>
-          {lowSignal && (
-            <p className={styles.warn}>
-              {L('폰을 좀 더 세게 흔들며 움직여보세요!', 'Move a bit harder!')}
-            </p>
+          {(noSensor || lowSignal) && (
+            <>
+              <p className={styles.warn}>
+                {noSensor
+                  ? L('동작 센서 신호가 잡히지 않아요. 이 브라우저에서 센서 접근이 제한된 것 같아요.',
+                      'No motion-sensor signal. Sensor access seems blocked in this browser.')
+                  : L('폰을 좀 더 세게 흔들며 움직여보세요!', 'Move a bit harder!')}
+              </p>
+              {/* 원인 진단 한 줄 — 스크린샷 1장으로 파악: raw=0이면 센서 차단, raw>0인데 cnt=0이면 데이터 이상 */}
+              <p className={styles.diag}>
+                DM:{hasDM ? 'Y' : 'N'} · perm:{permission} · reqPerm:{needsPerm ? 'Y' : 'N'} · iframe:{inIframe ? 'Y' : 'N'} · raw:{rawSamples} · cnt:{liveCount}
+              </p>
+            </>
           )}
         </div>
       )}
