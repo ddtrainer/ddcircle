@@ -9,11 +9,10 @@ export function PiAuthProvider({ children }) {
   const [piUser, setPiUser] = useState(null); // 백엔드(/me) 검증 완료된 { uid, username }
   const [status, setStatus] = useState('idle');
   const [error, setError] = useState(null);
-  const inFlight = useRef(false);
 
+  // 항상 재호출 가능 — Pi.authenticate는 사용자 제스처(버튼 클릭)로 다시 부를 수 있어야
+  // 검증기가 "Waiting for sign-in" 동안 실제 로그인을 감지한다. (락으로 막지 않음)
   const signInWithPi = useCallback(async () => {
-    if (inFlight.current) return;
-    inFlight.current = true;
     setStatus('loading');
     setError(null);
     try {
@@ -25,8 +24,6 @@ export function PiAuthProvider({ children }) {
       console.error('[pi-auth]', e);
       setError(e);
       setStatus(/unavailable|Pi Browser/i.test(e.message || '') ? 'unavailable' : 'error');
-    } finally {
-      inFlight.current = false;
     }
   }, []);
 

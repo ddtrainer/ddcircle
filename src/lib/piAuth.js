@@ -57,17 +57,10 @@ function onIncompletePaymentFound(payment) {
 }
 
 // username 스코프로 인증. 반환: { accessToken, user: { uid, username } }
-// Pi Browser 밖에선 authenticate가 응답하지 않으므로 타임아웃으로 우아하게 종료.
-const AUTH_TIMEOUT_MS = 120000;
 export async function authenticateWithPi() {
   const Pi = await initPi();               // init을 완전히 await 한 뒤에만 authenticate
   const scopes = ['username'];
-  return Promise.race([
-    Pi.authenticate(scopes, onIncompletePaymentFound),
-    new Promise((_, reject) =>
-      setTimeout(() => reject(new Error('Pi authenticate timed out — open in Pi Browser')), AUTH_TIMEOUT_MS)
-    ),
-  ]);
+  return Pi.authenticate(scopes, onIncompletePaymentFound);
 }
 
 // 백엔드가 access token을 /me 로 검증하고 세션(HttpOnly 쿠키)을 수립.
