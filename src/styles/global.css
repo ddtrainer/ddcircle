@@ -1,4 +1,7 @@
-@import url('https://fonts.googleapis.com/css2?family=Gowun+Dodum&family=Noto+Serif+KR:wght@400;700&family=Inter:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,700;1,400&display=swap');
+/* Inter는 800·900까지 받아온다 — 앱 곳곳에서 800/900을 쓰는데 로드돼 있지 않으면
+   브라우저가 700을 뭉개 '가짜 굵게'로 그리고, 그 글자는 진짜 굵기보다 폭이 넓어져
+   한 줄 문구가 화면 밖으로 잘린다(body에 overflow-x:hidden). */
+@import url('https://fonts.googleapis.com/css2?family=Gowun+Dodum&family=Noto+Serif+KR:wght@400;700&family=Inter:wght@400;500;600;700;800;900&family=Playfair+Display:ital,wght@0,700;1,400&display=swap');
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
 

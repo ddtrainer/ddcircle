@@ -116,14 +116,16 @@
 /* 히어로 최상단 태그라인 — 앱의 정체성을 먼저 각인시키는 자리라 진하게 강조.
    항상 한 줄 유지: 좁은 화면에선 글자 크기·자간을 줄여 넘침 방지 */
 .heroSub {
-  white-space: nowrap;
-  /* 자간이 폭의 상당 부분을 먹으므로 자간을 줄이고 그만큼 글자를 키운다
-     → 폰에서 잘리지 않으면서 오히려 더 크고 진하게 보인다 */
-  font-size: clamp(12px, 4.15vw, 18px);
+  /* 일부러 nowrap을 쓰지 않는다 — 기기 폰트나 안드로이드 '텍스트 크기 확대' 설정으로
+     예상보다 넓어지면, body의 overflow-x:hidden 때문에 소리 없이 잘린다.
+     줄바꿈을 허용해 최악의 경우 두 줄이 될지언정 글자가 잘리지는 않게 한다. */
+  text-wrap: balance;
+  /* 자간이 폭의 상당 부분을 먹으므로 자간을 줄이고 그만큼 글자를 키운다 */
+  font-size: clamp(11px, 3.7vw, 16px);
   letter-spacing: 0.2px;
   text-transform: uppercase;
   font-family: 'Inter', sans-serif;
-  font-weight: 900;
+  font-weight: 800;
   margin-bottom: 10px;
   /* DEEP(쿨) → DASH(웜) 두 축을 색으로 표현 — 헤더 그라데이션과 구분되는 색조.
      크림 배경에서 흐려지지 않도록 중간 노랑을 빼고 채도·명도가 낮은 색만 사용 */
