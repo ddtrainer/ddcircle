@@ -14,6 +14,11 @@ const base = {
   whiteSpace: 'nowrap',
   color: '#fff',
   background: 'linear-gradient(135deg, #7b3ff2, #b06ab3)',
+  // 좁은 화면에서 긴 Pi 사용자명이 다른 버튼을 밀어내지 않도록 말줄임
+  maxWidth: '38vw',
+  overflow: 'hidden',
+  textOverflow: 'ellipsis',
+  flexShrink: 0,
 };
 
 export default function PiSignInButton() {

@@ -20,16 +20,19 @@ export default function Header() {
           className={styles.logoWrap}
           role="button"
           tabIndex={0}
-          aria-label={lang === 'ko' ? '숨-핏 홈으로' : 'Soom-Fit home'}
+          aria-label={lang === 'ko' ? 'DDCircle 홈으로' : 'DDCircle home'}
           onClick={() => navigate('/')}
           onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); navigate('/'); } }}
         >
-          {/* 숨-핏 워드마크 — 무지개 그라데이션(브랜드 컬러) + 한 줄 태그라인, 아래 By DDCircle. 탭하면 홈으로 */}
-          <div className={styles.brandTop}>
-            <span className={styles.brandMark}>{lang === 'ko' ? '숨-핏' : 'Soom-Fit'}</span>
-            <span className={styles.brandTag}>{lang === 'ko' ? '숨 쉬고 운동해' : 'Breathe & Move'}</span>
-          </div>
-          <span className={styles.brandBy}>By DDCircle</span>
+          {/* DDCircle 로고 마크 — 탭하면 홈으로. 이미지가 브랜드명을 담고 있어 텍스트 워드마크는 생략(모바일 폭 절약) */}
+          <img
+            className={styles.logoImg}
+            src="/dd-circle-mark.png"
+            alt="DDCircle"
+            width="44"
+            height="44"
+          />
+          <span className={styles.brandTag}>{lang === 'ko' ? '숨 쉬고 운동해' : 'Breathe & Move'}</span>
         </div>
 
         <div className={styles.right}>
