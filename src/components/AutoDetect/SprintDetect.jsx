@@ -6,6 +6,7 @@ import { useApp } from '../../context/AppContext';
 import { useDeviceMotion } from '../../hooks/useDeviceMotion';
 import { getCalibratedMinAmp } from '../../hooks/useSprintCalibration';
 import { createSprintDetector } from '../../lib/sprintDetector';
+import { startCameraMotion, energyToSample } from '../../lib/cameraMotion';
 import { saveSprint } from '../../lib/sprintStore';
 import { SPRINT, intensityPercentile } from '../../data/sprintConfig';
 import { getDashMode, DASH_MODES } from '../../data/dashModes';
@@ -38,8 +39,11 @@ export default function SprintDetect() {
   const [noSensor, setNoSensor] = useState(false); // 측정 중 원시 센서 이벤트가 0 → 센서 접근 차단 추정
   const [sensorBlocked, setSensorBlocked] = useState(false); // 측정 종료 시점 확정 판정
   const [result, setResult] = useState(null);
+  const [useCamera, setUseCamera] = useState(false); // 카메라 대체 측정(사용자가 선택했을 때만)
+  const [camError, setCamError] = useState('');
   const detectorRef = useRef(null);
   const rawSamplesRef = useRef(0);
+  const camStopRef = useRef(null);
 
   // Pi Browser는 앱을 cross-origin iframe으로 감싸며, 그 안에서는 동작센서가 차단된다.
   // (최상위로 탈출하면 센서는 살지만 Pi SDK 컨텍스트를 잃어 로그인/결제가 끊김 → 탈출하지 않음)
@@ -63,12 +67,28 @@ export default function SprintDetect() {
   };
 
   // '시작' — 권한 요청(제스처 콜스택) 후 바로 카운트다운.
-  const handleStart = async () => {
+  // camera=true면 동작센서 대신 카메라로 측정(사용자가 명시적으로 선택한 경우).
+  const handleStart = async (camera = false) => {
     // 이 종목으로 실제 시작을 확정 → 다음 접속 때 "마지막 선택"으로 재사용.
     // mode.key는 유효 DASH 키(무효값은 getDashMode가 walk로 보정)라 EP/기록도 안전.
     setSelectedExercise(mode.key);
     setPreferredExercise(mode.key);
     warmDashAudio();
+    setCamError('');
+    if (camera) {
+      // 카메라 권한은 제스처 콜스택 안에서 미리 확인 — 거부 시 측정에 들어가지 않는다.
+      try {
+        const s = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
+        s.getTracks().forEach((t) => t.stop()); // 권한 확인용 — 실제 스트림은 측정 시작 시 다시 연다
+      } catch {
+        setCamError('denied');
+        return;
+      }
+      setUseCamera(true);
+      setPhase('countdown');
+      return;
+    }
+    setUseCamera(false);
     const res = await requestPermission();
     if (res !== 'granted') { goProof(null); return; } // 센서 불가 → 측정 없이 완료(종목 배율로 EP)
     setPhase('countdown');
@@ -88,7 +108,8 @@ export default function SprintDetect() {
 
   useEffect(() => { // 1분 측정
     if (phase !== 'measuring') return;
-    const minAmp = getCalibratedMinAmp();
+    // 카메라 모드는 프레임 차이(0~255)라 단위가 달라 전용 floor를 쓴다.
+    const minAmp = useCamera ? SPRINT.CAMERA_MIN_AMP : getCalibratedMinAmp();
     const det = createSprintDetector({ minAmp, minIntervalMs: SPRINT.MIN_PEAK_INTERVAL_MS });
     detectorRef.current = det;
     setLiveCount(0); setRemainSec(SPRINT.MEASURE_MS / 1000); setLowSignal(false);
@@ -96,7 +117,22 @@ export default function SprintDetect() {
     const startTs = performance.now();
     playDashStart(); // 🔊 시작음
     // 원시 이벤트 카운트는 감지 알고리즘과 무관 — det.addSample 입력/로직은 그대로.
-    motionStart((x, y, z, ts) => { rawSamplesRef.current += 1; det.addSample(x, y, z, ts); });
+    let cancelled = false; // 클로저의 phase는 낡은 값이라 쓸 수 없다 — 로컬 플래그로 판단
+    if (useCamera) {
+      // 카메라 프레임 차이를 동일 detector에 흘려보냄(피크 감지·리듬 게이트 그대로 재사용)
+      startCameraMotion((energy, ts) => {
+        rawSamplesRef.current += 1;
+        const [x, y, z] = energyToSample(energy);
+        det.addSample(x, y, z, ts);
+      })
+        .then((stop) => {
+          if (cancelled) stop();          // 이미 끝났으면 즉시 해제(카메라 켜진 채 방치 방지)
+          else camStopRef.current = stop;
+        })
+        .catch(() => setCamError('start_failed'));
+    } else {
+      motionStart((x, y, z, ts) => { rawSamplesRef.current += 1; det.addSample(x, y, z, ts); });
+    }
     const poll = setInterval(() => {
       setLiveCount(det.count);
       const el = performance.now() - startTs;
@@ -108,16 +144,21 @@ export default function SprintDetect() {
       if (el > SPRINT.LOW_SIGNAL_MS && det.count < 3) setLowSignal(true);
       else if (det.count >= 3) setLowSignal(false);
     }, 150);
+    const stopCam = () => {
+      cancelled = true; // 아직 promise가 안 끝났어도 resolve 시점에 즉시 해제되도록
+      if (camStopRef.current) { camStopRef.current(); camStopRef.current = null; }
+    };
     const done = setTimeout(() => {
-      clearInterval(poll); motionStop(); playDashEnd(); // 🔊 종료음
+      clearInterval(poll); motionStop(); stopCam(); playDashEnd(); // 🔊 종료음 + 카메라 해제
       // 원시 센서 이벤트가 사실상 없었다면 '측정 불가 환경'(Pi Browser의 iframe 등).
       // 사용자가 안 움직인 게 아니므로 실패 처리하지 않고 시간 기반 완료로 인정한다.
       setSensorBlocked(rawSamplesRef.current < SENSOR_ALIVE_MIN_TOTAL);
       setResult(det.getResult());
       setPhase('result');
     }, SPRINT.MEASURE_MS);
-    return () => { clearInterval(poll); clearTimeout(done); motionStop(); };
-  }, [phase, motionStart, motionStop]);
+    // 이탈/재렌더 시에도 카메라를 반드시 해제 — 뒤따르는 셀카 화면이 카메라를 열 수 있어야 함
+    return () => { clearInterval(poll); clearTimeout(done); motionStop(); stopCam(); };
+  }, [phase, useCamera, motionStart, motionStop]);
 
   const finalize = () => goProof(result);
 
@@ -150,16 +191,35 @@ export default function SprintDetect() {
                'Move at your own pace — don’t overdo it.')}
           </p>
 
-          {/* iframe(Pi Browser) 안에서는 동작센서가 차단됨 — 펄스 없이 시간으로 완료된다고 미리 안내.
+          {/* iframe(Pi Browser) 안에서는 동작센서가 차단됨 — 기본은 시간 기반 완료,
+              원하면 카메라로 펄스를 재는 대체 수단을 선택할 수 있게 한다(opt-in).
               전체화면 탈출은 Pi 로그인이 끊기므로 권하지 않는다. */}
           {inIframe && (
             <p className={styles.safety}>
-              {L('ℹ️ 이 환경에서는 펄스 측정 없이 1분 운동으로 완료돼요.',
-                 'ℹ️ Here the session completes on time — pulses aren’t measured.')}
+              {L('ℹ️ 이 환경에서는 동작 센서가 막혀 있어요. 그냥 시작하면 1분 운동으로 완료되고, 펄스까지 재고 싶다면 카메라로 측정할 수 있어요.',
+                 'ℹ️ Motion sensors are blocked here. Just start to complete on time, or use the camera if you also want pulses.')}
+            </p>
+          )}
+          {camError && (
+            <p className={styles.warn}>
+              {L('카메라를 사용할 수 없어요. 그냥 시작하면 1분 운동으로 완료됩니다.',
+                 'Camera unavailable. Just start — it completes on time.')}
             </p>
           )}
 
-          <button className={styles.primary} onClick={handleStart}>{L('시작', 'Start')}</button>
+          <button className={styles.primary} onClick={() => handleStart(false)}>{L('시작', 'Start')}</button>
+
+          {inIframe && (
+            <>
+              <button className={styles.lowBtn} onClick={() => handleStart(true)}>
+                {L('📷 카메라로 펄스 측정 (베타)', '📷 Measure pulses with camera (beta)')}
+              </button>
+              <p className={styles.privacy}>
+                {L('카메라 영상은 기기 안에서 움직임 비교에만 쓰고 즉시 버려요. 저장·전송하지 않습니다.',
+                   'Camera frames are compared on-device only and discarded immediately — never stored or uploaded.')}
+              </p>
+            </>
+          )}
           <button className={styles.exit} onClick={() => navigate('/picker', { replace: true })}>
             {L('← 종목 다시 선택', '← Pick another')}
           </button>
@@ -173,7 +233,11 @@ export default function SprintDetect() {
       {phase === 'countdown' && (
         <div className={styles.panel}>
           <div className={styles.countdownNum}>{countdown}</div>
-          <p className={styles.desc}>{L('폰을 꽉 쥐고 준비하세요!', 'Hold tight — get ready!')}</p>
+          <p className={styles.desc}>
+            {useCamera
+              ? L('폰을 꽉 쥐고 카메라가 가리지 않게 준비하세요!', 'Hold tight — keep the camera unobstructed!')
+              : L('폰을 꽉 쥐고 준비하세요!', 'Hold tight — get ready!')}
+          </p>
         </div>
       )}
 
@@ -191,11 +255,19 @@ export default function SprintDetect() {
             <span className={styles.repsNum}>{liveCount}</span>
             <span className={styles.repsUnit}>{L('펄스', 'pulses')}</span>
           </div>
+          {useCamera && (
+            <p className={styles.camBadge}>
+              {L('📷 카메라로 측정 중', '📷 Measuring with camera')}
+            </p>
+          )}
           {(noSensor || lowSignal) && (
             <p className={styles.warn}>
               {noSensor
-                ? L('이 환경에서는 펄스 측정이 안 돼요. 시간으로 완료되니 그대로 움직여주세요!',
-                    'Pulses can’t be measured here — keep moving, it completes on time.')
+                ? (useCamera
+                    ? L('카메라 신호가 없어요. 렌즈가 가려졌는지 확인해주세요. (시간으로는 완료돼요)',
+                        'No camera signal — check the lens isn’t covered. (It still completes on time.)')
+                    : L('이 환경에서는 펄스 측정이 안 돼요. 시간으로 완료되니 그대로 움직여주세요!',
+                        'Pulses can’t be measured here — keep moving, it completes on time.'))
                 : L('폰을 좀 더 세게 흔들며 움직여보세요!', 'Move a bit harder!')}
             </p>
           )}
