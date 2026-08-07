@@ -24,15 +24,9 @@ export default function Header() {
           onClick={() => navigate('/')}
           onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); navigate('/'); } }}
         >
-          {/* DDCircle 로고 마크 — 탭하면 홈으로. 이미지가 브랜드명을 담고 있어 텍스트 워드마크는 생략(모바일 폭 절약) */}
-          <img
-            className={styles.logoImg}
-            src="/dd-circle-mark.png"
-            alt="DDCircle"
-            width="44"
-            height="44"
-          />
-          <span className={styles.brandTag}>{lang === 'ko' ? '숨 쉬고 운동해' : 'Breathe & Move'}</span>
+          {/* Pi 브라우저 상단에 이미 DDCircle 로고가 있어 헤더 로고는 생략.
+              대신 브랜드 미션 "Global Wellness Community"를 강조 문구로. 탭하면 홈으로 */}
+          <span className={styles.brandMission}>Global Wellness Community</span>
         </div>
 
         <div className={styles.right}>

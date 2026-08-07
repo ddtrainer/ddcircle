@@ -15,9 +15,9 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  height: 60px;
-  padding: 0 14px;
-  gap: 8px;
+  min-height: 60px;
+  padding: 8px 14px;
+  gap: 10px;
 }
 
 .logoWrap {
@@ -30,12 +30,18 @@
   -webkit-tap-highlight-color: transparent;
 }
 
-/* DDCircle 로고 마크 — 헤더 높이에 맞춘 원형 이미지 */
-.logoImg {
-  width: 44px;
-  height: 44px;
-  display: block;
-  flex-shrink: 0;
+/* 브랜드 미션 문구 — 무지개 그라데이션으로 강조. 좁으면 2줄까지 허용 */
+.brandMission {
+  font-size: 17px;
+  font-weight: 800;
+  line-height: 1.12;
+  letter-spacing: 0.1px;
+  font-family: 'Inter', 'Noto Sans KR', sans-serif;
+  background: linear-gradient(100deg, #7ed957 0%, #3bbfb0 26%, #fbb040 58%, #f47730 80%, #ed3a4a 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  min-width: 0;
 }
 
 .logoWrap:focus-visible {
@@ -44,30 +50,11 @@
   border-radius: 6px;
 }
 
-/* 로고 옆 태그라인 — 좁은 화면에서는 말줄임(우측 버튼 우선) */
-.brandTag {
-  font-size: 14px;
-  font-weight: 700;
-  letter-spacing: 0.2px;
-  color: var(--text);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  min-width: 0;
-}
-
-/* 휴대폰 폭에서는 태그라인 숨기고 로고만 — 우측 버튼이 온전히 보이도록.
-   태그라인은 히어로 문구와 중복이라 넓은 화면에서만 노출. */
-@media (max-width: 440px) {
-  .brandTag {
-    display: none;
-  }
-}
-
 .right {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
+  flex-shrink: 0;
 }
 
 .langToggle {
@@ -102,9 +89,9 @@
   background: linear-gradient(135deg, var(--warm), var(--cool));
   color: #fff;
   border: none;
-  padding: 7px 14px;
+  padding: 5px 11px;
   border-radius: 999px;
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 700;
   font-family: inherit;
   cursor: pointer;
@@ -123,11 +110,11 @@
 }
 
 .avatarBtn {
-  width: 36px;
-  height: 36px;
+  width: 30px;
+  height: 30px;
   border-radius: 50%;
   border: 1px solid var(--border);
-  font-size: 18px;
+  font-size: 15px;
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -135,6 +122,7 @@
   box-shadow: var(--shadow-sm);
   padding: 0;
   transition: transform 0.1s;
+  flex-shrink: 0;
 }
 
 .avatarBtn:active {
@@ -143,12 +131,12 @@
 
 /* 통합 설정 진입 (비로그인) — 아바타와 동일 사이즈의 원형 ⚙️ */
 .settingsBtn {
-  width: 36px;
-  height: 36px;
+  width: 30px;
+  height: 30px;
   border-radius: 50%;
   border: 1px solid var(--border);
   background: var(--surface);
-  font-size: 17px;
+  font-size: 14px;
   line-height: 1;
   cursor: pointer;
   display: flex;
@@ -157,6 +145,7 @@
   box-shadow: var(--shadow-sm);
   padding: 0;
   transition: transform 0.1s;
+  flex-shrink: 0;
 }
 
 .settingsBtn:active {
