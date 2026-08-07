@@ -4,6 +4,7 @@ import { Analytics } from '@vercel/analytics/react';
 import { LangProvider } from './i18n/LangContext';
 import { AppProvider, useApp } from './context/AppContext';
 import { AuthProvider, useAuth } from './context/AuthContext';
+import { PiAuthProvider } from './context/PiAuthContext';
 import { LevelProvider } from './context/LevelContext';
 import { ToastProvider } from './components/Toast';
 import Header from './components/layout/Header';
@@ -166,6 +167,7 @@ function InviteUrlHandler() {
 export default function App() {
   return (
     <LangProvider>
+      <PiAuthProvider>
       <AuthProvider>
         <AppProvider>
           <LevelProvider>
@@ -211,6 +213,7 @@ export default function App() {
           </LevelProvider>
         </AppProvider>
       </AuthProvider>
+      </PiAuthProvider>
     </LangProvider>
   );
 }

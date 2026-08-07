@@ -1,6 +1,6 @@
 {
   "rewrites": [
-    { "source": "/((?!audio/).*)", "destination": "/index.html" }
+    { "source": "/((?!api/|audio/).*)", "destination": "/index.html" }
   ],
   "headers": [
     {

@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useLang } from '../../i18n/LangContext';
 import { useAuth } from '../../context/AuthContext';
 import SettingsModal from '../modals/SettingsModal';
+import PiSignInButton from '../PiSignInButton';
 import styles from './Header.module.css';
 
 export default function Header() {
@@ -32,6 +33,7 @@ export default function Header() {
         </div>
 
         <div className={styles.right}>
+          <PiSignInButton />
           {!user && (
             <button
               className={styles.loginBtn}
