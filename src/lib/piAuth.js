@@ -4,12 +4,13 @@
 
 const PI_SDK_URL = 'https://sdk.minepi.com/pi-sdk.js';
 
-// 샌드박스(Testnet) 여부 — 환경변수 우선, 없으면 기본 true.
-// App Studio/Pi Desktop 검증은 Testnet(sandbox) 흐름이라 기본 true여야 로그인이 성립한다.
-// Mainnet 배포 시엔 VITE_PI_SANDBOX=false 로 지정.
+// sandbox 플래그 — 실제 Pi Browser/Pi Desktop에서 도는 앱은 반드시 false(프로덕션 네트워크 연결).
+// true는 로컬(sandbox.minepi.com)에서 테스트할 때만. Testnet/Mainnet은 이 플래그가 아니라
+// 개발자 포털의 '앱 등록 네트워크'로 결정된다. → 기본 false.
+// 로컬 샌드박스 테스트가 필요하면 VITE_PI_SANDBOX=true 로 지정.
 const SANDBOX = import.meta.env.VITE_PI_SANDBOX != null
   ? String(import.meta.env.VITE_PI_SANDBOX) === 'true'
-  : true;
+  : false;
 
 let sdkPromise = null;
 let initPromise = null;
