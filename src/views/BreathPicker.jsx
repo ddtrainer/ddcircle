@@ -18,7 +18,6 @@ export default function BreathPicker() {
   const { t, lang } = useLang();
   const { setBreathPatternId } = useApp();
   const navigate = useNavigate();
-  const L = (ko, en) => (lang === 'ko' ? ko : en);
   const [safetyOpen, setSafetyOpen] = useState(false);
   const [settingsMode, setSettingsMode] = useState(null); // 'natural' | 'wimhof' | null
   const [guideMode, setGuideMode] = useState(null); // 가이드 열 호흡 모드(m) 또는 null
@@ -56,10 +55,9 @@ export default function BreathPicker() {
 
   return (
     <div className={styles.pickerScreen}>
-      <div className={styles.title}>{L('오늘의 호흡을 골라요', "Pick today's breath")}</div>
+      <div className={styles.title}>{t('pickBreathTitle')}</div>
       <div className={styles.sub}>
-        {L('레벨 잠금 없이 컨디션에 맞게 자유롭게 선택하세요.',
-           'Choose freely — no level locks.')}
+        {t('pickBreathSub')}
       </div>
 
       <div className={styles.grid}>
@@ -74,14 +72,14 @@ export default function BreathPicker() {
           >
             <div className={styles.preview} style={{ fontSize: 44 }}>{m.emoji}</div>
             <div className={styles.name}>{t(m.labelKey)}</div>
-            <div className={styles.desc}>{L(m.descKo, m.descEn)}</div>
+            <div className={styles.desc}>{t(m.descKey)}</div>
             <div style={actionsStyle}>
               <button type="button" style={chipStyle} onClick={(e) => openGuide(m, e)}>
-                📖 {L('방법·효과', 'How & why')}
+                📖 {t('guideBtn')}
               </button>
               {m.settings && (
                 <button type="button" style={chipStyle} onClick={(e) => openSettings(m, e)}>
-                  ⚙ {L('설정', 'Settings')}
+                  ⚙ {t('settingsBtn')}
                 </button>
               )}
             </div>

@@ -100,7 +100,7 @@ export default function DdLevelCard() {
             <div key={m.key} className={styles.stepWrap}>
               <div className={`${styles.step} ${styles.unlocked}`}>
                 <span className={styles.stepEmoji}>{m.emoji}</span>
-                <span className={styles.stepName}>{lang === 'ko' ? m.labelKo : m.labelEn}</span>
+                <span className={styles.stepName}>{t(m.labelKey)}</span>
                 <span className={styles.stepMul}>×{DASH_MODE_MULTIPLIER[m.key]}</span>
               </div>
             </div>

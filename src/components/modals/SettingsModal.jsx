@@ -13,7 +13,7 @@ import styles from './SettingsModal.module.css';
 // 통합 설정 허브 — 언어(인라인) + 프로필·DD 타이밍·계정으로 연결.
 // 기존에 흩어져 있던 진입점(헤더 KO/EN 토글, 아바타 메뉴, 타이밍 카드)을 여기로 일원화.
 export default function SettingsModal({ open, onClose }) {
-  const { lang, setLang } = useLang();
+  const { lang, setLang, t } = useLang();
   const { user, profile, signOut } = useAuth();
   const { deepLevel } = useLevel();
   const { userEp } = useApp();
@@ -21,7 +21,6 @@ export default function SettingsModal({ open, onClose }) {
   const [timingOpen, setTimingOpen] = useState(false);
   const [tipOpen, setTipOpen] = useState(false);
 
-  const L = (ko, en) => (lang === 'ko' ? ko : en);
 
   const goProfile = () => {
     // Pi 전용 — 카카오/구글 로그인 진입점 제거. 계정이 있을 때만 편집으로 이동.
@@ -31,7 +30,7 @@ export default function SettingsModal({ open, onClose }) {
   };
 
   const logout = async () => {
-    const msg = L('로그아웃할까요?', 'Sign out of DDCircle?');
+    const msg = t('signOutConfirm');
     if (!window.confirm(msg)) return;
     onClose?.();
     await signOut();
@@ -43,11 +42,11 @@ export default function SettingsModal({ open, onClose }) {
   return (
     <>
       <Modal open={open} onClose={onClose}>
-        <div className={styles.title}>{L('설정', 'Settings')}</div>
+        <div className={styles.title}>{t('settingsTitle')}</div>
 
         {/* 언어 — 인라인 토글 */}
         <div className={styles.section}>
-          <div className={styles.sectionLabel}>{L('언어', 'Language')}</div>
+          <div className={styles.sectionLabel}>{t('languageLabel')}</div>
           <div className={styles.langToggle}>
             <button
               className={`${styles.langBtn} ${lang === 'ko' ? styles.langActive : ''}`}
@@ -77,13 +76,13 @@ export default function SettingsModal({ open, onClose }) {
               : emoji}
           </span>
           <span className={styles.rowMain}>
-            <span className={styles.rowTitle}>{L('프로필', 'Profile')}</span>
+            <span className={styles.rowTitle}>{t('profileLabel')}</span>
             <span className={styles.rowSub}>
               {user
                 ? (profile?.nickname
                     ? renderNickname(profile, { deepLevel, streak: userEp?.streak ?? 0 })
-                    : L('프로필 편집', 'Edit profile'))
-                : L('로그인 후 편집할 수 있어요', 'Sign in to edit')}
+                    : t('profileEdit'))
+                : t('profileSignInToEdit')}
             </span>
           </span>
           <span className={styles.chevron}>›</span>
@@ -93,8 +92,8 @@ export default function SettingsModal({ open, onClose }) {
         <button className={styles.row} onClick={() => setTimingOpen(true)}>
           <span className={styles.rowIcon}>⏰</span>
           <span className={styles.rowMain}>
-            <span className={styles.rowTitle}>{L('DD 타이밍', 'Set timing')}</span>
-            <span className={styles.rowSub}>{L('아침·저녁 알림 시간', 'Morning & evening reminders')}</span>
+            <span className={styles.rowTitle}>{t('timingLabel')}</span>
+            <span className={styles.rowSub}>{t('timingSub')}</span>
           </span>
           <span className={styles.chevron}>›</span>
         </button>
@@ -103,8 +102,8 @@ export default function SettingsModal({ open, onClose }) {
         <button className={styles.row} onClick={() => setTipOpen(true)}>
           <span className={styles.rowIcon}>💜</span>
           <span className={styles.rowMain}>
-            <span className={styles.rowTitle}>{L('Pi로 후원하기', 'Support with Pi')}</span>
-            <span className={styles.rowSub}>{L('원하는 만큼 Pi로 응원', 'Send any amount in Pi')}</span>
+            <span className={styles.rowTitle}>{t('tipRowTitle')}</span>
+            <span className={styles.rowSub}>{t('tipRowSub')}</span>
           </span>
           <span className={styles.chevron}>›</span>
         </button>
@@ -114,7 +113,7 @@ export default function SettingsModal({ open, onClose }) {
           <button className={`${styles.row} ${styles.danger}`} onClick={logout}>
             <span className={styles.rowIcon}>↩️</span>
             <span className={styles.rowMain}>
-              <span className={styles.rowTitle}>{L('로그아웃', 'Sign out')}</span>
+              <span className={styles.rowTitle}>{t('signOut')}</span>
             </span>
           </button>
         )}

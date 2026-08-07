@@ -1,3 +1,4 @@
+import { useLang } from '../i18n/LangContext';
 import { usePiAuth } from '../context/PiAuthContext';
 
 // Pi 로그인 버튼 — 항상 클릭 가능(제스처 로그인). 검증 중 "Waiting for sign-in"에
@@ -22,12 +23,13 @@ const base = {
 };
 
 export default function PiSignInButton() {
+  const { t } = useLang();
   const { piUser, status, signInWithPi } = usePiAuth();
 
   const label =
     status === 'authenticated' && piUser ? `π ${piUser.username}` :
-    status === 'loading' ? 'Pi 로그인 중…' :
-    'Pi로 로그인';
+    status === 'loading' ? t('piSigningIn') :
+    t('piSignIn');
 
   return (
     <button

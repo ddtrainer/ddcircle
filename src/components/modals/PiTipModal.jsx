@@ -7,9 +7,8 @@ import styles from './PiTipModal.module.css';
 
 // Pi 후원(팁) — U2A 결제. 금액은 사용자 입력(프리셋 + 직접 입력).
 export default function PiTipModal({ open, onClose }) {
-  const { lang } = useLang();
+  const { lang, t } = useLang();
   const { show: showToast } = useToast();
-  const L = (ko, en) => (lang === 'ko' ? ko : en);
 
   const [amount, setAmount] = useState(TIP_PRESETS[0]);
   const [custom, setCustom] = useState('');
@@ -23,16 +22,16 @@ export default function PiTipModal({ open, onClose }) {
     setPaying(true);
     try {
       const r = await createTip(value);
-      showToast('💜', L(`후원 완료! ${r.amount} Pi 감사합니다`, `Thanks for the ${r.amount} Pi tip!`));
+      showToast('💜', t('tipThanks', { n: r.amount }));
       onClose?.();
     } catch (e) {
       const msg = String(e && e.message);
       if (/cancel/i.test(msg)) {
-        showToast('🙂', L('후원을 취소했어요', 'Tip cancelled'));
+        showToast('🙂', t('tipCancelled'));
       } else if (/Pi Browser|unavailable/i.test(msg)) {
-        showToast('💡', L('Pi Browser에서 후원할 수 있어요', 'Tipping works in the Pi Browser'));
+        showToast('💡', t('tipPiBrowserOnly'));
       } else {
-        showToast('⚠️', L('후원에 실패했어요. 잠시 후 다시 시도해주세요', 'Tip failed. Please try again.'));
+        showToast('⚠️', t('tipFailed'));
       }
     } finally {
       setPaying(false);
@@ -41,10 +40,9 @@ export default function PiTipModal({ open, onClose }) {
 
   return (
     <Modal open={open} onClose={onClose}>
-      <div className={styles.title}>💜 {L('Pi로 후원하기', 'Support with Pi')}</div>
+      <div className={styles.title}>💜 {t('tipRowTitle')}</div>
       <div className={styles.sub}>
-        {L('DDCircle을 응원해 주세요. 원하는 만큼 Pi로 보낼 수 있어요.',
-           'Cheer DDCircle on — send any amount in Pi.')}
+        {t('tipSub')}
       </div>
 
       <div className={styles.presets}>
@@ -61,7 +59,7 @@ export default function PiTipModal({ open, onClose }) {
       </div>
 
       <div className={styles.customRow}>
-        <span className={styles.customLabel}>{L('직접 입력', 'Custom')}</span>
+        <span className={styles.customLabel}>{t('tipCustom')}</span>
         <input
           type="number"
           min="0"
@@ -76,7 +74,7 @@ export default function PiTipModal({ open, onClose }) {
       </div>
 
       <button className={styles.sendBtn} onClick={send} disabled={!valid || paying}>
-        {paying ? L('결제 중…', 'Processing…') : L(`${valid ? value : 0} Pi 후원하기`, `Tip ${valid ? value : 0} Pi`)}
+        {paying ? t('tipProcessing') : t('tipSend', { n: valid ? value : 0 })}
       </button>
     </Modal>
   );

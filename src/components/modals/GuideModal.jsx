@@ -11,11 +11,10 @@ import styles from './GuideModal.module.css';
 // mode(선택): 자유선택제(BreathPicker 등)에서 { emoji, label, multiplier }를 넘기면
 //   옛 레벨 표기 대신 종목명 + EP 배율로 헤더를 표시한다. 미전달 시 기존 레벨 표기 유지.
 export default function GuideModal({ open, onClose, track, level, mode = null }) {
-  const { lang } = useLang();
+  const { lang, t } = useLang();
   const { recordGuideView } = useLevel();
   const guide = getGuide(track, level, lang);
   const def = mode ? null : getLevelDef(track, level);
-  const L = (ko, en) => (lang === 'ko' ? ko : en);
 
   useEffect(() => {
     if (open) recordGuideView(track, level);
@@ -30,7 +29,7 @@ export default function GuideModal({ open, onClose, track, level, mode = null })
 
       {guide.intro && <p className={styles.intro}>{guide.intro}</p>}
 
-      <div className={styles.sectionTitle}>{L('방법', 'How to')}</div>
+      <div className={styles.sectionTitle}>{t('guideHowTo')}</div>
       {guide.methodSections ? (
         guide.methodSections.map((sec) => (
           <div key={sec.heading}>
@@ -50,7 +49,7 @@ export default function GuideModal({ open, onClose, track, level, mode = null })
         </ol>
       )}
 
-      <div className={styles.sectionTitle}>{L('효과', 'Benefits')}</div>
+      <div className={styles.sectionTitle}>{t('guideBenefits')}</div>
       {Array.isArray(guide.effect) ? (
         <ul className={styles.effectList}>
           {guide.effect.map((e, i) => (

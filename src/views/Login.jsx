@@ -6,10 +6,9 @@ import styles from './Login.module.css';
 
 // Pi 전용 — 카카오/구글 OAuth 로그인 제거. 이 화면은 Pi Browser의 Pi 로그인 안내만 표시.
 export default function Login() {
-  const { lang } = useLang();
+  const { lang, t } = useLang();
   const { user, loading: authLoading } = useAuth();
   const navigate = useNavigate();
-  const L = (ko, en) => (lang === 'ko' ? ko : en);
 
   // 이미 로그인된 유저는 프로필 설정 여부에 따라 분기
   useEffect(() => {
@@ -26,24 +25,22 @@ export default function Login() {
         </div>
         <div className={styles.title}>DDCircle</div>
         <div className={styles.sub}>
-          {L('DDCircle은 Pi Browser에서 Pi 계정으로 이용해요.',
-             'DDCircle runs on Pi — sign in with your Pi account in the Pi Browser.')}
+          {t('loginPiSub')}
         </div>
       </div>
 
       <div className={styles.notice}>
-        {L('상단의 "Pi로 로그인" 버튼으로 로그인할 수 있어요. Pi Browser에서 열면 자동으로 로그인이 진행됩니다.',
-           'Use the “Sign in with Pi” button at the top. When opened in the Pi Browser, sign-in starts automatically.')}
+        {t('loginPiNotice')}
       </div>
 
       <button className={styles.homeBtn} onClick={() => navigate('/', { replace: true })}>
-        {L('홈으로', 'Go home')}
+        {t('goHome')}
       </button>
 
       <div className={styles.legalNotice}>
-        <Link to="/terms" className={styles.legalLink}>{L('이용약관', 'Terms')}</Link>
+        <Link to="/terms" className={styles.legalLink}>{t('termsLink')}</Link>
         {' · '}
-        <Link to="/privacy" className={styles.legalLink}>{L('개인정보처리방침', 'Privacy')}</Link>
+        <Link to="/privacy" className={styles.legalLink}>{t('privacyLink')}</Link>
       </div>
     </div>
   );
