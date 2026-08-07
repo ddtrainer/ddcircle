@@ -191,7 +191,7 @@ export function AppProvider({ children }) {
   const completeSession = useCallback(({ shared } = {}) => {
     const hasProof = !!proofBlobRef.current;
 
-    // Dash/Deep 완주 여부 — DashSession/DeepSession이 sessionStorage에 기록
+    // Dash/Deep 완주 여부 — SprintDetect/DeepSession이 sessionStorage에 기록
     let dashFully = false, deepFully = false;
     try {
       dashFully = sessionStorage.getItem('ddcircle.session.dashFully') === '1';

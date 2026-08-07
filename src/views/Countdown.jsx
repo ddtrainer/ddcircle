@@ -46,7 +46,9 @@ export default function Countdown() {
   const intervalRef = useRef(null);
 
   const isDash = target === 'dash';
-  const next = isDash ? '/dash' : '/deep';
+  // Dash는 종목 선택(/picker) → 자동측정(/sprint) 흐름으로 일원화됨.
+  // 옛 영상 기반 화면(/dash)은 제거 — 오래된 북마크로 들어와도 새 흐름으로 보낸다.
+  const next = isDash ? '/picker' : '/deep';
 
   const proceed = () => {
     if (finishedRef.current) return;

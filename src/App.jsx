@@ -27,7 +27,6 @@ import Grow from './views/Grow';
 import BreathPicker from './views/BreathPicker';
 import ExercisePicker from './views/ExercisePicker';
 import Countdown from './views/Countdown';
-import DashSession from './views/DashSession';
 import Proof from './views/Proof';
 import DeepSession from './views/DeepSession';
 import Login from './views/Login';
@@ -58,7 +57,7 @@ function ViewFallback() {
 }
 
 // 카운트다운/세션/Proof/로그인 화면에서는 BottomNav 숨김
-const FULLSCREEN_PATHS = ['/countdown', '/dash', '/deep', '/proof', '/login', '/auth', '/profile-setup', '/book', '/sprint', '/breath-picker'];
+const FULLSCREEN_PATHS = ['/countdown', '/deep', '/proof', '/login', '/auth', '/profile-setup', '/book', '/sprint', '/breath-picker'];
 
 function ConditionalBottomNav() {
   const { pathname } = useLocation();
@@ -185,7 +184,6 @@ export default function App() {
                     <Route path="/book/:chapterKey" element={<Book />} />
                     <Route path="/picker" element={<ExercisePicker />} />
                     <Route path="/countdown/:target" element={<Countdown />} />
-                    <Route path="/dash" element={<DashSession />} />
                     <Route path="/sprint" element={<SprintDetect />} />
                     <Route path="/proof" element={<Proof />} />
                     <Route path="/deep" element={<DeepSession />} />

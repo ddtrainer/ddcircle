@@ -14,7 +14,7 @@ function daysBetween(fromStr, toStr) {
 
 // 홈 화면 성장 카드 — v2.3: Deep/Dash 모두 레벨 폐지, 자유선택제.
 // 실력 = 누적 스트릭/EP(상단), 종목 = 오늘의 선택(트랙별 종목·EP 배율 안내).
-// 가이드 진입은 세션(DeepSession/DashSession) 내에서만 노출해 중복을 피한다.
+// 가이드 진입은 세션(DeepSession/SprintDetect) 내에서만 노출해 중복을 피한다.
 export default function DdLevelCard() {
   const { userEp } = useApp();
   const { t, lang } = useLang();
