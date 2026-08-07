@@ -1,5 +1,4 @@
 import { usePiAuth } from '../context/PiAuthContext';
-import { isPiBrowser } from '../lib/piAuth';
 
 // Pi 수동 로그인 버튼 — 자동 트리거와 별개로 사용자가 직접 재시도할 수 있게.
 const base = {
@@ -16,9 +15,6 @@ const base = {
 
 export default function PiSignInButton() {
   const { piUser, status, signInWithPi } = usePiAuth();
-
-  // 일반 웹 브라우저에선 노출하지 않음 (Pi Browser 전용)
-  if (!isPiBrowser()) return null;
 
   if (status === 'authenticated' && piUser) {
     return (
