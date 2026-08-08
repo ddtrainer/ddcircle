@@ -462,6 +462,7 @@ export default {
   "comingSoonBadge": "Coming soon",
   "kakaoOpening": "Opening KakaoTalk...",
   "facebookPasteHint": "Message copied — paste it into your post",
+  "kakaoPasteHint": "Message copied — paste it in KakaoTalk",
   "whatsappOpening": "Opening WhatsApp...",
   "telegramOpening": "Opening Telegram...",
   "smsOpening": "Opening Messages...",

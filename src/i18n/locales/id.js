@@ -462,6 +462,7 @@ export default {
   "comingSoonBadge": "Segera hadir",
   "kakaoOpening": "Membuka KakaoTalk...",
   "facebookPasteHint": "Pesan disalin — tempel ke postinganmu",
+  "kakaoPasteHint": "Pesan disalin — tempel di KakaoTalk",
   "whatsappOpening": "Membuka WhatsApp...",
   "telegramOpening": "Membuka Telegram...",
   "smsOpening": "Membuka Pesan...",

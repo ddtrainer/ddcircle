@@ -462,6 +462,7 @@ export default {
   "comingSoonBadge": "Próximamente",
   "kakaoOpening": "Abriendo KakaoTalk...",
   "facebookPasteHint": "Mensaje copiado — pégalo en tu publicación",
+  "kakaoPasteHint": "Mensaje copiado — pégalo en KakaoTalk",
   "whatsappOpening": "Abriendo WhatsApp...",
   "telegramOpening": "Abriendo Telegram...",
   "smsOpening": "Abriendo Mensajes...",

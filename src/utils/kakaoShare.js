@@ -45,8 +45,28 @@ async function initKakao() {
   return Kakao;
 }
 
-// 초대 링크를 카카오톡으로 공유. 성공하면 true, 실패하면 false를 반환해
-// 호출부가 "링크 복사"로 폴백할 수 있게 한다(예외를 던지지 않는다).
+// 카카오 공유가 실제로 일어났는지 확인 — sendDefault는 프로미스도 아니고 실패해도
+// 예외를 던지지 않아서, 호출만으로는 성공 여부를 알 수 없다. 앱이 실제로 떴다면
+// 우리 화면은 백그라운드로 내려가므로(document.hidden) 그것만이 유일한 신호다.
+function appDidOpen(timeout = 1800) {
+  return new Promise((resolve) => {
+    if (document.hidden) return resolve(true);
+    let settled = false;
+    const finish = (v) => {
+      if (settled) return;
+      settled = true;
+      clearTimeout(timer);
+      document.removeEventListener('visibilitychange', onVis);
+      resolve(v);
+    };
+    const onVis = () => { if (document.hidden) finish(true); };
+    const timer = setTimeout(() => finish(false), timeout);
+    document.addEventListener('visibilitychange', onVis);
+  });
+}
+
+// 초대 링크를 카카오톡으로 공유. 실제로 카카오톡이 열렸을 때만 true를 반환해
+// 호출부가 "복사 후 붙여넣기"로 폴백할 수 있게 한다(예외를 던지지 않는다).
 export async function shareToKakao({ title, description, link, imageUrl }) {
   try {
     const Kakao = await initKakao();
@@ -63,9 +83,10 @@ export async function shareToKakao({ title, description, link, imageUrl }) {
         { title: '함께하기', link: { mobileWebUrl: link, webUrl: link } },
       ],
     });
-    return true;
   } catch (e) {
     console.error('[kakao] share failed:', e);
     return false;
   }
+  // 여기까지 왔어도 아직 성공이 아니다 — 카카오톡이 실제로 떴는지 확인해야 한다.
+  return appDidOpen();
 }

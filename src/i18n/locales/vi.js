@@ -464,6 +464,7 @@ export default {
   "comingSoonBadge": "Sắp có",
   "kakaoOpening": "Đang mở KakaoTalk...",
   "facebookPasteHint": "Đã sao chép lời nhắn — hãy dán vào bài đăng",
+  "kakaoPasteHint": "Đã sao chép lời nhắn — hãy dán vào KakaoTalk",
   "whatsappOpening": "Đang mở WhatsApp...",
   "telegramOpening": "Đang mở Telegram...",
   "smsOpening": "Đang mở Tin nhắn...",

@@ -91,13 +91,17 @@ export default function InviteModal({ open, onClose }) {
   // SDK 로드·초기화·공유 중 어디서 실패하든 false가 오므로 링크 복사로 폴백한다.
   const shareKakao = async () => {
     track(Events.INVITE_SENT, { channel: 'kakao' });
+    // 복사는 반드시 지금(사용자 제스처 안에서) 해둔다 — SDK 로드와 실행 확인을 기다린
+    // 뒤에는 제스처 컨텍스트가 풀려서 클립보드 쓰기가 거부된다. 카카오톡이 정상적으로
+    // 열리는 경우에도 복사가 남아 있는 건 해가 없다.
+    writeClipboard(`${t('inviteShareText')} ${inviteLink}`).catch(() => {});
     showToast('💛', t('kakaoOpening'));
     const ok = await shareToKakao({
       title: t('inviteShareTitle'),
       description: t('inviteShareText'),
       link: inviteLink,
     });
-    if (!ok) copyLink();
+    if (!ok) showToast('💛', t('kakaoPasteHint'));
   };
 
   const shareWhatsApp = () => {

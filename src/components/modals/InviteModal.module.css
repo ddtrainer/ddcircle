@@ -112,19 +112,27 @@
 
 .secondaryRow {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  /* 1fr의 최소 크기는 min-content라, "WhatsApp"·"Telegram"처럼 긴 단어가 트랙을
+     밀어올려 모달 전체가 화면 밖으로 삐져나갔다(단어가 짧은 한국어에선 안 드러남).
+     minmax(0,1fr)이라야 트랙이 화면 폭에 맞춰 줄어든다. */
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 8px;
   margin-bottom: 14px;
 }
 
 .secondaryBtn {
+  min-width: 0;
   background: var(--surface);
   border: 1px solid var(--border-strong);
   border-radius: 12px;
-  padding: 10px;
+  padding: 10px 6px;
   font-family: inherit;
   font-size: 14px;
   color: var(--text);
+  text-align: center;
+  line-height: 1.3;
+  /* 15개 언어 중엔 더 긴 라벨도 있다 — 레이아웃이 깨지느니 단어를 접는다 */
+  overflow-wrap: anywhere;
   cursor: pointer;
   display: flex;
   flex-direction: column;

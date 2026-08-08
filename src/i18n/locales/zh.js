@@ -462,6 +462,7 @@ export default {
   "comingSoonBadge": "即将推出",
   "kakaoOpening": "正在打开KakaoTalk...",
   "facebookPasteHint": "文案已复制 — 请粘贴到帖子正文中",
+  "kakaoPasteHint": "文案已复制 — 请在KakaoTalk中粘贴",
   "whatsappOpening": "正在打开WhatsApp...",
   "telegramOpening": "正在打开Telegram...",
   "smsOpening": "正在打开短信...",
