@@ -5,6 +5,7 @@ import { useLang } from '../i18n/LangContext';
 import { useApp } from '../context/AppContext';
 import YesterdayPageCard from '../components/assets/YesterdayPageCard';
 import { unlockAudio } from '../utils/audioUnlock';
+import { warmBreathAudio } from '../hooks/useBreathSound';
 import { BREATH_MODES } from '../data/breathPatterns';
 import styles from './Home.module.css';
 
@@ -29,8 +30,10 @@ export default function Home() {
   // 개선1(빠른 재시작): 마지막에 고른 호흡(breathPatternId, localStorage 유지)으로 바로 시작.
   //   · 바로 시작 → 선택 화면 건너뛰고 카운트다운으로 직행
   //   · 다른 호흡 선택 → 기존 자유선택 Picker(/breath-picker)
-  const goStartDeep = () => { unlockAudio(); navigate('/countdown/deep'); };
-  const goPicker = () => { unlockAudio(); navigate('/breath-picker'); };
+  // unlockAudio: 범용 언락. warmBreathAudio: 실제 들숨/날숨 벨 요소를 이 제스처 안에서
+  // 예열(모바일 WebView가 개별 요소를 언락해야 세션 중 벨이 소리남).
+  const goStartDeep = () => { unlockAudio(); warmBreathAudio(); navigate('/countdown/deep'); };
+  const goPicker = () => { unlockAudio(); warmBreathAudio(); navigate('/breath-picker'); };
 
   // 마지막 선택 호흡 정보(리쥼 카드 표시용). 기본값 '478'도 안전한 신경 안정 호흡.
   const currentBreath = BREATH_MODES.find((m) => m.id === breathPatternId) || BREATH_MODES[0];

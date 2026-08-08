@@ -54,6 +54,28 @@ function ensureBells() {
   }
 }
 
+// 실제 벨 요소를 사용자 제스처 콜스택에서 미리 '언락'한다.
+// audioUnlock의 throwaway silent 클립을 재생해도, 모바일 WebView(Pi Browser 포함)는
+// HTMLAudioElement를 개별로 언락하는 경우가 많다 — 세션 중 처음 생성돼 자동 재생되는
+// bellIn/bellOut은 그 언락을 못 받아 묵음 거부될 수 있다(들숨·날숨 벨이 통째로 안 나던
+// 증상). 그래서 시작 탭(제스처) 때 이 함수로 실제 벨 요소를 무음으로 한 번 재생/정지해
+// 둔다 — 이후 세션 중 재생은 정상 소리로 나온다.
+export function warmBreathAudio() {
+  ensureBells();
+  for (const el of [bellIn, bellOut]) {
+    if (!el) continue;
+    try {
+      el.muted = true;
+      const p = el.play();
+      const settle = () => {
+        try { el.pause(); el.currentTime = 0; el.muted = false; } catch { /* ignore */ }
+      };
+      if (p && typeof p.then === 'function') p.then(settle).catch(settle);
+      else settle();
+    } catch { /* ignore */ }
+  }
+}
+
 // 들숨/날숨 벨 — 외부(윔호프 등)에서 stage 전환 시점에 직접 호출
 export function playBellIn() {
   ensureBells();

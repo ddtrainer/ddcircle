@@ -4,6 +4,7 @@ import { useLang } from '../i18n/LangContext';
 import { useApp } from '../context/AppContext';
 import { BREATH_MODES, BREATH_MODE_MULTIPLIER, wimHofSafetyAcked, ackWimHofSafety } from '../data/breathPatterns';
 import { unlockAudio } from '../utils/audioUnlock';
+import { warmBreathAudio } from '../hooks/useBreathSound';
 import WimHofSafetyModal from '../components/modals/WimHofSafetyModal';
 import BreathSettingsModal from '../components/modals/BreathSettingsModal';
 import GuideModal from '../components/modals/GuideModal';
@@ -25,6 +26,7 @@ export default function BreathPicker() {
   const proceed = (id) => {
     setBreathPatternId(id);
     unlockAudio(); // iOS 오디오 unlock (제스처 콜스택 안)
+    warmBreathAudio(); // 실제 들숨/날숨 벨 요소 예열 (모바일 WebView 개별 언락)
     navigate('/countdown/deep');
   };
 
