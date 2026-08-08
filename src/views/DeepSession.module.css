@@ -219,21 +219,31 @@
 }
 
 /* 과호흡(power) — 빠른 1초 펌핑 전용.
-   이전 방식은 색·글로우를 매초 파랑↔청록으로 전환시켰는데, 전환이 1초에 동기화돼
-   쉴 틈 없이 이어지며 "색이 끊임없이 출렁이는" 혼란을 줬다. 과호흡은 리듬만 전달하면
-   되므로 — 색·글로우를 '단일 톤으로 고정'해 아예 변하지 않게 하고(→ 색 흔들림 제거),
-   리듬은 은은한 스케일 펄스로만 표현한다. 스케일 진폭도 정상 호흡(0.3↔1.62)보다 크게
-   낮춰(0.86↔1.16) 매초 5배로 출렁이던 것을 차분한 맥동으로 바꾼다. */
+   1차 시도(색·글로우를 매초 파랑↔청록으로 전환)는 "색이 출렁이는" 혼란을 줬다 → 색상(hue)은
+   절대 바꾸지 않는 걸로 고정. 2차 시도(스케일만 0.86↔1.16, 색·글로우 완전 고정)는 흔들림은
+   없앴지만 진폭이 너무 작고 등속(ease-in-out)이라 "밋밋하고 기계적"으로 느껴졌다.
+   3차 시도(back-out 바운스 커브)는 오버슈트 후 되돌아오는 성질 때문에, 수축(exhale) 1초 구간의
+   마지막 0.3~0.4초 동안 오히려 살짝 "커지는" 역방향 움직임이 생겨 — 눈에는 "절반만 줄어들고
+   마는" 것처럼 보였다(실측: 0.9초 지점 0.754까지 줄었다가 1.3초 지점엔 0.78로 재상승).
+   최종: hue는 계속 고정(파란 계열 단일 톤)하고, 스케일 진폭도 유지(0.78↔1.28)하되 — 이징은
+   바운스 없이 한 방향으로만 끝까지 진행하는 ease-out 커브로 교체해 "빠르게 튀어나가고
+   부드럽게 안착"하는 역동감은 유지하면서 방향 역전(되돌아오는 움직임)은 없앤다. */
 .orbOuter.power.inhale,
 .orbOuter.power.exhale {
-  /* 색·글로우는 고정이라 전환할 게 없다 → transform만 1초에 부드럽게 동기화 */
-  transition: transform var(--power-dur, 1s) ease-in-out;
-  background: radial-gradient(circle, rgba(30,155,216,0.42), rgba(43,164,143,0.14));
-  box-shadow: 0 0 56px 4px rgba(30,155,216,0.22);
+  background: radial-gradient(circle, rgba(30,155,216,0.46), rgba(30,155,216,0.14));
+  transition:
+    transform var(--power-dur, 1s) cubic-bezier(0.22, 0.61, 0.36, 1),
+    box-shadow var(--power-dur, 1s) cubic-bezier(0.22, 0.61, 0.36, 1);
 }
 
-.orbOuter.power.inhale { transform: scale(1.16); }
-.orbOuter.power.exhale { transform: scale(0.86); }
+.orbOuter.power.inhale {
+  transform: scale(1.28);
+  box-shadow: 0 0 84px 10px rgba(30,155,216,0.4);
+}
+.orbOuter.power.exhale {
+  transform: scale(0.78);
+  box-shadow: 0 0 30px 2px rgba(30,155,216,0.16);
+}
 
 .orbInner {
   width: 70px;
