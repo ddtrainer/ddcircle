@@ -218,26 +218,22 @@
   box-shadow: 0 0 26px rgba(232,158,43,0.2);
 }
 
-/* 과호흡(power) — 빠른 펌핑(1초 들숨/날숨) 전용.
-   색·글로우 전환을 움직임과 동일한 1초로 동기화(--power-dur)해 밀림 없이 부드럽게,
-   들숨/날숨 색·글로우 대비를 완만하게(파랑↔청록 블렌드) 낮춰 깜빡임을 줄인다. */
+/* 과호흡(power) — 빠른 1초 펌핑 전용.
+   이전 방식은 색·글로우를 매초 파랑↔청록으로 전환시켰는데, 전환이 1초에 동기화돼
+   쉴 틈 없이 이어지며 "색이 끊임없이 출렁이는" 혼란을 줬다. 과호흡은 리듬만 전달하면
+   되므로 — 색·글로우를 '단일 톤으로 고정'해 아예 변하지 않게 하고(→ 색 흔들림 제거),
+   리듬은 은은한 스케일 펄스로만 표현한다. 스케일 진폭도 정상 호흡(0.3↔1.62)보다 크게
+   낮춰(0.86↔1.16) 매초 5배로 출렁이던 것을 차분한 맥동으로 바꾼다. */
 .orbOuter.power.inhale,
 .orbOuter.power.exhale {
-  transition:
-    transform var(--power-dur, 1s) ease-in-out,
-    background var(--power-dur, 1s) ease-in-out,
-    box-shadow var(--power-dur, 1s) ease-in-out;
+  /* 색·글로우는 고정이라 전환할 게 없다 → transform만 1초에 부드럽게 동기화 */
+  transition: transform var(--power-dur, 1s) ease-in-out;
+  background: radial-gradient(circle, rgba(30,155,216,0.42), rgba(43,164,143,0.14));
+  box-shadow: 0 0 56px 4px rgba(30,155,216,0.22);
 }
 
-.orbOuter.power.inhale {
-  background: radial-gradient(circle, rgba(30,155,216,0.5), rgba(43,164,143,0.16));
-  box-shadow: 0 0 72px 6px rgba(30,155,216,0.32);
-}
-
-.orbOuter.power.exhale {
-  background: radial-gradient(circle, rgba(43,164,143,0.44), rgba(30,155,216,0.14));
-  box-shadow: 0 0 46px 3px rgba(43,164,143,0.24);
-}
+.orbOuter.power.inhale { transform: scale(1.16); }
+.orbOuter.power.exhale { transform: scale(0.86); }
 
 .orbInner {
   width: 70px;
