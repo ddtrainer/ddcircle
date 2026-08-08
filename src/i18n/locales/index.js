@@ -10,23 +10,28 @@ export const FALLBACK = 'en';
 export { en };
 
 // label은 각 언어 사용자가 자기 언어로 읽을 수 있도록 '원어 표기'를 쓴다.
-export const LOCALES = [
-  { code: 'en', label: 'English',           dir: 'ltr' },
-  { code: 'ko', label: '한국어',             dir: 'ltr' },
-  { code: 'zh', label: '中文（简体）',        dir: 'ltr' },
-  { code: 'vi', label: 'Tiếng Việt',        dir: 'ltr' },
-  { code: 'id', label: 'Bahasa Indonesia',  dir: 'ltr' },
-  { code: 'hi', label: 'हिन्दी',              dir: 'ltr' },
-  { code: 'tr', label: 'Türkçe',            dir: 'ltr' },
-  { code: 'es', label: 'Español',           dir: 'ltr' },
-  { code: 'pt', label: 'Português',         dir: 'ltr' },
-  { code: 'ar', label: 'العربية',             dir: 'rtl' },
-  { code: 'ja', label: '日本語',              dir: 'ltr' },
-  { code: 'th', label: 'ไทย',                dir: 'ltr' },
-  { code: 'tl', label: 'Filipino',          dir: 'ltr' },
-  { code: 'bn', label: 'বাংলা',               dir: 'ltr' },
-  { code: 'ur', label: 'اردو',               dir: 'rtl' },
+// englishName은 화면에 표시되지 않고 정렬 기준으로만 쓴다 — 문자 그대로(원어) 정렬하면
+// 한글/아랍어/태국어 등 서로 다른 문자 체계가 섞여 순서가 뒤죽박죽되므로, 국가 선택
+// 화면처럼 영어 이름 알파벳순으로 정렬해 일관된 순서를 만든다.
+const LOCALES_RAW = [
+  { code: 'en', label: 'English',           englishName: 'English',              dir: 'ltr' },
+  { code: 'ko', label: '한국어',             englishName: 'Korean',               dir: 'ltr' },
+  { code: 'zh', label: '中文（简体）',        englishName: 'Chinese (Simplified)', dir: 'ltr' },
+  { code: 'vi', label: 'Tiếng Việt',        englishName: 'Vietnamese',           dir: 'ltr' },
+  { code: 'id', label: 'Bahasa Indonesia',  englishName: 'Indonesian',           dir: 'ltr' },
+  { code: 'hi', label: 'हिन्दी',              englishName: 'Hindi',                dir: 'ltr' },
+  { code: 'tr', label: 'Türkçe',            englishName: 'Turkish',              dir: 'ltr' },
+  { code: 'es', label: 'Español',           englishName: 'Spanish',              dir: 'ltr' },
+  { code: 'pt', label: 'Português',         englishName: 'Portuguese',           dir: 'ltr' },
+  { code: 'ar', label: 'العربية',             englishName: 'Arabic',               dir: 'rtl' },
+  { code: 'ja', label: '日本語',              englishName: 'Japanese',             dir: 'ltr' },
+  { code: 'th', label: 'ไทย',                englishName: 'Thai',                 dir: 'ltr' },
+  { code: 'tl', label: 'Filipino',          englishName: 'Filipino',             dir: 'ltr' },
+  { code: 'bn', label: 'বাংলা',               englishName: 'Bengali',              dir: 'ltr' },
+  { code: 'ur', label: 'اردو',               englishName: 'Urdu',                 dir: 'rtl' },
 ];
+
+export const LOCALES = [...LOCALES_RAW].sort((a, b) => a.englishName.localeCompare(b.englishName));
 
 export const LOCALE_CODES = LOCALES.map((l) => l.code);
 

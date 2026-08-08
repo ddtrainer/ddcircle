@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useLang } from '../../i18n/LangContext';
-import { LOCALES } from '../../i18n/locales';
+import { getLocale } from '../../i18n/locales';
 import { useAuth } from '../../context/AuthContext';
 import { useLevel } from '../../context/LevelContext';
 import { useApp } from '../../context/AppContext';
@@ -10,12 +10,13 @@ import { renderNickname } from '../../lib/nickname';
 import Modal from './Modal';
 import SetTimingModal from './SetTimingModal';
 import PiTipModal from './PiTipModal';
+import LanguageModal from './LanguageModal';
 import styles from './SettingsModal.module.css';
 
 // 통합 설정 허브 — 언어(인라인) + 프로필·DD 타이밍·계정으로 연결.
 // 기존에 흩어져 있던 진입점(헤더 KO/EN 토글, 아바타 메뉴, 타이밍 카드)을 여기로 일원화.
 export default function SettingsModal({ open, onClose }) {
-  const { lang, setLang, t } = useLang();
+  const { lang, t } = useLang();
   const { user, profile, signOut } = useAuth();
   const { deepLevel } = useLevel();
   const { userEp } = useApp();
@@ -23,6 +24,7 @@ export default function SettingsModal({ open, onClose }) {
   const navigate = useNavigate();
   const [timingOpen, setTimingOpen] = useState(false);
   const [tipOpen, setTipOpen] = useState(false);
+  const [langOpen, setLangOpen] = useState(false);
 
   // 디지털북(PDF) — 아직 실제 상품이 아니라 준비 중 안내만. 구매 플로우 없이 토스트로 끝.
   const openDigitalBookInfo = () => {
@@ -52,23 +54,15 @@ export default function SettingsModal({ open, onClose }) {
       <Modal open={open} onClose={onClose}>
         <div className={styles.title}>{t('settingsTitle')}</div>
 
-        {/* 언어 — 15개 지원. 각 언어를 그 언어 사용자가 읽을 수 있도록 원어로 표기한다. */}
-        <div className={styles.section}>
-          <div className={styles.sectionLabel}>{t('languageLabel')}</div>
-          <div className={styles.langGrid}>
-            {LOCALES.map((l) => (
-              <button
-                key={l.code}
-                className={`${styles.langBtn} ${lang === l.code ? styles.langActive : ''}`}
-                onClick={() => setLang(l.code)}
-                lang={l.code}
-                dir={l.dir}
-              >
-                {l.label}
-              </button>
-            ))}
-          </div>
-        </div>
+        {/* 언어 — 15개 지원. 별도 리스트 화면(LanguageModal)에서 선택. */}
+        <button className={styles.row} onClick={() => setLangOpen(true)}>
+          <span className={styles.rowIcon}>🌐</span>
+          <span className={styles.rowMain}>
+            <span className={styles.rowTitle}>{t('languageLabel')}</span>
+          </span>
+          <span className={styles.rowValue}>{getLocale(lang).label}</span>
+          <span className={styles.chevron}>›</span>
+        </button>
 
         {/* 프로필 */}
         <button className={styles.row} onClick={goProfile}>
@@ -140,6 +134,8 @@ export default function SettingsModal({ open, onClose }) {
       <SetTimingModal open={timingOpen} onClose={() => setTimingOpen(false)} />
       {/* Pi 후원(팁) 모달 */}
       <PiTipModal open={tipOpen} onClose={() => setTipOpen(false)} />
+      {/* 언어 선택 화면 */}
+      <LanguageModal open={langOpen} onClose={() => setLangOpen(false)} />
     </>
   );
 }
