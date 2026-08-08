@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useState, useCallback, useRef } from 'react';
-import { authenticateWithPi, verifyWithBackend } from '../lib/piAuth';
+import { authenticateWithPi, verifyWithBackend, isPiBrowser } from '../lib/piAuth';
 
 const PiAuthContext = createContext(null);
 
@@ -27,11 +27,19 @@ export function PiAuthProvider({ children }) {
     }
   }, []);
 
-  // 앱 로드 시 1회 자동 인증 시도 (Pi 검증이 감지하도록 항상 실행)
+  // 앱 로드 시 1회 자동 인증 시도 — 반드시 실제 Pi Browser 안에서만.
+  // 일반 브라우저(Chrome 등)에서 Pi.authenticate()를 부르면 응답할 네이티브 Pi Browser가
+  // 없어 "Pi 로그인 중..."에서 영원히 멈추거나, 완료될 수 없는 수락 화면이 일반 브라우저에
+  // 뜨는 채로 남는다. 이 경우 즉시 'unavailable'로 두고, 사용자가 버튼을 누르면
+  // Pi.authenticate 대신 Pi Browser로 이동하도록 안내한다(PiSignInButton 참고).
   const autoRan = useRef(false);
   useEffect(() => {
     if (autoRan.current) return;
     autoRan.current = true;
+    if (!isPiBrowser()) {
+      setStatus('unavailable');
+      return;
+    }
     signInWithPi();
   }, [signInWithPi]);
 
