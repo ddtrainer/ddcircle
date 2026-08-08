@@ -529,6 +529,8 @@ export default {
   "piSigningIn": "Pi 로그인 중…",
   "piGateTitle": "Pi Browser에서 열면 로그인까지 한 번에",
   "piGateBody": "DDCircle은 Pi 계정으로 로그인해요. Pi Browser로 열면 로그인이 자동으로 이어지고, 없어도 지금 브라우저로 계속 볼 수 있어요.",
+  "piBannerBody": "Pi Browser가 있으신가요? 거기서 열면 Pi 로그인과 기록 저장이 됩니다.",
+  "piBannerStay": "그냥 여기서 계속 보기 ›",
   "piGateOpenBtn": "Pi Browser에서 열기",
   "piGateInstallLink": "Pi Browser가 없다면 설치하기 →",
   "piGateContinue": "그냥 계속하기",

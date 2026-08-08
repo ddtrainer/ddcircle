@@ -529,6 +529,8 @@ export default {
   "piSigningIn": "Signing in…",
   "piGateTitle": "Open in Pi Browser to sign in instantly",
   "piGateBody": "DDCircle signs in with your Pi account. Opening in Pi Browser connects sign-in automatically — no Pi Browser? You can keep using this browser too.",
+  "piBannerBody": "Have Pi Browser? Open it there for Pi sign-in and saved progress.",
+  "piBannerStay": "Just keep looking around here ›",
   "piGateOpenBtn": "Open in Pi Browser",
   "piGateInstallLink": "Don't have Pi Browser? Install it →",
   "piGateContinue": "Continue here",

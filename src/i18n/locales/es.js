@@ -529,6 +529,8 @@ export default {
   "piSigningIn": "Iniciando sesión…",
   "piGateTitle": "Abre en Pi Browser para iniciar sesión al instante",
   "piGateBody": "DDCircle inicia sesión con tu cuenta de Pi. Abrir en Pi Browser conecta el inicio de sesión automáticamente — ¿no tienes Pi Browser? También puedes seguir usando este navegador.",
+  "piBannerBody": "¿Tienes Pi Browser? Ábrelo ahí para iniciar sesión con Pi y guardar tu progreso.",
+  "piBannerStay": "Seguir aquí sin más ›",
   "piGateOpenBtn": "Abrir en Pi Browser",
   "piGateInstallLink": "¿No tienes Pi Browser? Instálalo →",
   "piGateContinue": "Continuar aquí",

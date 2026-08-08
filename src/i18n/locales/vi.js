@@ -531,6 +531,8 @@ export default {
   "piSigningIn": "Đang đăng nhập…",
   "piGateTitle": "Mở bằng Pi Browser để đăng nhập ngay",
   "piGateBody": "DDCircle đăng nhập bằng tài khoản Pi của bạn. Mở bằng Pi Browser sẽ tự động đăng nhập luôn — chưa có Pi Browser? Bạn vẫn có thể tiếp tục dùng trình duyệt này.",
+  "piBannerBody": "Bạn có Pi Browser? Mở ở đó để đăng nhập Pi và lưu tiến trình.",
+  "piBannerStay": "Cứ xem tiếp ở đây ›",
   "piGateOpenBtn": "Mở bằng Pi Browser",
   "piGateInstallLink": "Chưa có Pi Browser? Cài đặt ngay →",
   "piGateContinue": "Tiếp tục ở đây",

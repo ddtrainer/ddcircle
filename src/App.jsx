@@ -13,7 +13,7 @@ import IncomingInviteModal from './components/modals/IncomingInviteModal';
 import Onboarding from './components/Onboarding';
 import PWAInstallPrompt from './components/PWAInstallPrompt';
 import InAppBrowserGate from './components/InAppBrowserGate';
-import PiBrowserGate from './components/PiBrowserGate';
+import PiBrowserBanner from './components/PiBrowserBanner';
 import SWUpdatePrompt from './components/SWUpdatePrompt';
 import SetAlertController from './components/SetAlertController';
 import { initAnalytics } from './utils/analytics';
@@ -175,6 +175,8 @@ export default function App() {
           <ToastProvider>
             <BrowserRouter>
               <Header />
+              {/* Pi Browser 밖이면 상단에 안내 배너 — 화면을 막지 않고 계속 보인다 */}
+              <PiBrowserBanner />
               <main>
                 <Suspense fallback={<ViewFallback />}>
                   <Routes>
@@ -202,7 +204,6 @@ export default function App() {
               <ProfileGuard />
               <ConditionalBottomNav />
               <InviteUrlHandler />
-              <PiBrowserGate />
               <Onboarding />
               <InAppBrowserGate />
               <PWAInstallPrompt />

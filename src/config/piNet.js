@@ -21,3 +21,13 @@ export function shareBaseUrl() {
   if (typeof window !== 'undefined') return window.location.origin;
   return 'https://www.ddcircle.app';
 }
+
+// 지금 보고 있는 화면을 Pi Browser로 넘길 때 쓸 주소.
+// 현재 경로·쿼리(초대 코드 등)는 유지하되 도메인만 PiNet으로 바꾼다 — Pi Browser는
+// pinet.com 주소를 자기 앱으로 열도록 등록해두었기 때문에, ddcircle.app 그대로 넘기면
+// 열리지 않거나 일반 브라우저로 되돌아간다.
+export function piNetHref() {
+  if (typeof window === 'undefined') return shareBaseUrl();
+  const { pathname, search, hash } = window.location;
+  return `${shareBaseUrl()}${pathname}${search}${hash}`;
+}

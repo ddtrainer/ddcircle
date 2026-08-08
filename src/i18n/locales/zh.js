@@ -529,6 +529,8 @@ export default {
   "piSigningIn": "登录中…",
   "piGateTitle": "用 Pi Browser 打开即可立即登录",
   "piGateBody": "DDCircle 使用你的 Pi 账户登录。用 Pi Browser 打开会自动完成登录 — 没有 Pi Browser 吗?你也可以继续使用当前浏览器。",
+  "piBannerBody": "有Pi Browser吗？在那里打开即可用Pi登录并保存记录。",
+  "piBannerStay": "就在这里继续看看 ›",
   "piGateOpenBtn": "用 Pi Browser 打开",
   "piGateInstallLink": "没有 Pi Browser?立即安装 →",
   "piGateContinue": "继续使用",
