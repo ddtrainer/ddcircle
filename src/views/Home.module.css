@@ -388,9 +388,11 @@
   display: flex;
   gap: 10px;
   overflow-x: auto;
-  padding: 4px 4px 12px;
+  padding: 4px 16px 12px 4px;
   margin: 0 -4px;
-  scroll-snap-type: x mandatory;
+  /* mandatory였을 때 일부 모바일 브라우저(특히 iOS Safari 계열)에서 마지막 카드
+     직전에 스크롤이 멈춰 더 이상 못 넘어가는 버그가 있었음 — proximity로 완화 */
+  scroll-snap-type: x proximity;
   -webkit-overflow-scrolling: touch;
   scrollbar-width: none;
 }
