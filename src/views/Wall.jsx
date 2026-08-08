@@ -17,10 +17,13 @@ import { fetchUserStatsBulk } from '../lib/stats';
 import FeedCard from '../components/FeedCard';
 import EncourageSheet from '../components/EncourageSheet';
 import InviteModal from '../components/modals/InviteModal';
+import { usePiSignInGate } from '../hooks/usePiSignInGate';
 import styles from './Wall.module.css';
 
 export default function Wall() {
   const { t, lang } = useLang();
+  // 로그인 유도 카드를 헤더의 Pi 로그인 버튼과 똑같이 눌리게 한다(같은 동작 공유)
+  const { triggerSignIn, gate: piSignInGate } = usePiSignInGate();
   const { userPosts, sentEncouragements, sendEncouragement, todayDone, friendsVersion } = useApp();
   // 보낸 응원 localStorage 캐시 — AppContext 체인 타이밍 문제 우회, 직접 읽기/쓰기
   const [sentEncByPost, setSentEncByPost] = useState(() => {
@@ -487,14 +490,17 @@ export default function Wall() {
       {/* 내 서클 탭 */}
       {tab === 'circle' && (!loading || hasLoaded) && (
         <div>
-          {/* 비로그인 — 로그인 유도 카드만 표시 (데모 친구·게시물 제거) */}
+          {/* 비로그인 — 카드 전체를 눌러 바로 로그인(헤더 버튼과 같은 동작) */}
           {!user ? (
-            <div className={styles.inviteCta}>
+            <button
+              type="button"
+              className={`${styles.inviteCta} ${styles.inviteCtaClickable}`}
+              onClick={triggerSignIn}
+            >
               <div className={styles.inviteCtaIcon}>💙</div>
               <div className={styles.inviteCtaTitle}>{t('wallLoginCtaTitle')}</div>
               <div className={styles.inviteCtaSub}>{t('wallLoginCtaSub')}</div>
-              {/* Pi 전용 — 카카오/구글 로그인 버튼 제거 */}
-            </div>
+            </button>
           ) : (
           <>
           {/* 친구 0명일 때 초대 CTA */}
@@ -576,14 +582,17 @@ export default function Wall() {
       {/* 글로벌 서클 탭 */}
       {tab === 'public' && (!loading || hasLoaded) && (
         <div>
-          {/* 비로그인 — 로그인 유도 (데모 글로벌 게시물 제거) */}
+          {/* 비로그인 — 카드 전체를 눌러 바로 로그인(헤더 버튼과 같은 동작) */}
           {!user ? (
-            <div className={styles.inviteCta}>
+            <button
+              type="button"
+              className={`${styles.inviteCta} ${styles.inviteCtaClickable}`}
+              onClick={triggerSignIn}
+            >
               <div className={styles.inviteCtaIcon}>🌍</div>
               <div className={styles.inviteCtaTitle}>{t('wallLoginCtaTitle')}</div>
               <div className={styles.inviteCtaSub}>{t('wallLoginCtaSub')}</div>
-              {/* Pi 전용 — 카카오/구글 로그인 버튼 제거 */}
-            </div>
+            </button>
           ) : (
             <>
               {hasLoaded && remotePublic.length === 0 && (
@@ -600,6 +609,8 @@ export default function Wall() {
       )}
 
       <InviteModal open={inviteOpen} onClose={() => setInviteOpen(false)} />
+      {/* 로그인 카드가 Pi Browser 밖에서 눌렸을 때 뜨는 안내 모달 */}
+      {piSignInGate}
       <EncourageSheet
         open={!!encFriend}
         friendName={encFriend?.name}

@@ -1,8 +1,6 @@
-import { useState } from 'react';
 import { useLang } from '../i18n/LangContext';
 import { usePiAuth } from '../context/PiAuthContext';
-import { isPiBrowser } from '../lib/piAuth';
-import OpenInPiBrowserModal from './modals/OpenInPiBrowserModal';
+import { usePiSignInGate } from '../hooks/usePiSignInGate';
 
 // Pi 로그인 버튼 — Pi Browser 안에서는 항상 클릭 가능(제스처 로그인). 검증 중
 // "Waiting for sign-in"에 사용자가 직접 눌러 실제 Pi 로그인을 완료할 수 있도록
@@ -30,37 +28,25 @@ const base = {
 
 export default function PiSignInButton() {
   const { t } = useLang();
-  const { piUser, status, signInWithPi } = usePiAuth();
-  const [showPiGate, setShowPiGate] = useState(false);
+  const { piUser, status } = usePiAuth();
+  const { triggerSignIn, gate } = usePiSignInGate();
 
   const label =
     status === 'authenticated' && piUser ? `π ${piUser.username}` :
     status === 'loading' ? t('piSigningIn') :
     t('piSignIn');
 
-  const handleClick = () => {
-    if (isPiBrowser()) {
-      signInWithPi();
-    } else {
-      setShowPiGate(true);
-    }
-  };
-
   return (
     <>
       <button
         type="button"
-        onClick={handleClick}
+        onClick={triggerSignIn}
         aria-label="Sign in with Pi"
         style={base}
       >
         {label}
       </button>
-      <OpenInPiBrowserModal
-        open={showPiGate}
-        onClose={() => setShowPiGate(false)}
-        targetUrl={typeof window !== 'undefined' ? window.location.href : ''}
-      />
+      {gate}
     </>
   );
 }

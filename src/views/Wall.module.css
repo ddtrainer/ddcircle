@@ -382,6 +382,17 @@
   border-radius: 18px;
 }
 
+/* 카드가 <button>일 때 — 브라우저 기본 버튼 모양을 지우고 카드처럼 보이게 맞춘다.
+   (div는 블록이라 폭이 꽉 찼지만 button은 안 그러므로 width:100% 필요) */
+.inviteCtaClickable {
+  width: 100%;
+  font-family: inherit;
+  cursor: pointer;
+  transition: transform 0.12s ease, border-color 0.2s ease;
+}
+.inviteCtaClickable:hover { border-color: var(--cool); }
+.inviteCtaClickable:active { transform: scale(0.99); }
+
 .inviteCtaIcon {
   font-size: 44px;
   margin-bottom: 10px;
