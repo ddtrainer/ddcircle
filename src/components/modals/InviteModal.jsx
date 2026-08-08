@@ -117,12 +117,14 @@ export default function InviteModal({ open, onClose }) {
     window.location.href = `sms:?body=${body}`;
   };
 
-  const shareEmail = () => {
-    track(Events.INVITE_SENT, { channel: 'email' });
-    showToast('📧', t('emailOpening'));
-    const subject = encodeURIComponent(t('inviteShareTitle'));
-    const body = encodeURIComponent(`${t('inviteShareText')}\n\n${inviteLink}`);
-    window.location.href = `mailto:?subject=${subject}&body=${body}`;
+  // 페이스북은 내 피드에 게시하는 방식(1:1 전송이 아님). 문구를 파라미터로 미리 채우는
+  // 기능은 페이스북이 폐기해서, 공유 카드에 보이는 제목·설명·이미지는 링크 페이지의
+  // Open Graph 태그에서만 나온다 — 여기서 text를 넘겨봐야 무시된다.
+  const shareFacebook = () => {
+    track(Events.INVITE_SENT, { channel: 'facebook' });
+    showToast('💙', t('facebookOpening'));
+    const u = encodeURIComponent(inviteLink);
+    openExternal(`https://www.facebook.com/sharer/sharer.php?u=${u}`);
   };
 
   return (
@@ -158,28 +160,31 @@ export default function InviteModal({ open, onClose }) {
         </button>
       )}
 
-      {/* 카카오톡 / WhatsApp / Telegram / SMS / 이메일 / QR — navigator.share 미지원
-          환경(Pi Browser 등)에서도 바로 쓸 수 있는 개별 채널 버튼 */}
+      {/* navigator.share 미지원 환경(Pi Browser 등)에서도 바로 쓸 수 있는 개별 채널 버튼.
+          순서는 Pi 사용자 분포 기준 — 상위 국가가 나이지리아·인도·베트남·인도네시아·필리핀이라
+          WhatsApp(나이지리아·인도·인도네시아 기본 메신저) → 페이스북(필리핀·베트남, Pi 커뮤니티가
+          FB 그룹에서 조직됨) → 텔레그램(크립토 네이티브) → 카카오톡(한국) 순.
+          문자·QR은 범용 폴백이라 뒤로. */}
       <div className={styles.secondaryRow}>
-        <button className={styles.secondaryBtn} onClick={shareKakao}>
-          <span className={styles.icon}>💛</span>
-          {t('kakaoShareLabel')}
-        </button>
         <button className={styles.secondaryBtn} onClick={shareWhatsApp}>
           <span className={styles.icon}>💚</span>
           {t('whatsappShareLabel')}
+        </button>
+        <button className={styles.secondaryBtn} onClick={shareFacebook}>
+          <span className={styles.icon}>💙</span>
+          {t('facebookShareLabel')}
         </button>
         <button className={styles.secondaryBtn} onClick={shareTelegram}>
           <span className={styles.icon}>✈️</span>
           {t('telegramShareLabel')}
         </button>
+        <button className={styles.secondaryBtn} onClick={shareKakao}>
+          <span className={styles.icon}>💛</span>
+          {t('kakaoShareLabel')}
+        </button>
         <button className={styles.secondaryBtn} onClick={shareSMS}>
           <span className={styles.icon}>💬</span>
           {t('smsShareLabel')}
-        </button>
-        <button className={styles.secondaryBtn} onClick={shareEmail}>
-          <span className={styles.icon}>📧</span>
-          {t('emailShareLabel')}
         </button>
         <button className={styles.secondaryBtn} onClick={() => setShowQR((v) => !v)}>
           <span className={styles.icon}>📷</span>
