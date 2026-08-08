@@ -225,15 +225,18 @@
    3차 시도(back-out 바운스 커브)는 오버슈트 후 되돌아오는 성질 때문에, 수축(exhale) 1초 구간의
    마지막 0.3~0.4초 동안 오히려 살짝 "커지는" 역방향 움직임이 생겨 — 눈에는 "절반만 줄어들고
    마는" 것처럼 보였다(실측: 0.9초 지점 0.754까지 줄었다가 1.3초 지점엔 0.78로 재상승).
-   최종: hue는 계속 고정(파란 계열 단일 톤)하고, 스케일 진폭도 유지(0.78↔1.28)하되 — 이징은
-   바운스 없이 한 방향으로만 끝까지 진행하는 ease-out 커브로 교체해 "빠르게 튀어나가고
-   부드럽게 안착"하는 역동감은 유지하면서 방향 역전(되돌아오는 움직임)은 없앤다. */
+   4차 시도(방향 역전 없는 ease-out)는 데스크톱에서는 완벽했지만 실기기(Pi Browser)에서 여전히
+   "부드럽지도 역동적이지도 않다"는 피드백 — box-shadow의 blur/spread를 매 프레임 트랜지션시키는
+   건 GPU 합성이 안 되는 무거운 연산(매 프레임 리페인트)이라, 데스크톱에선 안 보이던 프레임
+   드랍/버벅임이 중저가 안드로이드 실기기에서 발생해 "끊기는" 것으로 보였을 가능성이 높다.
+   최종: transform(스케일)만 트랜지션시켜 GPU 합성 경로를 타게 하고, box-shadow는 트랜지션
+   목록에서 빼 순간 전환(스냅)시킨다 — 리페인트 비용을 프레임마다가 아니라 전환 시점 1회로
+   줄여 실기기에서도 스케일 펄스가 끊김 없이 부드럽게 재생되도록 한다. */
 .orbOuter.power.inhale,
 .orbOuter.power.exhale {
   background: radial-gradient(circle, rgba(30,155,216,0.46), rgba(30,155,216,0.14));
-  transition:
-    transform var(--power-dur, 1s) cubic-bezier(0.22, 0.61, 0.36, 1),
-    box-shadow var(--power-dur, 1s) cubic-bezier(0.22, 0.61, 0.36, 1);
+  transition: transform var(--power-dur, 1s) cubic-bezier(0.22, 0.61, 0.36, 1);
+  will-change: transform;
 }
 
 .orbOuter.power.inhale {
