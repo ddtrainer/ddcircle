@@ -1,8 +1,11 @@
 .overlay {
   position: fixed;
   inset: 0;
-  background: rgba(60, 50, 30, 0.4);
-  backdrop-filter: blur(4px);
+  /* backdrop-filter(blur)를 썼었는데, 일부 모바일 WebView(Pi Browser 포함)에서
+     블러 레이어 합성이 깨져 모달 카드가 흰 화면으로 그려지고 터치/스크롤로
+     강제 리페인트해야만 글자가 보이는 버그가 있었다 — 배경을 좀 더 진한
+     단색 반투명으로 바꿔 블러 없이 동일한 무게감을 낸다. */
+  background: rgba(50, 40, 25, 0.55);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -32,6 +35,7 @@
   transition: transform 0.3s;
   max-height: 80vh;
   overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
   box-shadow: var(--shadow-lg);
   position: relative;
 }
