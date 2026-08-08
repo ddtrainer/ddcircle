@@ -72,3 +72,40 @@
   text-align: center;
   box-sizing: border-box;
 }
+
+/* 자동 점프가 안 먹혔을 때(일부 인앱 브라우저) 보여주는 수동 대안 */
+.fallback {
+  text-align: left;
+  background: var(--bg-soft);
+  border-radius: 12px;
+  padding: 14px 16px;
+  margin-bottom: 8px;
+}
+
+.fallbackTitle {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text);
+  margin: 0 0 8px;
+}
+
+.fallbackSteps {
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--text-soft);
+  margin: 0 0 10px;
+  padding-left: 18px;
+}
+
+.fallbackCopyBtn {
+  width: 100%;
+  background: var(--surface);
+  border: 1px solid var(--border-strong);
+  border-radius: 10px;
+  padding: 10px;
+  color: var(--text);
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+}

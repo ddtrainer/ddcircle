@@ -10,6 +10,7 @@ import { dashModeMultiplier } from '../data/dashModes';
 import { breathModeMultiplier } from '../data/breathPatterns';
 import { DEFAULT_CUSTOM_BREATH, DEFAULT_NATURAL_BREATH, DEFAULT_WIM_HOF_ROUNDS, DEFAULT_WIM_HOF_CYCLES, DEFAULT_WIM_HOF_RETENTION, DEFAULT_WIM_HOF_RECOVERY, DEFAULT_WIM_HOF_FINISH } from '../data/breathPatterns';
 import { evaluateChallenges } from '../data/challenges';
+import { shareBaseUrl } from '../config/piNet';
 
 const AppContext = createContext(null);
 
@@ -400,7 +401,9 @@ export function AppProvider({ children }) {
         consumeLastChallengeBonus,
         todaySessions,
         inviteCode,
-        inviteLink: `${typeof window !== 'undefined' ? window.location.origin : 'https://ddcircle.vercel.app'}/?invite=${inviteCode}`,
+        // PiNet 주소 기준 — 받는 사람 기기에서 OS가 Pi Browser로 바로 열어주려면
+        // 반드시 *.pinet.com이어야 한다. (config/piNet.js 참고)
+        inviteLink: `${shareBaseUrl()}/?invite=${inviteCode}`,
         pendingInvite,
         setPendingInvite,
         friendsVersion,
