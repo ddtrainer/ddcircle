@@ -461,7 +461,7 @@ export default {
   "linkCopiedToast": "Tautan undangan disalin",
   "comingSoonBadge": "Segera hadir",
   "kakaoOpening": "Membuka KakaoTalk...",
-  "facebookOpening": "Membuka Facebook...",
+  "facebookPasteHint": "Pesan disalin — tempel ke postinganmu",
   "whatsappOpening": "Membuka WhatsApp...",
   "telegramOpening": "Membuka Telegram...",
   "smsOpening": "Membuka Pesan...",

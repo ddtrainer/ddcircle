@@ -461,7 +461,7 @@ export default {
   "linkCopiedToast": "Enlace de invitación copiado",
   "comingSoonBadge": "Próximamente",
   "kakaoOpening": "Abriendo KakaoTalk...",
-  "facebookOpening": "Abriendo Facebook...",
+  "facebookPasteHint": "Mensaje copiado — pégalo en tu publicación",
   "whatsappOpening": "Abriendo WhatsApp...",
   "telegramOpening": "Abriendo Telegram...",
   "smsOpening": "Abriendo Mensajes...",

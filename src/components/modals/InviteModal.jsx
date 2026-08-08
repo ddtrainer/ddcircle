@@ -23,21 +23,26 @@ export default function InviteModal({ open, onClose }) {
   const [copied, setCopied] = useState(false);
   const [showQR, setShowQR] = useState(false);
 
+  // 클립보드 쓰기. clipboard API는 프로미스지만 권한 판정은 호출 시점(사용자 제스처)에
+  // 이뤄지므로, 호출부에서 await 없이 시작해도 된다 — 뒤이어 window.open을 같은 제스처
+  // 안에서 동기로 실행해야 팝업 차단을 피할 수 있기 때문에 이 구분이 중요하다.
+  const writeClipboard = (text) => {
+    if (navigator.clipboard?.writeText) return navigator.clipboard.writeText(text);
+    // 폴백: textarea (동기)
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    ta.style.position = 'fixed';
+    ta.style.opacity = '0';
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    document.body.removeChild(ta);
+    return Promise.resolve();
+  };
+
   const copyLink = async () => {
     try {
-      if (navigator.clipboard?.writeText) {
-        await navigator.clipboard.writeText(inviteLink);
-      } else {
-        // 폴백: textarea
-        const ta = document.createElement('textarea');
-        ta.value = inviteLink;
-        ta.style.position = 'fixed';
-        ta.style.opacity = '0';
-        document.body.appendChild(ta);
-        ta.select();
-        document.execCommand('copy');
-        document.body.removeChild(ta);
-      }
+      await writeClipboard(inviteLink);
       setCopied(true);
       showToast('✓', t('linkCopiedToast'));
       setTimeout(() => setCopied(false), 2000);
@@ -120,9 +125,16 @@ export default function InviteModal({ open, onClose }) {
   // 페이스북은 내 피드에 게시하는 방식(1:1 전송이 아님). 문구를 파라미터로 미리 채우는
   // 기능은 페이스북이 폐기해서, 공유 카드에 보이는 제목·설명·이미지는 링크 페이지의
   // Open Graph 태그에서만 나온다 — 여기서 text를 넘겨봐야 무시된다.
+  //
+  // 게다가 모바일 웹 작성창은 링크 미리보기만 붙어 있고 본문이 비면 "게시물에 내용을
+  // 추가한 후 다시 시도해주세요"라며 게시를 막는다. 우리가 본문을 채워줄 방법이 없으니,
+  // 인사말을 클립보드에 담아두고 붙여넣기만 하면 되게 안내한다. (링크는 미리보기로 이미
+  // 붙으므로 링크는 빼고 인사말만 복사 — 안 그러면 주소가 두 번 나온다)
   const shareFacebook = () => {
     track(Events.INVITE_SENT, { channel: 'facebook' });
-    showToast('💙', t('facebookOpening'));
+    // await하지 않는다 — 뒤의 window.open이 같은 사용자 제스처 안에서 실행돼야 안 막힌다.
+    writeClipboard(t('inviteShareText')).catch(() => { /* 복사 실패해도 공유는 계속 */ });
+    showToast('💙', t('facebookPasteHint'));
     const u = encodeURIComponent(inviteLink);
     openExternal(`https://www.facebook.com/sharer/sharer.php?u=${u}`);
   };

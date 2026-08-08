@@ -461,7 +461,7 @@ export default {
   "linkCopiedToast": "초대 링크가 복사되었어요",
   "comingSoonBadge": "준비 중",
   "kakaoOpening": "카카오톡을 여는 중...",
-  "facebookOpening": "페이스북을 여는 중...",
+  "facebookPasteHint": "인사말을 복사했어요 — 본문에 붙여넣기 하세요",
   "whatsappOpening": "WhatsApp을 여는 중...",
   "telegramOpening": "텔레그램을 여는 중...",
   "smsOpening": "문자 앱을 여는 중...",

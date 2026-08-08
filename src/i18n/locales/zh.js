@@ -461,7 +461,7 @@ export default {
   "linkCopiedToast": "邀请链接已复制",
   "comingSoonBadge": "即将推出",
   "kakaoOpening": "正在打开KakaoTalk...",
-  "facebookOpening": "正在打开Facebook...",
+  "facebookPasteHint": "文案已复制 — 请粘贴到帖子正文中",
   "whatsappOpening": "正在打开WhatsApp...",
   "telegramOpening": "正在打开Telegram...",
   "smsOpening": "正在打开短信...",

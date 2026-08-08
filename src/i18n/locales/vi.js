@@ -463,7 +463,7 @@ export default {
   "linkCopiedToast": "Đã sao chép liên kết mời",
   "comingSoonBadge": "Sắp có",
   "kakaoOpening": "Đang mở KakaoTalk...",
-  "facebookOpening": "Đang mở Facebook...",
+  "facebookPasteHint": "Đã sao chép lời nhắn — hãy dán vào bài đăng",
   "whatsappOpening": "Đang mở WhatsApp...",
   "telegramOpening": "Đang mở Telegram...",
   "smsOpening": "Đang mở Tin nhắn...",
