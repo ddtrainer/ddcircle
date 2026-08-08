@@ -66,7 +66,7 @@ export default function DdLevelCard() {
       <div className={styles.track} style={{ '--tc': 'var(--cool)', '--tc-soft': 'var(--cool-soft)' }}>
         <div className={styles.trackHead}>
           <div className={styles.trackTitle}>
-            <span className={styles.trackLabel}>{lang === 'ko' ? '숨-Deep' : 'Soom-Deep'}</span>
+            <span className={styles.trackLabel}>Deep</span>
           </div>
           <span className={styles.trackNow}>
             {lang === 'ko' ? '호흡 선택제 · EP 배율' : 'Pick a breath · EP mult'}
@@ -89,7 +89,7 @@ export default function DdLevelCard() {
       <div className={styles.track} style={{ '--tc': 'var(--warm)', '--tc-soft': 'var(--warm-soft)' }}>
         <div className={styles.trackHead}>
           <div className={styles.trackTitle}>
-            <span className={styles.trackLabel}>{lang === 'ko' ? '핏-Dash' : 'Fit-Dash'}</span>
+            <span className={styles.trackLabel}>Dash</span>
           </div>
           <span className={styles.trackNow}>
             {lang === 'ko' ? '종목 선택제 · EP 배율' : 'Pick a mode · EP mult'}
