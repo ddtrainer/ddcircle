@@ -62,11 +62,27 @@ export default function InviteModal({ open, onClose }) {
 
   // navigator.share가 없는 환경(Pi Browser 등 인앱 브라우저)을 위한 개별 채널 버튼.
   // wa.me / t.me는 앱 미설치 시 자동으로 웹 버전으로 열리므로 국가별 분기 불필요.
+  // 주의: Pi Browser는 앱을 cross-origin iframe으로 감싸는데, location.href로 이동시키면
+  // 최상위 창이 아니라 그 iframe 자체를 이동시키려다 wa.me/t.me의 프레임 차단 헤더에
+  // 걸려 net::ERR_BLOCKED_BY_RESPONSE가 난다 — window.open(_blank)로 새 창/탭에서 열어야 한다.
+  // 그마저 팝업이 막힌 샌드박스라면(window.open이 null 반환) 최상위 프레임 자체를
+  // 이동시키는 것으로 한 번 더 시도한다 — 미니앱을 벗어나긴 하지만 공유는 완료된다.
+  const openExternal = (url) => {
+    const win = window.open(url, '_blank');
+    if (!win) {
+      try {
+        window.top.location.href = url;
+      } catch {
+        window.location.href = url;
+      }
+    }
+  };
+
   const shareWhatsApp = () => {
     track(Events.INVITE_SENT, { channel: 'whatsapp' });
     showToast('💚', t('whatsappOpening'));
     const text = encodeURIComponent(`${t('inviteShareText')} ${inviteLink}`);
-    window.location.href = `https://wa.me/?text=${text}`;
+    openExternal(`https://wa.me/?text=${text}`);
   };
 
   const shareTelegram = () => {
@@ -74,7 +90,7 @@ export default function InviteModal({ open, onClose }) {
     showToast('✈️', t('telegramOpening'));
     const url = encodeURIComponent(inviteLink);
     const text = encodeURIComponent(t('inviteShareText'));
-    window.location.href = `https://t.me/share/url?url=${url}&text=${text}`;
+    openExternal(`https://t.me/share/url?url=${url}&text=${text}`);
   };
 
   const shareSMS = () => {
