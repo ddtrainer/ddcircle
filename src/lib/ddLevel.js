@@ -16,11 +16,13 @@ const UNLOCK = {
 // Deep 레벨 — 모두 2분 고정. breathId는 기존 breathPatterns.js 프리셋과 매핑.
 // 단계명은 훈련 티어(입문·기본·숙련·전문). emoji는 식물 대신 원형 단계 뱃지(①②③④).
 //   ※ 식물 생애주기 은유는 '생명나무 레벨'(treeLevels.js) 전용으로 역할 분리함.
+// name/method는 UI 문자열이라 다국어 지원을 위해 t()로 조회할 i18n 키를 담는다
+// (nameKey는 15개 언어 공통 티어명, methodKey는 breathPatterns.js와 동일한 호흡 이름 키를 재사용).
 export const DEEP_LEVELS = [
-  { level: 1, emoji: '①', name: '입문',  method: '자연호흡',         breathId: '48',   multiplier: 1.0, unlock: UNLOCK[1] },
-  { level: 2, emoji: '②', name: '기본',  method: '신경 안정 호흡',     breathId: '478',  multiplier: 1.5, unlock: UNLOCK[2] },
-  { level: 3, emoji: '③', name: '숙련',  method: '멘탈 강화 호흡',     breathId: '4444', multiplier: 2.0, unlock: UNLOCK[3] },
-  { level: 4, emoji: '④', name: '전문',  method: '면역력 강화 호흡',    breathId: 'custom', multiplier: 3.0, unlock: UNLOCK[4], safetyRequired: true },
+  { level: 1, emoji: '①', nameKey: 'levelTierIntro',    methodKey: 'breath48',     breathId: '48',   multiplier: 1.0, unlock: UNLOCK[1] },
+  { level: 2, emoji: '②', nameKey: 'levelTierBasic',    methodKey: 'breath478',    breathId: '478',  multiplier: 1.5, unlock: UNLOCK[2] },
+  { level: 3, emoji: '③', nameKey: 'levelTierAdvanced', methodKey: 'breath4444',   breathId: '4444', multiplier: 2.0, unlock: UNLOCK[3] },
+  { level: 4, emoji: '④', nameKey: 'levelTierExpert',   methodKey: 'breathCustom', breathId: 'custom', multiplier: 3.0, unlock: UNLOCK[4], safetyRequired: true },
 ];
 
 // Dash 레벨 — 모두 1분 고정. 개발스펙 v2.0 전체 구성표 기준.
@@ -29,13 +31,13 @@ export const DEEP_LEVELS = [
 // Dash는 3종(걷기·슬로우런·전력질주) 자동측정으로 통일. 레벨은 EP 배율(성장) 지표로만 유지.
 // options/exerciseKeys는 하위호환용 잔재(현재 미사용) — 실제 선택은 data/dashModes.js.
 export const DASH_LEVELS = [
-  { level: 1, emoji: '①', name: '입문',  method: '걷기·슬로우런·전력질주',
+  { level: 1, emoji: '①', nameKey: 'levelTierIntro',    methodKey: 'dashLevelMethodAll',
     options: [], exerciseKeys: [], multiplier: 1.0, unlock: UNLOCK[1] },
-  { level: 2, emoji: '②', name: '기본',  method: '걷기·슬로우런·전력질주',
+  { level: 2, emoji: '②', nameKey: 'levelTierBasic',    methodKey: 'dashLevelMethodAll',
     options: [], exerciseKeys: [], multiplier: 1.5, unlock: UNLOCK[2] },
-  { level: 3, emoji: '③', name: '숙련',  method: '걷기·슬로우런·전력질주',
+  { level: 3, emoji: '③', nameKey: 'levelTierAdvanced', methodKey: 'dashLevelMethodAll',
     options: [], exerciseKeys: [], multiplier: 2.0, unlock: UNLOCK[3] },
-  { level: 4, emoji: '④', name: '전문',  method: '걷기·슬로우런·전력질주',
+  { level: 4, emoji: '④', nameKey: 'levelTierExpert',   methodKey: 'dashLevelMethodAll',
     options: [], exerciseKeys: [], multiplier: 3.0, unlock: UNLOCK[4], safetyRequired: true },
 ];
 

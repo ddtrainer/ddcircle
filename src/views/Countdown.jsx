@@ -108,14 +108,14 @@ export default function Countdown() {
       {/* Deep 준비 단계에서만 — 선택한 호흡 배지 + 가이드 진입 (실행 화면은 호흡에만 집중) */}
       {!isDash && (
         <button className={styles.levelChip} onClick={() => setGuideOpen(true)}>
-          {deepGuideMode.emoji} {deepGuideMode.label} · ×{deepGuideMode.multiplier} EP · 가이드
+          {deepGuideMode.emoji} {deepGuideMode.label} · ×{deepGuideMode.multiplier} EP · {t('guideBtn')}
         </button>
       )}
 
       {/* Dash 준비 단계에서만 — 레벨 배지 + 가이드 진입 (실행 화면은 운동에만 집중) */}
       {isDash && (
         <button className={styles.levelChip} onClick={() => setGuideOpen(true)}>
-          {dashDef.emoji} Lv.{dashLevel} {dashDef.name} · ×{dashDef.multiplier} EP · 가이드
+          {dashDef.emoji} Lv.{dashLevel} {t(dashDef.nameKey)} · ×{dashDef.multiplier} EP · {t('guideBtn')}
         </button>
       )}
 
@@ -123,7 +123,7 @@ export default function Countdown() {
       {isDash && dashOptions.length > 0 && (
         <div className={styles.exSelect}>
           <div className={styles.exSelectLabel}>
-            {dashDef.emoji} {dashDef.name} · {t('preferLabel')}
+            {dashDef.emoji} {t(dashDef.nameKey)} · {t('preferLabel')}
           </div>
           <div className={styles.exOptions}>
             {dashOptions.map((opt, i) => {

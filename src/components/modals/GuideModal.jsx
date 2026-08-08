@@ -24,7 +24,7 @@ export default function GuideModal({ open, onClose, track, level, mode = null })
     <Modal open={open} onClose={onClose}>
       <div className={styles.title}>{mode ? `${mode.emoji} ${mode.label}` : guide.title}</div>
       <div className={styles.meta}>
-        {mode ? `EP ×${mode.multiplier}` : `Lv.${level} · ${def.method} · ×${def.multiplier} EP`}
+        {mode ? `EP ×${mode.multiplier}` : `Lv.${level} · ${t(def.methodKey)} · ×${def.multiplier} EP`}
       </div>
 
       {guide.intro && <p className={styles.intro}>{guide.intro}</p>}

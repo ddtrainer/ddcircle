@@ -1,3 +1,4 @@
+import { useLang } from '../../i18n/LangContext';
 import { getLevelDef } from '../../lib/ddLevel';
 import Modal from './Modal';
 import styles from './LevelUpModal.module.css';
@@ -7,6 +8,7 @@ import styles from './LevelUpModal.module.css';
 const TRACK_LABEL = { deep: 'Deep · 호흡', dash: 'Dash · 운동' };
 
 export default function LevelUpModal({ open, onClose, track, level }) {
+  const { t } = useLang();
   const def = getLevelDef(track, level);
 
   return (
@@ -15,9 +17,9 @@ export default function LevelUpModal({ open, onClose, track, level }) {
         <div className={styles.badge}>{def.emoji}</div>
         <div className={styles.tag}>LEVEL UP · {TRACK_LABEL[track]}</div>
         <div className={styles.title}>
-          Lv.{level} {def.name}
+          Lv.{level} {t(def.nameKey)}
         </div>
-        <div className={styles.method}>{def.method}</div>
+        <div className={styles.method}>{t(def.methodKey)}</div>
         <div className={styles.multiplier}>EP 배율 ×{def.multiplier}</div>
 
         {def.safetyRequired && (
