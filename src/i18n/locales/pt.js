@@ -555,7 +555,7 @@ export default {
   "tipRowTitle": "Apoie com Pi",
   "tipRowSub": "Envie qualquer quantia em Pi",
   "digitalBookRowTitle": "Livro Digital",
-  "digitalBookRowSub": "Livro digital da DDCircle em breve",
+  "digitalBookRowSub": "\"DDCircle: a vida se torna capital\" — em breve",
   "digitalBookComingSoonToast": "Estamos preparando um e-book sobre corpo saudável e mente tranquila. Até breve!",
   "signOut": "Sair",
   "goHome": "Ir para o início",

@@ -556,7 +556,7 @@ export default {
   "tipRowTitle": "Pi سے سپورٹ کریں",
   "tipRowSub": "کوئی بھی رقم Pi میں بھیجیں",
   "digitalBookRowTitle": "ڈیجیٹل کتاب",
-  "digitalBookRowSub": "DDCircle کی ڈیجیٹل کتاب جلد آ رہی ہے",
+  "digitalBookRowSub": "'DDCircle: زندگی کی سرگرمی سرمایہ بن جاتی ہے' تیار کی جا رہی ہے",
   "digitalBookComingSoonToast": "ہم صحت مند جسم اور پرسکون ذہن کے بارے میں ایک ڈیجیٹل کتاب تیار کر رہے ہیں۔ جلد ملتے ہیں!",
   "signOut": "سائن آؤٹ کریں",
   "goHome": "گھر جائیں",

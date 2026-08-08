@@ -555,7 +555,7 @@ export default {
   "tipRowTitle": "পাই দিয়ে সমর্থন করুন",
   "tipRowSub": "পাইতে যেকোনো পরিমাণ পাঠান",
   "digitalBookRowTitle": "ডিজিটাল বই",
-  "digitalBookRowSub": "DDCircle-এর ডিজিটাল বই শীঘ্রই আসছে",
+  "digitalBookRowSub": "'DDCircle: জীবন কার্যক্রম পুঁজিতে পরিণত হয়' প্রস্তুত করা হচ্ছে",
   "digitalBookComingSoonToast": "আমরা সুস্থ শরীর এবং শান্ত মনের জন্য একটি ডিজিটাল বই প্রস্তুত করছি। শীঘ্রই দেখা হবে!",
   "signOut": "সাইন আউট",
   "goHome": "বাড়ি যান",

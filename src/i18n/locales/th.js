@@ -556,7 +556,7 @@ export default {
   "tipRowTitle": "รองรับด้วย Pi",
   "tipRowSub": "ส่งจำนวน Pi ใด ๆ",
   "digitalBookRowTitle": "อีบุ๊ก",
-  "digitalBookRowSub": "อีบุ๊กจาก DDCircle เร็วๆ นี้",
+  "digitalBookRowSub": "'DDCircle: กิจกรรมชีวิตกลายเป็นทุน' กำลังจัดเตรียม",
   "digitalBookComingSoonToast": "เรากำลังเตรียมอีบุ๊กเกี่ยวกับร่างกายที่แข็งแรงและจิตใจที่สงบ แล้วพบกันเร็วๆ นี้!",
   "signOut": "ออกจากระบบ",
   "goHome": "ไปที่หน้าแรก",

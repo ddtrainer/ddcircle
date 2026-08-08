@@ -555,7 +555,7 @@ export default {
   "tipRowTitle": "Pi ile Destek Ver",
   "tipRowSub": "Herhangi bir miktarı Pi'de gönder",
   "digitalBookRowTitle": "Dijital Kitap",
-  "digitalBookRowSub": "DDCircle dijital kitabı yakında geliyor",
+  "digitalBookRowSub": "'DDCircle: Yaşam Etkinliği Sermayeye Dönüşür' hazırlanıyor",
   "digitalBookComingSoonToast": "Sağlıklı beden ve sakin zihin üzerine bir dijital kitap hazırlıyoruz. Yakında görüşürüz!",
   "signOut": "Çıkış Yap",
   "goHome": "Anasayfaya Git",

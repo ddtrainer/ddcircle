@@ -560,7 +560,7 @@ export default {
   "tipRowTitle": "Ủng hộ bằng Pi",
   "tipRowSub": "Gửi số Pi tùy ý",
   "digitalBookRowTitle": "Sách điện tử",
-  "digitalBookRowSub": "Sách điện tử DDCircle sắp ra mắt",
+  "digitalBookRowSub": "'DDCircle: Hoạt động sống trở thành vốn' đang được chuẩn bị",
   "digitalBookComingSoonToast": "Chúng tôi đang chuẩn bị một cuốn sách điện tử về cơ thể khỏe mạnh và tâm hồn bình an. Hẹn gặp lại sớm!",
   "signOut": "Đăng xuất",
   "goHome": "Về trang chủ",

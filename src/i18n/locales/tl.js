@@ -556,7 +556,7 @@ export default {
   "tipRowTitle": "Suportahan gamit ang Pi",
   "tipRowSub": "Magpadala ng kahit anong halaga sa Pi",
   "digitalBookRowTitle": "Digital Book",
-  "digitalBookRowSub": "Paparating na ang digital book ng DDCircle",
+  "digitalBookRowSub": "'DDCircle: Ang Aktibidad ng Buhay ay Nagiging Kapital' inihahanda",
   "digitalBookComingSoonToast": "Naghahanda kami ng digital book tungkol sa malusog na katawan at payapang isip. Magkita tayo sa lalong madaling panahon!",
   "signOut": "Mag-sign out",
   "goHome": "Umuwi",

@@ -556,7 +556,7 @@ export default {
   "tipRowTitle": "الدعم باستخدام Pi",
   "tipRowSub": "أرسلي أي مبلغ بـ Pi",
   "digitalBookRowTitle": "كتاب رقمي",
-  "digitalBookRowSub": "كتاب DDCircle الرقمي قريباً",
+  "digitalBookRowSub": "'DDCircle: الحياة تتحول إلى رأس مال' قيد الإعداد",
   "digitalBookComingSoonToast": "نحن نُعِدّ كتاباً رقمياً عن الجسد الصحي والعقل الهادئ. نراكم قريباً!",
   "signOut": "تسجيل الخروج",
   "goHome": "اذهبي للرئيسية",

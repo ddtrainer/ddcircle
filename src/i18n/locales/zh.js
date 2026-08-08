@@ -558,7 +558,7 @@ export default {
   "tipRowTitle": "用Pi支持我们",
   "tipRowSub": "发送任意金额的Pi",
   "digitalBookRowTitle": "电子书",
-  "digitalBookRowSub": "DDCircle 电子书即将推出",
+  "digitalBookRowSub": "《DDCircle：生命活动即资本》准备中",
   "digitalBookComingSoonToast": "我们正在准备一本关于健康身体与平静内心的电子书，敬请期待！",
   "signOut": "退出登录",
   "goHome": "回到首页",

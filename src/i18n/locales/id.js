@@ -558,7 +558,7 @@ export default {
   "tipRowTitle": "Dukung dengan Pi",
   "tipRowSub": "Kirim Pi dengan jumlah berapa pun",
   "digitalBookRowTitle": "Buku Digital",
-  "digitalBookRowSub": "Buku digital DDCircle akan segera hadir",
+  "digitalBookRowSub": "'DDCircle: Aktivitas Hidup Menjadi Modal' sedang disiapkan",
   "digitalBookComingSoonToast": "Kami sedang menyiapkan buku digital tentang tubuh yang sehat dan pikiran yang tenang. Sampai jumpa segera!",
   "signOut": "Keluar",
   "goHome": "Ke beranda",
