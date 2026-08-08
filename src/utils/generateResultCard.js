@@ -1,10 +1,15 @@
 // 인스타 스토리(9:16, 1080x1920) 결과 카드 생성 — 셀카 없이 시적/조용한 카드
 // 반환: Blob (PNG)
 import QRCode from 'qrcode';
+import { shareBaseUrl } from '../config/piNet';
 
 const W = 1080;
 const H = 1920;
-const SHARE_URL = 'https://www.ddcircle.app?ref=share-card';
+
+// QR·공유 링크는 PiNet 주소 기준 — 스캔하거나 누른 사람의 기기에서 OS가 Pi Browser로
+// 바로 열어주기 때문에 Pi 로그인까지 그대로 이어진다. (config/piNet.js 참고)
+// 카드 하단에 글자로 찍히는 'ddcircle.app'은 사람이 읽는 브랜드 표기라 그대로 둔다.
+const shareUrl = () => `${shareBaseUrl()}/?ref=share-card`;
 
 // 무드별 시적 카피 (ko/en)
 const MOOD_COPY = {
@@ -132,27 +137,31 @@ export async function generateResultCard({
   ctx.fillStyle = glow2;
   ctx.fillRect(0, 0, W, H);
 
-  // 상단 — 좌측 DDCircle 로고 이미지 (닉네임과 비슷한 시각적 무게), 우측 날짜
+  // 상단 — 좌측 DDCircle 심볼 로고, 우측 날짜
+  const LOGO_X = 90;
+  const LOGO_Y = 80;
+  const LOGO_H = 185;
+  const headerMidY = LOGO_Y + LOGO_H / 2; // 로고 세로 중심 — 날짜를 여기에 맞춘다
   try {
-    // 새 워드마크 PNG (1672×941). 카드 배경이 #faf6ee로 PNG 배경과 거의 동일해 자연스럽게 묻힘.
-    const logoImg = await loadImage('/dd-logo.png');
-    const logoH = 130;
-    const logoW = Math.round((logoH * (logoImg.naturalWidth || 1672)) / (logoImg.naturalHeight || 941));
-    ctx.drawImage(logoImg, 90, 90, logoW, logoH);
+    // 배경이 투명한 원형 심볼 로고. 이전 워드마크 PNG는 배경이 불투명 단색(#faf6ee)이라,
+    // 이 카드처럼 배경이 그라데이션이면 로고 자리에만 색이 어긋나 흰 네모가 그대로 드러났다.
+    const logoImg = await loadImage('/dd-logo-circle.png');
+    const logoW = Math.round((LOGO_H * (logoImg.naturalWidth || 580)) / (logoImg.naturalHeight || 565));
+    ctx.drawImage(logoImg, LOGO_X, LOGO_Y, logoW, LOGO_H);
   } catch (e) {
     // 로고 로드 실패 시 텍스트 폴백
     ctx.textAlign = 'left';
+    ctx.textBaseline = 'middle';
     ctx.fillStyle = '#5a4d38';
     ctx.font = 'bold 56px "Inter", sans-serif';
-    ctx.fillText('DDCIRCLE', 100, 170);
+    ctx.fillText('DDCIRCLE', LOGO_X + 10, headerMidY);
   }
 
   ctx.textAlign = 'right';
   ctx.textBaseline = 'middle';
   ctx.font = '500 34px "Inter", sans-serif';
   ctx.fillStyle = '#9a8a70';
-  // 로고 세로 중심에 날짜를 맞춤 (logoY 90 + logoH/2 = 155)
-  ctx.fillText(formatDate(lang), W - 100, 155);
+  ctx.fillText(formatDate(lang), W - 100, headerMidY);
   ctx.textBaseline = 'alphabetic'; // 이후 텍스트 baseline 원복
 
   // 큰 아바타 (중앙 상단)
@@ -216,7 +225,7 @@ export async function generateResultCard({
     const qrSize = 220;
     const qrX = W - qrSize - 70;
     const qrY = 1640;
-    const qrDataUrl = await QRCode.toDataURL(SHARE_URL, {
+    const qrDataUrl = await QRCode.toDataURL(shareUrl(), {
       width: qrSize,
       margin: 1,
       color: { dark: '#2a241a', light: '#ffffff' },
@@ -271,7 +280,7 @@ function drawRoundedRect(ctx, x, y, w, h, r, fillStyle) {
 // → 카카오톡처럼 받는 앱이 URL 본문을 무시해도, 사용자가 채팅창에 한 번에 붙여넣어 친구가 진입 가능
 export async function shareOrDownload(blob, filename = 'ddcircle-today.png', opts = {}) {
   const {
-    url = 'https://www.ddcircle.app?ref=share-card',
+    url = shareUrl(),
     title = 'DDCircle',
     text = `매일 3분, 함께 호흡하는 작은 의식\n👉 ${url}`,
   } = opts;

@@ -10,6 +10,7 @@ import { MOODS, SHARE_TARGETS } from '../data/moods';
 import { getTodayPrompt } from '../data/dailyPrompts';
 import { track, Events } from '../utils/analytics';
 import { generateResultCard, shareOrDownload } from '../utils/generateResultCard';
+import { shareBaseUrl } from '../config/piNet';
 import { createPost, fetchMyPosts } from '../lib/posts';
 import { detectAnyMilestone, markMilestoneSeen } from '../lib/milestones';
 import { chapterKey as toChapterKey } from '../lib/chapters';
@@ -191,11 +192,13 @@ export default function Complete() {
         lang,
         userMessage: empathyMsg.trim(),  // textarea에 쓴 글 — 카드에 같이 표시
       });
+      // 남에게 건네지는 링크는 PiNet 주소여야 상대 기기에서 Pi Browser로 열린다.
+      const cardUrl = `${shareBaseUrl()}/?ref=share-card`;
       const shareText = lang === 'en'
-        ? 'A three-minute daily breath together · DDCircle\nhttps://www.ddcircle.app'
-        : '매일 3분, 함께 호흡하는 작은 의식 · DDCircle\nhttps://www.ddcircle.app';
+        ? `A three-minute daily breath together · DDCircle\n${cardUrl}`
+        : `매일 3분, 함께 호흡하는 작은 의식 · DDCircle\n${cardUrl}`;
       const result = await shareOrDownload(blob, 'ddcircle-today.png', {
-        url: 'https://www.ddcircle.app?ref=share-card',
+        url: cardUrl,
         title: 'DDCircle',
         text: shareText,
       });
