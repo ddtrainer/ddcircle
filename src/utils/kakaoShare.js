@@ -5,6 +5,10 @@
 // JavaScript 키는 도메인 제한이 걸려 있어 브라우저 노출이 안전하다.
 // (Kakao Developers > 내 애플리케이션 > 플랫폼 > Web 사이트 도메인에 등록된 곳에서만 동작)
 const KAKAO_SDK_URL = 'https://t1.kakaocdn.net/kakao_js_sdk/2.7.4/kakao.min.js';
+
+// 카카오 피드 카드에 쓰는 대표 이미지. 반드시 절대 URL이어야 하고(카카오 서버가 직접
+// 긁어간다), index.html의 og:image와 같은 카드를 쓴다.
+const SHARE_CARD_IMAGE = 'https://www.ddcircle.app/og-card.png';
 const KAKAO_JS_KEY = import.meta.env.VITE_KAKAO_JS_KEY || 'ded4dfa9de45a1d3742e0f4fca4ce545';
 
 let loadPromise = null;
@@ -52,7 +56,7 @@ export async function shareToKakao({ title, description, link, imageUrl }) {
       content: {
         title,
         description,
-        imageUrl: imageUrl || '',
+        imageUrl: imageUrl || SHARE_CARD_IMAGE,
         link: { mobileWebUrl: link, webUrl: link },
       },
       buttons: [
