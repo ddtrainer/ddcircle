@@ -86,7 +86,7 @@ export function shareTextFor(milestone, t, lang = 'ko') {
     return `${label}\nhttps://ddcircle.app`;
   }
   if (milestone.type === 'stage') {
-    const name = lang === 'en' ? milestone.stage.labelEn : milestone.stage.label;
+    const name = t(milestone.stage.labelKey);
     const label = lang === 'en'
       ? `${milestone.stage.icon} Cover evolved to ${name} (${milestone.totalDays} days) — DDCircle`
       : `${milestone.stage.icon} 책 표지가 ${name}로 진화했어요 (${milestone.totalDays}일) — DDCircle`;

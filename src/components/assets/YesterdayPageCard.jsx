@@ -4,6 +4,7 @@ import { useAuth } from '../../context/AuthContext';
 import { useLang } from '../../i18n/LangContext';
 import { fetchMyPosts } from '../../lib/posts';
 import { chapterKey, getCoverStage, totalActiveDays } from '../../lib/chapters';
+import { toIntlLocale } from '../../utils/intlLocale';
 import { MOODS } from '../../data/moods';
 import styles from './YesterdayPageCard.module.css';
 
@@ -63,7 +64,7 @@ export default function YesterdayPageCard() {
           <span className={styles.icon}>📖</span> {t(labelKey)}
         </div>
         <div className={styles.dateLine}>
-          {date.toLocaleDateString(lang === 'en' ? 'en-US' : 'ko-KR', {
+          {date.toLocaleDateString(toIntlLocale(lang), {
             month: 'short', day: 'numeric', weekday: 'short',
           })}
           {moodObj && <span className={styles.moodTag}> · {t(moodObj.key)}</span>}

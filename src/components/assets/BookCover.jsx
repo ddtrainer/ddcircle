@@ -14,11 +14,11 @@ export default function BookCover({
   isCurrent = false,  // 이번 달인지 (살짝 빛나는 효과)
   onClick,
 }) {
-  const { lang } = useLang();
+  const { t, lang } = useLang();
 
   // 표지 색은 stage 기반. 빈 책은 더 옅은 톤
   const coverColor = isEmpty ? '#d8c9a9' : stage?.color || '#a98564';
-  const stageLabel = lang === 'en' ? stage?.labelEn : stage?.label;
+  const stageLabel = stage?.labelKey ? t(stage.labelKey) : '';
 
   return (
     <button
@@ -35,12 +35,12 @@ export default function BookCover({
         <div className={styles.chapterTitle}>{chapterLabel(chapterKey, lang)}</div>
         {!isEmpty && (
           <div className={styles.pageCount}>
-            {pageCount} {lang === 'en' ? 'pages' : '쪽'}
+            {pageCount} {t('bookPages')}
           </div>
         )}
         {isEmpty && (
           <div className={styles.emptyHint}>
-            {lang === 'en' ? 'First page awaits' : '첫 페이지를 기다려요'}
+            {t('bookFirstPageAwaits')}
           </div>
         )}
         {/* NFT 등급 뱃지 (Pi 출시 시 실제 NFT 등급) */}

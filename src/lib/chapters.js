@@ -1,15 +1,16 @@
 // 챕터(=월별 책) 시스템 + 표지 진화 단계
 // 향후 Pi Apps에서 각 챕터를 NFT로 mint할 때 chapterKey가 token 메타데이터 키가 됨
 // 지금은 client-side에서 posts를 그룹핑해 책으로 시각화하는 용도
+import { toIntlLocale } from '../utils/intlLocale';
 
 // 표지 진화 5단계 — 누적 활동 일수로 결정
 // 엘프대륙 NFT 등급 매핑: Common → Uncommon → Rare → Epic → Legendary
 export const COVER_STAGES = [
-  { id: 'seed',    minDays: 0,   icon: '🌰', label: '씨앗',      labelEn: 'Seed',    grade: 'Common',    color: '#a98564' },
-  { id: 'sprout',  minDays: 8,   icon: '🌱', label: '새싹',      labelEn: 'Sprout',  grade: 'Uncommon',  color: '#9bc88a' },
-  { id: 'sapling', minDays: 31,  icon: '🌿', label: '어린 나무',  labelEn: 'Sapling', grade: 'Rare',      color: '#5fa86b' },
-  { id: 'tree',    minDays: 101, icon: '🌳', label: '나무',      labelEn: 'Tree',    grade: 'Epic',      color: '#3b7d4f' },
-  { id: 'forest',  minDays: 366, icon: '🌲', label: '숲',        labelEn: 'Forest',  grade: 'Legendary', color: '#1f5d3a' },
+  { id: 'seed',    minDays: 0,   icon: '🌰', labelKey: 'stageSeed',    grade: 'Common',    color: '#a98564' },
+  { id: 'sprout',  minDays: 8,   icon: '🌱', labelKey: 'stageSprout',  grade: 'Uncommon',  color: '#9bc88a' },
+  { id: 'sapling', minDays: 31,  icon: '🌿', labelKey: 'stageSapling', grade: 'Rare',      color: '#5fa86b' },
+  { id: 'tree',    minDays: 101, icon: '🌳', labelKey: 'stageTree',    grade: 'Epic',      color: '#3b7d4f' },
+  { id: 'forest',  minDays: 366, icon: '🌲', labelKey: 'stageForest',  grade: 'Legendary', color: '#1f5d3a' },
 ];
 
 // 누적 일수 → 현재 단계
@@ -33,14 +34,15 @@ export function chapterKey(date) {
   return `${y}-${m}`;
 }
 
-// 챕터 키 → 사람이 읽는 라벨
+// 챕터 키 → 사람이 읽는 라벨 (선택된 언어의 달력 표기로 — 예: "August 2026", "2026년 8월")
 export function chapterLabel(key, lang = 'ko') {
   const [y, m] = key.split('-');
-  if (lang === 'en') {
-    const names = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-    return `${names[parseInt(m, 10) - 1]} ${y}`;
+  const date = new Date(Number(y), parseInt(m, 10) - 1, 1);
+  try {
+    return new Intl.DateTimeFormat(toIntlLocale(lang), { year: 'numeric', month: 'long' }).format(date);
+  } catch {
+    return `${y}-${m}`;
   }
-  return `${y}년 ${parseInt(m, 10)}월`;
 }
 
 // posts 배열 → 챕터별 그룹 (Map<chapterKey, posts[]>)

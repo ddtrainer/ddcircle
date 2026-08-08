@@ -20,14 +20,12 @@ export default function MilestoneModal({ open, milestone, onClose, onDismiss }) 
   const icon = isChapter ? milestone.emoji : milestone.stage.icon;
   const titleText = isChapter
     ? t(milestone.titleKey)
-    : (lang === 'en' ? milestone.stage.labelEn : milestone.stage.label);
+    : t(milestone.stage.labelKey);
   const subText = isChapter
     ? t(milestone.subKey, { days: milestone.days })
     : t('milestoneStageSub', {
-        prev: milestone.prevStage
-          ? (lang === 'en' ? milestone.prevStage.labelEn : milestone.prevStage.label)
-          : '—',
-        next: lang === 'en' ? milestone.stage.labelEn : milestone.stage.label,
+        prev: milestone.prevStage ? t(milestone.prevStage.labelKey) : '—',
+        next: t(milestone.stage.labelKey),
         days: milestone.totalDays,
       });
   const badge = isStage ? milestone.stage.grade : (lang === 'en' ? 'Edition' : '에디션');

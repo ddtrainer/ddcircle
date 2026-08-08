@@ -10,6 +10,7 @@ import {
   groupByChapter,
 } from '../lib/chapters';
 import { MOODS } from '../data/moods';
+import { toIntlLocale, weekdayNarrowLabels } from '../utils/intlLocale';
 import styles from './Book.module.css';
 
 // 풀스크린 책 뷰 — /book/:chapterKey
@@ -115,10 +116,10 @@ export default function Book() {
             <div className={styles.coverStageIcon}>{meta.stage.icon}</div>
             <div className={styles.coverTitle}>{chapterLabel(chapterKey, lang)}</div>
             <div className={styles.coverGrade}>
-              {meta.stage.grade} · {lang === 'en' ? meta.stage.labelEn : meta.stage.label}
+              {meta.stage.grade} · {t(meta.stage.labelKey)}
             </div>
             <div className={styles.coverStats}>
-              {meta.pageCount} {lang === 'en' ? 'pages' : '쪽'} · {meta.activeDays} {lang === 'en' ? 'days' : '일'}
+              {meta.pageCount} {t('bookPages')} · {meta.activeDays}{t('daysShort')}
             </div>
             {ownerName && <div className={styles.coverOwner}>— {ownerName}</div>}
           </div>
@@ -132,7 +133,7 @@ export default function Book() {
                 {chapterLabel(chapterKey, lang)}
               </div>
               <div className={styles.overviewStage}>
-                {meta.stage.icon} {lang === 'en' ? meta.stage.labelEn : meta.stage.label}
+                {meta.stage.icon} {t(meta.stage.labelKey)}
                 {' · '}{meta.stage.grade}
               </div>
             </header>
@@ -162,10 +163,7 @@ export default function Book() {
 
             <div className={styles.calendarWrap}>
               <div className={styles.calendarHead}>
-                {(lang === 'en'
-                  ? ['S','M','T','W','T','F','S']
-                  : ['일','월','화','수','목','금','토']
-                ).map((d, i) => (
+                {weekdayNarrowLabels(lang).map((d, i) => (
                   <div key={i} className={styles.calCellHead}>{d}</div>
                 ))}
               </div>
@@ -201,7 +199,7 @@ export default function Book() {
             <header className={styles.pageHeader}>
               <div className={styles.pageDate}>
                 {new Date(post.created_at).toLocaleDateString(
-                  lang === 'en' ? 'en-US' : 'ko-KR',
+                  toIntlLocale(lang),
                   { year: 'numeric', month: 'long', day: 'numeric', weekday: 'short' }
                 )}
               </div>
@@ -220,7 +218,7 @@ export default function Book() {
 
             {!post.message && !post.proof_url && (
               <p className={styles.pageEmpty}>
-                {lang === 'en' ? '...a quiet day.' : '...조용한 하루.'}
+                {t('bookQuietDay')}
               </p>
             )}
 
@@ -228,7 +226,7 @@ export default function Book() {
               <span className={styles.verifiedMark}>✓ Verified</span>
               <span className={styles.polId}>
                 {new Date(post.created_at).toLocaleTimeString(
-                  lang === 'en' ? 'en-US' : 'ko-KR',
+                  toIntlLocale(lang),
                   { hour: 'numeric', minute: '2-digit' }
                 )}
               </span>
@@ -243,9 +241,7 @@ export default function Book() {
           >
             <div className={styles.backTitle}>{t('bookEnd')}</div>
             <div className={styles.backSub}>
-              {lang === 'en'
-                ? `${meta.activeDays} days of presence`
-                : `${meta.activeDays}일의 기록`}
+              {t('bookBackDaysTpl').replace('{n}', meta.activeDays)}
             </div>
             <button className={styles.backHomeBtn} onClick={() => navigate('/record')}>
               {t('bookBackToShelf')}

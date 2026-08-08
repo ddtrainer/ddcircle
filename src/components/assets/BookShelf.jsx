@@ -15,7 +15,7 @@ import styles from './BookShelf.module.css';
 // posts: Supabase posts row 배열 (created_at 필수)
 // ownerName: 표지 하단에 찍힐 닉네임
 export default function BookShelf({ posts = [], ownerName = '' }) {
-  const { t, lang } = useLang();
+  const { t } = useLang();
   const navigate = useNavigate();
 
   const { books, totalDays, currentKey } = useMemo(() => {
@@ -46,7 +46,7 @@ export default function BookShelf({ posts = [], ownerName = '' }) {
         </div>
         <div className={styles.subtitle}>
           {t('shelfStageTpl', {
-            stage: lang === 'en' ? currentStage.labelEn : currentStage.label,
+            stage: t(currentStage.labelKey),
             days: totalDays,
           })}
         </div>
