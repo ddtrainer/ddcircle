@@ -40,71 +40,24 @@ export default function InviteModal({ open, onClose }) {
     }
   };
 
-  // 카카오톡 공유 — 우선순위:
-  // 1. Kakao SDK sendDefault (이미지 크기 명시로 1200×630 비율 유지)
-  // 2. Kakao SDK sendScrap (URL OG 태그 스크래핑 — fallback)
-  // 3. navigator.share (모바일 시스템 공유 시트)
-  // 4. 링크 자동 복사 + 안내 (데스크톱 / 미지원 환경)
-  const shareKakao = async () => {
-    track(Events.INVITE_SENT, { channel: 'kakao_or_share' });
+  // 공유 — 기기 기본 공유 시트(navigator.share)를 연다. 국가마다 깔린 메신저가
+  // 다르므로(WhatsApp/Telegram/카카오톡/Messages 등) 특정 앱을 하드코딩하지 않고
+  // OS가 알아서 목록을 보여주게 둔다. 데스크톱처럼 Web Share 미지원 환경은
+  // 링크를 자동 복사해서 안내.
+  const share = async () => {
+    track(Events.INVITE_SENT, { channel: navigator.share ? 'webshare' : 'copy' });
     const text = t('inviteShareText');
     const title = t('inviteShareTitle');
-    const ogImageUrl = window.location.origin + '/og-image.png';
 
-    // 1. sendDefault with explicit imageWidth/Height (1200×630 비율 강제 — 잘림 방지)
-    if (typeof window !== 'undefined' && window.Kakao?.Share?.sendDefault) {
-      try {
-        window.Kakao.Share.sendDefault({
-          objectType: 'feed',
-          content: {
-            title,
-            description: text,
-            imageUrl: ogImageUrl,
-            imageWidth: 1200,
-            imageHeight: 630,
-            link: { mobileWebUrl: inviteLink, webUrl: inviteLink },
-          },
-          buttons: [{
-            title: t('kakaoBtnOpen') || '함께 시작하기',
-            link: { mobileWebUrl: inviteLink, webUrl: inviteLink },
-          }],
-        });
-        showToast('💛', t('kakaoOpening'));
-        return;
-      } catch (e) {
-        console.warn('Kakao sendDefault failed, trying sendScrap:', e);
-      }
-    }
-
-    // 2. Fallback: sendScrap (URL을 카카오톡이 직접 스크래핑)
-    if (typeof window !== 'undefined' && window.Kakao?.Share?.sendScrap) {
-      try {
-        window.Kakao.Share.sendScrap({ requestUrl: inviteLink });
-        showToast('💛', t('kakaoOpening'));
-        return;
-      } catch (e) {
-        console.warn('Kakao sendScrap failed:', e);
-      }
-    }
-
-    // 2. 모바일 Web Share API (시스템 공유 시트 → 카카오톡 선택)
     if (navigator.share) {
       try {
         await navigator.share({ title, text, url: inviteLink });
-        showToast('💛', t('kakaoOpening'));
         return;
       } catch (e) {
         if (e.name === 'AbortError') return; // 사용자 취소
       }
     }
-
-    // 3. Fallback: 링크 자동 복사 + 카카오톡에 붙여넣기 안내
-    try {
-      await navigator.clipboard?.writeText(inviteLink);
-      showToast('📋', t('kakaoFallbackCopied'));
-    } catch {
-      showToast('⚠️', t('kakaoFallbackError'));
-    }
+    copyLink();
   };
 
   const shareSMS = () => {
@@ -144,10 +97,10 @@ export default function InviteModal({ open, onClose }) {
         </button>
       </div>
 
-      {/* 카카오톡 큰 버튼 */}
-      <button className={styles.kakaoBtn} onClick={shareKakao}>
-        <span className={styles.kakaoIcon}>K</span>
-        {t('kakaoShareLabel')}
+      {/* 공유 — 기기 기본 공유 시트 */}
+      <button className={styles.shareBtn} onClick={share}>
+        <span className={styles.shareIcon}>📤</span>
+        {t('shareLabel')}
       </button>
 
       {/* SMS / 이메일 / QR */}
@@ -187,7 +140,7 @@ export default function InviteModal({ open, onClose }) {
 
       <div className={styles.divider}>{t('inviteDividerOr')}</div>
 
-      {/* 닉네임 검색 / 카카오 친구 매칭 (백엔드 필요 — 준비 중) */}
+      {/* 닉네임 검색 (백엔드 필요 — 준비 중) */}
       <div className={styles.extraOptions}>
         <button
           className={styles.extraBtn}
@@ -195,14 +148,6 @@ export default function InviteModal({ open, onClose }) {
         >
           <span className={styles.icon}>🔍</span>
           {t('nicknameSearchLabel')}
-          <span className={styles.arrow}>{t('comingSoonBadge')}</span>
-        </button>
-        <button
-          className={styles.extraBtn}
-          onClick={() => showToast('🛠️', t('contactSyncSoon'))}
-        >
-          <span className={styles.icon}>📞</span>
-          {t('contactSyncLabel')}
           <span className={styles.arrow}>{t('comingSoonBadge')}</span>
         </button>
       </div>

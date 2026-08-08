@@ -17,12 +17,9 @@ import PiBrowserGate from './components/PiBrowserGate';
 import SWUpdatePrompt from './components/SWUpdatePrompt';
 import SetAlertController from './components/SetAlertController';
 import { initAnalytics } from './utils/analytics';
-import { initKakao } from './utils/kakao';
 
 // PostHog 초기화 (키 없으면 no-op)
 initAnalytics();
-// Kakao SDK 초기화 (공유하기)
-initKakao();
 import Home from './views/Home';
 import Grow from './views/Grow';
 import BreathPicker from './views/BreathPicker';

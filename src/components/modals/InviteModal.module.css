@@ -79,11 +79,13 @@
   color: white;
 }
 
-/* 카카오톡 버튼 */
-.kakaoBtn {
+/* 공유 버튼 — navigator.share(기기 기본 공유 시트)를 여는 메인 CTA.
+   특정 메신저를 강조하지 않고, 기기에 깔린 앱(WhatsApp/Telegram/카카오톡 등)이
+   시트에 자동으로 뜨게 둔다 — 국가별로 앱을 하드코딩하지 않아도 됨. */
+.shareBtn {
   width: 100%;
-  background: #FEE500;
-  color: #000;
+  background: linear-gradient(135deg, var(--warm), var(--cool));
+  color: #fff;
   border: none;
   border-radius: 14px;
   padding: 14px;
@@ -96,26 +98,16 @@
   align-items: center;
   justify-content: center;
   gap: 8px;
-  box-shadow: 0 6px 16px rgba(254, 229, 0, 0.3);
+  box-shadow: 0 6px 16px rgba(244, 119, 48, 0.25);
   transition: transform 0.15s ease;
 }
 
-.kakaoBtn:active {
+.shareBtn:active {
   transform: scale(0.98);
 }
 
-.kakaoIcon {
-  width: 22px;
-  height: 22px;
-  background: #000;
-  border-radius: 5px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #FEE500;
-  font-size: 15px;
-  font-weight: 800;
-  font-family: 'Inter', sans-serif;
+.shareIcon {
+  font-size: 18px;
 }
 
 .secondaryRow {
