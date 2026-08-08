@@ -45,7 +45,10 @@ function ensureBells() {
     bellIn.volume = 0.1;
   }
   if (!bellOut) {
-    bellOut = new Audio('/audio/bell-out.wav');
+    // 날숨 벨(에밀레 종). 원래 .wav였으나 1.7MB 무압축 WAV가 모바일 WebView(Pi Browser)
+    // 에서 재생이 안 돼 소리가 아예 안 났다 — 같은 종소리를 MP3로 변환해 교체(224KB).
+    // 들숨 벨(bell-in.mp3)이 잘 나던 것과 같은 포맷이라 재생이 확실하다.
+    bellOut = new Audio('/audio/bell-out.mp3');
     bellOut.preload = 'auto';
     bellOut.volume = 1.0;
   }
