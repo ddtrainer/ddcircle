@@ -6,7 +6,7 @@ import { useToast } from '../Toast';
 import { FRIENDS } from '../../data/friends';
 import Modal from './Modal';
 import { track, Events } from '../../utils/analytics';
-import { shareToKakao, openKakaoTalkApp } from '../../utils/kakaoShare';
+import { shareToKakao } from '../../utils/kakaoShare';
 import { isPiBrowser } from '../../lib/piAuth';
 import styles from './InviteModal.module.css';
 
@@ -97,13 +97,14 @@ export default function InviteModal({ open, onClose }) {
     // 열리는 경우에도 복사가 남아 있는 건 해가 없다.
     writeClipboard(`${t('inviteShareText')} ${inviteLink}`).catch(() => {});
 
-    // Pi Browser는 앱을 cross-origin iframe으로 감싸서 카카오 SDK의 공유 팝업이 조용히
-    // 차단된다(호출은 성공하는데 아무 일도 안 일어남 — 실기기에서 확인). SDK 결과를
-    // 기다렸다가 앱을 띄우면 그땐 제스처가 이미 풀려서 실행 자체가 막히므로,
-    // 여기서는 SDK를 건너뛰고 지금 바로 앱을 띄운 뒤 붙여넣기로 안내한다.
+    // Pi Browser는 앱을 cross-origin iframe으로 감싸서 카카오 SDK의 공유 팝업도, 카카오톡
+    // 앱을 여는 커스텀 스킴도 조용히 차단한다. 스킴을 억지로 열어도 카카오톡은 공유 화면이
+    // 아니라 메인 화면만 뜨므로(문구를 실을 방법이 없음) 어차피 붙여넣기를 해야 한다.
+    // 그래서 여기서는 자동 실행을 시도하지 않고 — 최상위 프레임을 스킴으로 바꾸는 건 잘
+    // 되는 세션까지 깨뜨릴 위험이 있다 — 문구를 복사해두고 붙여넣기만 안내한다.
+    // (실기기 확인: 복사 → 카카오톡에 붙여넣기 → 링크로 Pi Browser 자동 로그인까지 정상)
     if (isPiBrowser()) {
       showToast('💛', t('kakaoPasteHint'));
-      openKakaoTalkApp();
       return;
     }
 
