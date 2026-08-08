@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useLang } from '../../i18n/LangContext';
+import { LOCALES } from '../../i18n/locales';
 import { useAuth } from '../../context/AuthContext';
 import { useLevel } from '../../context/LevelContext';
 import { useApp } from '../../context/AppContext';
@@ -44,22 +45,21 @@ export default function SettingsModal({ open, onClose }) {
       <Modal open={open} onClose={onClose}>
         <div className={styles.title}>{t('settingsTitle')}</div>
 
-        {/* 언어 — 인라인 토글 */}
+        {/* 언어 — 15개 지원. 각 언어를 그 언어 사용자가 읽을 수 있도록 원어로 표기한다. */}
         <div className={styles.section}>
           <div className={styles.sectionLabel}>{t('languageLabel')}</div>
-          <div className={styles.langToggle}>
-            <button
-              className={`${styles.langBtn} ${lang === 'ko' ? styles.langActive : ''}`}
-              onClick={() => setLang('ko')}
-            >
-              한국어
-            </button>
-            <button
-              className={`${styles.langBtn} ${lang === 'en' ? styles.langActive : ''}`}
-              onClick={() => setLang('en')}
-            >
-              English
-            </button>
+          <div className={styles.langGrid}>
+            {LOCALES.map((l) => (
+              <button
+                key={l.code}
+                className={`${styles.langBtn} ${lang === l.code ? styles.langActive : ''}`}
+                onClick={() => setLang(l.code)}
+                lang={l.code}
+                dir={l.dir}
+              >
+                {l.label}
+              </button>
+            ))}
           </div>
         </div>
 

@@ -286,6 +286,16 @@
   max-width: 100%;
 }
 
+/* .time은 그라디언트를 배경으로 깔고 글자 모양대로 오려내는 방식(background-clip: text)이라,
+   박스 폭이 실제 글자 폭보다 좁으면 그라디언트가 칠해지지 않은 부분의 글자가 통째로 안 보인다.
+   번역 문구(예: 인도네시아어 "Mulai sekarang")가 한국어/영어 원문보다 길 때 이 문제가 생겨서,
+   폭을 100%로 강제로 줄이지 않고 실제 글자 폭(max-content)에 맞춘다. 원을 살짝 넘어가는 것은
+   괜찮지만, 글자가 안 보이는 것보다는 훨씬 낫다. */
+.time {
+  max-width: none;
+  width: max-content;
+}
+
 .label {
   font-size: 13px;
   color: var(--text-muted);

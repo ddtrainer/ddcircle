@@ -19,23 +19,33 @@
   margin-bottom: 8px;
 }
 
-.langToggle {
+/* 15개 언어 — 2열 그리드. 목록이 길어 세로 스크롤을 허용하되, 모달이
+   화면을 다 먹지 않도록 높이를 제한한다. */
+.langGrid {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 8px;
+  max-height: 216px;
+  overflow-y: auto;
+  padding-right: 2px;
+  -webkit-overflow-scrolling: touch;
 }
 
 .langBtn {
-  padding: 11px 12px;
+  padding: 11px 10px;
   border-radius: 12px;
   border: 1px solid var(--border);
   background: var(--surface2, #fdf9f0);
   color: var(--text-soft);
-  font-size: 15px;
+  font-size: 14px;
   font-weight: 700;
   font-family: inherit;
   cursor: pointer;
   transition: all 0.15s ease;
+  /* 언어명이 길어도 버튼이 밀리지 않게 */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .langActive {
