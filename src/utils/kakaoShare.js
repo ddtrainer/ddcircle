@@ -45,6 +45,28 @@ async function initKakao() {
   return Kakao;
 }
 
+// 카카오톡 앱만 띄운다(메시지는 호출부가 이미 클립보드에 담아둔 상태).
+// SDK 공유가 막히는 환경에서 쓰는 최후 수단이라, 반드시 클릭 핸들러 안에서
+// 동기로 호출해야 한다 — await 뒤에 부르면 제스처가 풀려 브라우저가 막는다.
+//
+// 커스텀 스킴은 HTTP 응답이 아니라 OS가 가로채므로, wa.me/t.me를 막았던
+// 프레임 차단 헤더 문제와는 무관하다. 미설치 시엔 아무 일도 일어나지 않게 두고
+// (스토어로 튕기지 않게) 사용자는 복사된 문구를 그대로 쓰면 된다.
+export function openKakaoTalkApp() {
+  const ua = (typeof navigator !== 'undefined' && navigator.userAgent) || '';
+  const url = /android/i.test(ua)
+    ? 'intent://#Intent;scheme=kakaotalk;package=com.kakao.talk;end'
+    : 'kakaotalk://';
+  try {
+    const win = window.open(url, '_blank');
+    if (!win) {
+      try { window.top.location.href = url; } catch { window.location.href = url; }
+    }
+  } catch {
+    try { window.location.href = url; } catch { /* 무시 */ }
+  }
+}
+
 // 카카오 공유가 실제로 일어났는지 확인 — sendDefault는 프로미스도 아니고 실패해도
 // 예외를 던지지 않아서, 호출만으로는 성공 여부를 알 수 없다. 앱이 실제로 떴다면
 // 우리 화면은 백그라운드로 내려가므로(document.hidden) 그것만이 유일한 신호다.

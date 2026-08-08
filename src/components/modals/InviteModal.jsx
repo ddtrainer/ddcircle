@@ -6,7 +6,8 @@ import { useToast } from '../Toast';
 import { FRIENDS } from '../../data/friends';
 import Modal from './Modal';
 import { track, Events } from '../../utils/analytics';
-import { shareToKakao } from '../../utils/kakaoShare';
+import { shareToKakao, openKakaoTalkApp } from '../../utils/kakaoShare';
+import { isPiBrowser } from '../../lib/piAuth';
 import styles from './InviteModal.module.css';
 
 // Pi Browser를 비롯한 인앱 웹뷰에는 Web Share API가 없다. 없는 환경에서 "공유하기"를
@@ -95,6 +96,17 @@ export default function InviteModal({ open, onClose }) {
     // 뒤에는 제스처 컨텍스트가 풀려서 클립보드 쓰기가 거부된다. 카카오톡이 정상적으로
     // 열리는 경우에도 복사가 남아 있는 건 해가 없다.
     writeClipboard(`${t('inviteShareText')} ${inviteLink}`).catch(() => {});
+
+    // Pi Browser는 앱을 cross-origin iframe으로 감싸서 카카오 SDK의 공유 팝업이 조용히
+    // 차단된다(호출은 성공하는데 아무 일도 안 일어남 — 실기기에서 확인). SDK 결과를
+    // 기다렸다가 앱을 띄우면 그땐 제스처가 이미 풀려서 실행 자체가 막히므로,
+    // 여기서는 SDK를 건너뛰고 지금 바로 앱을 띄운 뒤 붙여넣기로 안내한다.
+    if (isPiBrowser()) {
+      showToast('💛', t('kakaoPasteHint'));
+      openKakaoTalkApp();
+      return;
+    }
+
     showToast('💛', t('kakaoOpening'));
     const ok = await shareToKakao({
       title: t('inviteShareTitle'),
