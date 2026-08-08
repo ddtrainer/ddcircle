@@ -232,20 +232,24 @@
    최종: transform(스케일)만 트랜지션시켜 GPU 합성 경로를 타게 하고, box-shadow는 트랜지션
    목록에서 빼 순간 전환(스냅)시킨다 — 리페인트 비용을 프레임마다가 아니라 전환 시점 1회로
    줄여 실기기에서도 스케일 펄스가 끊김 없이 부드럽게 재생되도록 한다. */
+/* 깔끔한 단색 원 — 글로우(box-shadow)와 그라디언트 번짐을 없애 리듬을 또렷하게 전달한다.
+   빠른 1초 펌핑에는 은은한 아우라보다 또렷한 도형이 박자감을 더 잘 살린다. */
 .orbOuter.power.inhale,
 .orbOuter.power.exhale {
-  background: radial-gradient(circle, rgba(30,155,216,0.46), rgba(30,155,216,0.14));
+  background: rgba(30,155,216,0.85);
+  box-shadow: none;
+  filter: none;
   transition: transform var(--power-dur, 1s) cubic-bezier(0.22, 0.61, 0.36, 1);
   will-change: transform;
 }
 
+/* 진폭: 날숨이 평소 호흡의 최소 크기(0.3, 카운터 숫자 원과 비슷한 크기)까지 확실히
+   줄어들도록 평소 호흡과 동일한 스케일 범위(0.3↔1.62)를 쓴다. */
 .orbOuter.power.inhale {
-  transform: scale(1.28);
-  box-shadow: 0 0 84px 10px rgba(30,155,216,0.4);
+  transform: scale(1.62);
 }
 .orbOuter.power.exhale {
-  transform: scale(0.78);
-  box-shadow: 0 0 30px 2px rgba(30,155,216,0.16);
+  transform: scale(0.3);
 }
 
 .orbInner {
