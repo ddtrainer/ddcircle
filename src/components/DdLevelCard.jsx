@@ -77,7 +77,7 @@ export default function DdLevelCard() {
             <div key={m.id} className={styles.stepWrap}>
               <div className={`${styles.step} ${styles.unlocked}`}>
                 <span className={styles.stepEmoji}>{m.emoji}</span>
-                <span className={styles.stepName}>{t(m.labelKey)}</span>
+                <span className={styles.stepName}>{t(m.shortLabelKey || m.labelKey)}</span>
                 <span className={styles.stepMul}>×{BREATH_MODE_MULTIPLIER[m.id]}</span>
               </div>
             </div>

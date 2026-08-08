@@ -125,21 +125,16 @@
   color: var(--text);
 }
 
-/* 레벨 로드맵 */
+/* 종목 선택 박스 — 4개를 2×2로 배치해 폰 폭에 상관없이 우측으로 넘치지 않게 한다. */
 .steps {
-  display: flex;
-  align-items: stretch;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
 }
 
 .stepWrap {
   display: flex;
-  align-items: center;
-  flex: 1;
-}
-
-.stepWrap:first-child {
-  flex: 0 0 auto;
+  min-width: 0;
 }
 
 .connector {
@@ -166,8 +161,8 @@
   border-radius: 12px;
   border: 1.5px solid transparent;
   background: var(--surface);
-  flex-shrink: 0;
-  min-width: 52px;
+  width: 100%;
+  min-width: 0;
 }
 
 .nowPill {
@@ -194,7 +189,8 @@
   font-size: 11px;
   font-weight: 700;
   color: var(--text);
-  line-height: 1;
+  line-height: 1.25;
+  text-align: center;
 }
 
 .stepMul {

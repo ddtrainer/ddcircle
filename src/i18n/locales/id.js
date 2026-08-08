@@ -146,6 +146,8 @@ export default {
   "breath48": "Napas Alami",
   "breath4444": "Napas Kekuatan Mental",
   "breathCustom": "Napas Peningkat Imun",
+  "breath4444Short": "Kekuatan Mental",
+  "breathCustomShort": "Peningkat Imun",
   "breathLockedNotice": "Terbuka di Lv.{lv}",
   "wimHofPower": "Napas Kuat",
   "wimHofRetention": "Tahan Napas",

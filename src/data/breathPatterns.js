@@ -7,11 +7,13 @@ export const BREATH_PRESETS = [
 
 // Deep 호흡 4종 — 레벨 잠금 없이 자유 선택(v2.3). labelKey는 i18n(효과 이름).
 //   safety=true(윔호프)는 최초 1회 안전 동의 필요.
+//   shortLabelKey는 '나의 성장' 2×2 박스처럼 좁은 공간용 — 이미 헤더가 Deep이라
+//   중복되는 '호흡' 단어를 뺀 짧은 이름. 없으면 labelKey로 대체.
 export const BREATH_MODES = [
   { id: '48',   emoji: '🍃', labelKey: 'breath48',    descKey: 'breath48Desc', settings: 'natural' },
   { id: '478',  emoji: '🌙', labelKey: 'breath478',   descKey: 'breath478Desc',           settings: null },
-  { id: '4444', emoji: '🎯', labelKey: 'breath4444',  descKey: 'breath4444Desc',           settings: null },
-  { id: 'custom', emoji: '🔥', labelKey: 'breathCustom', descKey: 'breathCustomDesc', settings: 'wimhof', safety: true },
+  { id: '4444', emoji: '🎯', labelKey: 'breath4444',  shortLabelKey: 'breath4444Short',  descKey: 'breath4444Desc',           settings: null },
+  { id: 'custom', emoji: '🔥', labelKey: 'breathCustom', shortLabelKey: 'breathCustomShort', descKey: 'breathCustomDesc', settings: 'wimhof', safety: true },
 ];
 
 // Deep EP 호흡별 배율 (v2.3) — Deep EP = 15(고정) × 배율 × 스트릭. 레벨 배율 폐지.

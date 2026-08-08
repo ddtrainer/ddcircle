@@ -146,6 +146,8 @@ export default {
   "breath48": "자연 호흡",
   "breath4444": "멘탈 강화 호흡",
   "breathCustom": "면역력 강화 호흡",
+  "breath4444Short": "멘탈 강화",
+  "breathCustomShort": "면역력 강화",
   "breathLockedNotice": "Lv.{lv} 도달 시 열려요",
   "wimHofPower": "과호흡",
   "wimHofRetention": "숨 참기",

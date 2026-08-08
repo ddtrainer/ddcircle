@@ -148,6 +148,8 @@ export default {
   "breath48": "Nhịp thở tự nhiên",
   "breath4444": "Nhịp thở vững tâm trí",
   "breathCustom": "Nhịp thở tăng miễn dịch",
+  "breath4444Short": "Vững tâm trí",
+  "breathCustomShort": "Tăng miễn dịch",
   "breathLockedNotice": "Mở khóa ở Lv.{lv}",
   "wimHofPower": "Thở mạnh",
   "wimHofRetention": "Nín thở",

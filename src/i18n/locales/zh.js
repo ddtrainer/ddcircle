@@ -146,6 +146,8 @@ export default {
   "breath48": "自然呼吸法",
   "breath4444": "意志力呼吸法",
   "breathCustom": "免疫增强呼吸法",
+  "breath4444Short": "意志力",
+  "breathCustomShort": "免疫增强",
   "breathLockedNotice": "达到 Lv.{lv} 后解锁",
   "wimHofPower": "强力呼吸",
   "wimHofRetention": "屏气",

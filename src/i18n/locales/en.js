@@ -146,6 +146,8 @@ export default {
   "breath48": "Natural Breath",
   "breath4444": "Mental Strength Breath",
   "breathCustom": "Immunity Boost Breath",
+  "breath4444Short": "Mental Strength",
+  "breathCustomShort": "Immunity Boost",
   "breathLockedNotice": "Unlocks at Lv.{lv}",
   "wimHofPower": "Power Breathing",
   "wimHofRetention": "Breath Hold",

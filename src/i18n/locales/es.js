@@ -146,6 +146,8 @@ export default {
   "breath48": "Respiración Natural",
   "breath4444": "Respiración Fuerza Mental",
   "breathCustom": "Respiración Refuerzo Inmune",
+  "breath4444Short": "Fuerza Mental",
+  "breathCustomShort": "Refuerzo Inmune",
   "breathLockedNotice": "Se desbloquea en Nv.{lv}",
   "wimHofPower": "Respiración de Poder",
   "wimHofRetention": "Retención",
