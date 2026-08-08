@@ -49,20 +49,26 @@ async function initKakao() {
 // SDK 공유가 막히는 환경에서 쓰는 최후 수단이라, 반드시 클릭 핸들러 안에서
 // 동기로 호출해야 한다 — await 뒤에 부르면 제스처가 풀려 브라우저가 막는다.
 //
-// 커스텀 스킴은 HTTP 응답이 아니라 OS가 가로채므로, wa.me/t.me를 막았던
-// 프레임 차단 헤더 문제와는 무관하다. 미설치 시엔 아무 일도 일어나지 않게 두고
-// (스토어로 튕기지 않게) 사용자는 복사된 문구를 그대로 쓰면 된다.
+// 핵심: Pi Browser는 우리 앱을 cross-origin iframe으로 감싼다. 이 안에서
+//  · window.open(스킴, '_blank') → 빈 탭만 열리고 앱은 안 뜬다(반환값은 truthy라
+//    실패를 감지할 수도 없다). wa.me·t.me가 window.open으로 됐던 건 그건 https라
+//    새 탭이 정상 로드되고 Android App Link가 앱으로 넘겨줬기 때문 — 카카오톡은
+//    그런 공개 웹 주소가 없어 커스텀 스킴을 써야 한다.
+//  · window.location(자식 프레임) = 스킴 → 크로스오리진 하위 프레임에서 외부
+//    프로토콜을 여는 건 브라우저가 더 강하게 막는다.
+//  · window.top.location = 스킴 → '사용자 제스처가 있는 최상위 네비게이션'이라
+//    브라우저가 허용하는 패턴이다. 스킴은 페이지를 언로드하지 않으므로, 앱이 뜨면
+//    Pi Browser는 그대로 남는다. (설정은 크로스오리진 부모라도 허용 — 읽기만 막힘)
+// 미설치 시엔 아무 일도 안 일어나게 두고(스토어로 튕기지 않게) 복사된 문구로 안내한다.
 export function openKakaoTalkApp() {
   const ua = (typeof navigator !== 'undefined' && navigator.userAgent) || '';
   const url = /android/i.test(ua)
     ? 'intent://#Intent;scheme=kakaotalk;package=com.kakao.talk;end'
     : 'kakaotalk://';
   try {
-    const win = window.open(url, '_blank');
-    if (!win) {
-      try { window.top.location.href = url; } catch { window.location.href = url; }
-    }
+    window.top.location.href = url;
   } catch {
+    // 최상위 접근이 막힌 예외 상황 — 자식 프레임으로라도 시도
     try { window.location.href = url; } catch { /* 무시 */ }
   }
 }
