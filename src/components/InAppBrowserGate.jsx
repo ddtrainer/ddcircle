@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { isInAppBrowser } from '../utils/inAppBrowser';
+import { HAD_INVITE_PARAM_ON_LOAD } from '../utils/inviteEntry';
 import OpenExternalModal from './modals/OpenExternalModal';
 
 // 앱 진입 시 인앱 브라우저(카톡·네이버·페북 등)면 1회 안내 모달
@@ -11,6 +12,9 @@ export default function InAppBrowserGate() {
 
   useEffect(() => {
     if (!isInAppBrowser()) return;
+    // 초대 링크(?invite=)로 들어온 경우엔 PiBrowserGate가 Pi Browser로 바로 유도하므로
+    // 여기서 또 다른 안내 모달을 겹쳐 띄우지 않는다.
+    if (HAD_INVITE_PARAM_ON_LOAD) return;
     try {
       if (sessionStorage.getItem(DISMISS_KEY) === '1') return;
     } catch { /* ignore */ }

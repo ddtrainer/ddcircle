@@ -59,6 +59,7 @@
 }
 
 .secondary {
+  display: block;
   width: 100%;
   background: none;
   border: none;
@@ -67,4 +68,7 @@
   font-size: 14px;
   padding: 10px;
   cursor: pointer;
+  text-decoration: none;
+  text-align: center;
+  box-sizing: border-box;
 }

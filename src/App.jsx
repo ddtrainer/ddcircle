@@ -13,6 +13,7 @@ import IncomingInviteModal from './components/modals/IncomingInviteModal';
 import Onboarding from './components/Onboarding';
 import PWAInstallPrompt from './components/PWAInstallPrompt';
 import InAppBrowserGate from './components/InAppBrowserGate';
+import PiBrowserGate from './components/PiBrowserGate';
 import SWUpdatePrompt from './components/SWUpdatePrompt';
 import SetAlertController from './components/SetAlertController';
 import { initAnalytics } from './utils/analytics';
@@ -200,6 +201,7 @@ export default function App() {
               <ProfileGuard />
               <ConditionalBottomNav />
               <InviteUrlHandler />
+              <PiBrowserGate />
               <Onboarding />
               <InAppBrowserGate />
               <PWAInstallPrompt />
