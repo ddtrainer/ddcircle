@@ -394,6 +394,7 @@
      직전에 스크롤이 멈춰 더 이상 못 넘어가는 버그가 있었음 — proximity로 완화 */
   scroll-snap-type: x proximity;
   -webkit-overflow-scrolling: touch;
+  overscroll-behavior-x: auto;
   scrollbar-width: none;
 }
 .challengeRow::-webkit-scrollbar { display: none; }

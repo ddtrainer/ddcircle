@@ -60,13 +60,32 @@ export default function InviteModal({ open, onClose }) {
     copyLink();
   };
 
+  // navigator.share가 없는 환경(Pi Browser 등 인앱 브라우저)을 위한 개별 채널 버튼.
+  // wa.me / t.me는 앱 미설치 시 자동으로 웹 버전으로 열리므로 국가별 분기 불필요.
+  const shareWhatsApp = () => {
+    track(Events.INVITE_SENT, { channel: 'whatsapp' });
+    showToast('💚', t('whatsappOpening'));
+    const text = encodeURIComponent(`${t('inviteShareText')} ${inviteLink}`);
+    window.location.href = `https://wa.me/?text=${text}`;
+  };
+
+  const shareTelegram = () => {
+    track(Events.INVITE_SENT, { channel: 'telegram' });
+    showToast('✈️', t('telegramOpening'));
+    const url = encodeURIComponent(inviteLink);
+    const text = encodeURIComponent(t('inviteShareText'));
+    window.location.href = `https://t.me/share/url?url=${url}&text=${text}`;
+  };
+
   const shareSMS = () => {
+    track(Events.INVITE_SENT, { channel: 'sms' });
     showToast('💬', t('smsOpening'));
     const body = encodeURIComponent(`${t('inviteShareText')} ${inviteLink}`);
     window.location.href = `sms:?body=${body}`;
   };
 
   const shareEmail = () => {
+    track(Events.INVITE_SENT, { channel: 'email' });
     showToast('📧', t('emailOpening'));
     const subject = encodeURIComponent(t('inviteShareTitle'));
     const body = encodeURIComponent(`${t('inviteShareText')}\n\n${inviteLink}`);
@@ -103,8 +122,17 @@ export default function InviteModal({ open, onClose }) {
         {t('shareLabel')}
       </button>
 
-      {/* SMS / 이메일 / QR */}
+      {/* WhatsApp / Telegram / SMS / 이메일 / QR — navigator.share 미지원 환경(Pi Browser 등)에서도
+          바로 쓸 수 있는 개별 채널 버튼 */}
       <div className={styles.secondaryRow}>
+        <button className={styles.secondaryBtn} onClick={shareWhatsApp}>
+          <span className={styles.icon}>💚</span>
+          {t('whatsappShareLabel')}
+        </button>
+        <button className={styles.secondaryBtn} onClick={shareTelegram}>
+          <span className={styles.icon}>✈️</span>
+          {t('telegramShareLabel')}
+        </button>
         <button className={styles.secondaryBtn} onClick={shareSMS}>
           <span className={styles.icon}>💬</span>
           {t('smsShareLabel')}

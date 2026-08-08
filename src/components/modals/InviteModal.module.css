@@ -111,13 +111,13 @@
 }
 
 .secondaryRow {
-  display: flex;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
   gap: 8px;
   margin-bottom: 14px;
 }
 
 .secondaryBtn {
-  flex: 1;
   background: var(--surface);
   border: 1px solid var(--border-strong);
   border-radius: 12px;

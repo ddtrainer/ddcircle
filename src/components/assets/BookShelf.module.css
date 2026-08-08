@@ -34,7 +34,9 @@
   gap: 12px;
   overflow-x: auto;
   padding: 6px 16px 12px;
-  scroll-snap-type: x mandatory;
+  scroll-snap-type: x proximity;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-x: auto;
   scrollbar-width: none;
 }
 

@@ -73,7 +73,11 @@ textarea {
   -webkit-appearance: none;
 }
 
-/* 좌우 스와이프 시 가로 스크롤 방지 강화 */
+/* 좌우 스와이프 시 가로 스크롤 방지 강화.
+   주의: 일부 인앱 브라우저(Pi Browser 등 임베디드 웹뷰)는 이 속성을 스펙대로
+   "스크롤 체이닝 경계에서만 차단"하지 않고, 하위의 가로 스크롤 컨테이너
+   (챌린지 카드 목록, 책장 등)까지 통째로 터치 스크롤이 안 먹게 만드는 경우가
+   있음 — 그런 내부 스크롤러에는 overscroll-behavior-x: auto로 되돌려준다. */
 body, #root {
   overscroll-behavior-x: none;
 }
