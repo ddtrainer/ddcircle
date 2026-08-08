@@ -97,7 +97,7 @@ function ProfileGuard() {
 //   2) 본인 코드 / 이미 처리한 코드는 무시
 //   3) 로그인 상태가 되면 (즉시 또는 OAuth 콜백 후) 보류 코드로 모달 표시
 function InviteUrlHandler() {
-  const { pendingInvite, setPendingInvite, inviteCode: myInviteCode } = useApp();
+  const { pendingInvite, setPendingInvite } = useApp();
   const { user, profile } = useAuth();
   const [open, setOpen] = useState(false);
 
@@ -128,8 +128,12 @@ function InviteUrlHandler() {
     if (!code) return;
 
     // 가드 1: 본인 코드 (자기 초대 차단)
-    const ownCode = profile?.invite_code || myInviteCode;
-    if (ownCode && code === ownCode) {
+    // 서버 프로필이 오기 전에는 판단을 보류한다 — 로컬 myInviteCode는 서버의
+    // invite_code와 다를 수 있어서, 성급히 통과시키면 본인 초대 모달이 떠버리고
+    // 수락 단계에서 실패한다. profile.invite_code가 deps에 있어 로딩되면 재평가됨.
+    const ownCode = profile?.invite_code;
+    if (!ownCode) return;
+    if (code === ownCode) {
       console.log('[invite] self-invite ignored');
       try { localStorage.removeItem('ddcircle.pendingInviteCode'); } catch {}
       return;
@@ -146,7 +150,7 @@ function InviteUrlHandler() {
 
     setPendingInvite({ code });
     setTimeout(() => setOpen(true), 400);
-  }, [user, profile?.invite_code, myInviteCode, setPendingInvite]);
+  }, [user, profile?.invite_code, setPendingInvite]);
 
   // pendingInvite가 외부에서 사라지면 모달도 닫음
   useEffect(() => {

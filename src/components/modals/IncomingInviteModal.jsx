@@ -56,14 +56,22 @@ export default function IncomingInviteModal({ open, onClose }) {
 
     // 비로그인 상태에선 친구 관계 생성 불가 — 로그인 안내만
     if (!user) {
-      showToast('🔑', '로그인하면 친구로 등록할 수 있어요');
+      showToast('🔑', t('inviteNeedLogin'));
       onClose?.();
       return;
     }
     // 실제 초대자 프로필 로딩 실패 (DB에 없는 코드)
     if (!inviter?.id || !pendingInvite?.code) {
-      showToast('⚠️', '초대 정보를 찾을 수 없어요');
+      showToast('⚠️', t('inviteNotFound'));
       markHandled(pendingInvite?.code);
+      setPendingInvite(null);
+      onClose?.();
+      return;
+    }
+    // 본인 초대 — 서버까지 갈 필요 없이 여기서 종결(재시도해도 절대 성공 못 함)
+    if (inviter.id === user.id) {
+      showToast('⚠️', t('inviteSelfError'));
+      markHandled(pendingInvite.code);
       setPendingInvite(null);
       onClose?.();
       return;
@@ -82,7 +90,14 @@ export default function IncomingInviteModal({ open, onClose }) {
       setTimeout(() => showToast('✦', '+20 EP'), 1500);
     } catch (e) {
       console.error('[invite] accept error:', e);
-      showToast('⚠️', `초대 수락 실패: ${e?.message || '잠시 후 다시 시도해주세요'}`);
+      // 실패해도 모달은 반드시 닫는다 — 닫히지 않는 팝업은 "앱이 멈췄다"로 읽힌다.
+      // markHandled를 부르지 않으므로 보류 코드는 localStorage에 남고, 다음 접속 때
+      // 모달이 다시 떠서 재시도할 수 있다.
+      const selfInvite = /yourself/i.test(e?.message || '');
+      if (selfInvite) markHandled(pendingInvite?.code); // 재시도 무의미 → 영구 정리
+      setPendingInvite(null);
+      onClose?.();
+      showToast('⚠️', selfInvite ? t('inviteSelfError') : t('inviteAcceptFailed'));
     } finally {
       setAccepting(false);
     }
