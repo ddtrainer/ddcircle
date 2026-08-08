@@ -5,6 +5,7 @@ import { LOCALES } from '../../i18n/locales';
 import { useAuth } from '../../context/AuthContext';
 import { useLevel } from '../../context/LevelContext';
 import { useApp } from '../../context/AppContext';
+import { useToast } from '../Toast';
 import { renderNickname } from '../../lib/nickname';
 import Modal from './Modal';
 import SetTimingModal from './SetTimingModal';
@@ -18,9 +19,15 @@ export default function SettingsModal({ open, onClose }) {
   const { user, profile, signOut } = useAuth();
   const { deepLevel } = useLevel();
   const { userEp } = useApp();
+  const { show: showToast } = useToast();
   const navigate = useNavigate();
   const [timingOpen, setTimingOpen] = useState(false);
   const [tipOpen, setTipOpen] = useState(false);
+
+  // 디지털북(PDF) — 아직 실제 상품이 아니라 준비 중 안내만. 구매 플로우 없이 토스트로 끝.
+  const openDigitalBookInfo = () => {
+    showToast('📖', t('digitalBookComingSoonToast'));
+  };
 
 
   const goProfile = () => {
@@ -104,6 +111,16 @@ export default function SettingsModal({ open, onClose }) {
           <span className={styles.rowMain}>
             <span className={styles.rowTitle}>{t('tipRowTitle')}</span>
             <span className={styles.rowSub}>{t('tipRowSub')}</span>
+          </span>
+          <span className={styles.chevron}>›</span>
+        </button>
+
+        {/* 디지털북(PDF) — 판매 상품 준비 중 안내. 실제 구매 플로우는 아직 없음(토스트로만 안내) */}
+        <button className={styles.row} onClick={openDigitalBookInfo}>
+          <span className={styles.rowIcon}>📖</span>
+          <span className={styles.rowMain}>
+            <span className={styles.rowTitle}>{t('digitalBookRowTitle')}</span>
+            <span className={styles.rowSub}>{t('digitalBookRowSub')}</span>
           </span>
           <span className={styles.chevron}>›</span>
         </button>
