@@ -17,7 +17,7 @@ function daysBetween(fromStr, toStr) {
 // 가이드 진입은 세션(DeepSession/SprintDetect) 내에서만 노출해 중복을 피한다.
 export default function DdLevelCard() {
   const { userEp } = useApp();
-  const { t, lang } = useLang();
+  const { t } = useLang();
   const streak = userEp?.streak ?? 0;
   const streakDate = userEp?.streakDate ?? null;
 
@@ -28,36 +28,36 @@ export default function DdLevelCard() {
   let graceState = 'idle';   // idle | safeToday | atRisk | broken
   let graceLabel = '';
   if (streak === 0) {
-    graceLabel = '오늘 시작하면 연속 1일';
+    graceLabel = t('ddGraceStartToday');
   } else if (streakDate === todayStr) {
     graceState = 'safeToday';
-    graceLabel = `오늘 완료 · ${grace}일까지 쉬어도 유지`;
+    graceLabel = t('ddGraceSafeToday').replace('{grace}', grace);
   } else if (streakDate) {
     const missed = daysBetween(streakDate, todayStr) - 1; // 지금까지 실제로 거른 날 수
     const leftover = grace - missed;                       // 앞으로 더 쉴 수 있는 날
     if (leftover < 0) {
       graceState = 'broken';
-      graceLabel = '연속이 끊겼어요 · 오늘 하면 1일부터 다시';
+      graceLabel = t('ddGraceBroken');
     } else if (missed >= 1) {
       // 하루 이상 실제로 걸렀을 때만 경고(주황) — 어제 완주(missed 0)는 정상으로 본다.
       graceState = 'atRisk';
       graceLabel = leftover === 0
-        ? '오늘 안 하면 연속이 끊겨요'
-        : `오늘 쉬어도 ${leftover}일 여유 · ${grace}일까지 유지`;
+        ? t('ddGraceAtRiskZero')
+        : t('ddGraceAtRiskLeftover').replace('{leftover}', leftover).replace('{grace}', grace);
     } else {
-      graceLabel = `${grace}일까지 쉬어도 연속 유지`;
+      graceLabel = t('ddGraceSafe').replace('{grace}', grace);
     }
   } else {
-    graceLabel = `${grace}일까지 쉬어도 연속 유지`;
+    graceLabel = t('ddGraceSafe').replace('{grace}', grace);
   }
 
   return (
     <div className={styles.card}>
       <div className={styles.header}>
-        <span className={styles.tag}>나의 성장</span>
-        <p className={styles.intro}>매일 호흡과 운동이 쌓여 연속이 자라요. 종목은 오늘의 컨디션대로 자유롭게.</p>
+        <span className={styles.tag}>{t('ddCardTag')}</span>
+        <p className={styles.intro}>{t('ddCardIntro')}</p>
         <div className={`${styles.streakRow} ${styles[`grace_${graceState}`] || ''}`}>
-          <span className={styles.streakFlame}>🔥 {streak}일 연속</span>
+          <span className={styles.streakFlame}>🔥 {t('ddStreakFlame').replace('{n}', streak)}</span>
           <span className={styles.graceHint}>{graceLabel}</span>
         </div>
       </div>
@@ -68,9 +68,7 @@ export default function DdLevelCard() {
           <div className={styles.trackTitle}>
             <span className={styles.trackLabel}>Deep</span>
           </div>
-          <span className={styles.trackNow}>
-            {lang === 'ko' ? '호흡 선택제 · EP 배율' : 'Pick a breath · EP mult'}
-          </span>
+          <span className={styles.trackNow}>{t('ddPickBreathMult')}</span>
         </div>
         <div className={styles.steps}>
           {BREATH_MODES.map((m) => (
@@ -91,9 +89,7 @@ export default function DdLevelCard() {
           <div className={styles.trackTitle}>
             <span className={styles.trackLabel}>Dash</span>
           </div>
-          <span className={styles.trackNow}>
-            {lang === 'ko' ? '종목 선택제 · EP 배율' : 'Pick a mode · EP mult'}
-          </span>
+          <span className={styles.trackNow}>{t('ddPickModeMult')}</span>
         </div>
         <div className={styles.steps}>
           {DASH_MODES.map((m) => (
