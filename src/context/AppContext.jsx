@@ -11,6 +11,7 @@ import { breathModeMultiplier } from '../data/breathPatterns';
 import { DEFAULT_CUSTOM_BREATH, DEFAULT_NATURAL_BREATH, DEFAULT_WIM_HOF_ROUNDS, DEFAULT_WIM_HOF_CYCLES, DEFAULT_WIM_HOF_RETENTION, DEFAULT_WIM_HOF_RECOVERY, DEFAULT_WIM_HOF_FINISH } from '../data/breathPatterns';
 import { evaluateChallenges } from '../data/challenges';
 import { shareBaseUrl } from '../config/piNet';
+import { useLang } from '../i18n/LangContext';
 
 const AppContext = createContext(null);
 
@@ -50,6 +51,7 @@ function daysBetween(fromStr, toStr) {
 
 export function AppProvider({ children }) {
   const { profile, user } = useAuth();
+  const { lang } = useLang();
   const [userEp, setUserEp] = useLocalStorage('ddcircle.userEp', DEFAULT_USER_EP);
   const [setTiming, setSetTiming] = useLocalStorage('ddcircle.setTiming', DEFAULT_SET_TIMING);
   // 실제 오늘 활동 인원 수 — 서버에서 fetch될 때까지 0 (가짜 247 노출 방지)
@@ -403,7 +405,9 @@ export function AppProvider({ children }) {
         inviteCode,
         // PiNet 주소 기준 — 받는 사람 기기에서 OS가 Pi Browser로 바로 열어주려면
         // 반드시 *.pinet.com이어야 한다. (config/piNet.js 참고)
-        inviteLink: `${shareBaseUrl()}/?invite=${inviteCode}`,
+        // lang은 공유 카드(OG) 문구를 보내는 사람의 언어로 내보내기 위한 것 —
+        // 크롤러는 JS를 안 돌리므로 서버가 이 값을 보고 태그를 바꾼다(middleware.js 참고).
+        inviteLink: `${shareBaseUrl()}/?invite=${inviteCode}&lang=${lang}`,
         pendingInvite,
         setPendingInvite,
         friendsVersion,

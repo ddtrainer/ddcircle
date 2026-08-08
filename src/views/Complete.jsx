@@ -193,7 +193,7 @@ export default function Complete() {
         userMessage: empathyMsg.trim(),  // textarea에 쓴 글 — 카드에 같이 표시
       });
       // 남에게 건네지는 링크는 PiNet 주소여야 상대 기기에서 Pi Browser로 열린다.
-      const cardUrl = `${shareBaseUrl()}/?ref=share-card`;
+      const cardUrl = `${shareBaseUrl()}/?ref=share-card&lang=${lang}`;
       const shareText = lang === 'en'
         ? `A three-minute daily breath together · DDCircle\n${cardUrl}`
         : `매일 3분, 함께 호흡하는 작은 의식 · DDCircle\n${cardUrl}`;
