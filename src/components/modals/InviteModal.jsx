@@ -6,7 +6,13 @@ import { useToast } from '../Toast';
 import { FRIENDS } from '../../data/friends';
 import Modal from './Modal';
 import { track, Events } from '../../utils/analytics';
+import { shareToKakao } from '../../utils/kakaoShare';
 import styles from './InviteModal.module.css';
+
+// Pi Browser를 비롯한 인앱 웹뷰에는 Web Share API가 없다. 없는 환경에서 "공유하기"를
+// 보여주면 눌러도 링크 복사밖에 안 되어 "버튼이 고장났다"로 읽히므로, 지원하는
+// 브라우저에서만 노출하고 그 외에는 아래 개별 앱 버튼들이 공유 수단이 된다.
+const CAN_WEB_SHARE = typeof navigator !== 'undefined' && typeof navigator.share === 'function';
 
 const MAX_CIRCLE = 12;
 
@@ -42,22 +48,20 @@ export default function InviteModal({ open, onClose }) {
 
   // 공유 — 기기 기본 공유 시트(navigator.share)를 연다. 국가마다 깔린 메신저가
   // 다르므로(WhatsApp/Telegram/카카오톡/Messages 등) 특정 앱을 하드코딩하지 않고
-  // OS가 알아서 목록을 보여주게 둔다. 데스크톱처럼 Web Share 미지원 환경은
-  // 링크를 자동 복사해서 안내.
+  // OS가 알아서 목록을 보여주게 둔다. CAN_WEB_SHARE일 때만 렌더되므로 여기선
+  // 폴백을 신경 쓰지 않아도 된다.
   const share = async () => {
-    track(Events.INVITE_SENT, { channel: navigator.share ? 'webshare' : 'copy' });
-    const text = t('inviteShareText');
-    const title = t('inviteShareTitle');
-
-    if (navigator.share) {
-      try {
-        await navigator.share({ title, text, url: inviteLink });
-        return;
-      } catch (e) {
-        if (e.name === 'AbortError') return; // 사용자 취소
-      }
+    track(Events.INVITE_SENT, { channel: 'webshare' });
+    try {
+      await navigator.share({
+        title: t('inviteShareTitle'),
+        text: t('inviteShareText'),
+        url: inviteLink,
+      });
+    } catch (e) {
+      if (e.name === 'AbortError') return; // 사용자 취소
+      copyLink();
     }
-    copyLink();
   };
 
   // navigator.share가 없는 환경(Pi Browser 등 인앱 브라우저)을 위한 개별 채널 버튼.
@@ -76,6 +80,19 @@ export default function InviteModal({ open, onClose }) {
         window.location.href = url;
       }
     }
+  };
+
+  // 카카오톡은 wa.me/t.me 같은 공개 공유 URL이 없어 SDK를 써야 한다(클릭 시 동적 로드).
+  // SDK 로드·초기화·공유 중 어디서 실패하든 false가 오므로 링크 복사로 폴백한다.
+  const shareKakao = async () => {
+    track(Events.INVITE_SENT, { channel: 'kakao' });
+    showToast('💛', t('kakaoOpening'));
+    const ok = await shareToKakao({
+      title: t('inviteShareTitle'),
+      description: t('inviteShareText'),
+      link: inviteLink,
+    });
+    if (!ok) copyLink();
   };
 
   const shareWhatsApp = () => {
@@ -132,15 +149,22 @@ export default function InviteModal({ open, onClose }) {
         </button>
       </div>
 
-      {/* 공유 — 기기 기본 공유 시트 */}
-      <button className={styles.shareBtn} onClick={share}>
-        <span className={styles.shareIcon}>📤</span>
-        {t('shareLabel')}
-      </button>
+      {/* 공유 — 기기 기본 공유 시트. Web Share를 지원하는 브라우저에서만 노출한다
+          (Pi Browser 등 미지원 환경에선 눌러도 복사밖에 안 돼 오해를 부른다) */}
+      {CAN_WEB_SHARE && (
+        <button className={styles.shareBtn} onClick={share}>
+          <span className={styles.shareIcon}>📤</span>
+          {t('shareLabel')}
+        </button>
+      )}
 
-      {/* WhatsApp / Telegram / SMS / 이메일 / QR — navigator.share 미지원 환경(Pi Browser 등)에서도
-          바로 쓸 수 있는 개별 채널 버튼 */}
+      {/* 카카오톡 / WhatsApp / Telegram / SMS / 이메일 / QR — navigator.share 미지원
+          환경(Pi Browser 등)에서도 바로 쓸 수 있는 개별 채널 버튼 */}
       <div className={styles.secondaryRow}>
+        <button className={styles.secondaryBtn} onClick={shareKakao}>
+          <span className={styles.icon}>💛</span>
+          {t('kakaoShareLabel')}
+        </button>
         <button className={styles.secondaryBtn} onClick={shareWhatsApp}>
           <span className={styles.icon}>💚</span>
           {t('whatsappShareLabel')}
