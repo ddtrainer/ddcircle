@@ -486,6 +486,7 @@
   font-family: inherit;
   font-size: 13px;
   font-weight: 700;
+  white-space: nowrap;
   cursor: pointer;
   box-shadow: 0 3px 10px rgba(244,119,48,0.18);
 }
