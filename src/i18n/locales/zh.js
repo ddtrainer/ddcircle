@@ -667,5 +667,11 @@ export default {
   "helpTip2": "\"过度换气（Wim Hof）\"呼吸法强度较高。如果是第一次尝试，请务必先查看指南中的安全须知。",
   "helpTip3": "使用 Pi 账户登录。在 Pi 浏览器中使用时，登录、通知和声音功能最稳定。",
   "helpTip4": "每天完成的活动会累积为 EP，连续记录（连击）越长，倍率就越高。",
-  "helpFeedbackEmailBtn": "发送邮件"
+  "helpFeedbackEmailBtn": "发送邮件",
+  "aboutRowTitle": "关于 DDCircle",
+  "aboutParagraph1": "DDCircle 是一个全球健康社区，通过每天3分钟的仪式来照顾自己。",
+  "aboutParagraph2": "在AI几乎能代劳一切的时代，最珍贵的莫过于\"活着\"本身。人类延续了数百万年的两件事——呼吸与运动。哪怕每天只是短暂地有意识地去实践它们，这就是自我关怀的本质。",
+  "aboutParagraph3": "用Deep（呼吸）和Dash（运动）开启每一天，积累的活动会以EP和DDT的形式被记录下来。深呼吸能恢复交感与副交感神经的平衡，轻度运动则能培养面对压力与焦虑时不轻易动摇的恢复力。",
+  "aboutParagraph4": "使用 Pi Network 账户登录，目前提供15种语言服务。",
+  "aboutTagline": "呼吸要Deep，运动要Dash。一起，活着。——by DDCircle"
 };

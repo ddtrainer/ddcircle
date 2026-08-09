@@ -667,5 +667,11 @@ export default {
   "helpTip2": "'과호흡(윔호프)' 호흡은 강도가 높아요. 처음이라면 가이드의 안전 안내를 꼭 확인하고 시작하세요.",
   "helpTip3": "Pi 계정으로 로그인해요. 파이 브라우저에서 사용하면 로그인·알림·소리가 가장 안정적으로 작동해요.",
   "helpTip4": "매일 완료한 활동은 EP로 쌓이고, 연속 기록(스트릭)이 길어질수록 배율이 올라가요.",
-  "helpFeedbackEmailBtn": "메일 보내기"
+  "helpFeedbackEmailBtn": "메일 보내기",
+  "aboutRowTitle": "DDCircle 소개",
+  "aboutParagraph1": "DDCircle은 매일 3분 의식으로 자신을 돌보기 위한 글로벌 웰니스 커뮤니티입니다.",
+  "aboutParagraph2": "AI가 모든 것을 대신하는 시대, 가장 값진 것은 살아있음 그 자체입니다. 인류가 수백만 년 이어온 두 가지, 호흡과 움직임. 매일 짧게라도 의식적으로 실천하는 것 — 그것이 자기돌봄의 본질입니다.",
+  "aboutParagraph3": "Deep(호흡)과 Dash(운동)로 하루를 시작하고, 쌓아온 활동은 EP와 DDT로 기록됩니다. 깊은 호흡은 교감·부교감 신경의 균형을 되찾아주고, 가벼운 움직임은 스트레스와 불안에 흔들리지 않는 회복력을 길러줍니다.",
+  "aboutParagraph4": "Pi Network 계정으로 로그인하며, 15개 언어로 서비스하고 있습니다.",
+  "aboutTagline": "숨은 Deep하게, 핏은 Dash하게. 함께 살아있다. — by DDCircle"
 };

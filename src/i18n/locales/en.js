@@ -667,5 +667,11 @@ export default {
   "helpTip2": "Power breathing (Wim Hof) is high-intensity. If it's your first time, be sure to check the safety notice in the guide before starting.",
   "helpTip3": "You sign in with a Pi account. Using Pi Browser gives the most reliable sign-in, notifications, and sound.",
   "helpTip4": "Daily activity earns EP, and the multiplier grows the longer your streak runs.",
-  "helpFeedbackEmailBtn": "Email us"
+  "helpFeedbackEmailBtn": "Email us",
+  "aboutRowTitle": "About DDCircle",
+  "aboutParagraph1": "DDCircle is a global wellness community built around a daily three-minute ritual of caring for yourself.",
+  "aboutParagraph2": "In an age when AI does almost everything for us, the most valuable thing is simply being alive. Two things humanity has carried for millions of years: breath and movement. Practicing them consciously — even briefly, every day — is the essence of self-care.",
+  "aboutParagraph3": "Start your day with Deep (breathing) and Dash (movement) — the activity you build up is recorded as EP and DDT. Deep breathing restores the balance between your sympathetic and parasympathetic nervous systems, while light movement builds the resilience to stay steady through stress and anxiety.",
+  "aboutParagraph4": "You sign in with a Pi Network account, and the service is available in 15 languages.",
+  "aboutTagline": "Breathe Deep. Move Dash. Alive, together. — by DDCircle"
 };

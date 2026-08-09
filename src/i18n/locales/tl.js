@@ -665,5 +665,11 @@ export default {
   "helpTip2": "Ang power breathing (Wim Hof) ay may mataas na intensity. Kung ito ang una mong pagkakataon, tiyaking basahin ang paalala sa kaligtasan sa gabay bago magsimula.",
   "helpTip3": "Naglo-log in ka gamit ang Pi account. Ang paggamit ng Pi Browser ang nagbibigay ng pinaka-matatag na pag-log in, notification, at tunog.",
   "helpTip4": "Ang araw-araw na aktibidad ay nag-iipon ng EP, at tumataas ang multiplier habang humahaba ang streak mo.",
-  "helpFeedbackEmailBtn": "Mag-email sa amin"
+  "helpFeedbackEmailBtn": "Mag-email sa amin",
+  "aboutRowTitle": "Tungkol sa DDCircle",
+  "aboutParagraph1": "Ang DDCircle ay isang pandaigdigang wellness community na binuo sa paligid ng araw-araw na 3 minutong ritwal ng pag-aalaga sa sarili.",
+  "aboutParagraph2": "Sa panahon kung saan halos lahat ay ginagawa na ng AI para sa atin, ang pinakamahalaga ay ang pagiging buhay mismo. Dalawang bagay na dala ng sangkatauhan sa loob ng milyun-milyong taon: paghinga at paggalaw. Ang sadyang pagsasagawa nito — kahit sandali lang bawat araw — ang siyang esensya ng pag-aalaga sa sarili.",
+  "aboutParagraph3": "Simulan ang iyong araw gamit ang Deep (paghinga) at Dash (galaw) — ang aktibidad mong naiipon ay naitatala bilang EP at DDT. Ang malalim na paghinga ay nagpapanumbalik ng balanse sa pagitan ng sympathetic at parasympathetic nervous system, samantalang ang magaan na galaw ay bumubuo ng katatagan upang hindi matinag sa stress at pagkabalisa.",
+  "aboutParagraph4": "Naglo-log in ka gamit ang Pi Network account, at available ang serbisyo sa 15 wika.",
+  "aboutTagline": "Huminga nang Deep. Gumalaw nang Dash. Magkasamang buhay. — by DDCircle"
 };

@@ -669,5 +669,11 @@ export default {
   "helpTip2": "Hơi thở mạnh (Wim Hof) có cường độ cao. Nếu đây là lần đầu, hãy chắc chắn xem lưu ý an toàn trong hướng dẫn trước khi bắt đầu.",
   "helpTip3": "Bạn đăng nhập bằng tài khoản Pi. Sử dụng Pi Browser giúp đăng nhập, thông báo và âm thanh hoạt động ổn định nhất.",
   "helpTip4": "Hoạt động hàng ngày sẽ tích lũy thành EP, và hệ số nhân tăng lên khi chuỗi ngày liên tục càng dài.",
-  "helpFeedbackEmailBtn": "Gửi email"
+  "helpFeedbackEmailBtn": "Gửi email",
+  "aboutRowTitle": "Giới thiệu DDCircle",
+  "aboutParagraph1": "DDCircle là một cộng đồng chăm sóc sức khỏe toàn cầu, xây dựng quanh nghi thức chăm sóc bản thân mỗi ngày 3 phút.",
+  "aboutParagraph2": "Trong thời đại AI có thể làm thay hầu hết mọi thứ, điều quý giá nhất chính là sự sống. Hai điều nhân loại đã gìn giữ hàng triệu năm: hơi thở và chuyển động. Thực hành chúng một cách có ý thức — dù chỉ trong chốc lát mỗi ngày — chính là bản chất của việc chăm sóc bản thân.",
+  "aboutParagraph3": "Bắt đầu ngày mới với Deep (hơi thở) và Dash (vận động) — hoạt động bạn tích lũy được ghi lại dưới dạng EP và DDT. Hơi thở sâu giúp khôi phục sự cân bằng giữa hệ thần kinh giao cảm và phó giao cảm, còn vận động nhẹ nhàng xây dựng khả năng phục hồi để không bị lung lay trước căng thẳng và lo âu.",
+  "aboutParagraph4": "Bạn đăng nhập bằng tài khoản Pi Network, và dịch vụ hiện có sẵn bằng 15 ngôn ngữ.",
+  "aboutTagline": "Hơi thở theo Deep. Vận động theo Dash. Cùng nhau sống động. — by DDCircle"
 };

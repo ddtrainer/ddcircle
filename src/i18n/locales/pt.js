@@ -664,5 +664,11 @@ export default {
   "helpTip2": "A respiração de potência (Wim Hof) é de alta intensidade. Se for sua primeira vez, confira o aviso de segurança no guia antes de começar.",
   "helpTip3": "Você entra com uma conta Pi. Usar o Pi Browser garante o login, as notificações e o som mais confiáveis.",
   "helpTip4": "A atividade diária acumula EP, e o multiplicador aumenta quanto mais longa for sua sequência.",
-  "helpFeedbackEmailBtn": "Enviar e-mail"
+  "helpFeedbackEmailBtn": "Enviar e-mail",
+  "aboutRowTitle": "Sobre a DDCircle",
+  "aboutParagraph1": "A DDCircle é uma comunidade global de bem-estar construída em torno de um ritual diário de três minutos para cuidar de si mesmo.",
+  "aboutParagraph2": "Numa era em que a IA faz quase tudo por nós, o mais valioso é simplesmente estar vivo. Duas coisas que a humanidade carrega há milhões de anos: a respiração e o movimento. Praticá-las conscientemente — mesmo que brevemente, todos os dias — é a essência do autocuidado.",
+  "aboutParagraph3": "Comece o seu dia com Deep (respiração) e Dash (movimento) — a atividade que você acumula é registrada como EP e DDT. A respiração profunda restaura o equilíbrio entre o sistema nervoso simpático e parassimpático, enquanto o movimento leve constrói a resiliência para permanecer firme diante do estresse e da ansiedade.",
+  "aboutParagraph4": "Você entra com uma conta Pi Network, e o serviço está disponível em 15 idiomas.",
+  "aboutTagline": "Respire Deep. Mova-se Dash. Vivos, juntos. — by DDCircle"
 };

@@ -664,5 +664,11 @@ export default {
   "helpTip2": "Güçlü nefes (Wim Hof) yüksek yoğunluklu bir egzersizdir. İlk defa yapıyorsanız, başlamadan önce kılavuzdaki güvenlik uyarısını mutlaka kontrol edin.",
   "helpTip3": "Pi hesabınızla giriş yaparsınız. Pi Browser kullanmak en güvenilir giriş, bildirim ve ses deneyimini sağlar.",
   "helpTip4": "Günlük etkinlikler EP kazandırır ve serin uzadıkça çarpan artar.",
-  "helpFeedbackEmailBtn": "E-posta gönder"
+  "helpFeedbackEmailBtn": "E-posta gönder",
+  "aboutRowTitle": "DDCircle Hakkında",
+  "aboutParagraph1": "DDCircle, kendine bakmak için her gün üç dakikalık bir ritüel etrafında kurulmuş küresel bir sağlık topluluğudur.",
+  "aboutParagraph2": "Yapay zekânın hemen her şeyi bizim yerimize yaptığı bir çağda, en değerli şey sadece hayatta olmaktır. İnsanlığın milyonlarca yıldır taşıdığı iki şey: nefes ve hareket. Kısa da olsa her gün bunları bilinçle uygulamak — kendine bakımın özü budur.",
+  "aboutParagraph3": "Gününe Deep (nefes) ve Dash (hareket) ile başla — biriktirdiğin aktivite EP ve DDT olarak kaydedilir. Derin nefes, sempatik ve parasempatik sinir sistemi arasındaki dengeyi geri kazandırırken, hafif hareket stres ve kaygı karşısında sarsılmadan durabilme dayanıklılığını geliştirir.",
+  "aboutParagraph4": "Pi Network hesabınızla giriş yaparsınız ve hizmet 15 dilde sunulmaktadır.",
+  "aboutTagline": "Deep nefes al. Dash hareket et. Birlikte, hayattayız. — by DDCircle"
 };

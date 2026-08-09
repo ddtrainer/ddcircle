@@ -667,5 +667,11 @@ export default {
   "helpTip2": "Napas kuat (Wim Hof) memiliki intensitas tinggi. Jika ini pertama kalinya, pastikan membaca catatan keamanan di panduan sebelum memulai.",
   "helpTip3": "Anda masuk dengan akun Pi. Menggunakan Pi Browser memberikan login, notifikasi, dan suara yang paling stabil.",
   "helpTip4": "Aktivitas harian mengumpulkan EP, dan pengali akan meningkat semakin panjang streak-mu.",
-  "helpFeedbackEmailBtn": "Kirim email"
+  "helpFeedbackEmailBtn": "Kirim email",
+  "aboutRowTitle": "Tentang DDCircle",
+  "aboutParagraph1": "DDCircle adalah komunitas kesehatan global yang dibangun di sekitar ritual harian 3 menit untuk merawat diri sendiri.",
+  "aboutParagraph2": "Di era ketika AI mampu melakukan hampir segalanya untuk kita, hal paling berharga adalah sekadar hidup. Dua hal yang telah dijaga umat manusia selama jutaan tahun: napas dan gerakan. Mempraktikkannya dengan sadar — meski singkat, setiap hari — adalah inti dari perawatan diri.",
+  "aboutParagraph3": "Mulailah harimu dengan Deep (napas) dan Dash (gerakan) — aktivitas yang kamu kumpulkan akan dicatat sebagai EP dan DDT. Napas dalam memulihkan keseimbangan antara sistem saraf simpatis dan parasimpatis, sementara gerakan ringan membangun ketahanan agar tidak mudah goyah oleh stres dan kecemasan.",
+  "aboutParagraph4": "Anda masuk dengan akun Pi Network, dan layanan ini tersedia dalam 15 bahasa.",
+  "aboutTagline": "Bernapaslah dengan Deep. Bergeraklah dengan Dash. Hidup, bersama. — by DDCircle"
 };

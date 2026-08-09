@@ -12,6 +12,7 @@ import SetTimingModal from './SetTimingModal';
 import PiTipModal from './PiTipModal';
 import LanguageModal from './LanguageModal';
 import HelpFeedbackModal from './HelpFeedbackModal';
+import AboutModal from './AboutModal';
 import styles from './SettingsModal.module.css';
 
 // 통합 설정 허브 — 언어(인라인) + 프로필·DD 타이밍·계정으로 연결.
@@ -27,6 +28,7 @@ export default function SettingsModal({ open, onClose }) {
   const [tipOpen, setTipOpen] = useState(false);
   const [langOpen, setLangOpen] = useState(false);
   const [helpOpen, setHelpOpen] = useState(false);
+  const [aboutOpen, setAboutOpen] = useState(false);
 
   // 디지털북(PDF) — 아직 실제 상품이 아니라 준비 중 안내만. 구매 플로우 없이 토스트로 끝.
   const openDigitalBookInfo = () => {
@@ -121,6 +123,15 @@ export default function SettingsModal({ open, onClose }) {
           <span className={styles.chevron}>›</span>
         </button>
 
+        {/* DDCircle 소개 */}
+        <button className={styles.row} onClick={() => setAboutOpen(true)}>
+          <span className={styles.rowIcon}>📄</span>
+          <span className={styles.rowMain}>
+            <span className={styles.rowTitle}>{t('aboutRowTitle')}</span>
+          </span>
+          <span className={styles.chevron}>›</span>
+        </button>
+
         {/* 이용약관 / 개인정보처리방침 — 기존엔 로그인 화면 하단에만 있어 로그인 후엔 찾을 방법이 없었음 */}
         <button className={styles.row} onClick={() => { onClose?.(); navigate('/terms'); }}>
           <span className={styles.rowIcon}>📜</span>
@@ -166,6 +177,8 @@ export default function SettingsModal({ open, onClose }) {
       <LanguageModal open={langOpen} onClose={() => setLangOpen(false)} />
       {/* 도움말 및 피드백 */}
       <HelpFeedbackModal open={helpOpen} onClose={() => setHelpOpen(false)} />
+      {/* DDCircle 소개 */}
+      <AboutModal open={aboutOpen} onClose={() => setAboutOpen(false)} />
     </>
   );
 }
