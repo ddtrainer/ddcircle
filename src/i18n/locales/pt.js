@@ -656,5 +656,13 @@ export default {
   "levelUpEpMultiplier": "Multiplicador de EP ×{x}",
   "levelUpSafetyNotice": "⚠️ Este é um nível de alta intensidade. Confira o aviso de segurança no guia.",
   "levelUpConfirmBtn": "Entendi",
-  "pushSetupFailedToast": "Falha ao configurar notificações push: {msg}"
+  "pushSetupFailedToast": "Falha ao configurar notificações push: {msg}",
+  "helpFeedbackRowTitle": "Ajuda e Feedback",
+  "helpFeedbackRowSub": "Envie-nos uma pergunta ou sugestão",
+  "helpFeedbackIntro": "Tem uma pergunta ou feedback? Sinta-se à vontade para nos enviar um e-mail a qualquer momento.",
+  "helpTip1": "A DDCircle não é um serviço médico. Se você tiver preocupações de saúde, consulte um médico antes de se exercitar ou respirar.",
+  "helpTip2": "A respiração de potência (Wim Hof) é de alta intensidade. Se for sua primeira vez, confira o aviso de segurança no guia antes de começar.",
+  "helpTip3": "Você entra com uma conta Pi. Usar o Pi Browser garante o login, as notificações e o som mais confiáveis.",
+  "helpTip4": "A atividade diária acumula EP, e o multiplicador aumenta quanto mais longa for sua sequência.",
+  "helpFeedbackEmailBtn": "Enviar e-mail"
 };

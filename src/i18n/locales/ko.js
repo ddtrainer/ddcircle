@@ -659,5 +659,13 @@ export default {
   "levelUpEpMultiplier": "EP 배율 ×{x}",
   "levelUpSafetyNotice": "⚠️ 강도가 높은 단계예요. 가이드의 안전 안내를 꼭 확인하세요.",
   "levelUpConfirmBtn": "확인",
-  "pushSetupFailedToast": "푸시 알림 설정 실패: {msg}"
+  "pushSetupFailedToast": "푸시 알림 설정 실패: {msg}",
+  "helpFeedbackRowTitle": "도움말 및 피드백",
+  "helpFeedbackRowSub": "궁금한 점이나 의견을 보내주세요",
+  "helpFeedbackIntro": "궁금한 점이나 의견이 있다면 언제든 편하게 메일 주세요.",
+  "helpTip1": "DDCircle은 의료 서비스가 아니에요. 건강이 걱정된다면 운동·호흡 전에 전문의와 상담하세요.",
+  "helpTip2": "'과호흡(윔호프)' 호흡은 강도가 높아요. 처음이라면 가이드의 안전 안내를 꼭 확인하고 시작하세요.",
+  "helpTip3": "Pi 계정으로 로그인해요. 파이 브라우저에서 사용하면 로그인·알림·소리가 가장 안정적으로 작동해요.",
+  "helpTip4": "매일 완료한 활동은 EP로 쌓이고, 연속 기록(스트릭)이 길어질수록 배율이 올라가요.",
+  "helpFeedbackEmailBtn": "메일 보내기"
 };

@@ -657,5 +657,13 @@ export default {
   "levelUpEpMultiplier": "Multiplier ng EP ×{x}",
   "levelUpSafetyNotice": "⚠️ Ito ay isang antas na may mataas na intensity. Tiyaking basahin ang paalala sa kaligtasan sa gabay.",
   "levelUpConfirmBtn": "Nakuha ko",
-  "pushSetupFailedToast": "Nabigo ang pag-setup ng push notification: {msg}"
+  "pushSetupFailedToast": "Nabigo ang pag-setup ng push notification: {msg}",
+  "helpFeedbackRowTitle": "Tulong at Feedback",
+  "helpFeedbackRowSub": "Ipadala sa amin ang tanong o ideya mo",
+  "helpFeedbackIntro": "May tanong o feedback ka ba? Huwag mag-atubiling mag-email sa amin anumang oras.",
+  "helpTip1": "Ang DDCircle ay hindi medikal na serbisyo. Kung may alalahanin ka sa kalusugan, kumonsulta sa doktor bago mag-ehersisyo o huminga.",
+  "helpTip2": "Ang power breathing (Wim Hof) ay may mataas na intensity. Kung ito ang una mong pagkakataon, tiyaking basahin ang paalala sa kaligtasan sa gabay bago magsimula.",
+  "helpTip3": "Naglo-log in ka gamit ang Pi account. Ang paggamit ng Pi Browser ang nagbibigay ng pinaka-matatag na pag-log in, notification, at tunog.",
+  "helpTip4": "Ang araw-araw na aktibidad ay nag-iipon ng EP, at tumataas ang multiplier habang humahaba ang streak mo.",
+  "helpFeedbackEmailBtn": "Mag-email sa amin"
 };

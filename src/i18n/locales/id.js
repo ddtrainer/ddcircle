@@ -659,5 +659,13 @@ export default {
   "levelUpEpMultiplier": "Pengali EP ×{x}",
   "levelUpSafetyNotice": "⚠️ Ini level dengan intensitas tinggi. Pastikan membaca catatan keamanan di panduan.",
   "levelUpConfirmBtn": "Mengerti",
-  "pushSetupFailedToast": "Pengaturan notifikasi push gagal: {msg}"
+  "pushSetupFailedToast": "Pengaturan notifikasi push gagal: {msg}",
+  "helpFeedbackRowTitle": "Bantuan & Masukan",
+  "helpFeedbackRowSub": "Kirimkan pertanyaan atau masukan",
+  "helpFeedbackIntro": "Ada pertanyaan atau masukan? Jangan ragu untuk mengirim email kapan saja.",
+  "helpTip1": "DDCircle bukan layanan medis. Jika Anda memiliki masalah kesehatan, konsultasikan dengan dokter sebelum berolahraga atau bernapas.",
+  "helpTip2": "Napas kuat (Wim Hof) memiliki intensitas tinggi. Jika ini pertama kalinya, pastikan membaca catatan keamanan di panduan sebelum memulai.",
+  "helpTip3": "Anda masuk dengan akun Pi. Menggunakan Pi Browser memberikan login, notifikasi, dan suara yang paling stabil.",
+  "helpTip4": "Aktivitas harian mengumpulkan EP, dan pengali akan meningkat semakin panjang streak-mu.",
+  "helpFeedbackEmailBtn": "Kirim email"
 };

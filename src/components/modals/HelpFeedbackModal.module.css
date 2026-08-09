@@ -1,0 +1,52 @@
+.icon {
+  font-size: 40px;
+  margin-bottom: 6px;
+}
+
+.title {
+  font-family: 'Noto Serif KR', 'Playfair Display', serif;
+  font-size: 19px;
+  font-weight: 700;
+  margin-bottom: 6px;
+  color: var(--text);
+  padding-right: 24px;
+}
+
+.intro {
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--text-soft);
+  margin: 0 0 14px;
+}
+
+.tips {
+  text-align: left;
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--text);
+  background: var(--bg-soft);
+  border-radius: 12px;
+  padding: 14px 18px 14px 32px;
+  margin: 0 0 16px;
+}
+
+.tips li { margin-bottom: 8px; }
+.tips li:last-child { margin-bottom: 0; }
+
+.primary {
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  background: linear-gradient(135deg, var(--warm), var(--cool));
+  border: none;
+  border-radius: 14px;
+  padding: 14px;
+  color: white;
+  font-family: inherit;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  text-align: center;
+  text-decoration: none;
+  box-shadow: 0 6px 16px rgba(244, 119, 48, 0.2);
+}

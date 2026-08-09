@@ -656,5 +656,13 @@ export default {
   "levelUpEpMultiplier": "EP çarpanı ×{x}",
   "levelUpSafetyNotice": "⚠️ Bu yüksek yoğunluklu bir seviye. Kılavuzdaki güvenlik uyarısını mutlaka kontrol et.",
   "levelUpConfirmBtn": "Anladım",
-  "pushSetupFailedToast": "Push bildirim kurulumu başarısız: {msg}"
+  "pushSetupFailedToast": "Push bildirim kurulumu başarısız: {msg}",
+  "helpFeedbackRowTitle": "Yardım ve Geri Bildirim",
+  "helpFeedbackRowSub": "Sorunuzu veya fikrinizi bize gönderin",
+  "helpFeedbackIntro": "Bir sorunuz veya geri bildiriminiz mi var? İstediğiniz zaman bize e-posta gönderebilirsiniz.",
+  "helpTip1": "DDCircle bir tıbbi hizmet değildir. Sağlık endişeleriniz varsa egzersiz veya nefes çalışmasından önce bir doktora danışın.",
+  "helpTip2": "Güçlü nefes (Wim Hof) yüksek yoğunluklu bir egzersizdir. İlk defa yapıyorsanız, başlamadan önce kılavuzdaki güvenlik uyarısını mutlaka kontrol edin.",
+  "helpTip3": "Pi hesabınızla giriş yaparsınız. Pi Browser kullanmak en güvenilir giriş, bildirim ve ses deneyimini sağlar.",
+  "helpTip4": "Günlük etkinlikler EP kazandırır ve serin uzadıkça çarpan artar.",
+  "helpFeedbackEmailBtn": "E-posta gönder"
 };

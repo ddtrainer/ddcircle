@@ -661,5 +661,13 @@ export default {
   "levelUpEpMultiplier": "Hệ số EP ×{x}",
   "levelUpSafetyNotice": "⚠️ Đây là cấp độ cường độ cao. Hãy chắc chắn đã xem lưu ý an toàn trong hướng dẫn.",
   "levelUpConfirmBtn": "Đã hiểu",
-  "pushSetupFailedToast": "Thiết lập thông báo đẩy thất bại: {msg}"
+  "pushSetupFailedToast": "Thiết lập thông báo đẩy thất bại: {msg}",
+  "helpFeedbackRowTitle": "Trợ giúp & Phản hồi",
+  "helpFeedbackRowSub": "Gửi cho chúng tôi câu hỏi hoặc ý kiến",
+  "helpFeedbackIntro": "Có câu hỏi hoặc phản hồi? Hãy thoải mái email cho chúng tôi bất cứ lúc nào.",
+  "helpTip1": "DDCircle không phải là dịch vụ y tế. Nếu bạn có vấn đề sức khỏe, hãy hỏi ý kiến bác sĩ trước khi tập luyện hoặc hít thở.",
+  "helpTip2": "Hơi thở mạnh (Wim Hof) có cường độ cao. Nếu đây là lần đầu, hãy chắc chắn xem lưu ý an toàn trong hướng dẫn trước khi bắt đầu.",
+  "helpTip3": "Bạn đăng nhập bằng tài khoản Pi. Sử dụng Pi Browser giúp đăng nhập, thông báo và âm thanh hoạt động ổn định nhất.",
+  "helpTip4": "Hoạt động hàng ngày sẽ tích lũy thành EP, và hệ số nhân tăng lên khi chuỗi ngày liên tục càng dài.",
+  "helpFeedbackEmailBtn": "Gửi email"
 };

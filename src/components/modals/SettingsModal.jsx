@@ -11,6 +11,7 @@ import Modal from './Modal';
 import SetTimingModal from './SetTimingModal';
 import PiTipModal from './PiTipModal';
 import LanguageModal from './LanguageModal';
+import HelpFeedbackModal from './HelpFeedbackModal';
 import styles from './SettingsModal.module.css';
 
 // 통합 설정 허브 — 언어(인라인) + 프로필·DD 타이밍·계정으로 연결.
@@ -25,6 +26,7 @@ export default function SettingsModal({ open, onClose }) {
   const [timingOpen, setTimingOpen] = useState(false);
   const [tipOpen, setTipOpen] = useState(false);
   const [langOpen, setLangOpen] = useState(false);
+  const [helpOpen, setHelpOpen] = useState(false);
 
   // 디지털북(PDF) — 아직 실제 상품이 아니라 준비 중 안내만. 구매 플로우 없이 토스트로 끝.
   const openDigitalBookInfo = () => {
@@ -135,6 +137,16 @@ export default function SettingsModal({ open, onClose }) {
           <span className={styles.chevron}>›</span>
         </button>
 
+        {/* 도움말 및 피드백 — 문의 메일 + 알아두면 좋은 사항 안내 */}
+        <button className={styles.row} onClick={() => setHelpOpen(true)}>
+          <span className={styles.rowIcon}>💬</span>
+          <span className={styles.rowMain}>
+            <span className={styles.rowTitle}>{t('helpFeedbackRowTitle')}</span>
+            <span className={styles.rowSub}>{t('helpFeedbackRowSub')}</span>
+          </span>
+          <span className={styles.chevron}>›</span>
+        </button>
+
         {/* 계정 — Pi 전용. 기존 계정 세션이 있을 때만 로그아웃 노출(카카오/구글 로그인 진입점 제거) */}
         {user && (
           <button className={`${styles.row} ${styles.danger}`} onClick={logout}>
@@ -152,6 +164,8 @@ export default function SettingsModal({ open, onClose }) {
       <PiTipModal open={tipOpen} onClose={() => setTipOpen(false)} />
       {/* 언어 선택 화면 */}
       <LanguageModal open={langOpen} onClose={() => setLangOpen(false)} />
+      {/* 도움말 및 피드백 */}
+      <HelpFeedbackModal open={helpOpen} onClose={() => setHelpOpen(false)} />
     </>
   );
 }

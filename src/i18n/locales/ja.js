@@ -659,5 +659,13 @@ export default {
   "levelUpEpMultiplier": "EP倍率 ×{x}",
   "levelUpSafetyNotice": "⚠️ これは強度の高いレベルです。ガイドの安全に関する注意事項を必ず確認してください。",
   "levelUpConfirmBtn": "了解",
-  "pushSetupFailedToast": "プッシュ通知の設定に失敗しました: {msg}"
+  "pushSetupFailedToast": "プッシュ通知の設定に失敗しました: {msg}",
+  "helpFeedbackRowTitle": "ヘルプとフィードバック",
+  "helpFeedbackRowSub": "質問やご意見をお寄せください",
+  "helpFeedbackIntro": "ご質問やご意見があれば、いつでもお気軽にメールしてください。",
+  "helpTip1": "DDCircleは医療サービスではありません。健康に不安がある場合は、運動や呼吸の前に医師にご相談ください。",
+  "helpTip2": "パワーブレス（ウィム・ホフ）は強度の高い呼吸法です。初めての場合は、始める前にガイドの安全に関する注意事項を必ず確認してください。",
+  "helpTip3": "Piアカウントでサインインします。Pi Browserを使うとサインイン・通知・音が最も安定して動作します。",
+  "helpTip4": "毎日の活動でEPが貯まり、連続記録（ストリーク）が長くなるほど倍率が上がります。",
+  "helpFeedbackEmailBtn": "メールを送る"
 };

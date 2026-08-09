@@ -659,5 +659,13 @@ export default {
   "levelUpEpMultiplier": "EP multiplier ×{x}",
   "levelUpSafetyNotice": "⚠️ This is a high-intensity level. Be sure to check the safety notice in the guide.",
   "levelUpConfirmBtn": "Got it",
-  "pushSetupFailedToast": "Push notification setup failed: {msg}"
+  "pushSetupFailedToast": "Push notification setup failed: {msg}",
+  "helpFeedbackRowTitle": "Help & Feedback",
+  "helpFeedbackRowSub": "Send us a question or idea",
+  "helpFeedbackIntro": "Have a question or feedback? Feel free to email us anytime.",
+  "helpTip1": "DDCircle isn't a medical service. If you have health concerns, check with a doctor before exercising or breathing.",
+  "helpTip2": "Power breathing (Wim Hof) is high-intensity. If it's your first time, be sure to check the safety notice in the guide before starting.",
+  "helpTip3": "You sign in with a Pi account. Using Pi Browser gives the most reliable sign-in, notifications, and sound.",
+  "helpTip4": "Daily activity earns EP, and the multiplier grows the longer your streak runs.",
+  "helpFeedbackEmailBtn": "Email us"
 };

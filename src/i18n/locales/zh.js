@@ -659,5 +659,13 @@ export default {
   "levelUpEpMultiplier": "EP 倍率 ×{x}",
   "levelUpSafetyNotice": "⚠️ 这是高强度等级。请务必查看指南中的安全须知。",
   "levelUpConfirmBtn": "知道了",
-  "pushSetupFailedToast": "推送通知设置失败：{msg}"
+  "pushSetupFailedToast": "推送通知设置失败：{msg}",
+  "helpFeedbackRowTitle": "帮助与反馈",
+  "helpFeedbackRowSub": "有问题或建议请告诉我们",
+  "helpFeedbackIntro": "有任何疑问或建议，欢迎随时发邮件给我们。",
+  "helpTip1": "DDCircle 不是医疗服务。如果您有健康方面的顾虑，请在运动或呼吸练习前咨询医生。",
+  "helpTip2": "\"过度换气（Wim Hof）\"呼吸法强度较高。如果是第一次尝试，请务必先查看指南中的安全须知。",
+  "helpTip3": "使用 Pi 账户登录。在 Pi 浏览器中使用时，登录、通知和声音功能最稳定。",
+  "helpTip4": "每天完成的活动会累积为 EP，连续记录（连击）越长，倍率就越高。",
+  "helpFeedbackEmailBtn": "发送邮件"
 };
