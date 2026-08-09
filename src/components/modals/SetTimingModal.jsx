@@ -91,7 +91,7 @@ export default function SetTimingModal({ open, onClose }) {
         lang,
         onError: (msg) => {
           pushOk = false;
-          showToast('⚠️', `푸시 알림 설정 실패: ${msg}`);
+          showToast('⚠️', t('pushSetupFailedToast', { msg }));
         },
       });
       if (result) pushOk = true;

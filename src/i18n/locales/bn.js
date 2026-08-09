@@ -650,5 +650,11 @@ export default {
   "resultCardScanLabel": "শুরু করতে স্ক্যান করুন",
   "resultCardStreakDays": "টানা {n} দিন",
   "resultCardAnonNickname": "আমি",
-  "calDayHasEntry": "এন্ট্রি আছে"
+  "calDayHasEntry": "এন্ট্রি আছে",
+  "levelUpTrackDeep": "Deep · নিঃশ্বাস",
+  "levelUpTrackDash": "Dash · ব্যায়াম",
+  "levelUpEpMultiplier": "EP গুণক ×{x}",
+  "levelUpSafetyNotice": "⚠️ এটি একটি উচ্চ-তীব্রতার স্তর। গাইডের নিরাপত্তা নোটিশ অবশ্যই দেখুন।",
+  "levelUpConfirmBtn": "বুঝেছি",
+  "pushSetupFailedToast": "পুশ নোটিফিকেশন সেটআপ ব্যর্থ হয়েছে: {msg}"
 };

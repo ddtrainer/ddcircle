@@ -650,5 +650,11 @@ export default {
   "resultCardScanLabel": "Escaneie para começar",
   "resultCardStreakDays": "sequência de {n} dias",
   "resultCardAnonNickname": "Eu",
-  "calDayHasEntry": "tem um registro"
+  "calDayHasEntry": "tem um registro",
+  "levelUpTrackDeep": "Deep · Respiração",
+  "levelUpTrackDash": "Dash · Exercício",
+  "levelUpEpMultiplier": "Multiplicador de EP ×{x}",
+  "levelUpSafetyNotice": "⚠️ Este é um nível de alta intensidade. Confira o aviso de segurança no guia.",
+  "levelUpConfirmBtn": "Entendi",
+  "pushSetupFailedToast": "Falha ao configurar notificações push: {msg}"
 };

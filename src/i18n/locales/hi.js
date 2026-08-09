@@ -650,5 +650,11 @@ export default {
   "resultCardScanLabel": "शुरू करने के लिए स्कैन करें",
   "resultCardStreakDays": "{n} दिन की लगातार श्रृंखला",
   "resultCardAnonNickname": "मैं",
-  "calDayHasEntry": "एंट्री मौजूद है"
+  "calDayHasEntry": "एंट्री मौजूद है",
+  "levelUpTrackDeep": "Deep · सांस",
+  "levelUpTrackDash": "Dash · व्यायाम",
+  "levelUpEpMultiplier": "EP गुणक ×{x}",
+  "levelUpSafetyNotice": "⚠️ यह एक हाई-इंटेंसिटी लेवल है। गाइड में सुरक्षा सूचना जरूर देखें।",
+  "levelUpConfirmBtn": "समझ गया",
+  "pushSetupFailedToast": "पुश नोटिफिकेशन सेटअप विफल: {msg}"
 };

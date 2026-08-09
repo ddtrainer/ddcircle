@@ -653,5 +653,11 @@ export default {
   "resultCardScanLabel": "扫码开始",
   "resultCardStreakDays": "连续{n}天",
   "resultCardAnonNickname": "我",
-  "calDayHasEntry": "有记录"
+  "calDayHasEntry": "有记录",
+  "levelUpTrackDeep": "Deep · 呼吸",
+  "levelUpTrackDash": "Dash · 运动",
+  "levelUpEpMultiplier": "EP 倍率 ×{x}",
+  "levelUpSafetyNotice": "⚠️ 这是高强度等级。请务必查看指南中的安全须知。",
+  "levelUpConfirmBtn": "知道了",
+  "pushSetupFailedToast": "推送通知设置失败：{msg}"
 };

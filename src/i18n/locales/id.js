@@ -653,5 +653,11 @@ export default {
   "resultCardScanLabel": "Pindai untuk mulai",
   "resultCardStreakDays": "{n} hari berturut-turut",
   "resultCardAnonNickname": "Aku",
-  "calDayHasEntry": "ada catatan"
+  "calDayHasEntry": "ada catatan",
+  "levelUpTrackDeep": "Deep · Napas",
+  "levelUpTrackDash": "Dash · Olahraga",
+  "levelUpEpMultiplier": "Pengali EP ×{x}",
+  "levelUpSafetyNotice": "⚠️ Ini level dengan intensitas tinggi. Pastikan membaca catatan keamanan di panduan.",
+  "levelUpConfirmBtn": "Mengerti",
+  "pushSetupFailedToast": "Pengaturan notifikasi push gagal: {msg}"
 };

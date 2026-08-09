@@ -651,5 +651,11 @@ export default {
   "resultCardScanLabel": "สแกนเพื่อเริ่ม",
   "resultCardStreakDays": "ต่อเนื่อง {n} วัน",
   "resultCardAnonNickname": "ฉัน",
-  "calDayHasEntry": "มีบันทึก"
+  "calDayHasEntry": "มีบันทึก",
+  "levelUpTrackDeep": "Deep · การหายใจ",
+  "levelUpTrackDash": "Dash · การออกกำลังกาย",
+  "levelUpEpMultiplier": "ตัวคูณ EP ×{x}",
+  "levelUpSafetyNotice": "⚠️ นี่คือระดับความเข้มข้นสูง โปรดตรวจสอบคำแนะนำด้านความปลอดภัยในคู่มือ",
+  "levelUpConfirmBtn": "เข้าใจแล้ว",
+  "pushSetupFailedToast": "ตั้งค่าการแจ้งเตือนพุชล้มเหลว: {msg}"
 };

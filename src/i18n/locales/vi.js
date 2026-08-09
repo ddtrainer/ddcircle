@@ -655,5 +655,11 @@ export default {
   "resultCardScanLabel": "Quét để bắt đầu",
   "resultCardStreakDays": "chuỗi {n} ngày",
   "resultCardAnonNickname": "Tôi",
-  "calDayHasEntry": "có mục nhập"
+  "calDayHasEntry": "có mục nhập",
+  "levelUpTrackDeep": "Deep · Hơi thở",
+  "levelUpTrackDash": "Dash · Vận động",
+  "levelUpEpMultiplier": "Hệ số EP ×{x}",
+  "levelUpSafetyNotice": "⚠️ Đây là cấp độ cường độ cao. Hãy chắc chắn đã xem lưu ý an toàn trong hướng dẫn.",
+  "levelUpConfirmBtn": "Đã hiểu",
+  "pushSetupFailedToast": "Thiết lập thông báo đẩy thất bại: {msg}"
 };

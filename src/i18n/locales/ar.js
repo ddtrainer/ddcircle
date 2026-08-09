@@ -651,5 +651,11 @@ export default {
   "resultCardScanLabel": "امسح للبدء",
   "resultCardStreakDays": "سلسلة {n} يومًا",
   "resultCardAnonNickname": "أنا",
-  "calDayHasEntry": "يوجد إدخال"
+  "calDayHasEntry": "يوجد إدخال",
+  "levelUpTrackDeep": "Deep · التنفس",
+  "levelUpTrackDash": "Dash · التمرين",
+  "levelUpEpMultiplier": "مضاعف EP ×{x}",
+  "levelUpSafetyNotice": "⚠️ هذا مستوى عالي الشدة. تأكد من مراجعة إشعار السلامة في الدليل.",
+  "levelUpConfirmBtn": "فهمت",
+  "pushSetupFailedToast": "فشل إعداد الإشعارات: {msg}"
 };

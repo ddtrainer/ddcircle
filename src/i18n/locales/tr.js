@@ -650,5 +650,11 @@ export default {
   "resultCardScanLabel": "Başlamak için tara",
   "resultCardStreakDays": "{n} günlük seri",
   "resultCardAnonNickname": "Ben",
-  "calDayHasEntry": "kayıt var"
+  "calDayHasEntry": "kayıt var",
+  "levelUpTrackDeep": "Deep · Nefes",
+  "levelUpTrackDash": "Dash · Egzersiz",
+  "levelUpEpMultiplier": "EP çarpanı ×{x}",
+  "levelUpSafetyNotice": "⚠️ Bu yüksek yoğunluklu bir seviye. Kılavuzdaki güvenlik uyarısını mutlaka kontrol et.",
+  "levelUpConfirmBtn": "Anladım",
+  "pushSetupFailedToast": "Push bildirim kurulumu başarısız: {msg}"
 };

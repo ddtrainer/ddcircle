@@ -653,5 +653,11 @@ export default {
   "resultCardScanLabel": "스캔하여 시작",
   "resultCardStreakDays": "{n}일 연속",
   "resultCardAnonNickname": "나",
-  "calDayHasEntry": "기록 있음"
+  "calDayHasEntry": "기록 있음",
+  "levelUpTrackDeep": "Deep · 호흡",
+  "levelUpTrackDash": "Dash · 운동",
+  "levelUpEpMultiplier": "EP 배율 ×{x}",
+  "levelUpSafetyNotice": "⚠️ 강도가 높은 단계예요. 가이드의 안전 안내를 꼭 확인하세요.",
+  "levelUpConfirmBtn": "확인",
+  "pushSetupFailedToast": "푸시 알림 설정 실패: {msg}"
 };

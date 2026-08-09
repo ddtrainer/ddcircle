@@ -651,5 +651,11 @@ export default {
   "resultCardScanLabel": "شروع کرنے کے لیے اسکین کریں",
   "resultCardStreakDays": "{n} دن کا تسلسل",
   "resultCardAnonNickname": "میں",
-  "calDayHasEntry": "اندراج موجود ہے"
+  "calDayHasEntry": "اندراج موجود ہے",
+  "levelUpTrackDeep": "Deep · سانس",
+  "levelUpTrackDash": "Dash · ورزش",
+  "levelUpEpMultiplier": "EP ضرب ×{x}",
+  "levelUpSafetyNotice": "⚠️ یہ ایک ہائی انٹینسٹی لیول ہے۔ گائیڈ میں حفاظتی نوٹس ضرور دیکھیں۔",
+  "levelUpConfirmBtn": "سمجھ گیا",
+  "pushSetupFailedToast": "پش نوٹیفیکیشن سیٹ اپ ناکام: {msg}"
 };

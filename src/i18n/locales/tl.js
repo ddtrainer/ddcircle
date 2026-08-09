@@ -651,5 +651,11 @@ export default {
   "resultCardScanLabel": "I-scan para magsimula",
   "resultCardStreakDays": "{n} araw nang sunod-sunod",
   "resultCardAnonNickname": "Ako",
-  "calDayHasEntry": "may entry"
+  "calDayHasEntry": "may entry",
+  "levelUpTrackDeep": "Deep · Paghinga",
+  "levelUpTrackDash": "Dash · Ehersisyo",
+  "levelUpEpMultiplier": "Multiplier ng EP ×{x}",
+  "levelUpSafetyNotice": "⚠️ Ito ay isang antas na may mataas na intensity. Tiyaking basahin ang paalala sa kaligtasan sa gabay.",
+  "levelUpConfirmBtn": "Nakuha ko",
+  "pushSetupFailedToast": "Nabigo ang pag-setup ng push notification: {msg}"
 };
