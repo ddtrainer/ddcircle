@@ -177,7 +177,7 @@ export default function Book() {
                       if (cell.postIndex != null) setPageIdx(cell.postIndex + 2);
                     }}
                     disabled={cell.empty}
-                    aria-label={cell.empty ? '' : `${cell.day}${cell.hasEntry ? ' · 기록 있음' : ''}`}
+                    aria-label={cell.empty ? '' : `${cell.day}${cell.hasEntry ? ` · ${t('calDayHasEntry')}` : ''}`}
                   >
                     {!cell.empty && (
                       <>

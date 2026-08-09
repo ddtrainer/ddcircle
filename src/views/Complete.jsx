@@ -48,7 +48,7 @@ export default function Complete() {
   const [empathyMsg, setEmpathyMsg] = useState('');
   const textareaRef = useRef(null);
   // 매일 다른 prompt — 자정 넘어가면 자동으로 새 문구
-  const todayPrompt = useMemo(() => getTodayPrompt(lang), [lang]);
+  const todayPrompt = useMemo(() => getTodayPrompt(t), [t]);
 
   // auto-grow textarea: 내용에 맞춰 높이 자동 확장
   useEffect(() => {
@@ -125,7 +125,7 @@ export default function Complete() {
           showToast('📷', t('proofUploadFailed'));
         }
       } catch (e) {
-        showToast('⚠️', '저장에 실패했어요. 로컬에만 저장됩니다.');
+        showToast('⚠️', t('saveFailedLocalToast'));
         addUserPost(payload);
       }
     } else {
@@ -186,41 +186,32 @@ export default function Complete() {
         streak: userEp.streak,
         mood: selectedMood, // mood id (hard/tired/anxious/didIt/proud)
         exerciseLabel,
-        nickname: profile?.nickname || (user ? 'DD' : '나'),
+        nickname: profile?.nickname || (user ? 'DD' : t('resultCardAnonNickname')),
         emoji: profile?.emoji || '🌸',
         emojiBg: profile?.emoji_bg || 'linear-gradient(135deg,#fbb040,#f97b9c)',
         lang,
+        t,
         userMessage: empathyMsg.trim(),  // textarea에 쓴 글 — 카드에 같이 표시
       });
       // 남에게 건네지는 링크는 PiNet 주소여야 상대 기기에서 Pi Browser로 열린다.
       const cardUrl = `${shareBaseUrl()}/?ref=share-card&lang=${lang}`;
-      const shareText = lang === 'en'
-        ? `A three-minute daily breath together · DDCircle\n${cardUrl}`
-        : `매일 3분, 함께 호흡하는 작은 의식 · DDCircle\n${cardUrl}`;
+      const shareText = t('storyShareText', { url: cardUrl });
       const result = await shareOrDownload(blob, 'ddcircle-today.png', {
         url: cardUrl,
         title: 'DDCircle',
         text: shareText,
       });
       if (result === 'shared+copied' || result === 'shared') {
-        showToast('📸', lang === 'en'
-          ? 'Shared · link copied — paste in chat for direct entry'
-          : '공유됨 · 링크 복사됨 — 채팅에 붙여넣으면 친구가 바로 들어와요');
+        showToast('📸', t('storySharedToast'));
         // SNS 공유는 세션을 종료하지 않음 — 사용자가 응원나라에도 나누거나 조용히 마칠 수 있게 안내
         setTimeout(() => {
-          showToast('💡', lang === 'en'
-            ? 'You can also share to Cheerland or finish quietly below'
-            : '아래에서 응원나라에도 나누거나 조용히 마칠 수 있어요');
+          showToast('💡', t('storyShareFollowupToast'));
         }, 2000);
       } else if (result === 'unsupported+copied') {
         // PC 등 Web Share 미지원 — 링크는 복사됐으니 사용자가 직접 붙여넣기
-        showToast('📋', lang === 'en'
-          ? 'PC sharing not supported — link copied, paste in chat'
-          : 'PC는 직접 공유 미지원 — 링크가 복사됐어요, 채팅에 붙여넣으세요');
+        showToast('📋', t('storyShareUnsupportedCopiedToast'));
       } else if (result === 'unsupported') {
-        showToast('⚠️', lang === 'en'
-          ? 'Sharing not supported on this browser'
-          : '이 브라우저에서는 공유가 지원되지 않아요');
+        showToast('⚠️', t('storyShareUnsupportedToast'));
       }
     } catch (e) {
       showToast('⚠️', t('storyShareError'));
@@ -300,9 +291,7 @@ export default function Complete() {
         {storySharing ? '...' : t('storyShareBtn')}
       </button>
       <div className={styles.shareHint}>
-        {lang === 'en'
-          ? 'After sharing externally, you can still share to Cheerland or finish quietly below.'
-          : 'SNS 공유 후에도 응원나라에 나누거나 조용히 마칠 수 있어요.'}
+        {t('shareHintAfter')}
       </div>
       <button className={styles.skipShare} onClick={handleSkipShare}>
         {t('skipShareBtn')}
@@ -318,7 +307,7 @@ export default function Complete() {
           fontFamily: 'inherit', fontSize: 13, fontWeight: 700, color: '#7b3ff2',
         }}
       >
-        💜 {lang === 'en' ? 'Support DDCircle with Pi' : 'Pi로 DDCircle 응원하기'}
+        💜 {t('supportWithPiBtn')}
       </button>
 
       {/* 책장 진입 — 방금 쓴 페이지를 즉시 확인 */}

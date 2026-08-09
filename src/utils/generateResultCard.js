@@ -11,39 +11,32 @@ const H = 1920;
 // 카드 하단에 글자로 찍히는 'ddcircle.app'은 사람이 읽는 브랜드 표기라 그대로 둔다.
 const shareUrl = () => `${shareBaseUrl()}/?ref=share-card`;
 
-// 무드별 시적 카피 (ko/en)
-const MOOD_COPY = {
-  alive:   { ko: '살아있네~ DD했다~^^',              en: 'Alive today, DD done!' },
-  proud:   { ko: '이 평범한 3분이 1년 뒤를 바꿔요.', en: 'These plain three minutes shape a year.' },
-  joyful:  { ko: '즐거움이 가득한 하루였어요.',       en: 'A day full of joy.' },
-  didIt:   { ko: '조용히 한 걸음, 오늘도 충분해요.', en: 'A quiet step. Today is enough.' },
-  hard:    { ko: '버틴 것도 잘한 거예요.',           en: 'Showing up was enough today.' },
-  blue:    { ko: '가라앉은 날에도, 숨은 멈추지 않았어요.', en: 'Even on a low day, breath kept going.' },
-  anxious: { ko: '잠시 멈춰 깊은 호흡, 그걸로 충분해요.', en: 'A pause, a breath. Enough.' },
-  tired:   { ko: '지친 마음에도 숨이 닿았어요.',     en: 'Even tired, breath found you.' },
+// 무드별 시적 카피 — 무드 id → i18n 키. 실제 문구는 locale 파일(resultCardMood*)에서 15개 언어로 관리.
+const MOOD_KEYS = {
+  alive: 'resultCardMoodAlive',
+  proud: 'resultCardMoodProud',
+  joyful: 'resultCardMoodJoyful',
+  didIt: 'resultCardMoodDidIt',
+  hard: 'resultCardMoodHard',
+  blue: 'resultCardMoodBlue',
+  anxious: 'resultCardMoodAnxious',
+  tired: 'resultCardMoodTired',
 };
 
 // 스트릭 기반 폴백 카피
-function streakCopy(streak, lang) {
-  if (lang === 'en') {
-    if (streak >= 100) return '100 days of breathing together.';
-    if (streak >= 30) return 'This breath is becoming everyday.';
-    if (streak >= 7) return 'Small promises, quietly stacking.';
-    if (streak >= 1) return "Today's three minutes shape tomorrow.";
-    return 'A first breath has begun.';
-  }
-  if (streak >= 100) return '100일을 함께한 호흡.';
-  if (streak >= 30) return '이 호흡이 일상이 되어가요.';
-  if (streak >= 7) return '작은 약속이 조용히 쌓여요.';
-  if (streak >= 1) return '오늘의 3분이 내일을 만들어요.';
-  return '첫 호흡을 시작했어요.';
+function streakCopy(streak, t) {
+  if (streak >= 100) return t('resultCardStreak100');
+  if (streak >= 30) return t('resultCardStreak30');
+  if (streak >= 7) return t('resultCardStreak7');
+  if (streak >= 1) return t('resultCardStreak1');
+  return t('resultCardStreak0');
 }
 
-function pickCopy(mood, streak, lang) {
-  if (mood && MOOD_COPY[mood]) {
-    return MOOD_COPY[mood][lang === 'en' ? 'en' : 'ko'];
+function pickCopy(mood, streak, t) {
+  if (mood && MOOD_KEYS[mood]) {
+    return t(MOOD_KEYS[mood]);
   }
-  return streakCopy(streak, lang);
+  return streakCopy(streak, t);
 }
 
 // 카드 위에 텍스트를 여러 줄로 그리기 (최대 너비 안 넘게 wrap)
@@ -110,6 +103,7 @@ export async function generateResultCard({
   emoji = '🌸',
   emojiBg = 'linear-gradient(135deg,#fbb040,#f97b9c)',
   lang = 'ko',
+  t = (key) => key, // useLang()의 번역 함수. 호출부(Complete.jsx)가 항상 넘겨준다.
   userMessage = '',  // 사용자가 완료 화면 textarea에 쓴 글 — mood 카피 아래 인용
 }) {
   const canvas = document.createElement('canvas');
@@ -174,7 +168,7 @@ export async function generateResultCard({
   ctx.fillText(nickname, W / 2, 830);
 
   // 시적 카피 (mood 기반)
-  const copy = pickCopy(mood, streak, lang);
+  const copy = pickCopy(mood, streak, t);
   ctx.fillStyle = '#3a2f20';
   ctx.font = `italic 600 ${lang === 'en' ? '64px' : '70px'} "Noto Serif KR", serif`;
   const lines = wrapText(ctx, copy, W - 200);
@@ -199,7 +193,7 @@ export async function generateResultCard({
 
   // 통계 라인 (작게)
   const stats = [];
-  stats.push(lang === 'en' ? `🔥 ${streak}-day streak` : `🔥 ${streak}일 연속`);
+  stats.push(`🔥 ${t('resultCardStreakDays', { n: streak })}`);
   stats.push(`+${ep} EP`);
   if (exerciseLabel) stats.push(`💪 ${exerciseLabel}`);
   ctx.fillStyle = '#5a4d38';
@@ -211,8 +205,8 @@ export async function generateResultCard({
   const leftX = 90;
   ctx.fillStyle = '#7a6d58';
   ctx.font = `italic 32px "Noto Serif KR", serif`;
-  const subText = lang === 'ko' ? '매일 3분, 함께 호흡하는' : 'A three-minute daily';
-  const subText2 = lang === 'ko' ? '작은 의식' : 'breath together';
+  const subText = t('resultCardTagline1');
+  const subText2 = t('resultCardTagline2');
   ctx.fillText(subText, leftX, 1720);
   ctx.fillText(subText2, leftX, 1760);
 
@@ -239,7 +233,7 @@ export async function generateResultCard({
     ctx.textAlign = 'center';
     ctx.fillStyle = '#5a4d38';
     ctx.font = '600 26px "Inter", "Noto Serif KR", sans-serif';
-    const scanLabel = lang === 'ko' ? '스캔하여 시작' : 'Scan to begin';
+    const scanLabel = t('resultCardScanLabel');
     ctx.fillText(scanLabel, qrX + qrSize / 2, qrY + qrSize + 50);
   } catch (e) {
     console.warn('[card] QR generation failed:', e);

@@ -12,7 +12,7 @@ import styles from './OpenExternalModal.module.css';
 // reason: 'share' — 공유 버튼 누른 직후 띄움 (강한 안내)
 //          'banner' — 앱 진입 시 한 번 띄움 (부드러운 안내, 나중에 닫기 가능)
 export default function OpenExternalModal({ open, onClose, reason = 'banner' }) {
-  const { lang } = useLang();
+  const { t } = useLang();
   const brand = inAppBrand();
   const label = brandLabel(brand);
   const ios = isIOS();
@@ -26,35 +26,19 @@ export default function OpenExternalModal({ open, onClose, reason = 'banner' }) 
   // 점프 가능한 환경(Android)인지
   const canAutoJump = android && isInAppBrowser();
 
-  const title = lang === 'en'
-    ? (reason === 'share' ? 'Open in your browser to share' : 'Open in your browser')
-    : (reason === 'share' ? '외부 브라우저로 열어 공유해요' : '더 편하게 쓰려면 외부 브라우저로 열어요');
+  const title = t(reason === 'share' ? 'extBrowserTitleShare' : 'extBrowserTitleBanner');
 
-  const body = lang === 'en' ? (
+  const body = (
     <>
-      <p>
-        {`This page is open in ${label === '인앱 브라우저' ? 'an in-app browser' : label}, which blocks card sharing and home-screen install.`}
-      </p>
-      <p>Tap below to open in Chrome/Safari — sharing and installing then work normally.</p>
-    </>
-  ) : (
-    <>
-      <p>
-        지금 <b>{label}</b> 안에서 보고 있어요. 인앱 브라우저는 카드 공유와 홈 화면 추가가 막혀 있어요.
-      </p>
-      <p>아래 버튼을 누르면 <b>Chrome/Safari</b>로 열려서 공유·설치가 정상 작동해요.</p>
+      <p>{t('extBrowserBody1', { brand: label })}</p>
+      <p>{t('extBrowserBody2')}</p>
     </>
   );
 
-  const iosInstructions = lang === 'en' ? (
+  const iosInstructions = (
     <ol className={styles.steps}>
-      <li>Tap the <b>⋯</b> menu at the top-right</li>
-      <li>Choose <b>"Open in Safari"</b> (or default browser)</li>
-    </ol>
-  ) : (
-    <ol className={styles.steps}>
-      <li>오른쪽 위 <b>⋯</b> 또는 <b>⋮</b> 메뉴를 눌러요</li>
-      <li><b>"다른 브라우저로 열기"</b> 또는 <b>"Safari로 열기"</b>를 선택해요</li>
+      <li>{t('extBrowserIosStep1')}</li>
+      <li>{t('extBrowserIosStep2')}</li>
     </ol>
   );
 
@@ -66,7 +50,7 @@ export default function OpenExternalModal({ open, onClose, reason = 'banner' }) 
 
       {canAutoJump && (
         <button className={styles.primary} onClick={handleOpen}>
-          {lang === 'en' ? 'Open in Chrome' : 'Chrome으로 열기'}
+          {t('extBrowserOpenChrome')}
         </button>
       )}
 
@@ -74,14 +58,12 @@ export default function OpenExternalModal({ open, onClose, reason = 'banner' }) 
 
       {!canAutoJump && !ios && (
         <button className={styles.primary} onClick={handleOpen}>
-          {lang === 'en' ? 'Open in browser' : '브라우저로 열기'}
+          {t('extBrowserOpenGeneric')}
         </button>
       )}
 
       <button className={styles.secondary} onClick={onClose}>
-        {reason === 'share'
-          ? (lang === 'en' ? 'Not now' : '나중에')
-          : (lang === 'en' ? 'Continue here' : '여기서 계속 보기')}
+        {t(reason === 'share' ? 'extBrowserNotNow' : 'extBrowserContinueHere')}
       </button>
     </Modal>
   );
