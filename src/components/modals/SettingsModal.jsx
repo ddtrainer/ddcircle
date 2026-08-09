@@ -119,6 +119,22 @@ export default function SettingsModal({ open, onClose }) {
           <span className={styles.chevron}>›</span>
         </button>
 
+        {/* 이용약관 / 개인정보처리방침 — 기존엔 로그인 화면 하단에만 있어 로그인 후엔 찾을 방법이 없었음 */}
+        <button className={styles.row} onClick={() => { onClose?.(); navigate('/terms'); }}>
+          <span className={styles.rowIcon}>📜</span>
+          <span className={styles.rowMain}>
+            <span className={styles.rowTitle}>{t('termsLink')}</span>
+          </span>
+          <span className={styles.chevron}>›</span>
+        </button>
+        <button className={styles.row} onClick={() => { onClose?.(); navigate('/privacy'); }}>
+          <span className={styles.rowIcon}>🔒</span>
+          <span className={styles.rowMain}>
+            <span className={styles.rowTitle}>{t('privacyLink')}</span>
+          </span>
+          <span className={styles.chevron}>›</span>
+        </button>
+
         {/* 계정 — Pi 전용. 기존 계정 세션이 있을 때만 로그아웃 노출(카카오/구글 로그인 진입점 제거) */}
         {user && (
           <button className={`${styles.row} ${styles.danger}`} onClick={logout}>
