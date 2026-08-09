@@ -58,6 +58,15 @@ export default function SettingsModal({ open, onClose }) {
       <Modal open={open} onClose={onClose}>
         <div className={styles.title}>{t('settingsTitle')}</div>
 
+        {/* DDCircle 소개 */}
+        <button className={styles.row} onClick={() => setAboutOpen(true)}>
+          <span className={styles.rowIcon}>📄</span>
+          <span className={styles.rowMain}>
+            <span className={styles.rowTitle}>{t('aboutRowTitle')}</span>
+          </span>
+          <span className={styles.chevron}>›</span>
+        </button>
+
         {/* 언어 — 15개 지원. 별도 리스트 화면(LanguageModal)에서 선택. */}
         <button className={styles.row} onClick={() => setLangOpen(true)}>
           <span className={styles.rowIcon}>🌐</span>
@@ -119,15 +128,6 @@ export default function SettingsModal({ open, onClose }) {
           <span className={styles.rowMain}>
             <span className={styles.rowTitle}>{t('digitalBookRowTitle')}</span>
             <span className={styles.rowSub}>{t('digitalBookRowSub')}</span>
-          </span>
-          <span className={styles.chevron}>›</span>
-        </button>
-
-        {/* DDCircle 소개 */}
-        <button className={styles.row} onClick={() => setAboutOpen(true)}>
-          <span className={styles.rowIcon}>📄</span>
-          <span className={styles.rowMain}>
-            <span className={styles.rowTitle}>{t('aboutRowTitle')}</span>
           </span>
           <span className={styles.chevron}>›</span>
         </button>
