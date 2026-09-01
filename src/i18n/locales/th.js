@@ -389,7 +389,7 @@ export default {
   "ddtMyToken": "โทเค็น DD ของฉัน",
   "ddtBasis": "แปลงจาก {ep} EP",
   "ddtNextLabel": "{ep} EP ถึง DDT ถัดไป",
-  "ddtRule": "100 EP = 1 DDT · EP จากการหายใจและการเคลื่อนไหวจะกลายเป็นสินทรัพย์",
+  "ddtRule": "100 EP = 1 DDT · กิจกรรม DD ที่ดูแลตัวคุณกลายเป็นสินทรัพย์",
   "ddtRoadmapTitle": "วิธี DD Tokens เติบโตจากที่นี่",
   "ddtPhaseNowTag": "ตอนนี้",
   "ddtPhaseNow": "สินทรัพย์ดิจิทัลที่พิสูจน์การหายใจและการเคลื่อนไหวของคุณ",

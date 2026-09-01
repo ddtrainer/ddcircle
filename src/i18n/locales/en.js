@@ -391,7 +391,7 @@ export default {
   "ddtMyToken": "My DD Tokens",
   "ddtBasis": "Converted from {ep} EP",
   "ddtNextLabel": "{ep} EP to next DDT",
-  "ddtRule": "100 EP = 1 DDT · EP from breath & movement becomes an asset",
+  "ddtRule": "100 EP = 1 DDT · Caring for yourself through DD becomes an asset",
   "ddtRoadmapTitle": "How DD Tokens grow from here",
   "ddtPhaseNowTag": "Now",
   "ddtPhaseNow": "A digital asset proving your breath & movement",

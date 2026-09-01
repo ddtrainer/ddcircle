@@ -391,7 +391,7 @@ export default {
   "ddtMyToken": "Token DD-ku",
   "ddtBasis": "Dikonversi dari {ep} EP",
   "ddtNextLabel": "{ep} EP menuju DDT berikutnya",
-  "ddtRule": "100 EP = 1 DDT · EP dari napas & gerakan menjadi aset",
+  "ddtRule": "100 EP = 1 DDT · Aktivitas DD yang merawat dirimu menjadi aset",
   "ddtRoadmapTitle": "Bagaimana Token DD berkembang dari sini",
   "ddtPhaseNowTag": "Sekarang",
   "ddtPhaseNow": "Aset digital yang membuktikan napas & gerakanmu",

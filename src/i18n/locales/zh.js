@@ -391,7 +391,7 @@ export default {
   "ddtMyToken": "我的DD代币",
   "ddtBasis": "由{ep} EP转换而来",
   "ddtNextLabel": "还差{ep} EP兑换下一个DDT",
-  "ddtRule": "100 EP = 1 DDT · 来自呼吸与运动的EP将成为资产",
+  "ddtRule": "100 EP = 1 DDT · 关爱自己的 DD 活动，成为你的资产",
   "ddtRoadmapTitle": "DD代币未来的成长路线",
   "ddtPhaseNowTag": "现在",
   "ddtPhaseNow": "证明你呼吸与运动的数字资产",

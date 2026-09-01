@@ -388,7 +388,7 @@ export default {
   "ddtMyToken": "Benim DD Tokenlerim",
   "ddtBasis": "{ep} EP'den dönüştürüldü",
   "ddtNextLabel": "Sonraki DDT için {ep} EP",
-  "ddtRule": "100 EP = 1 DDT · Nefes ve hareketten gelen EP bir varlık haline gelir",
+  "ddtRule": "100 EP = 1 DDT · Kendine bakan DD etkinliğin bir varlığa dönüşür",
   "ddtRoadmapTitle": "DD Token'lar buradan nasıl büyür",
   "ddtPhaseNowTag": "Şimdi",
   "ddtPhaseNow": "Senin nefes ve hareketini kanıtlayan bir dijital varlık",

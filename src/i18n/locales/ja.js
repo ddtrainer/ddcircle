@@ -391,7 +391,7 @@ export default {
   "ddtMyToken": "マイDDトークン",
   "ddtBasis": "{ep} EPから転換",
   "ddtNextLabel": "次のDDTまで{ep} EP",
-  "ddtRule": "100 EP = 1 DDT · 呼吸と動きから得たEPが資産になります",
+  "ddtRule": "100 EP = 1 DDT · 自分をケアするDD活動が資産になります",
   "ddtRoadmapTitle": "DDトークンの成長ロードマップ",
   "ddtPhaseNowTag": "今",
   "ddtPhaseNow": "あなたの呼吸と動きを証明するデジタル資産",

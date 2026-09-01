@@ -388,7 +388,7 @@ export default {
   "ddtMyToken": "मेरे DD टोकन",
   "ddtBasis": "{ep} EP से परिवर्तित",
   "ddtNextLabel": "अगले DDT के लिए {ep} EP",
-  "ddtRule": "100 EP = 1 DDT · सांस और गति से EP एक संपत्ति बन जाता है",
+  "ddtRule": "100 EP = 1 DDT · आपकी देखभाल करने वाली DD गतिविधि एक संपत्ति बन जाती है",
   "ddtRoadmapTitle": "DD टोकन यहाँ से कैसे बढ़ते हैं",
   "ddtPhaseNowTag": "अभी",
   "ddtPhaseNow": "एक डिजिटल संपत्ति आपकी सांस और गति साबित करती है",

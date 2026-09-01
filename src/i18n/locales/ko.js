@@ -391,7 +391,7 @@ export default {
   "ddtMyToken": "내 DD 토큰",
   "ddtBasis": "누적 {ep} EP 전환",
   "ddtNextLabel": "다음 1 DDT까지 {ep} EP",
-  "ddtRule": "100 EP = 1 DDT · 호흡과 운동으로 쌓은 EP가 자산이 됩니다",
+  "ddtRule": "100 EP = 1 DDT · 나를 돌보는 DD 활동이 자산이 됩니다",
   "ddtRoadmapTitle": "DD 토큰, 앞으로 이렇게 커집니다",
   "ddtPhaseNowTag": "지금",
   "ddtPhaseNow": "나의 호흡·운동을 증명하는 디지털 자산",

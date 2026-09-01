@@ -389,7 +389,7 @@ export default {
   "ddtMyToken": "رموزي DD",
   "ddtBasis": "تحويل من {ep} نقطة طاقة",
   "ddtNextLabel": "{ep} نقطة طاقة إلى رمز DD التالي",
-  "ddtRule": "100 نقطة طاقة = 1 رمز DD · نقاط الطاقة من التنفس والحركة تصبح أصل",
+  "ddtRule": "100 نقطة طاقة = 1 رمز DD · نشاط DD الذي يعتني بك يتحول إلى أصل",
   "ddtRoadmapTitle": "كيف تنمو رموز DD من هنا",
   "ddtPhaseNowTag": "الآن",
   "ddtPhaseNow": "أصل رقمي يثبت تنفسك وحركتك",

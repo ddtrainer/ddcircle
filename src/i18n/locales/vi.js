@@ -393,7 +393,7 @@ export default {
   "ddtMyToken": "DD Token của tôi",
   "ddtBasis": "Quy đổi từ {ep} EP",
   "ddtNextLabel": "Còn {ep} EP đến DDT tiếp theo",
-  "ddtRule": "100 EP = 1 DDT · EP từ hít thở và vận động trở thành tài sản",
+  "ddtRule": "100 EP = 1 DDT · Hoạt động DD chăm sóc bản thân trở thành tài sản của bạn",
   "ddtRoadmapTitle": "DD Token sẽ phát triển ra sao",
   "ddtPhaseNowTag": "Hiện tại",
   "ddtPhaseNow": "Tài sản số chứng minh hơi thở và vận động của bạn",

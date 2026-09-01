@@ -389,7 +389,7 @@ export default {
   "ddtMyToken": "Ang Aming DD Tokens",
   "ddtBasis": "Converted mula {ep} EP",
   "ddtNextLabel": "{ep} EP hanggang next DDT",
-  "ddtRule": "100 EP = 1 DDT · EP mula sa paghinga & galaw ay nagiging asset",
+  "ddtRule": "100 EP = 1 DDT · Ang DD activity mo na nag-aalaga sa sarili ay nagiging asset",
   "ddtRoadmapTitle": "Paano lalaki ang DD Tokens mula dito",
   "ddtPhaseNowTag": "Ngayon",
   "ddtPhaseNow": "Isang digital asset na nagpapatunay ng paghinga at galaw mo",

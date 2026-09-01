@@ -389,7 +389,7 @@ export default {
   "ddtMyToken": "میرے DD ٹوکنز",
   "ddtBasis": "{ep} EP سے تبدیل",
   "ddtNextLabel": "اگلا DDT {ep} EP",
-  "ddtRule": "100 EP = 1 DDT · سانس اور حرکت سے EP ایک سرمایہ بن جاتا ہے",
+  "ddtRule": "100 EP = 1 DDT · آپ کا خیال رکھنے والی DD سرگرمی ایک اثاثہ بن جاتی ہے",
   "ddtRoadmapTitle": "DD ٹوکنز آگے کیسے بڑھے گا",
   "ddtPhaseNowTag": "اب",
   "ddtPhaseNow": "آپ کی سانس اور حرکت کو ثابت کرتی ہوئی ڈیجیٹل سرمایہ",
