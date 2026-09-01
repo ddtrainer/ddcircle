@@ -673,7 +673,7 @@ export default {
   "aboutParagraph2": "AIがほとんどのことを代わりにやってくれる時代、最も価値のあるものは健康に生きていることそのものです。人類が数百万年受け継いできた二つのこと、呼吸と動き。たとえ短くても毎日意識して実践すること——それがセルフケアの核心です。",
   "aboutParagraph3": "いつでもどこでも、心と体をケアする習慣づくりをサポートします。",
   "aboutParagraph4": "1日DD習慣をつくってみましょう。深い呼吸は交感神経と副交感神経のバランスを取り戻し、息が上がる運動はストレスや不安に揺らがない精神力と回復力を育てます。",
-  "aboutTagline": "息はDeepに、動きはDashに。Let's DD! — by DDCircle Labs",
+  "aboutTagline": "息はDeepに、動きはDashに。Let's DD!",
   "heroIdentityLine": "Deep+Dashで自分をケアする人たちのコミュニティ",
   "aboutHighlight": "ひとりの時間にも、いつでもどこでもDeep+Dash。",
   "aboutParagraph5": "自分をケアするDD活動はただ消えるのではなく、EPとDDTとして記録され、あなたの資産になります。",

@@ -673,7 +673,7 @@ export default {
   "aboutParagraph2": "In an age when AI does almost everything for us, the most valuable thing is simply being healthy and alive. Two things humanity has carried for millions of years: breath and movement. Practicing them consciously — even briefly, every day — is the heart of self-care.",
   "aboutParagraph3": "Anytime, anywhere — we help you build a habit of caring for your body and mind.",
   "aboutParagraph4": "Try building a one-day DD habit. Deep breathing restores the balance between your sympathetic and parasympathetic nervous systems, while breath-quickening exercise builds the mental strength and resilience to stay steady through stress and anxiety.",
-  "aboutTagline": "Breathe Deep. Move Dash. Let's DD! — by DDCircle Labs",
+  "aboutTagline": "Breathe Deep. Move Dash. Let's DD!",
   "heroIdentityLine": "A community caring for themselves through Deep+Dash",
   "aboutHighlight": "Even in your alone time, Deep+Dash — anytime, anywhere.",
   "aboutParagraph5": "Your DD activity of caring for yourself doesn't just disappear — it's recorded as EP and DDT, becoming your asset.",

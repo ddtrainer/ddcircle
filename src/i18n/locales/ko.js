@@ -673,7 +673,7 @@ export default {
   "aboutParagraph2": "AI가 모든 것을 대신하는 시대, 가장 값진 것은 건강하게 살아있음 그 자체입니다. 인류가 수백만 년 이어온 두 가지, 호흡과 움직임. 매일 짧게라도 의식적으로 실천하는 것 — 그것이 자기 돌봄의 핵심입니다.",
   "aboutParagraph3": "언제 어디서나, 몸과 마음을 돌보는 습관을 만들어드립니다.",
   "aboutParagraph4": "1일 DD 습관을 만들어보세요. 깊은 호흡은 교감·부교감 신경의 균형을 되찾아주고, 숨찬 운동은 스트레스와 불안에 흔들리지 않는 멘탈과 회복력을 길러줍니다.",
-  "aboutTagline": "숨은 Deep하게, 핏은 Dash하게. Let's DD! — by DDCircle Labs",
+  "aboutTagline": "숨은 Deep하게, 핏은 Dash하게. Let's DD!",
   "heroIdentityLine": "Deep+Dash로 자신을 돌보는 사람들의 모임",
   "aboutHighlight": "혼자인 시간엔 언제 어디서나 Deep+Dash.",
   "aboutParagraph5": "나를 돌보는 DD 활동은 그냥 사라지지 않고, EP와 DDT로 기록되어 당신의 자산이 됩니다.",

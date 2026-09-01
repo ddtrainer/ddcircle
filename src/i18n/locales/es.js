@@ -673,7 +673,7 @@ export default {
   "aboutParagraph2": "En una era en la que la IA hace casi todo por nosotros, lo más valioso es simplemente estar sano y vivo. Dos cosas que la humanidad ha llevado consigo durante millones de años: la respiración y el movimiento. Practicarlas conscientemente, aunque sea brevemente cada día, es el corazón del autocuidado.",
   "aboutParagraph3": "En cualquier momento y lugar, te ayudamos a crear el hábito de cuidar tu cuerpo y tu mente.",
   "aboutParagraph4": "Prueba a crear un hábito DD de un día. La respiración profunda restaura el equilibrio entre el sistema nervioso simpático y parasimpático, mientras que el ejercicio que te deja sin aliento desarrolla la fuerza mental y la resiliencia para mantenerte firme frente al estrés y la ansiedad.",
-  "aboutTagline": "Respira Deep. Muévete Dash. Let's DD! — by DDCircle Labs",
+  "aboutTagline": "Respira Deep. Muévete Dash. Let's DD!",
   "heroIdentityLine": "Una comunidad que se cuida a sí misma con Deep+Dash",
   "aboutHighlight": "Incluso en tus momentos a solas, Deep+Dash en cualquier momento y lugar.",
   "aboutParagraph5": "Tu actividad DD de autocuidado no simplemente desaparece: se registra como EP y DDT, y se convierte en tu activo.",

@@ -671,7 +671,7 @@ export default {
   "aboutParagraph2": "Sa panahon kung saan halos lahat ay ginagawa na ng AI para sa atin, ang pinakamahalaga ay ang maging malusog at buhay. Dalawang bagay na dala ng sangkatauhan sa loob ng milyun-milyong taon: paghinga at paggalaw. Ang sadyang pagsasagawa nito — kahit sandali lang bawat araw — ang siyang puso ng pag-aalaga sa sarili.",
   "aboutParagraph3": "Kahit kailan, kahit saan — tinutulungan ka naming bumuo ng ugali ng pag-aalaga sa katawan at isip.",
   "aboutParagraph4": "Subukan ang 1-araw na DD habit. Ang malalim na paghinga ay nagpapanumbalik ng balanse sa pagitan ng sympathetic at parasympathetic nervous system, samantalang ang ehersisyong nakakahingal ay bumubuo ng lakas ng isip at katatagan upang hindi matinag sa stress at pagkabalisa.",
-  "aboutTagline": "Huminga nang Deep. Gumalaw nang Dash. Let's DD! — by DDCircle Labs",
+  "aboutTagline": "Huminga nang Deep. Gumalaw nang Dash. Let's DD!",
   "heroIdentityLine": "Isang komunidad ng mga taong nag-aalaga sa sarili gamit ang Deep+Dash",
   "aboutHighlight": "Kahit sa oras na mag-isa ka, Deep+Dash kahit kailan kahit saan.",
   "aboutParagraph5": "Ang DD activity mong nag-aalaga sa sarili ay hindi basta nawawala — naitatala ito bilang EP at DDT, na nagiging asset mo.",

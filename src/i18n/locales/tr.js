@@ -670,7 +670,7 @@ export default {
   "aboutParagraph2": "Yapay zekânın hemen her şeyi bizim yerimize yaptığı bir çağda, en değerli şey sağlıklı bir şekilde hayatta olmaktır. İnsanlığın milyonlarca yıldır taşıdığı iki şey: nefes ve hareket. Kısa da olsa her gün bunları bilinçle uygulamak — kendine bakımın özüdür.",
   "aboutParagraph3": "Her yerde, her zaman — beden ve zihin bakımı alışkanlığı oluşturmana yardımcı oluyoruz.",
   "aboutParagraph4": "1 günlük DD alışkanlığı oluşturmayı dene. Derin nefes, sempatik ve parasempatik sinir sistemi arasındaki dengeyi geri kazandırırken, nefes nefese kalan egzersiz stres ve kaygı karşısında sarsılmadan durabilme zihinsel gücünü ve dayanıklılığını geliştirir.",
-  "aboutTagline": "Deep nefes al. Dash hareket et. Let's DD! — by DDCircle Labs",
+  "aboutTagline": "Deep nefes al. Dash hareket et. Let's DD!",
   "heroIdentityLine": "Deep+Dash ile kendine bakan insanların topluluğu",
   "aboutHighlight": "Yalnız kaldığın anlarda bile, her yerde her zaman Deep+Dash.",
   "aboutParagraph5": "Kendine bakan DD etkinliğin öylece kaybolmaz — EP ve DDT olarak kaydedilerek varlığına dönüşür.",

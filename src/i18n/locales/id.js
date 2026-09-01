@@ -673,7 +673,7 @@ export default {
   "aboutParagraph2": "Di era ketika AI mampu melakukan hampir segalanya untuk kita, hal paling berharga adalah hidup dengan sehat. Dua hal yang telah dijaga umat manusia selama jutaan tahun: napas dan gerakan. Mempraktikkannya dengan sadar — meski singkat, setiap hari — adalah inti dari perawatan diri.",
   "aboutParagraph3": "Kapan saja, di mana saja — kami membantumu membangun kebiasaan merawat tubuh dan pikiran.",
   "aboutParagraph4": "Coba bangun kebiasaan DD selama 1 hari. Napas dalam memulihkan keseimbangan antara sistem saraf simpatis dan parasimpatis, sementara olahraga hingga terengah-engah membangun kekuatan mental dan ketahanan agar tidak mudah goyah oleh stres dan kecemasan.",
-  "aboutTagline": "Bernapaslah dengan Deep. Bergeraklah dengan Dash. Let's DD! — by DDCircle Labs",
+  "aboutTagline": "Bernapaslah dengan Deep. Bergeraklah dengan Dash. Let's DD!",
   "heroIdentityLine": "Komunitas yang merawat diri dengan Deep+Dash",
   "aboutHighlight": "Bahkan di waktu sendirian, Deep+Dash kapan saja di mana saja.",
   "aboutParagraph5": "Aktivitas DD yang merawat dirimu tidak begitu saja hilang — ia dicatat sebagai EP dan DDT, menjadi asetmu.",

@@ -675,7 +675,7 @@ export default {
   "aboutParagraph2": "Trong thời đại AI có thể làm thay hầu hết mọi thứ, điều quý giá nhất chính là được sống khỏe mạnh. Hai điều nhân loại đã gìn giữ hàng triệu năm: hơi thở và chuyển động. Thực hành chúng một cách có ý thức — dù chỉ trong chốc lát mỗi ngày — chính là cốt lõi của việc chăm sóc bản thân.",
   "aboutParagraph3": "Mọi lúc, mọi nơi — chúng tôi giúp bạn xây dựng thói quen chăm sóc thân và tâm.",
   "aboutParagraph4": "Hãy thử xây dựng thói quen DD trong 1 ngày. Hơi thở sâu giúp khôi phục sự cân bằng giữa hệ thần kinh giao cảm và phó giao cảm, còn vận động đến hụt hơi giúp xây dựng sức mạnh tinh thần và khả năng phục hồi để không bị lung lay trước căng thẳng và lo âu.",
-  "aboutTagline": "Hơi thở theo Deep. Vận động theo Dash. Let's DD! — by DDCircle Labs",
+  "aboutTagline": "Hơi thở theo Deep. Vận động theo Dash. Let's DD!",
   "heroIdentityLine": "Cộng đồng chăm sóc bản thân bằng Deep+Dash",
   "aboutHighlight": "Ngay cả những lúc một mình, Deep+Dash mọi lúc mọi nơi.",
   "aboutParagraph5": "Hoạt động DD chăm sóc bản thân của bạn không biến mất, mà được ghi lại dưới dạng EP và DDT, trở thành tài sản của bạn.",
