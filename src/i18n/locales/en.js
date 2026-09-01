@@ -2,7 +2,7 @@
 // 이 파일은 언어별로 분리되어 필요한 것만 지연 로드된다(첫 로딩 용량 절감).
 // 값이 없는 키는 자동으로 영어로 폴백되므로, 부분 번역 상태여도 안전하다.
 export default {
-  "heroQuote": "A daily <span class=\"one\">3 minutes</span><br>sharing your energy~",
+  "heroQuote": "Anytime, anywhere —<br>build a habit of caring for<br>body and mind with <span class=\"one\">DD</span>",
   "nowStart": "Right now",
   "tapToStart": "Tap to start",
   "resumeAskBreath": "Start with this breath again?",
@@ -83,7 +83,7 @@ export default {
   "profileEditSaved": "Profile saved",
   "startBtn": "Start",
   "browseLink": "Peek at Cheerland first →",
-  "philosophyText": "<span style=\"color:#2ba48f;font-weight:400;font-style:normal\">For a million years, humanity has carried one </span><span style=\"color:#2ba48f;font-weight:700;font-style:normal\">instinct</span><span style=\"color:#2ba48f;font-weight:400;font-style:normal\"> —</span><br><span style=\"color:#2ba48f;font-weight:400;font-style:normal\">to </span><span style=\"color:#2ba48f;font-weight:700;font-style:normal\">breathe deeply</span><span style=\"color:#2ba48f;font-weight:400;font-style:normal\">, and to </span><span style=\"color:#2ba48f;font-weight:700;font-style:normal\">move the body</span><br><br><span style=\"color:#1e9bd8;font-weight:700;font-style:normal;font-size:17px\">Just three minutes of caring for myself</span><br><span style=\"color:#1e9bd8;font-weight:700;font-style:normal;font-size:18px\">Being alive becomes an asset</span>",
+  "philosophyText": "<span style=\"color:#1e9bd8;font-weight:700;font-style:normal;font-size:18px\">Caring for yourself through DD<br>becomes an asset</span>",
   "pickerTitle": "🔥 Pick what comes next",
   "pickerSub": "Breath is done.<br>Now move for one minute with this.",
   "preferLabel": "Today's move:",
@@ -673,5 +673,6 @@ export default {
   "aboutParagraph2": "In an age when AI does almost everything for us, the most valuable thing is simply being alive. Two things humanity has carried for millions of years: breath and movement. Practicing them consciously — even briefly, every day — is the essence of self-care.",
   "aboutParagraph3": "Start your day with Deep (breathing) and Dash (movement) — the activity you build up is recorded as EP and DDT. Deep breathing restores the balance between your sympathetic and parasympathetic nervous systems, while light movement builds the resilience to stay steady through stress and anxiety.",
   "aboutParagraph4": "You sign in with a Pi Network account, and the service is available in 15 languages.",
-  "aboutTagline": "Breathe Deep. Move Dash. Alive, together. — by DDCircle"
+  "aboutTagline": "Breathe Deep. Move Dash. Alive, together. — by DDCircle",
+  "heroIdentityLine": "A community caring for themselves through Deep+Dash"
 };

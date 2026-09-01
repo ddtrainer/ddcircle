@@ -2,7 +2,7 @@
 // 此文件按语言拆分,仅在需要时延迟加载(减少首次加载体积)。
 // 缺失的键会自动回退到英文,因此部分翻译状态也是安全的。
 export default {
-  "heroQuote": "每天<span class=\"one\">3分钟</span><br>分享你的能量~",
+  "heroQuote": "随时随地，<br>用 <span class=\"one\">DD</span> 养成<br>关爱身心的习惯",
   "nowStart": "现在开始",
   "tapToStart": "点击开始",
   "resumeAskBreath": "要继续这个呼吸吗?",
@@ -83,7 +83,7 @@ export default {
   "profileEditSaved": "资料已保存",
   "startBtn": "开始",
   "browseLink": "先看看加油空间 →",
-  "philosophyText": "<span style=\"color:#2ba48f;font-weight:400;font-style:normal\">百万年来，人类一直保持着一个 </span><span style=\"color:#2ba48f;font-weight:700;font-style:normal\">本能</span><span style=\"color:#2ba48f;font-weight:400;font-style:normal\"> —</span><br><span style=\"color:#2ba48f;font-weight:400;font-style:normal\">那就是 </span><span style=\"color:#2ba48f;font-weight:700;font-style:normal\">深呼吸</span><span style=\"color:#2ba48f;font-weight:400;font-style:normal\">，以及 </span><span style=\"color:#2ba48f;font-weight:700;font-style:normal\">活动身体</span><br><br><span style=\"color:#1e9bd8;font-weight:700;font-style:normal;font-size:17px\">照顾自己的三分钟</span><br><span style=\"color:#1e9bd8;font-weight:700;font-style:normal;font-size:18px\">生命活动本身就是资产</span>",
+  "philosophyText": "<span style=\"color:#1e9bd8;font-weight:700;font-style:normal;font-size:18px\">关爱自己的 DD 活动，<br>成为你的资产</span>",
   "pickerTitle": "🔥 选择接下来的动作",
   "pickerSub": "呼吸完成了。<br>现在用这个动作活动一分钟。",
   "preferLabel": "今天的动作:",
@@ -673,5 +673,6 @@ export default {
   "aboutParagraph2": "在AI几乎能代劳一切的时代，最珍贵的莫过于\"活着\"本身。人类延续了数百万年的两件事——呼吸与运动。哪怕每天只是短暂地有意识地去实践它们，这就是自我关怀的本质。",
   "aboutParagraph3": "用Deep（呼吸）和Dash（运动）开启每一天，积累的活动会以EP和DDT的形式被记录下来。深呼吸能恢复交感与副交感神经的平衡，轻度运动则能培养面对压力与焦虑时不轻易动摇的恢复力。",
   "aboutParagraph4": "使用 Pi Network 账户登录，目前提供15种语言服务。",
-  "aboutTagline": "呼吸要Deep，运动要Dash。一起，活着。——by DDCircle"
+  "aboutTagline": "呼吸要Deep，运动要Dash。一起，活着。——by DDCircle",
+  "heroIdentityLine": "通过 Deep+Dash 关爱自己的社群"
 };

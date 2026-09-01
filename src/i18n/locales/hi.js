@@ -1,5 +1,5 @@
 export default {
-  "heroQuote": "रोज़ <span class=\"one\">3 मिनट</span><br>अपनी ऊर्जा शेयर करें~",
+  "heroQuote": "कभी भी, कहीं भी —<br><span class=\"one\">DD</span> से शरीर और मन की<br>देखभाल की आदत बनाएं",
   "nowStart": "अभी शुरू करें",
   "tapToStart": "शुरू करने के लिए टैप करें",
   "resumeAskBreath": "इसी सांस से फिर से शुरू करें?",
@@ -80,7 +80,7 @@ export default {
   "profileEditSaved": "प्रोफाइल सेव हो गया",
   "startBtn": "शुरू करें",
   "browseLink": "पहले Cheerland को झलक दिखाएँ →",
-  "philosophyText": "<span style=\"color:#2ba48f;font-weight:400;font-style:normal\">लाखों साल से, मानवता एक </span><span style=\"color:#2ba48f;font-weight:700;font-style:normal\">प्रवृत्ति</span><span style=\"color:#2ba48f;font-weight:400;font-style:normal\"> रखती आई है —</span><br><span style=\"color:#2ba48f;font-weight:400;font-style:normal\">गहरी </span><span style=\"color:#2ba48f;font-weight:700;font-style:normal\">सांस लेना</span><span style=\"color:#2ba48f;font-weight:400;font-style:normal\">, और शरीर को </span><span style=\"color:#2ba48f;font-weight:700;font-style:normal\">हिलाना</span><br><br><span style=\"color:#1e9bd8;font-weight:700;font-style:normal;font-size:17px\">बस तीन मिनट खुद की देखभाल करना</span><br><span style=\"color:#1e9bd8;font-weight:700;font-style:normal;font-size:18px\">जीवित रहना एक संपत्ति बन जाता है</span>",
+  "philosophyText": "<span style=\"color:#1e9bd8;font-weight:700;font-style:normal;font-size:18px\">आपकी देखभाल करने वाली DD गतिविधि<br>एक संपत्ति बन जाती है</span>",
   "pickerTitle": "🔥 अगला क्या चुनें",
   "pickerSub": "सांस ख़त्म हुई।<br>अब एक मिनट के लिए इसके साथ हिलें।",
   "preferLabel": "आज की गति:",
@@ -670,5 +670,6 @@ export default {
   "aboutParagraph2": "जिस युग में AI लगभग सब कुछ हमारी जगह कर देता है, वहाँ सबसे कीमती चीज़ है — बस जीवित होना। मानवता ने लाखों वर्षों से जिन दो चीज़ों को साथ रखा है, वे हैं सांस और गति। हर दिन, थोड़ी देर के लिए ही सही, इन्हें सचेत रूप से अभ्यास करना — यही आत्म-देखभाल का सार है।",
   "aboutParagraph3": "अपने दिन की शुरुआत Deep (सांस) और Dash (व्यायाम) से करें — आपकी जमा हुई गतिविधि EP और DDT के रूप में दर्ज होती है। गहरी सांस सिम्पैथेटिक और पैरासिम्पैथेटिक नर्वस सिस्टम के बीच संतुलन बहाल करती है, जबकि हल्की गतिविधि तनाव और चिंता में डगमगाए बिना टिके रहने की क्षमता विकसित करती है।",
   "aboutParagraph4": "आप Pi Network अकाउंट से साइन इन करते हैं, और यह सेवा 15 भाषाओं में उपलब्ध है।",
-  "aboutTagline": "सांस लो Deep तरीके से. गति करो Dash तरीके से. साथ में जीवंत. — by DDCircle"
+  "aboutTagline": "सांस लो Deep तरीके से. गति करो Dash तरीके से. साथ में जीवंत. — by DDCircle",
+  "heroIdentityLine": "Deep+Dash के ज़रिए खुद की देखभाल करने वालों का समुदाय"
 };

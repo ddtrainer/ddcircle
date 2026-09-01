@@ -2,7 +2,7 @@
 // File ini dipisah per bahasa dan dimuat secara lazy (hemat ukuran muat awal).
 // Kunci yang belum diterjemahkan otomatis kembali ke bahasa Inggris, jadi terjemahan sebagian tetap aman.
 export default {
-  "heroQuote": "<span class=\"one\">3 menit</span> setiap hari<br>berbagi energimu~",
+  "heroQuote": "Kapan saja, di mana saja —<br>bangun kebiasaan merawat<br>tubuh dan pikiran dengan <span class=\"one\">DD</span>",
   "nowStart": "Mulai sekarang",
   "tapToStart": "Ketuk untuk mulai",
   "resumeAskBreath": "Mulai lagi dengan napas ini?",
@@ -83,7 +83,7 @@ export default {
   "profileEditSaved": "Profil disimpan",
   "startBtn": "Mulai",
   "browseLink": "Lihat dulu Cheerland →",
-  "philosophyText": "<span style=\"color:#2ba48f;font-weight:400;font-style:normal\">Selama jutaan tahun, manusia membawa satu </span><span style=\"color:#2ba48f;font-weight:700;font-style:normal\">insting</span><span style=\"color:#2ba48f;font-weight:400;font-style:normal\"> —</span><br><span style=\"color:#2ba48f;font-weight:400;font-style:normal\">untuk </span><span style=\"color:#2ba48f;font-weight:700;font-style:normal\">bernapas dalam</span><span style=\"color:#2ba48f;font-weight:400;font-style:normal\">, dan untuk </span><span style=\"color:#2ba48f;font-weight:700;font-style:normal\">menggerakkan tubuh</span><br><br><span style=\"color:#1e9bd8;font-weight:700;font-style:normal;font-size:17px\">Hanya tiga menit merawat diri</span><br><span style=\"color:#1e9bd8;font-weight:700;font-style:normal;font-size:18px\">Hidup itu sendiri menjadi aset</span>",
+  "philosophyText": "<span style=\"color:#1e9bd8;font-weight:700;font-style:normal;font-size:18px\">Aktivitas DD yang merawat dirimu<br>menjadi aset</span>",
   "pickerTitle": "🔥 Pilih langkah berikutnya",
   "pickerSub": "Napas selesai.<br>Sekarang bergerak satu menit dengan ini.",
   "preferLabel": "Gerakan hari ini:",
@@ -673,5 +673,6 @@ export default {
   "aboutParagraph2": "Di era ketika AI mampu melakukan hampir segalanya untuk kita, hal paling berharga adalah sekadar hidup. Dua hal yang telah dijaga umat manusia selama jutaan tahun: napas dan gerakan. Mempraktikkannya dengan sadar — meski singkat, setiap hari — adalah inti dari perawatan diri.",
   "aboutParagraph3": "Mulailah harimu dengan Deep (napas) dan Dash (gerakan) — aktivitas yang kamu kumpulkan akan dicatat sebagai EP dan DDT. Napas dalam memulihkan keseimbangan antara sistem saraf simpatis dan parasimpatis, sementara gerakan ringan membangun ketahanan agar tidak mudah goyah oleh stres dan kecemasan.",
   "aboutParagraph4": "Anda masuk dengan akun Pi Network, dan layanan ini tersedia dalam 15 bahasa.",
-  "aboutTagline": "Bernapaslah dengan Deep. Bergeraklah dengan Dash. Hidup, bersama. — by DDCircle"
+  "aboutTagline": "Bernapaslah dengan Deep. Bergeraklah dengan Dash. Hidup, bersama. — by DDCircle",
+  "heroIdentityLine": "Komunitas yang merawat diri dengan Deep+Dash"
 };

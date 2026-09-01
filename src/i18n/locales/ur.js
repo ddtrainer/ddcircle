@@ -1,6 +1,6 @@
 // Urdu (ur) — DDCircle UI strings
 export default {
-  "heroQuote": "روز <span class=\"one\">3 منٹ</span><br>اپنی توانائی بانٹیں~",
+  "heroQuote": "کبھی بھی، کہیں بھی —<br><span class=\"one\">DD</span> کے ساتھ جسم اور ذہن<br>کی دیکھ بھال کی عادت بنائیں",
   "nowStart": "ابھی شروع کریں",
   "tapToStart": "شروع کرنے کے لیے ٹیپ کریں",
   "resumeAskBreath": "اسی سانس سے دوبارہ شروع کریں؟",
@@ -81,7 +81,7 @@ export default {
   "profileEditSaved": "پروفائل محفوظ ہو گیا",
   "startBtn": "شروع کریں",
   "browseLink": "پہلے Cheerland دیکھیں →",
-  "philosophyText": "<span style=\"color:#2ba48f;font-weight:400;font-style:normal\">لاکھوں برس سے انسانیت ایک </span><span style=\"color:#2ba48f;font-weight:700;font-style:normal\">بنیادی جبلت</span><span style=\"color:#2ba48f;font-weight:400;font-style:normal\"> لے کر چل رہی ہے —</span><br><span style=\"color:#2ba48f;font-weight:400;font-style:normal\">گہری </span><span style=\"color:#2ba48f;font-weight:700;font-style:normal\">سانس لینا</span><span style=\"color:#2ba48f;font-weight:400;font-style:normal\">، اور جسم کو </span><span style=\"color:#2ba48f;font-weight:700;font-style:normal\">متحرک کرنا</span><br><br><span style=\"color:#1e9bd8;font-weight:700;font-style:normal;font-size:17px\">صرف 3 منٹ اپنا خیال رکھنا</span><br><span style=\"color:#1e9bd8;font-weight:700;font-style:normal;font-size:18px\">زندہ رہنا ایک سرمایہ بن جاتا ہے</span>",
+  "philosophyText": "<span style=\"color:#1e9bd8;font-weight:700;font-style:normal;font-size:18px\">آپ کا خیال رکھنے والی DD سرگرمی<br>ایک اثاثہ بن جاتی ہے</span>",
   "pickerTitle": "🔥 اگلا کیا کریں",
   "pickerSub": "سانس مکمل۔<br>اب اس کے ساتھ ایک منٹ متحرک ہوں۔",
   "preferLabel": "آج کی حرکت:",
@@ -671,5 +671,6 @@ export default {
   "aboutParagraph2": "اس دور میں جہاں AI ہمارے لیے تقریباً سب کچھ کر دیتا ہے، سب سے قیمتی چیز محض زندہ ہونا ہے۔ انسانیت نے لاکھوں سالوں سے جو دو چیزیں ساتھ رکھی ہیں وہ ہیں سانس اور حرکت۔ ہر روز، چاہے مختصر وقت کے لیے ہی سہی، ان کو باشعور انداز میں کرنا — یہی خود کی دیکھ بھال کا جوہر ہے۔",
   "aboutParagraph3": "اپنے دن کا آغاز Deep (سانس) اور Dash (حرکت) سے کریں — آپ کی جمع شدہ سرگرمی EP اور DDT کے طور پر ریکارڈ ہوتی ہے۔ گہری سانس ہمدرد اور غیر ہمدرد اعصابی نظام کے درمیان توازن بحال کرتی ہے، جبکہ ہلکی حرکت تناؤ اور اضطراب میں ڈگمگائے بغیر برداشت کی طاقت پیدا کرتی ہے۔",
   "aboutParagraph4": "آپ Pi Network اکاؤنٹ سے سائن ان کرتے ہیں، اور یہ سروس 15 زبانوں میں دستیاب ہے۔",
-  "aboutTagline": "سانس لو Deep انداز میں۔ حرکت کرو Dash انداز میں۔ ساتھ زندہ ہیں۔ — by DDCircle"
+  "aboutTagline": "سانس لو Deep انداز میں۔ حرکت کرو Dash انداز میں۔ ساتھ زندہ ہیں۔ — by DDCircle",
+  "heroIdentityLine": "Deep+Dash کے ذریعے اپنا خیال رکھنے والوں کی کمیونٹی"
 };

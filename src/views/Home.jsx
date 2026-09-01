@@ -43,7 +43,7 @@ export default function Home() {
       {/* 히어로 */}
       <div className={styles.hero}>
         {/* 태그라인을 맨 위로 — 앱이 무엇인지 먼저 각인시키고, 아래 문구가 이어받는다 */}
-        <div className={styles.heroSub}>DEEP RELAXATION · DASH EXERCISE</div>
+        <div className={styles.heroSub}>{t('heroIdentityLine')}</div>
         <p
           className={styles.heroQuote}
           dangerouslySetInnerHTML={{ __html: t('heroQuote') }}

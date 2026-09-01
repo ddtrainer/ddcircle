@@ -91,15 +91,15 @@
   padding: 24px 0 16px;
 }
 
-/* 한 문장 = 한 줄. 자동 줄바꿈을 막고(<br>로만 줄을 나눔), 좁은 화면에서는
-   글자 크기를 줄여 넘치지 않게 한다. */
+/* 문장형 카피(2~3줄)라 자동 줄바꿈을 허용한다. <br>로 의도한 지점에서 먼저 끊고,
+   그래도 넘치면 word-break로 안전하게 다음 줄로 넘어가게 한다(가로 넘침 방지). */
 .heroQuote {
   font-family: 'Gowun Dodum', 'Inter', sans-serif;
-  font-size: clamp(14px, 5vw, 20px);
+  font-size: clamp(13px, 4.5vw, 19px);
   line-height: 1.8;
   color: var(--text);
   margin-bottom: 0;
-  white-space: nowrap;
+  word-break: keep-all;
   font-weight: 400;
 }
 

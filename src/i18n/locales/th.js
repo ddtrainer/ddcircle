@@ -1,6 +1,6 @@
 // ไทย (th) — DDCircle UI strings.
 export default {
-  "heroQuote": "วันละ <span class=\"one\">3 นาที</span><br>แบ่งปันพลังงานของคุณ~",
+  "heroQuote": "ทุกที่ทุกเวลา<br>สร้างนิสัยดูแลกายและใจ<br>ด้วย <span class=\"one\">DD</span>",
   "nowStart": "ตอนนี้เลย",
   "tapToStart": "แตะเพื่อเริ่มต้น",
   "resumeAskBreath": "เริ่มด้วยการหายใจครั้งนี้อีกครั้งหนึ่งไหม",
@@ -81,7 +81,7 @@ export default {
   "profileEditSaved": "บันทึกโปรไฟล์แล้ว",
   "startBtn": "เริ่ม",
   "browseLink": "ดูที่ Cheerland ก่อน →",
-  "philosophyText": "<span style=\"color:#2ba48f;font-weight:400;font-style:normal\">เป็นเวลานับล้านปี มนุษยชาติมี </span><span style=\"color:#2ba48f;font-weight:700;font-style:normal\">สัญชาติญาณ</span><span style=\"color:#2ba48f;font-weight:400;font-style:normal\"> —</span><br><span style=\"color:#2ba48f;font-weight:400;font-style:normal\">ที่จะ </span><span style=\"color:#2ba48f;font-weight:700;font-style:normal\">หายใจลึก</span><span style=\"color:#2ba48f;font-weight:400;font-style:normal\"> และ </span><span style=\"color:#2ba48f;font-weight:700;font-style:normal\">เคลื่อนไหวร่างกาย</span><br><br><span style=\"color:#1e9bd8;font-weight:700;font-style:normal;font-size:17px\">แค่สามนาทีของการดูแลตัวเอง</span><br><span style=\"color:#1e9bd8;font-weight:700;font-style:normal;font-size:18px\">การมีชีวิตจึงกลายเป็นสินทรัพย์</span>",
+  "philosophyText": "<span style=\"color:#1e9bd8;font-weight:700;font-style:normal;font-size:18px\">กิจกรรม DD ที่ดูแลตัวคุณ<br>กลายเป็นสินทรัพย์</span>",
   "pickerTitle": "🔥 เลือกว่าต้องการทำอะไรต่อ",
   "pickerSub": "การหายใจเสร็จแล้ว<br>ตอนนี้เคลื่อนไหวหนึ่งนาทีด้วยนี่",
   "preferLabel": "การเคลื่อนไหวของวันนี้:",
@@ -671,5 +671,6 @@ export default {
   "aboutParagraph2": "ในยุคที่ AI ทำแทบทุกอย่างแทนเรา สิ่งที่มีค่าที่สุดคือการมีชีวิตอยู่นั่นเอง สองสิ่งที่มนุษยชาติสืบทอดมาหลายล้านปี คือลมหายใจและการเคลื่อนไหว การฝึกฝนอย่างมีสติทุกวัน แม้เพียงช่วงสั้นๆ คือแก่นแท้ของการดูแลตัวเอง",
   "aboutParagraph3": "เริ่มต้นวันของคุณด้วย Deep (การหายใจ) และ Dash (การเคลื่อนไหว) — กิจกรรมที่คุณสะสมจะถูกบันทึกเป็น EP และ DDT การหายใจลึกๆ ช่วยฟื้นฟูสมดุลระหว่างระบบประสาทซิมพาเทติกและพาราซิมพาเทติก ส่วนการเคลื่อนไหวเบาๆ จะสร้างความยืดหยุ่นที่ไม่หวั่นไหวต่อความเครียดและความวิตกกังวล",
   "aboutParagraph4": "คุณเข้าสู่ระบบด้วยบัญชี Pi Network และบริการนี้พร้อมให้บริการใน 15 ภาษา",
-  "aboutTagline": "หายใจแบบ Deep เคลื่อนไหวแบบ Dash มีชีวิตอยู่ไปด้วยกัน — by DDCircle"
+  "aboutTagline": "หายใจแบบ Deep เคลื่อนไหวแบบ Dash มีชีวิตอยู่ไปด้วยกัน — by DDCircle",
+  "heroIdentityLine": "ชุมชนของผู้คนที่ดูแลตัวเองด้วย Deep+Dash"
 };

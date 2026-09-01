@@ -1,5 +1,5 @@
 export default {
-  "heroQuote": "<span class=\"one\">Her gün 3 dakika</span><br>enerjini paylaş~",
+  "heroQuote": "Her yerde, her zaman —<br><span class=\"one\">DD</span> ile beden ve zihin<br>bakımı alışkanlığı oluşturun",
   "nowStart": "Şimdi başla",
   "tapToStart": "Başlamak için dokunun",
   "resumeAskBreath": "Bu nefesi tekrar başlatsak mı?",
@@ -80,7 +80,7 @@ export default {
   "profileEditSaved": "Profil kaydedildi",
   "startBtn": "Başla",
   "browseLink": "Önce Cheerland'ı göz at →",
-  "philosophyText": "<span style=\"color:#2ba48f;font-weight:400;font-style:normal\">Bir milyon yıldır insanoğlu bir </span><span style=\"color:#2ba48f;font-weight:700;font-style:normal\">içgüdüyü</span><span style=\"color:#2ba48f;font-weight:400;font-style:normal\"> taşımıştır —</span><br><span style=\"color:#2ba48f;font-weight:400;font-style:normal\"></span><span style=\"color:#2ba48f;font-weight:700;font-style:normal\">derin nefes almak</span><span style=\"color:#2ba48f;font-weight:400;font-style:normal\"> ve </span><span style=\"color:#2ba48f;font-weight:700;font-style:normal\">vücudu harekete geçirmek</span><br><br><span style=\"color:#1e9bd8;font-weight:700;font-style:normal;font-size:17px\">Kendime sadece üç dakika bakmak</span><br><span style=\"color:#1e9bd8;font-weight:700;font-style:normal;font-size:18px\">Yaşamak bir varlık haline gelir</span>",
+  "philosophyText": "<span style=\"color:#1e9bd8;font-weight:700;font-style:normal;font-size:18px\">Kendine bakan DD etkinliğin<br>bir varlığa dönüşür</span>",
   "pickerTitle": "🔥 Sırada ne var",
   "pickerSub": "Nefes bitti.<br>Şimdi bir dakika bunun için hareket et.",
   "preferLabel": "Bugünün hareketi:",
@@ -670,5 +670,6 @@ export default {
   "aboutParagraph2": "Yapay zekânın hemen her şeyi bizim yerimize yaptığı bir çağda, en değerli şey sadece hayatta olmaktır. İnsanlığın milyonlarca yıldır taşıdığı iki şey: nefes ve hareket. Kısa da olsa her gün bunları bilinçle uygulamak — kendine bakımın özü budur.",
   "aboutParagraph3": "Gününe Deep (nefes) ve Dash (hareket) ile başla — biriktirdiğin aktivite EP ve DDT olarak kaydedilir. Derin nefes, sempatik ve parasempatik sinir sistemi arasındaki dengeyi geri kazandırırken, hafif hareket stres ve kaygı karşısında sarsılmadan durabilme dayanıklılığını geliştirir.",
   "aboutParagraph4": "Pi Network hesabınızla giriş yaparsınız ve hizmet 15 dilde sunulmaktadır.",
-  "aboutTagline": "Deep nefes al. Dash hareket et. Birlikte, hayattayız. — by DDCircle"
+  "aboutTagline": "Deep nefes al. Dash hareket et. Birlikte, hayattayız. — by DDCircle",
+  "heroIdentityLine": "Deep+Dash ile kendine bakan insanların topluluğu"
 };

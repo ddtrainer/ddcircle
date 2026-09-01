@@ -1,6 +1,6 @@
 // Filipino (tl) — DDCircle UI strings
 export default {
-  "heroQuote": "Araw-araw <span class=\"one\">3 minuto</span><br>para ibahagi ang iyong enerhiya~",
+  "heroQuote": "Kahit kailan, kahit saan —<br>bumuo ng ugali ng pag-aalaga<br>sa katawan at isip gamit ang <span class=\"one\">DD</span>",
   "nowStart": "Ngayon na",
   "tapToStart": "I-tap para magsimula",
   "resumeAskBreath": "Uulit natin ang paghinga na ito?",
@@ -81,7 +81,7 @@ export default {
   "profileEditSaved": "Profile ay na-save na",
   "startBtn": "Magsimula",
   "browseLink": "Tingnan muna ang Cheerland →",
-  "philosophyText": "<span style=\"color:#2ba48f;font-weight:400;font-style:normal\">Sa loob ng milyun-milyong taon, nagdala ang sangkatauhan ng isang </span><span style=\"color:#2ba48f;font-weight:700;font-style:normal\">instinto</span><span style=\"color:#2ba48f;font-weight:400;font-style:normal\"> —</span><br><span style=\"color:#2ba48f;font-weight:400;font-style:normal\">na </span><span style=\"color:#2ba48f;font-weight:700;font-style:normal\">huminga nang malalim</span><span style=\"color:#2ba48f;font-weight:400;font-style:normal\">, at </span><span style=\"color:#2ba48f;font-weight:700;font-style:normal\">kipagsabayan ang katawan</span><br><br><span style=\"color:#1e9bd8;font-weight:700;font-style:normal;font-size:17px\">Tatlong minuto lang na pag-aalaga sa sarili</span><br><span style=\"color:#1e9bd8;font-weight:700;font-style:normal;font-size:18px\">Ang buhay ay nagiging asset</span>",
+  "philosophyText": "<span style=\"color:#1e9bd8;font-weight:700;font-style:normal;font-size:18px\">Ang DD activity mo na nag-aalaga sa sarili<br>ay nagiging asset</span>",
   "pickerTitle": "🔥 Piliin kung ano ang susunod",
   "pickerSub": "Tapos na ang paghinga.<br>Ngayon, gawin natin ito ng isang minuto.",
   "preferLabel": "Exercise ngayong araw:",
@@ -671,5 +671,6 @@ export default {
   "aboutParagraph2": "Sa panahon kung saan halos lahat ay ginagawa na ng AI para sa atin, ang pinakamahalaga ay ang pagiging buhay mismo. Dalawang bagay na dala ng sangkatauhan sa loob ng milyun-milyong taon: paghinga at paggalaw. Ang sadyang pagsasagawa nito — kahit sandali lang bawat araw — ang siyang esensya ng pag-aalaga sa sarili.",
   "aboutParagraph3": "Simulan ang iyong araw gamit ang Deep (paghinga) at Dash (galaw) — ang aktibidad mong naiipon ay naitatala bilang EP at DDT. Ang malalim na paghinga ay nagpapanumbalik ng balanse sa pagitan ng sympathetic at parasympathetic nervous system, samantalang ang magaan na galaw ay bumubuo ng katatagan upang hindi matinag sa stress at pagkabalisa.",
   "aboutParagraph4": "Naglo-log in ka gamit ang Pi Network account, at available ang serbisyo sa 15 wika.",
-  "aboutTagline": "Huminga nang Deep. Gumalaw nang Dash. Magkasamang buhay. — by DDCircle"
+  "aboutTagline": "Huminga nang Deep. Gumalaw nang Dash. Magkasamang buhay. — by DDCircle",
+  "heroIdentityLine": "Isang komunidad ng mga taong nag-aalaga sa sarili gamit ang Deep+Dash"
 };

@@ -1,6 +1,6 @@
 // Arabic (ar) — DDCircle UI strings.
 export default {
-  "heroQuote": "كل يوم <span class=\"one\">3 دقائق</span><br>تشاركين طاقتك~",
+  "heroQuote": "في أي وقت وفي أي مكان —<br>كوّن عادة العناية بالجسم<br>والعقل مع <span class=\"one\">DD</span>",
   "nowStart": "الآن",
   "tapToStart": "اضغطي للبدء",
   "resumeAskBreath": "هل تبدئين بهذا التنفس مجددًا؟",
@@ -81,7 +81,7 @@ export default {
   "profileEditSaved": "تم حفظ الملف الشخصي",
   "startBtn": "ابدئي",
   "browseLink": "اطلعي على Cheerland أولاً →",
-  "philosophyText": "<span style=\"color:#2ba48f;font-weight:400;font-style:normal\">منذ مليون سنة، حملت الإنسانية </span><span style=\"color:#2ba48f;font-weight:700;font-style:normal\">غريزة</span><span style=\"color:#2ba48f;font-weight:400;font-style:normal\"> واحدة —</span><br><span style=\"color:#2ba48f;font-weight:400;font-style:normal\">أن </span><span style=\"color:#2ba48f;font-weight:700;font-style:normal\">تتنفسي بعمق</span><span style=\"color:#2ba48f;font-weight:400;font-style:normal\">، وأن </span><span style=\"color:#2ba48f;font-weight:700;font-style:normal\">تحركي جسدك</span><br><br><span style=\"color:#1e9bd8;font-weight:700;font-style:normal;font-size:17px\">ثلاث دقائق فقط من العناية بنفسي</span><br><span style=\"color:#1e9bd8;font-weight:700;font-style:normal;font-size:18px\">أن تكوني حية تصبح أصلاً</span>",
+  "philosophyText": "<span style=\"color:#1e9bd8;font-weight:700;font-style:normal;font-size:18px\">نشاط DD الذي يعتني بك<br>يتحول إلى أصل</span>",
   "pickerTitle": "🔥 اختاري ما يأتي بعده",
   "pickerSub": "انتهى التنفس.<br>الآن تحركي دقيقة واحدة مع هذا.",
   "preferLabel": "حركة اليوم:",
@@ -671,5 +671,6 @@ export default {
   "aboutParagraph2": "في عصر تقوم فيه الذكاء الاصطناعي بكل شيء تقريبًا بدلاً منا، أثمن ما لدينا هو الحياة نفسها. أمران حملتهما البشرية منذ ملايين السنين: التنفس والحركة. ممارستهما بوعي — ولو لفترة وجيزة كل يوم — هي جوهر العناية بالذات.",
   "aboutParagraph3": "ابدأ يومك بـ Deep (التنفس) و Dash (الحركة) — يتم تسجيل النشاط الذي تراكمه كـ EP و DDT. يعيد التنفس العميق التوازن بين الجهاز العصبي الودي والباراسمبثاوي، بينما تبني الحركة الخفيفة القدرة على الصمود دون اهتزاز أمام التوتر والقلق.",
   "aboutParagraph4": "تسجل الدخول بحساب Pi Network، والخدمة متوفرة بـ 15 لغة.",
-  "aboutTagline": "تنفّس بعمق (Deep). تحرّك بحيوية (Dash). أحياء، معًا. — by DDCircle"
+  "aboutTagline": "تنفّس بعمق (Deep). تحرّك بحيوية (Dash). أحياء، معًا. — by DDCircle",
+  "heroIdentityLine": "مجتمع من الأشخاص الذين يعتنون بأنفسهم من خلال Deep+Dash"
 };

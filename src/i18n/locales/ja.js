@@ -2,7 +2,7 @@
 // このファイルは言語別に分離されており、必要なものだけが遅延ロードされます（初回ロード容量削減）。
 // 値のないキーは自動的に英語にフォールバックされるため、部分翻訳状態でも安全です。
 export default {
-  "heroQuote": "毎日 <span class=\"one\">3分</span><br>あなたのエネルギーをシェアして~",
+  "heroQuote": "いつでもどこでも、<br><span class=\"one\">DD</span>で心と体を<br>ケアする習慣を",
   "nowStart": "今すぐ",
   "tapToStart": "タップで開始",
   "resumeAskBreath": "この呼吸法でもう一度始めますか?",
@@ -83,7 +83,7 @@ export default {
   "profileEditSaved": "プロフィールが保存されました",
   "startBtn": "開始",
   "browseLink": "応援ランドを先に見てみる →",
-  "philosophyText": "<span style=\"color:#2ba48f;font-weight:400;font-style:normal\">百万年、人類が持ち続けた </span><span style=\"color:#2ba48f;font-weight:700;font-style:normal\">本能</span><span style=\"color:#2ba48f;font-weight:400;font-style:normal\"> —</span><br><span style=\"color:#2ba48f;font-weight:400;font-style:normal\">深く </span><span style=\"color:#2ba48f;font-weight:700;font-style:normal\">呼吸し</span><span style=\"color:#2ba48f;font-weight:400;font-style:normal\">、体を </span><span style=\"color:#2ba48f;font-weight:700;font-style:normal\">動かすこと</span><br><br><span style=\"color:#1e9bd8;font-weight:700;font-style:normal;font-size:17px\">自分を大切にする、たった3分</span><br><span style=\"color:#1e9bd8;font-weight:700;font-style:normal;font-size:18px\">生きることが資産になる</span>",
+  "philosophyText": "<span style=\"color:#1e9bd8;font-weight:700;font-style:normal;font-size:18px\">自分をケアするDD活動が<br>資産になります</span>",
   "pickerTitle": "🔥 次に何をするか選んでください",
   "pickerSub": "呼吸が終わりました。<br>この動きで1分一緒に動きましょう。",
   "preferLabel": "今日の動き:",
@@ -673,5 +673,6 @@ export default {
   "aboutParagraph2": "AIがほとんどのことを代わりにやってくれる時代、最も価値のあるものは「生きていること」そのものです。人類が数百万年受け継いできた二つのこと、呼吸と動き。たとえ短くても毎日意識して実践すること——それがセルフケアの本質です。",
   "aboutParagraph3": "Deep（呼吸）とDash（運動）で一日を始めましょう。積み重ねた活動はEPとDDTとして記録されます。深い呼吸は交感神経と副交感神経のバランスを取り戻し、軽い運動はストレスや不安に揺らがない回復力を育てます。",
   "aboutParagraph4": "Pi Networkアカウントでサインインし、15の言語でサービスを提供しています。",
-  "aboutTagline": "息はDeepに、動きはDashに。ともに、生きている。— by DDCircle"
+  "aboutTagline": "息はDeepに、動きはDashに。ともに、生きている。— by DDCircle",
+  "heroIdentityLine": "Deep+Dashで自分をケアする人たちのコミュニティ"
 };

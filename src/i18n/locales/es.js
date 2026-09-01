@@ -2,7 +2,7 @@
 // Este archivo está separado por idioma y se carga de forma diferida (reduce el tamaño de carga inicial).
 // Las claves sin traducir vuelven automáticamente al inglés, por lo que una traducción parcial es segura.
 export default {
-  "heroQuote": "<span class=\"one\">3 minutos</span> al día<br>compartiendo tu energía~",
+  "heroQuote": "En cualquier momento y lugar —<br>crea el hábito de cuidar<br>cuerpo y mente con <span class=\"one\">DD</span>",
   "nowStart": "Empezar ahora",
   "tapToStart": "Toca para empezar",
   "resumeAskBreath": "¿Continuar con esta respiración?",
@@ -83,7 +83,7 @@ export default {
   "profileEditSaved": "Perfil guardado",
   "startBtn": "Empezar",
   "browseLink": "Echa un vistazo a Cheerland primero →",
-  "philosophyText": "<span style=\"color:#2ba48f;font-weight:400;font-style:normal\">Durante un millón de años, la humanidad ha llevado consigo un </span><span style=\"color:#2ba48f;font-weight:700;font-style:normal\">instinto</span><span style=\"color:#2ba48f;font-weight:400;font-style:normal\"> —</span><br><span style=\"color:#2ba48f;font-weight:400;font-style:normal\">el de </span><span style=\"color:#2ba48f;font-weight:700;font-style:normal\">respirar profundamente</span><span style=\"color:#2ba48f;font-weight:400;font-style:normal\">, y el de </span><span style=\"color:#2ba48f;font-weight:700;font-style:normal\">mover el cuerpo</span><br><br><span style=\"color:#1e9bd8;font-weight:700;font-style:normal;font-size:17px\">Solo tres minutos para cuidarme</span><br><span style=\"color:#1e9bd8;font-weight:700;font-style:normal;font-size:18px\">Estar vivo se convierte en un activo</span>",
+  "philosophyText": "<span style=\"color:#1e9bd8;font-weight:700;font-style:normal;font-size:18px\">Tu actividad DD de autocuidado<br>se convierte en un activo</span>",
   "pickerTitle": "🔥 Elige qué sigue",
   "pickerSub": "La respiración terminó.<br>Ahora muévete un minuto con esto.",
   "preferLabel": "Movimiento de hoy:",
@@ -673,5 +673,6 @@ export default {
   "aboutParagraph2": "En una era en la que la IA hace casi todo por nosotros, lo más valioso es simplemente estar vivo. Dos cosas que la humanidad ha llevado consigo durante millones de años: la respiración y el movimiento. Practicarlas conscientemente, aunque sea brevemente cada día, es la esencia del autocuidado.",
   "aboutParagraph3": "Comienza tu día con Deep (respiración) y Dash (movimiento): la actividad que acumulas se registra como EP y DDT. La respiración profunda restaura el equilibrio entre el sistema nervioso simpático y parasimpático, mientras que el movimiento ligero desarrolla la resiliencia para mantenerte firme frente al estrés y la ansiedad.",
   "aboutParagraph4": "Inicias sesión con una cuenta de Pi Network, y el servicio está disponible en 15 idiomas.",
-  "aboutTagline": "Respira Deep. Muévete Dash. Vivos, juntos. — by DDCircle"
+  "aboutTagline": "Respira Deep. Muévete Dash. Vivos, juntos. — by DDCircle",
+  "heroIdentityLine": "Una comunidad que se cuida a sí misma con Deep+Dash"
 };

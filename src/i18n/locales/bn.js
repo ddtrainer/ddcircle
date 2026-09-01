@@ -1,5 +1,5 @@
 export default {
-  "heroQuote": "প্রতিদিন <span class=\"one\">৩ মিনিট</span><br>আপনার শক্তি শেয়ার করুন~",
+  "heroQuote": "যেকোনো সময়, যেকোনো জায়গায় —<br><span class=\"one\">DD</span> দিয়ে শরীর ও মনের<br>যত্ন নেওয়ার অভ্যাস তৈরি করুন",
   "nowStart": "এখনই",
   "tapToStart": "শুরু করতে ট্যাপ করুন",
   "resumeAskBreath": "এই শ্বাস দিয়ে আবার শুরু করব?",
@@ -80,7 +80,7 @@ export default {
   "profileEditSaved": "প্রোফাইল সংরক্ষিত হয়েছে",
   "startBtn": "শুরু করুন",
   "browseLink": "প্রথমে উৎসাহ প্রদানের স্থান দেখুন →",
-  "philosophyText": "<span style=\"color:#2ba48f;font-weight:400;font-style:normal\">লক্ষ লক্ষ বছর ধরে, মানবতা একটি </span><span style=\"color:#2ba48f;font-weight:700;font-style:normal\">প্রবৃত্তি</span><span style=\"color:#2ba48f;font-weight:400;font-style:normal\"> বহন করে এসেছে —</span><br><span style=\"color:#2ba48f;font-weight:400;font-style:normal\">গভীরভাবে </span><span style=\"color:#2ba48f;font-weight:700;font-style:normal\">শ্বাস নেওয়া</span><span style=\"color:#2ba48f;font-weight:400;font-style:normal\">, এবং শরীর </span><span style=\"color:#2ba48f;font-weight:700;font-style:normal\">নড়াচড়া করা</span><br><br><span style=\"color:#1e9bd8;font-weight:700;font-style:normal;font-size:17px\">নিজের যত্ন নেওয়ার মাত্র তিন মিনিট</span><br><span style=\"color:#1e9bd8;font-weight:700;font-style:normal;font-size:18px\">জীবন একটি সম্পদ হয়ে ওঠে</span>",
+  "philosophyText": "<span style=\"color:#1e9bd8;font-weight:700;font-style:normal;font-size:18px\">নিজের যত্ন নেওয়া আপনার DD কার্যক্রম<br>সম্পদে পরিণত হয়</span>",
   "pickerTitle": "🔥 পরবর্তী কি হবে তা বেছে নিন",
   "pickerSub": "শ্বাস শেষ.<br>এখন এটি দিয়ে এক মিনিট নড়াচড়া করুন.",
   "preferLabel": "আজকের নড়াচড়া:",
@@ -670,5 +670,6 @@ export default {
   "aboutParagraph2": "যে যুগে AI প্রায় সবকিছু আমাদের হয়ে করে দেয়, সেখানে সবচেয়ে মূল্যবান জিনিস হলো বেঁচে থাকা নিজেই। মানবজাতি লক্ষ লক্ষ বছর ধরে বহন করে আসা দুটি জিনিস — নিঃশ্বাস আর নড়াচড়া। প্রতিদিন, এমনকি সংক্ষিপ্তভাবে হলেও, সচেতনভাবে এগুলো অনুশীলন করাই আত্ম-যত্নের মূল সারমর্ম।",
   "aboutParagraph3": "Deep (নিঃশ্বাস) ও Dash (নড়াচড়া) দিয়ে আপনার দিন শুরু করুন — আপনার জমানো কার্যক্রম EP ও DDT হিসেবে রেকর্ড হয়। গভীর নিঃশ্বাস সিমপ্যাথেটিক ও প্যারাসিমপ্যাথেটিক নার্ভাস সিস্টেমের ভারসাম্য ফিরিয়ে আনে, আর হালকা নড়াচড়া মানসিক চাপ ও উদ্বেগে বিচলিত না হওয়ার সহনশীলতা গড়ে তোলে।",
   "aboutParagraph4": "আপনি Pi Network অ্যাকাউন্ট দিয়ে সাইন ইন করেন, এবং এই পরিষেবা ১৫টি ভাষায় উপলব্ধ।",
-  "aboutTagline": "নিঃশ্বাস নাও Deep ভাবে. নড়াচড়া করো Dash ভাবে. একসঙ্গে বেঁচে থাকা. — by DDCircle"
+  "aboutTagline": "নিঃশ্বাস নাও Deep ভাবে. নড়াচড়া করো Dash ভাবে. একসঙ্গে বেঁচে থাকা. — by DDCircle",
+  "heroIdentityLine": "Deep+Dash-এর মাধ্যমে নিজের যত্ন নেওয়া মানুষদের একটি সম্প্রদায়"
 };

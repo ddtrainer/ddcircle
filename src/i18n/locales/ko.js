@@ -2,7 +2,7 @@
 // 이 파일은 언어별로 분리되어 필요한 것만 지연 로드된다(첫 로딩 용량 절감).
 // 값이 없는 키는 자동으로 영어로 폴백되므로, 부분 번역 상태여도 안전하다.
 export default {
-  "heroQuote": "하루 <span class=\"one\">3분</span><br>당신의 에너지를 나누세요",
+  "heroQuote": "언제 어디서나 <span class=\"one\">DD</span>로<br>몸과 마음을 돌보는<br>습관을 만들어드립니다",
   "nowStart": "지금 바로",
   "tapToStart": "탭하여 시작",
   "peopleSuffix": "명",
@@ -83,7 +83,7 @@ export default {
   "profileEditSaved": "프로필이 저장됐어요",
   "startBtn": "시작",
   "browseLink": "먼저 응원나라 둘러보기 →",
-  "philosophyText": "<span style=\"color:#2ba48f;font-weight:400;font-style:normal\">수백만 년, 인류가 이어온 </span><span style=\"color:#2ba48f;font-weight:700;font-style:normal\">본능</span><span style=\"color:#2ba48f;font-weight:400;font-style:normal\"> —</span><br><span style=\"color:#2ba48f;font-weight:400;font-style:normal\">깊게 </span><span style=\"color:#2ba48f;font-weight:700;font-style:normal\">숨 쉬고</span><span style=\"color:#2ba48f;font-weight:400;font-style:normal\">, 몸을 </span><span style=\"color:#2ba48f;font-weight:700;font-style:normal\">움직이는 것</span><br><br><span style=\"color:#1e9bd8;font-weight:700;font-style:normal;font-size:17px\">나를 돌보는 단 3분</span><br><span style=\"color:#1e9bd8;font-weight:700;font-style:normal;font-size:18px\">생명 활동이 자산이 됩니다</span>",
+  "philosophyText": "<span style=\"color:#1e9bd8;font-weight:700;font-style:normal;font-size:18px\">나를 돌보는 DD 활동이<br>자산이 됩니다</span>",
   "pickerTitle": "🔥 이어서 할 운동을 골라주세요",
   "pickerSub": "깊은 호흡을 마쳤어요.<br>이제 이 동작으로 1분 움직여요.",
   "preferLabel": "오늘 운동:",
@@ -673,5 +673,6 @@ export default {
   "aboutParagraph2": "AI가 모든 것을 대신하는 시대, 가장 값진 것은 살아있음 그 자체입니다. 인류가 수백만 년 이어온 두 가지, 호흡과 움직임. 매일 짧게라도 의식적으로 실천하는 것 — 그것이 자기돌봄의 본질입니다.",
   "aboutParagraph3": "Deep(호흡)과 Dash(운동)로 하루를 시작하고, 쌓아온 활동은 EP와 DDT로 기록됩니다. 깊은 호흡은 교감·부교감 신경의 균형을 되찾아주고, 가벼운 움직임은 스트레스와 불안에 흔들리지 않는 회복력을 길러줍니다.",
   "aboutParagraph4": "Pi Network 계정으로 로그인하며, 15개 언어로 서비스하고 있습니다.",
-  "aboutTagline": "숨은 Deep하게, 핏은 Dash하게. 함께 살아있다. — by DDCircle"
+  "aboutTagline": "숨은 Deep하게, 핏은 Dash하게. 함께 살아있다. — by DDCircle",
+  "heroIdentityLine": "Deep+Dash로 자신을 돌보는 사람들의 모임"
 };

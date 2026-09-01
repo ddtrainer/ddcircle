@@ -4,7 +4,7 @@
 // {변수}는 번역하지 않고 그대로 둔다.
 
 export default {
-  "heroQuote": "Mỗi ngày <span class=\"one\">3 phút</span><br>chia sẻ năng lượng của bạn~",
+  "heroQuote": "Mọi lúc mọi nơi —<br>xây dựng thói quen chăm sóc<br>thân và tâm bằng <span class=\"one\">DD</span>",
   "nowStart": "Ngay bây giờ",
   "tapToStart": "Chạm để bắt đầu",
   "resumeAskBreath": "Bắt đầu lại với nhịp thở này?",
@@ -85,7 +85,7 @@ export default {
   "profileEditSaved": "Đã lưu hồ sơ",
   "startBtn": "Bắt đầu",
   "browseLink": "Ghé xem Cheerland trước →",
-  "philosophyText": "<span style=\"color:#2ba48f;font-weight:400;font-style:normal\">Suốt một triệu năm, loài người mang trong mình một </span><span style=\"color:#2ba48f;font-weight:700;font-style:normal\">bản năng</span><span style=\"color:#2ba48f;font-weight:400;font-style:normal\"> —</span><br><span style=\"color:#2ba48f;font-weight:400;font-style:normal\">là </span><span style=\"color:#2ba48f;font-weight:700;font-style:normal\">hít thở thật sâu</span><span style=\"color:#2ba48f;font-weight:400;font-style:normal\">, và </span><span style=\"color:#2ba48f;font-weight:700;font-style:normal\">vận động cơ thể</span><br><br><span style=\"color:#1e9bd8;font-weight:700;font-style:normal;font-size:17px\">Chỉ ba phút chăm sóc chính mình</span><br><span style=\"color:#1e9bd8;font-weight:700;font-style:normal;font-size:18px\">Sự sống trở thành tài sản</span>",
+  "philosophyText": "<span style=\"color:#1e9bd8;font-weight:700;font-style:normal;font-size:18px\">Hoạt động DD chăm sóc bản thân<br>trở thành tài sản của bạn</span>",
   "pickerTitle": "🔥 Chọn phần tiếp theo",
   "pickerSub": "Đã xong phần hít thở.<br>Giờ hãy vận động một phút với bài này.",
   "preferLabel": "Bài tập hôm nay:",
@@ -675,5 +675,6 @@ export default {
   "aboutParagraph2": "Trong thời đại AI có thể làm thay hầu hết mọi thứ, điều quý giá nhất chính là sự sống. Hai điều nhân loại đã gìn giữ hàng triệu năm: hơi thở và chuyển động. Thực hành chúng một cách có ý thức — dù chỉ trong chốc lát mỗi ngày — chính là bản chất của việc chăm sóc bản thân.",
   "aboutParagraph3": "Bắt đầu ngày mới với Deep (hơi thở) và Dash (vận động) — hoạt động bạn tích lũy được ghi lại dưới dạng EP và DDT. Hơi thở sâu giúp khôi phục sự cân bằng giữa hệ thần kinh giao cảm và phó giao cảm, còn vận động nhẹ nhàng xây dựng khả năng phục hồi để không bị lung lay trước căng thẳng và lo âu.",
   "aboutParagraph4": "Bạn đăng nhập bằng tài khoản Pi Network, và dịch vụ hiện có sẵn bằng 15 ngôn ngữ.",
-  "aboutTagline": "Hơi thở theo Deep. Vận động theo Dash. Cùng nhau sống động. — by DDCircle"
+  "aboutTagline": "Hơi thở theo Deep. Vận động theo Dash. Cùng nhau sống động. — by DDCircle",
+  "heroIdentityLine": "Cộng đồng chăm sóc bản thân bằng Deep+Dash"
 };
