@@ -14,7 +14,12 @@ export default function AboutModal({ open, onClose }) {
       <p className={styles.paragraph}>{t('aboutParagraph1')}</p>
       <p className={styles.paragraph}>{t('aboutParagraph2')}</p>
       <p className={styles.paragraph}>{t('aboutParagraph3')}</p>
+
+      <p className={styles.highlight}>{t('aboutHighlight')}</p>
+
       <p className={styles.paragraph}>{t('aboutParagraph4')}</p>
+      <p className={styles.paragraph}>{t('aboutParagraph5')}</p>
+      <p className={styles.paragraph}>{t('aboutParagraph6')}</p>
 
       <p className={styles.tagline}>{t('aboutTagline')}</p>
     </Modal>

@@ -669,10 +669,13 @@ export default {
   "helpTip4": "Daily activity earns EP, and the multiplier grows the longer your streak runs.",
   "helpFeedbackEmailBtn": "Email us",
   "aboutRowTitle": "About DDCircle",
-  "aboutParagraph1": "DDCircle is a global wellness community built around a daily three-minute ritual of caring for yourself.",
-  "aboutParagraph2": "In an age when AI does almost everything for us, the most valuable thing is simply being alive. Two things humanity has carried for millions of years: breath and movement. Practicing them consciously — even briefly, every day — is the essence of self-care.",
-  "aboutParagraph3": "Start your day with Deep (breathing) and Dash (movement) — the activity you build up is recorded as EP and DDT. Deep breathing restores the balance between your sympathetic and parasympathetic nervous systems, while light movement builds the resilience to stay steady through stress and anxiety.",
-  "aboutParagraph4": "You sign in with a Pi Network account, and the service is available in 15 languages.",
-  "aboutTagline": "Breathe Deep. Move Dash. Alive, together. — by DDCircle",
-  "heroIdentityLine": "A community caring for themselves through Deep+Dash"
+  "aboutParagraph1": "DDCircle is a community of people caring for themselves through Deep+Dash, for the sake of happiness.",
+  "aboutParagraph2": "In an age when AI does almost everything for us, the most valuable thing is simply being healthy and alive. Two things humanity has carried for millions of years: breath and movement. Practicing them consciously — even briefly, every day — is the heart of self-care.",
+  "aboutParagraph3": "Anytime, anywhere — we help you build a habit of caring for your body and mind.",
+  "aboutParagraph4": "Try building a one-day DD habit. Deep breathing restores the balance between your sympathetic and parasympathetic nervous systems, while breath-quickening exercise builds the mental strength and resilience to stay steady through stress and anxiety.",
+  "aboutTagline": "Breathe Deep. Move Dash. Let's DD! — by DDCircle Labs",
+  "heroIdentityLine": "A community caring for themselves through Deep+Dash",
+  "aboutHighlight": "Even in your alone time, Deep+Dash — anytime, anywhere.",
+  "aboutParagraph5": "Your DD activity of caring for yourself doesn't just disappear — it's recorded as EP and DDT, becoming your asset.",
+  "aboutParagraph6": "You sign in with a Pi Network account, and the service is available in 15 languages."
 };

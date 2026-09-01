@@ -23,6 +23,17 @@
   margin-bottom: 0;
 }
 
+.highlight {
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.6;
+  color: var(--text);
+  margin: 0 0 14px;
+  padding-block: 2px;
+  padding-inline-start: 12px;
+  border-inline-start: 3px solid var(--cool, #1e9bd8);
+}
+
 .tagline {
   font-family: 'Noto Serif KR', 'Playfair Display', serif;
   font-size: 14px;

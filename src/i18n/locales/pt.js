@@ -666,10 +666,13 @@ export default {
   "helpTip4": "A atividade diária acumula EP, e o multiplicador aumenta quanto mais longa for sua sequência.",
   "helpFeedbackEmailBtn": "Enviar e-mail",
   "aboutRowTitle": "Sobre a DDCircle",
-  "aboutParagraph1": "A DDCircle é uma comunidade global de bem-estar construída em torno de um ritual diário de três minutos para cuidar de si mesmo.",
-  "aboutParagraph2": "Numa era em que a IA faz quase tudo por nós, o mais valioso é simplesmente estar vivo. Duas coisas que a humanidade carrega há milhões de anos: a respiração e o movimento. Praticá-las conscientemente — mesmo que brevemente, todos os dias — é a essência do autocuidado.",
-  "aboutParagraph3": "Comece o seu dia com Deep (respiração) e Dash (movimento) — a atividade que você acumula é registrada como EP e DDT. A respiração profunda restaura o equilíbrio entre o sistema nervoso simpático e parassimpático, enquanto o movimento leve constrói a resiliência para permanecer firme diante do estresse e da ansiedade.",
-  "aboutParagraph4": "Você entra com uma conta Pi Network, e o serviço está disponível em 15 idiomas.",
-  "aboutTagline": "Respire Deep. Mova-se Dash. Vivos, juntos. — by DDCircle",
-  "heroIdentityLine": "Uma comunidade que cuida de si mesma com Deep+Dash"
+  "aboutParagraph1": "A DDCircle é uma comunidade de pessoas que cuidam de si mesmas com Deep+Dash, em busca da felicidade.",
+  "aboutParagraph2": "Numa era em que a IA faz quase tudo por nós, o mais valioso é simplesmente estar vivo e saudável. Duas coisas que a humanidade carrega há milhões de anos: a respiração e o movimento. Praticá-las conscientemente — mesmo que brevemente, todos os dias — é o cerne do autocuidado.",
+  "aboutParagraph3": "A qualquer hora e lugar, ajudamos você a criar o hábito de cuidar do corpo e da mente.",
+  "aboutParagraph4": "Experimente criar um hábito DD de 1 dia. A respiração profunda restaura o equilíbrio entre o sistema nervoso simpático e parassimpático, enquanto o exercício que tira o fôlego constrói força mental e resiliência para permanecer firme diante do estresse e da ansiedade.",
+  "aboutTagline": "Respire Deep. Mova-se Dash. Let's DD! — by DDCircle Labs",
+  "heroIdentityLine": "Uma comunidade que cuida de si mesma com Deep+Dash",
+  "aboutHighlight": "Mesmo nos seus momentos a sós, Deep+Dash a qualquer hora e lugar.",
+  "aboutParagraph5": "Sua atividade DD de autocuidado não simplesmente desaparece — ela é registrada como EP e DDT, tornando-se seu patrimônio.",
+  "aboutParagraph6": "Você entra com uma conta Pi Network, e o serviço está disponível em 15 idiomas."
 };

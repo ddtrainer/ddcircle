@@ -669,10 +669,13 @@ export default {
   "helpTip4": "毎日の活動でEPが貯まり、連続記録（ストリーク）が長くなるほど倍率が上がります。",
   "helpFeedbackEmailBtn": "メールを送る",
   "aboutRowTitle": "DDCircleについて",
-  "aboutParagraph1": "DDCircleは、毎日3分の儀式で自分自身をケアするためのグローバルウェルネスコミュニティです。",
-  "aboutParagraph2": "AIがほとんどのことを代わりにやってくれる時代、最も価値のあるものは「生きていること」そのものです。人類が数百万年受け継いできた二つのこと、呼吸と動き。たとえ短くても毎日意識して実践すること——それがセルフケアの本質です。",
-  "aboutParagraph3": "Deep（呼吸）とDash（運動）で一日を始めましょう。積み重ねた活動はEPとDDTとして記録されます。深い呼吸は交感神経と副交感神経のバランスを取り戻し、軽い運動はストレスや不安に揺らがない回復力を育てます。",
-  "aboutParagraph4": "Pi Networkアカウントでサインインし、15の言語でサービスを提供しています。",
-  "aboutTagline": "息はDeepに、動きはDashに。ともに、生きている。— by DDCircle",
-  "heroIdentityLine": "Deep+Dashで自分をケアする人たちのコミュニティ"
+  "aboutParagraph1": "DDCircleは、幸せのためにDeep+Dashで自分自身をケアする人たちのコミュニティです。",
+  "aboutParagraph2": "AIがほとんどのことを代わりにやってくれる時代、最も価値のあるものは健康に生きていることそのものです。人類が数百万年受け継いできた二つのこと、呼吸と動き。たとえ短くても毎日意識して実践すること——それがセルフケアの核心です。",
+  "aboutParagraph3": "いつでもどこでも、心と体をケアする習慣づくりをサポートします。",
+  "aboutParagraph4": "1日DD習慣をつくってみましょう。深い呼吸は交感神経と副交感神経のバランスを取り戻し、息が上がる運動はストレスや不安に揺らがない精神力と回復力を育てます。",
+  "aboutTagline": "息はDeepに、動きはDashに。Let's DD! — by DDCircle Labs",
+  "heroIdentityLine": "Deep+Dashで自分をケアする人たちのコミュニティ",
+  "aboutHighlight": "ひとりの時間にも、いつでもどこでもDeep+Dash。",
+  "aboutParagraph5": "自分をケアするDD活動はただ消えるのではなく、EPとDDTとして記録され、あなたの資産になります。",
+  "aboutParagraph6": "Pi Networkアカウントでサインインし、15の言語でサービスを提供しています。"
 };

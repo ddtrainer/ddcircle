@@ -669,10 +669,13 @@ export default {
   "helpTip4": "Aktivitas harian mengumpulkan EP, dan pengali akan meningkat semakin panjang streak-mu.",
   "helpFeedbackEmailBtn": "Kirim email",
   "aboutRowTitle": "Tentang DDCircle",
-  "aboutParagraph1": "DDCircle adalah komunitas kesehatan global yang dibangun di sekitar ritual harian 3 menit untuk merawat diri sendiri.",
-  "aboutParagraph2": "Di era ketika AI mampu melakukan hampir segalanya untuk kita, hal paling berharga adalah sekadar hidup. Dua hal yang telah dijaga umat manusia selama jutaan tahun: napas dan gerakan. Mempraktikkannya dengan sadar — meski singkat, setiap hari — adalah inti dari perawatan diri.",
-  "aboutParagraph3": "Mulailah harimu dengan Deep (napas) dan Dash (gerakan) — aktivitas yang kamu kumpulkan akan dicatat sebagai EP dan DDT. Napas dalam memulihkan keseimbangan antara sistem saraf simpatis dan parasimpatis, sementara gerakan ringan membangun ketahanan agar tidak mudah goyah oleh stres dan kecemasan.",
-  "aboutParagraph4": "Anda masuk dengan akun Pi Network, dan layanan ini tersedia dalam 15 bahasa.",
-  "aboutTagline": "Bernapaslah dengan Deep. Bergeraklah dengan Dash. Hidup, bersama. — by DDCircle",
-  "heroIdentityLine": "Komunitas yang merawat diri dengan Deep+Dash"
+  "aboutParagraph1": "DDCircle adalah komunitas orang-orang yang merawat diri dengan Deep+Dash, demi kebahagiaan.",
+  "aboutParagraph2": "Di era ketika AI mampu melakukan hampir segalanya untuk kita, hal paling berharga adalah hidup dengan sehat. Dua hal yang telah dijaga umat manusia selama jutaan tahun: napas dan gerakan. Mempraktikkannya dengan sadar — meski singkat, setiap hari — adalah inti dari perawatan diri.",
+  "aboutParagraph3": "Kapan saja, di mana saja — kami membantumu membangun kebiasaan merawat tubuh dan pikiran.",
+  "aboutParagraph4": "Coba bangun kebiasaan DD selama 1 hari. Napas dalam memulihkan keseimbangan antara sistem saraf simpatis dan parasimpatis, sementara olahraga hingga terengah-engah membangun kekuatan mental dan ketahanan agar tidak mudah goyah oleh stres dan kecemasan.",
+  "aboutTagline": "Bernapaslah dengan Deep. Bergeraklah dengan Dash. Let's DD! — by DDCircle Labs",
+  "heroIdentityLine": "Komunitas yang merawat diri dengan Deep+Dash",
+  "aboutHighlight": "Bahkan di waktu sendirian, Deep+Dash kapan saja di mana saja.",
+  "aboutParagraph5": "Aktivitas DD yang merawat dirimu tidak begitu saja hilang — ia dicatat sebagai EP dan DDT, menjadi asetmu.",
+  "aboutParagraph6": "Anda masuk dengan akun Pi Network, dan layanan ini tersedia dalam 15 bahasa."
 };

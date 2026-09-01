@@ -669,10 +669,13 @@ export default {
   "helpTip4": "La actividad diaria acumula EP, y el multiplicador aumenta cuanto más larga sea tu racha.",
   "helpFeedbackEmailBtn": "Enviarnos un correo",
   "aboutRowTitle": "Acerca de DDCircle",
-  "aboutParagraph1": "DDCircle es una comunidad global de bienestar construida alrededor de un ritual diario de tres minutos para cuidarte a ti mismo.",
-  "aboutParagraph2": "En una era en la que la IA hace casi todo por nosotros, lo más valioso es simplemente estar vivo. Dos cosas que la humanidad ha llevado consigo durante millones de años: la respiración y el movimiento. Practicarlas conscientemente, aunque sea brevemente cada día, es la esencia del autocuidado.",
-  "aboutParagraph3": "Comienza tu día con Deep (respiración) y Dash (movimiento): la actividad que acumulas se registra como EP y DDT. La respiración profunda restaura el equilibrio entre el sistema nervioso simpático y parasimpático, mientras que el movimiento ligero desarrolla la resiliencia para mantenerte firme frente al estrés y la ansiedad.",
-  "aboutParagraph4": "Inicias sesión con una cuenta de Pi Network, y el servicio está disponible en 15 idiomas.",
-  "aboutTagline": "Respira Deep. Muévete Dash. Vivos, juntos. — by DDCircle",
-  "heroIdentityLine": "Una comunidad que se cuida a sí misma con Deep+Dash"
+  "aboutParagraph1": "DDCircle es una comunidad de personas que se cuidan a sí mismas con Deep+Dash, por la felicidad.",
+  "aboutParagraph2": "En una era en la que la IA hace casi todo por nosotros, lo más valioso es simplemente estar sano y vivo. Dos cosas que la humanidad ha llevado consigo durante millones de años: la respiración y el movimiento. Practicarlas conscientemente, aunque sea brevemente cada día, es el corazón del autocuidado.",
+  "aboutParagraph3": "En cualquier momento y lugar, te ayudamos a crear el hábito de cuidar tu cuerpo y tu mente.",
+  "aboutParagraph4": "Prueba a crear un hábito DD de un día. La respiración profunda restaura el equilibrio entre el sistema nervioso simpático y parasimpático, mientras que el ejercicio que te deja sin aliento desarrolla la fuerza mental y la resiliencia para mantenerte firme frente al estrés y la ansiedad.",
+  "aboutTagline": "Respira Deep. Muévete Dash. Let's DD! — by DDCircle Labs",
+  "heroIdentityLine": "Una comunidad que se cuida a sí misma con Deep+Dash",
+  "aboutHighlight": "Incluso en tus momentos a solas, Deep+Dash en cualquier momento y lugar.",
+  "aboutParagraph5": "Tu actividad DD de autocuidado no simplemente desaparece: se registra como EP y DDT, y se convierte en tu activo.",
+  "aboutParagraph6": "Inicias sesión con una cuenta de Pi Network, y el servicio está disponible en 15 idiomas."
 };

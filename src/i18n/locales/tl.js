@@ -667,10 +667,13 @@ export default {
   "helpTip4": "Ang araw-araw na aktibidad ay nag-iipon ng EP, at tumataas ang multiplier habang humahaba ang streak mo.",
   "helpFeedbackEmailBtn": "Mag-email sa amin",
   "aboutRowTitle": "Tungkol sa DDCircle",
-  "aboutParagraph1": "Ang DDCircle ay isang pandaigdigang wellness community na binuo sa paligid ng araw-araw na 3 minutong ritwal ng pag-aalaga sa sarili.",
-  "aboutParagraph2": "Sa panahon kung saan halos lahat ay ginagawa na ng AI para sa atin, ang pinakamahalaga ay ang pagiging buhay mismo. Dalawang bagay na dala ng sangkatauhan sa loob ng milyun-milyong taon: paghinga at paggalaw. Ang sadyang pagsasagawa nito — kahit sandali lang bawat araw — ang siyang esensya ng pag-aalaga sa sarili.",
-  "aboutParagraph3": "Simulan ang iyong araw gamit ang Deep (paghinga) at Dash (galaw) — ang aktibidad mong naiipon ay naitatala bilang EP at DDT. Ang malalim na paghinga ay nagpapanumbalik ng balanse sa pagitan ng sympathetic at parasympathetic nervous system, samantalang ang magaan na galaw ay bumubuo ng katatagan upang hindi matinag sa stress at pagkabalisa.",
-  "aboutParagraph4": "Naglo-log in ka gamit ang Pi Network account, at available ang serbisyo sa 15 wika.",
-  "aboutTagline": "Huminga nang Deep. Gumalaw nang Dash. Magkasamang buhay. — by DDCircle",
-  "heroIdentityLine": "Isang komunidad ng mga taong nag-aalaga sa sarili gamit ang Deep+Dash"
+  "aboutParagraph1": "Ang DDCircle ay komunidad ng mga taong nag-aalaga sa sarili gamit ang Deep+Dash, para sa kaligayahan.",
+  "aboutParagraph2": "Sa panahon kung saan halos lahat ay ginagawa na ng AI para sa atin, ang pinakamahalaga ay ang maging malusog at buhay. Dalawang bagay na dala ng sangkatauhan sa loob ng milyun-milyong taon: paghinga at paggalaw. Ang sadyang pagsasagawa nito — kahit sandali lang bawat araw — ang siyang puso ng pag-aalaga sa sarili.",
+  "aboutParagraph3": "Kahit kailan, kahit saan — tinutulungan ka naming bumuo ng ugali ng pag-aalaga sa katawan at isip.",
+  "aboutParagraph4": "Subukan ang 1-araw na DD habit. Ang malalim na paghinga ay nagpapanumbalik ng balanse sa pagitan ng sympathetic at parasympathetic nervous system, samantalang ang ehersisyong nakakahingal ay bumubuo ng lakas ng isip at katatagan upang hindi matinag sa stress at pagkabalisa.",
+  "aboutTagline": "Huminga nang Deep. Gumalaw nang Dash. Let's DD! — by DDCircle Labs",
+  "heroIdentityLine": "Isang komunidad ng mga taong nag-aalaga sa sarili gamit ang Deep+Dash",
+  "aboutHighlight": "Kahit sa oras na mag-isa ka, Deep+Dash kahit kailan kahit saan.",
+  "aboutParagraph5": "Ang DD activity mong nag-aalaga sa sarili ay hindi basta nawawala — naitatala ito bilang EP at DDT, na nagiging asset mo.",
+  "aboutParagraph6": "Naglo-log in ka gamit ang Pi Network account, at available ang serbisyo sa 15 wika."
 };

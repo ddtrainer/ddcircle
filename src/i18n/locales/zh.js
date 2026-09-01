@@ -669,10 +669,13 @@ export default {
   "helpTip4": "每天完成的活动会累积为 EP，连续记录（连击）越长，倍率就越高。",
   "helpFeedbackEmailBtn": "发送邮件",
   "aboutRowTitle": "关于 DDCircle",
-  "aboutParagraph1": "DDCircle 是一个全球健康社区，通过每天3分钟的仪式来照顾自己。",
-  "aboutParagraph2": "在AI几乎能代劳一切的时代，最珍贵的莫过于\"活着\"本身。人类延续了数百万年的两件事——呼吸与运动。哪怕每天只是短暂地有意识地去实践它们，这就是自我关怀的本质。",
-  "aboutParagraph3": "用Deep（呼吸）和Dash（运动）开启每一天，积累的活动会以EP和DDT的形式被记录下来。深呼吸能恢复交感与副交感神经的平衡，轻度运动则能培养面对压力与焦虑时不轻易动摇的恢复力。",
-  "aboutParagraph4": "使用 Pi Network 账户登录，目前提供15种语言服务。",
-  "aboutTagline": "呼吸要Deep，运动要Dash。一起，活着。——by DDCircle",
-  "heroIdentityLine": "通过 Deep+Dash 关爱自己的社群"
+  "aboutParagraph1": "DDCircle 是一群为了幸福，通过 Deep+Dash 关爱自己的人组成的社群。",
+  "aboutParagraph2": "在AI几乎能代劳一切的时代，最珍贵的莫过于健康地\"活着\"本身。人类延续了数百万年的两件事——呼吸与运动。哪怕每天只是短暂地有意识地去实践它们，这就是自我关怀的核心。",
+  "aboutParagraph3": "无论何时何地，我们都帮你养成关爱身心的习惯。",
+  "aboutParagraph4": "试着养成\"1日DD习惯\"吧。深呼吸能恢复交感与副交感神经的平衡，而气喘吁吁的运动则能培养面对压力与焦虑时不轻易动摇的心理韧性与恢复力。",
+  "aboutTagline": "呼吸要Deep，运动要Dash。Let's DD！——by DDCircle Labs",
+  "heroIdentityLine": "通过 Deep+Dash 关爱自己的社群",
+  "aboutHighlight": "独处的时光里，也能随时随地 Deep+Dash。",
+  "aboutParagraph5": "关爱自己的DD活动不会就此消失，而是以EP和DDT被记录下来，成为你的资产。",
+  "aboutParagraph6": "使用 Pi Network 账户登录，目前提供15种语言服务。"
 };
